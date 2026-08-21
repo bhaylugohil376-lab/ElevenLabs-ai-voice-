@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Basic SEO Meta Tags -->
+  <title>VoiceForge AI — Free AI Voice Generator & Text to Speech</title>
+  <meta name="description" content="Convert text to natural AI voiceovers instantly with VoiceForge AI. Supports Hindi, English, Gujarati, Marathi, Bengali, Tamil, Telugu, and Urdu with pitch & speed controls.">
+  <meta name="keywords" content="AI voice generator, text to speech, Hindi text to speech, natural AI voiceover, voice forge AI, free tts engine">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="VoiceForge AI">
+  <link rel="canonical" href="https://www.voiceforge.ai/">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="VoiceForge AI — Free AI Voice Generator">
+  <meta property="og:description" content="Turn your text into natural AI voices in multiple languages with custom pitch and speed controls.">
+  <meta property="og:url" content="https://www.voiceforge.ai/">
+  <meta property="og:image" content="https://www.voiceforge.ai/og-image.jpg">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VoiceForge AI — Free AI Voice Generator">
+  <meta name="twitter:description" content="Turn your text into natural AI voices in multiple languages with custom pitch and speed controls.">
+  <meta name="twitter:image" content="https://www.voiceforge.ai/og-image.jpg">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "VoiceForge AI",
+    "url": "https://www.voiceforge.ai/",
+    "description": "Create high-quality AI voiceovers from text in Hindi, English, and other regional languages.",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header class="navbar">
+    <div class="logo">
+      <span>◉</span> VoiceForge <b>AI</b>
+    </div>
+
+    <nav>
+      <a href="#generator">Generator</a>
+      <a href="#voices">Voices</a>
+      <a href="#about">About</a>
+      <a href="#details">Details</a>
+      <a href="#history">History</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <button id="themeBtn" class="icon-btn" aria-label="Toggle Theme">☀️</button>
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+      <div class="badge">✦ AI VOICE GENERATOR</div>
+
+      <h1>Turn your text into<br>
+        <span>natural AI voice.</span>
+      </h1>
+
+      <p>
+        Create high-quality voiceovers for videos, stories,
+        education and content.
+      </p>
+    </section>
+
+
+    <section id="generator" class="generator">
+
+      <div class="panel">
+
+        <div class="panel-top">
+          <h2>Text to Speech</h2>
+
+          <span id="counter">0 / 5000</span>
+        </div>
+
+        <!-- Sample Text Quick Action Buttons -->
+        <div class="sample-actions" style="margin-bottom: 12px;">
+          <small>Quick Templates:</small>
+          <button type="button" class="chip-btn" onclick="insertSample('Welcome to our AI Text to Speech platform!')">Greeting</button>
+          <button type="button" class="chip-btn" onclick="insertSample('Once upon a time, in a far-away realm of innovation...')">Story</button>
+          <button type="button" class="chip-btn" onclick="insertSample('Welcome back to another episode of our podcast.')">Intro</button>
+        </div>
+
+        <textarea
+          id="textInput"
+          maxlength="5000"
+          placeholder="Type or paste your text here..."
+        ></textarea>
+
+
+        <div class="controls">
+
+          <div class="control">
+            <label for="language">Language</label>
+
+            <select id="language">
+              <option value="hi">Hindi</option>
+              <option value="en">English</option>
+              <option value="gu">Gujarati</option>
+              <option value="mr">Marathi</option>
+              <option value="bn">Bengali</option>
+              <option value="ta">Tamil</option>
+              <option value="te">Telugu</option>
+              <option value="ur">Urdu</option>
+            </select>
+          </div>
+
+
+          <div class="control">
+            <label for="voiceSelect">Voice</label>
+
+            <select id="voiceSelect">
+              <option value="">Loading voices...</option>
+            </select>
+          </div>
+
+
+          <div class="control">
+            <label for="speed">Speed</label>
+
+            <select id="speed">
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.25">1.25x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+
+          <!-- Pitch Control Slider -->
+          <div class="control">
+            <label for="pitch">Pitch: <span id="pitchValue">1</span></label>
+            <input type="range" id="pitch" min="0.5" max="1.5" step="0.1" value="1">
+          </div>
+
+        </div>
+
+
+        <div class="actions">
+
+          <button id="clearBtn" class="secondary">
+            Clear
+          </button>
+
+          <button id="generateBtn" class="generate">
+            <span>🔊</span>
+            Generate Voice
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div id="audioPanel" class="audio-panel hidden">
+
+        <div class="audio-info">
+          <div class="audio-icon">🔊</div>
+
+          <div>
+            <strong>Generated Voice</strong>
+            <small id="audioStatus">Ready</small>
+          </div>
+        </div>
+
+        <div class="audio-controls">
+
+          <button id="playBtn" class="play-btn">
+            ▶
+          </button>
+
+          <div class="progress">
+            <div id="progressBar"></div>
+          </div>
+
+          <button id="downloadBtn" class="download-btn">
+            ⬇ Download
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- NEW FEATURE: About Section -->
+    <section id="about" class="about-section">
+      <div class="section-title">
+        <span>WHO WE ARE</span>
+        <h2>About VoiceForge AI</h2>
+      </div>
+      <div class="about-content">
+        <p>
+          VoiceForge AI is a state-of-the-art Text-to-Speech (TTS) engine designed to transform written scripts into natural, human-like voiceovers. Built for content creators, educators, podcasters, and developers, our platform bridges the gap between written content and expressive audio production.
+        </p>
+        <p>
+          With multi-language support, custom pitch modulation, and fine-tuned pace adjustments, VoiceForge AI empowers users to craft localized studio-grade audio in seconds without complex studio equipment.
+        </p>
+      </div>
+    </section>
+
+    <!-- NEW FEATURE: Detailed Features Grid -->
+    <section id="details" class="details-section">
+      <div class="section-title">
+        <span>POWERFUL CAPABILITIES</span>
+        <h2>Detailed Specifications</h2>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-card">
+          <div class="detail-icon">🎯</div>
+          <h3>Human-Like Inflection</h3>
+          <p>Advanced neural voice synthesis ensures natural rhythm, pauses, and expressive emotional tones.</p>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon">🌐</div>
+          <h3>Multilingual Support</h3>
+          <p>Seamlessly generate audio in major Indian languages like Hindi, Marathi, Bengali, as well as English.</p>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon">🎛️</div>
+          <h3>Granular Audio Control</h3>
+          <p>Adjust playback rate from 0.75x to 2x and fine-tune voice pitch to fit news, storytelling, or casual vibes.</p>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-icon">💾</div>
+          <h3>Instant Audio Export</h3>
+          <p>Listen instantly in-browser and download lightweight MP3 files ready for your video editor or podcast.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Audio Generation History List -->
+    <section id="history" class="history-section">
+
+      <div class="section-title">
+        <span>GENERATION LOGS</span>
+        <h2>Recent Audio History</h2>
+      </div>
+
+      <div id="historyList" class="history-list">
+        <p class="empty-msg">No generated audio yet.</p>
+      </div>
+
+    </section>
+
+
+    <section id="voices" class="voices-section">
+
+      <div class="section-title">
+        <span>VOICE LIBRARY</span>
+        <h2>Choose your style</h2>
+      </div>
+
+      <div class="voice-grid">
+
+        <div class="voice-card">
+          <div class="voice-avatar">H</div>
+          <div>
+            <h3>Hindi Natural</h3>
+            <p>Indian • Natural</p>
+          </div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-avatar">E</div>
+          <div>
+            <h3>English Natural</h3>
+            <p>English • Natural</p>
+          </div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-avatar">N</div>
+          <div>
+            <h3>News Presenter</h3>
+            <p>Professional • Clear</p>
+          </div>
+        </div>
+
+        <div class="voice-card">
+          <div class="voice-avatar">S</div>
+          <div>
+            <h3>Storyteller</h3>
+            <p>Warm • Narration</p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- NEW FEATURE: FAQ Section -->
+    <section id="faq" class="faq-section">
+      <div class="section-title">
+        <span>QUESTIONS & ANSWERS</span>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Is VoiceForge AI free to use?</summary>
+          <p>Yes, VoiceForge AI offers free instant text-to-speech generation for personal and commercial projects.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Which audio formats are supported for download?</summary>
+          <p>All generated audio files can be downloaded directly in standard high-quality MP3/WAV audio formats.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary>Can I use the generated voiceovers on YouTube or Podcasts?</summary>
+          <p>Absolutely. VoiceForge AI speech outputs are royalty-free and ready for YouTube, social media videos, audiobooks, and e-learning modules.</p>
+        </details>
+      </div>
+    </section>
+
+
+    <section id="features" class="features">
+
+      <div>
+        <span>⚡</span>
+        <h3>Fast Generation</h3>
+        <p>Generate voice quickly from your text.</p>
+      </div>
+
+      <div>
+        <span>🌎</span>
+        <h3>Multiple Languages</h3>
+        <p>Support for Indian and international languages.</p>
+      </div>
+
+      <div>
+        <span>📱</span>
+        <h3>Mobile Friendly</h3>
+        <p>Works on phones, tablets and computers.</p>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer>
+    <p>© 2026 VoiceForge AI. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function insertSample(text) {
+      const input = document.getElementById('textInput');
+      input.value = text;
+      const counter = document.getElementById('counter');
+      if (counter) {
+        counter.textContent = text.length + " / 5000";
+      }
+    }
+  </script>
+  <script src="script.js"></script>
+
+</body>
+</html>
