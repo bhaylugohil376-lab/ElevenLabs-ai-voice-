@@ -1,12 +1,6 @@
-// ==========================================================================
-// VoiceForge AI — Web Speech API & Application Controller
-// ==========================================================================
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Speech Synthesis API
   const synth = window.speechSynthesis;
 
-  // DOM Elements
   const textInput = document.getElementById('textInput');
   const counter = document.getElementById('counter');
   const languageSelect = document.getElementById('language');
@@ -28,32 +22,30 @@ document.addEventListener('DOMContentLoaded', () => {
   let voices = [];
   let historyData = [];
 
-  // 1. Text Area Character Counter
+  // Character Counter
   if (textInput && counter) {
     textInput.addEventListener('input', () => {
       counter.textContent = `${textInput.value.length} / 5000`;
     });
   }
 
-  // 2. Pitch Range Slider Display Update
+  // Pitch Indicator
   if (pitchInput && pitchValue) {
     pitchInput.addEventListener('input', () => {
       pitchValue.textContent = pitchInput.value;
     });
   }
 
-  // 3. Load & Filter Web Speech Voices
+  // Load Voices
   function populateVoiceList() {
     if (!synth) return;
     voices = synth.getVoices();
     const selectedLang = languageSelect.value;
-
     voiceSelect.innerHTML = '';
 
     const filteredVoices = voices.filter(voice => voice.lang.startsWith(selectedLang));
 
     if (filteredVoices.length === 0) {
-      // Fallback: show all voices if selected language voice not found
       voices.forEach((voice, index) => {
         const option = document.createElement('option');
         option.textContent = `${voice.name} (${voice.lang})`;
@@ -77,18 +69,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   languageSelect.addEventListener('change', populateVoiceList);
 
-  // 4. Generate Voice & Playback
+  // Generate & Play Voice
   generateBtn.addEventListener('click', () => {
     const text = textInput.value.trim();
 
     if (!text) {
-      alert('Kripya speech me convert karne ke liye text enter karein.');
+      alert('Please enter text to generate voice.');
       return;
     }
 
-    if (synth.speaking) {
-      synth.cancel(); // Stop ongoing playback
-    }
+    if (synth.speaking) synth.cancel();
 
     const utterThis = new SpeechSynthesisUtterance(text);
     const selectedIndex = voiceSelect.selectedOptions[0]?.getAttribute('data-index');
@@ -100,13 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
     utterThis.rate = parseFloat(speedSelect.value) || 1;
     utterThis.pitch = parseFloat(pitchInput.value) || 1;
 
-    // UI Updates on Start
     audioPanel.classList.remove('hidden');
     audioStatus.textContent = 'Speaking...';
     playBtn.textContent = '⏸';
     progressBar.style.width = '0%';
 
-    // Speech Events
     utterThis.onboundary = (event) => {
       if (event.charIndex) {
         const progress = (event.charIndex / text.length) * 100;
@@ -122,14 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     utterThis.onerror = () => {
-      audioStatus.textContent = 'Error during synthesis';
+      audioStatus.textContent = 'Error';
       playBtn.textContent = '▶';
     };
 
     synth.speak(utterThis);
   });
 
-  // 5. Play / Pause Toggle Button
+  // Play/Pause
   playBtn.addEventListener('click', () => {
     if (synth.speaking) {
       if (synth.paused) {
@@ -144,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 6. Clear Input Button
+  // Clear Input
   clearBtn.addEventListener('click', () => {
     textInput.value = '';
     counter.textContent = '0 / 5000';
@@ -152,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audioPanel.classList.add('hidden');
   });
 
-  // 7. Theme Toggle (Dark/Light Mode)
+  // Theme Toggle
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
@@ -160,24 +148,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. History Item Management
+  // History Logging
   function addToHistory(text, lang) {
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     historyData.unshift({ text, lang, time });
-
-    if (historyData.length > 5) historyData.pop(); // Keep last 5 entries
-
+    if (historyData.length > 5) historyData.pop();
     renderHistory();
   }
 
   function renderHistory() {
     if (!historyList) return;
-
     if (historyData.length === 0) {
       historyList.innerHTML = '<p class="empty-msg">No generated audio yet.</p>';
       return;
     }
-
     historyList.innerHTML = historyData.map((item) => `
       <div class="history-item" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--border-color);">
         <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
