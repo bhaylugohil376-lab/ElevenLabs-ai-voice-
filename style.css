@@ -967,4 +967,236 @@ body.light .icon-btn {
 ::selection {
   background: var(--primary);
   color: white;
+
+   
 }
+
+/* =========================
+   ABOUT
+   ========================= */
+
+.about,
+.how,
+.faq,
+.contact {
+  width: min(1100px, 92%);
+  margin: 90px auto 0;
+}
+
+.about-box {
+  margin-top: 25px;
+  padding: 30px;
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(124,92,255,0.12),
+      rgba(0,217,255,0.06)
+    );
+
+  border: 1px solid var(--border);
+}
+
+.about-box p {
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.about-box p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================
+   HOW IT WORKS
+   ========================= */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.step {
+  padding: 28px;
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+
+  transition: 0.25s ease;
+}
+
+.step:hover {
+  transform: translateY(-5px);
+  border-color: rgba(124,92,255,0.5);
+}
+
+.step strong {
+  font-size: 35px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      var(--pink),
+      var(--secondary)
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.step h3 {
+  margin-top: 15px;
+}
+
+.step p {
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+
+/* =========================
+   FAQ
+   ========================= */
+
+.faq details {
+  margin-top: 12px;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  background: rgba(255,255,255,0.04);
+
+  border: 1px solid var(--border);
+}
+
+.faq summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.faq details p {
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 14px;
+}
+
+
+/* =========================
+   CONTACT
+   ========================= */
+
+.contact-box {
+  text-align: center;
+
+  padding: 55px 25px;
+
+  border-radius: 25px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124,92,255,0.15),
+      rgba(255,78,205,0.08),
+      rgba(0,217,255,0.08)
+    );
+
+  border: 1px solid var(--border);
+}
+
+.contact-box > span {
+  color: var(--secondary);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.contact-box h2 {
+  font-size: 36px;
+  margin-top: 10px;
+}
+
+.contact-box p {
+  color: var(--muted);
+  margin: 12px auto 25px;
+}
+
+.email-btn,
+.hero-btn {
+  display: inline-block;
+
+  padding: 13px 20px;
+
+  border-radius: 13px;
+
+  text-decoration: none;
+
+  color: white;
+
+  font-weight: 800;
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--primary),
+      var(--pink),
+      var(--secondary)
+    );
+
+  box-shadow:
+    0 10px 30px rgba(124,92,255,0.25);
+
+  transition: 0.25s ease;
+}
+
+.email-btn:hover,
+.hero-btn:hover {
+  transform: translateY(-2px);
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.footer-logo {
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.footer-logo b {
+  color: var(--primary);
+}
+
+.footer-note {
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 800px) {
+
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-box h2 {
+    font-size: 30px;
+  }
+}
+
