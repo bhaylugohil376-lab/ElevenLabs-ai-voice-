@@ -1,175 +1,505 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const synth = window.speechSynthesis;
+/* =========================================================
+   VOICEFORGE AI
+   Multilingual Browser Voice Engine
+   ========================================================= */
 
-  const textInput = document.getElementById('textInput');
-  const counter = document.getElementById('counter');
-  const languageSelect = document.getElementById('language');
-  const voiceSelect = document.getElementById('voiceSelect');
-  const speedSelect = document.getElementById('speed');
-  const pitchInput = document.getElementById('pitch');
-  const pitchValue = document.getElementById('pitchValue');
+const textInput = document.getElementById("textInput");
+const counter = document.getElementById("counter");
 
-  const generateBtn = document.getElementById('generateBtn');
-  const clearBtn = document.getElementById('clearBtn');
-  const themeBtn = document.getElementById('themeBtn');
+const language = document.getElementById("language");
+const voiceSelect = document.getElementById("voiceSelect");
 
-  const audioPanel = document.getElementById('audioPanel');
-  const audioStatus = document.getElementById('audioStatus');
-  const playBtn = document.getElementById('playBtn');
-  const progressBar = document.getElementById('progressBar');
-  const historyList = document.getElementById('historyList');
+const speed = document.getElementById("speed");
 
-  let voices = [];
-  let historyData = [];
+const generateBtn = document.getElementById("generateBtn");
+const clearBtn = document.getElementById("clearBtn");
 
-  // Character Counter
-  if (textInput && counter) {
-    textInput.addEventListener('input', () => {
-      counter.textContent = `${textInput.value.length} / 5000`;
-    });
+const audioPanel = document.getElementById("audioPanel");
+const audioStatus = document.getElementById("audioStatus");
+
+const playBtn = document.getElementById("playBtn");
+const stopBtn = document.getElementById("stopBtn");
+
+const themeBtn = document.getElementById("themeBtn");
+const progressBar = document.getElementById("progressBar");
+
+let voices = [];
+let selectedVoice = null;
+let speechTimer = null;
+
+
+/* =========================
+   TEXT COUNTER
+   ========================= */
+
+function updateCounter() {
+
+  const length = textInput.value.length;
+
+  counter.textContent = `${length} / 5000`;
+}
+
+textInput.addEventListener(
+  "input",
+  updateCounter
+);
+
+
+/* =========================
+   LOAD BROWSER VOICES
+   ========================= */
+
+function loadVoices() {
+
+  if (!("speechSynthesis" in window)) {
+
+    voiceSelect.innerHTML = `
+      <option>
+        Browser speech not supported
+      </option>
+    `;
+
+    return;
   }
 
-  // Pitch Indicator
-  if (pitchInput && pitchValue) {
-    pitchInput.addEventListener('input', () => {
-      pitchValue.textContent = pitchInput.value;
+  voices = speechSynthesis.getVoices();
+
+  updateVoiceList();
+}
+
+
+function updateVoiceList() {
+
+  const selectedLanguage =
+    language.value.toLowerCase();
+
+  voiceSelect.innerHTML = "";
+
+  const matchingVoices =
+    voices.filter(voice => {
+
+      const voiceLang =
+        voice.lang.toLowerCase();
+
+      return (
+        voiceLang === selectedLanguage ||
+        voiceLang.startsWith(
+          selectedLanguage.split("-")[0]
+        )
+      );
     });
+
+
+  const available =
+    matchingVoices.length
+      ? matchingVoices
+      : voices;
+
+
+  if (!available.length) {
+
+    voiceSelect.innerHTML = `
+      <option value="">
+        No voices available
+      </option>
+    `;
+
+    return;
   }
 
-  // Load Voices
-  function populateVoiceList() {
-    if (!synth) return;
-    voices = synth.getVoices();
-    const selectedLang = languageSelect.value;
-    voiceSelect.innerHTML = '';
 
-    const filteredVoices = voices.filter(voice => voice.lang.startsWith(selectedLang));
+  available.forEach(
+    (voice, index) => {
 
-    if (filteredVoices.length === 0) {
-      voices.forEach((voice, index) => {
-        const option = document.createElement('option');
-        option.textContent = `${voice.name} (${voice.lang})`;
-        option.setAttribute('data-index', index);
-        voiceSelect.appendChild(option);
-      });
-    } else {
-      filteredVoices.forEach((voice) => {
-        const option = document.createElement('option');
-        option.textContent = `${voice.name} (${voice.lang})`;
-        option.setAttribute('data-index', voices.indexOf(voice));
-        voiceSelect.appendChild(option);
-      });
+      const option =
+        document.createElement("option");
+
+      option.value = voices.indexOf(voice);
+
+      option.textContent =
+        `${voice.name} (${voice.lang})`;
+
+      voiceSelect.appendChild(option);
+
     }
+  );
+
+
+  selectedVoice = available[0];
+
+  voiceSelect.value =
+    voices.indexOf(selectedVoice);
+}
+
+
+/* Browser loads voices asynchronously */
+
+if ("speechSynthesis" in window) {
+
+  speechSynthesis.onvoiceschanged =
+    loadVoices;
+}
+
+loadVoices();
+
+
+/* =========================
+   LANGUAGE CHANGE
+   ========================= */
+
+language.addEventListener(
+  "change",
+  updateVoiceList
+);
+
+
+/* =========================
+   VOICE CHANGE
+   ========================= */
+
+voiceSelect.addEventListener(
+  "change",
+  () => {
+
+    const index =
+      Number(voiceSelect.value);
+
+    selectedVoice =
+      voices[index] || null;
+  }
+);
+
+
+/* =========================
+   SPEAK FUNCTION
+   ========================= */
+
+function speakText() {
+
+  const text =
+    textInput.value.trim();
+
+  if (!text) {
+
+    alert(
+      "Please enter some text first."
+    );
+
+    textInput.focus();
+
+    return;
   }
 
-  populateVoiceList();
-  if (speechSynthesis.onvoiceschanged !== undefined) {
-    speechSynthesis.onvoiceschanged = populateVoiceList;
+
+  if (!("speechSynthesis" in window)) {
+
+    alert(
+      "Your browser does not support text-to-speech."
+    );
+
+    return;
   }
 
-  languageSelect.addEventListener('change', populateVoiceList);
 
-  // Generate & Play Voice
-  generateBtn.addEventListener('click', () => {
-    const text = textInput.value.trim();
+  speechSynthesis.cancel();
 
-    if (!text) {
-      alert('Please enter text to generate voice.');
+
+  const utterance =
+    new SpeechSynthesisUtterance(text);
+
+
+  if (selectedVoice) {
+
+    utterance.voice =
+      selectedVoice;
+  }
+
+
+  utterance.lang =
+    language.value;
+
+
+  utterance.rate =
+    Number(speed.value);
+
+
+  utterance.pitch =
+    1;
+
+
+  utterance.volume =
+    1;
+
+
+  utterance.onstart = () => {
+
+    audioPanel.classList.remove(
+      "hidden"
+    );
+
+    audioStatus.textContent =
+      "Speaking...";
+
+    playBtn.textContent =
+      "⏸";
+
+    startProgress();
+  };
+
+
+  utterance.onend = () => {
+
+    audioStatus.textContent =
+      "Completed";
+
+    playBtn.textContent =
+      "▶";
+
+    stopProgress();
+  };
+
+
+  utterance.onerror = () => {
+
+    audioStatus.textContent =
+      "Voice error";
+
+    playBtn.textContent =
+      "▶";
+
+    stopProgress();
+  };
+
+
+  speechSynthesis.speak(
+    utterance
+  );
+}
+
+
+/* =========================
+   GENERATE BUTTON
+   ========================= */
+
+generateBtn.addEventListener(
+  "click",
+  () => {
+
+    generateBtn.classList.add(
+      "loading"
+    );
+
+    generateBtn.innerHTML =
+      "⏳ Generating...";
+
+
+    setTimeout(() => {
+
+      speakText();
+
+      generateBtn.classList.remove(
+        "loading"
+      );
+
+      generateBtn.innerHTML =
+        "🔊 Generate Voice";
+
+    }, 200);
+  }
+);
+
+
+/* =========================
+   PLAY BUTTON
+   ========================= */
+
+playBtn.addEventListener(
+  "click",
+  () => {
+
+    if (
+      speechSynthesis.speaking
+    ) {
+
+      speechSynthesis.pause();
+
+      playBtn.textContent =
+        "▶";
+
+      audioStatus.textContent =
+        "Paused";
+
       return;
     }
 
-    if (synth.speaking) synth.cancel();
 
-    const utterThis = new SpeechSynthesisUtterance(text);
-    const selectedIndex = voiceSelect.selectedOptions[0]?.getAttribute('data-index');
+    if (
+      speechSynthesis.paused
+    ) {
 
-    if (selectedIndex !== null && voices[selectedIndex]) {
-      utterThis.voice = voices[selectedIndex];
-    }
+      speechSynthesis.resume();
 
-    utterThis.rate = parseFloat(speedSelect.value) || 1;
-    utterThis.pitch = parseFloat(pitchInput.value) || 1;
+      playBtn.textContent =
+        "⏸";
 
-    audioPanel.classList.remove('hidden');
-    audioStatus.textContent = 'Speaking...';
-    playBtn.textContent = '⏸';
-    progressBar.style.width = '0%';
+      audioStatus.textContent =
+        "Speaking...";
 
-    utterThis.onboundary = (event) => {
-      if (event.charIndex) {
-        const progress = (event.charIndex / text.length) * 100;
-        progressBar.style.width = `${progress}%`;
-      }
-    };
-
-    utterThis.onend = () => {
-      audioStatus.textContent = 'Finished';
-      playBtn.textContent = '▶';
-      progressBar.style.width = '100%';
-      addToHistory(text, languageSelect.value);
-    };
-
-    utterThis.onerror = () => {
-      audioStatus.textContent = 'Error';
-      playBtn.textContent = '▶';
-    };
-
-    synth.speak(utterThis);
-  });
-
-  // Play/Pause
-  playBtn.addEventListener('click', () => {
-    if (synth.speaking) {
-      if (synth.paused) {
-        synth.resume();
-        playBtn.textContent = '⏸';
-        audioStatus.textContent = 'Speaking...';
-      } else {
-        synth.pause();
-        playBtn.textContent = '▶';
-        audioStatus.textContent = 'Paused';
-      }
-    }
-  });
-
-  // Clear Input
-  clearBtn.addEventListener('click', () => {
-    textInput.value = '';
-    counter.textContent = '0 / 5000';
-    if (synth.speaking) synth.cancel();
-    audioPanel.classList.add('hidden');
-  });
-
-  // Theme Toggle
-  if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('light-theme');
-      themeBtn.textContent = document.body.classList.contains('light-theme') ? '🌙' : '☀️';
-    });
-  }
-
-  // History Logging
-  function addToHistory(text, lang) {
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    historyData.unshift({ text, lang, time });
-    if (historyData.length > 5) historyData.pop();
-    renderHistory();
-  }
-
-  function renderHistory() {
-    if (!historyList) return;
-    if (historyData.length === 0) {
-      historyList.innerHTML = '<p class="empty-msg">No generated audio yet.</p>';
       return;
     }
-    historyList.innerHTML = historyData.map((item) => `
-      <div class="history-item" style="background: var(--bg-card); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--border-color);">
-        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
-          <span>LANG: ${item.lang.toUpperCase()}</span>
-          <span>${item.time}</span>
-        </div>
-        <p style="margin: 0.5rem 0; font-size: 0.95rem;">"${item.text.length > 80 ? item.text.substring(0, 80) + '...' : item.text}"</p>
-      </div>
-    `).join('');
+
+
+    speakText();
   }
-});
+);
+
+
+/* =========================
+   STOP
+   ========================= */
+
+stopBtn.addEventListener(
+  "click",
+  () => {
+
+    speechSynthesis.cancel();
+
+    playBtn.textContent =
+      "▶";
+
+    audioStatus.textContent =
+      "Stopped";
+
+    stopProgress();
+  }
+);
+
+
+/* =========================
+   CLEAR
+   ========================= */
+
+clearBtn.addEventListener(
+  "click",
+  () => {
+
+    speechSynthesis.cancel();
+
+    textInput.value = "";
+
+    updateCounter();
+
+    audioPanel.classList.add(
+      "hidden"
+    );
+
+    playBtn.textContent =
+      "▶";
+
+    stopProgress();
+  }
+);
+
+
+/* =========================
+   PROGRESS ANIMATION
+   ========================= */
+
+function startProgress() {
+
+  progressBar.style.width =
+    "0%";
+
+  clearInterval(
+    speechTimer
+  );
+
+  let progress = 0;
+
+  speechTimer =
+    setInterval(() => {
+
+      progress += 1;
+
+      if (progress >= 100) {
+
+        progress = 100;
+
+        clearInterval(
+          speechTimer
+        );
+      }
+
+      progressBar.style.width =
+        `${progress}%`;
+
+    }, 100);
+}
+
+
+function stopProgress() {
+
+  clearInterval(
+    speechTimer
+  );
+
+  progressBar.style.width =
+    "0%";
+}
+
+
+/* =========================
+   DARK / LIGHT MODE
+   ========================= */
+
+themeBtn.addEventListener(
+  "click",
+  () => {
+
+    document.body.classList.toggle(
+      "light"
+    );
+
+    const light =
+      document.body.classList.contains(
+        "light"
+      );
+
+    themeBtn.textContent =
+      light ? "🌙" : "☀️";
+
+    localStorage.setItem(
+      "voiceforge-theme",
+      light ? "light" : "dark"
+    );
+  }
+);
+
+
+/* Restore theme */
+
+const savedTheme =
+  localStorage.getItem(
+    "voiceforge-theme"
+  );
+
+if (savedTheme === "light") {
+
+  document.body.classList.add(
+    "light"
+  );
+
+  themeBtn.textContent =
+    "🌙";
+}
+
+
+/* =========================
+   INITIALIZE
+   ========================= */
+
+updateCounter();
+
+console.log(
+  "VoiceForge AI loaded successfully."
+);
