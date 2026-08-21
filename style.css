@@ -1,359 +1,970 @@
-/* ==========================================================================
-   Global Variables & Reset
-   ========================================================================== */
-:root {
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --bg-main: #0b0f19;
-  --bg-card: #151d30;
-  --bg-card-hover: #1e2942;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --accent-glow: rgba(99, 102, 241, 0.25);
-  --radius: 12px;
-}
-
-body.light-theme {
-  --bg-main: #f8fafc;
-  --bg-card: #ffffff;
-  --bg-card-hover: #f1f5f9;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border-color: rgba(0, 0, 0, 0.1);
-  --accent-glow: rgba(99, 102, 241, 0.15);
-}
+/* =========================================================
+   VOICEFORGE AI — ORIGINAL COLORFUL UI
+   ========================================================= */
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #080b18;
+  --bg2: #10152b;
+  --card: rgba(20, 27, 55, 0.82);
+  --card2: rgba(29, 37, 72, 0.8);
+
+  --text: #ffffff;
+  --muted: #aeb7d4;
+
+  --primary: #7c5cff;
+  --secondary: #00d9ff;
+  --pink: #ff4ecd;
+  --green: #39e58c;
+  --yellow: #ffd166;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+
+  --radius: 22px;
 }
 
 body {
-  background-color: var(--bg-main);
-  color: var(--text-main);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.6;
+  min-height: 100vh;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: var(--text);
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(124, 92, 255, 0.28),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(0, 217, 255, 0.18),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      rgba(255, 78, 205, 0.14),
+      transparent 30%
+    ),
+    var(--bg);
+
+  overflow-x: hidden;
 }
 
-/* ==========================================================================
-   Layout Centering Rules
-   ========================================================================== */
+/* =========================
+   NAVBAR
+   ========================= */
+
 .navbar {
+  width: 100%;
+  height: 76px;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
+  justify-content: space-between;
+
+  padding: 0 6%;
+
   position: sticky;
   top: 0;
   z-index: 100;
+
+  background: rgba(8, 11, 24, 0.75);
+  backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid var(--border);
 }
 
-.navbar .logo {
-  font-size: 1.25rem;
-  font-weight: 700;
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo span {
+  color: var(--secondary);
+
+  filter:
+    drop-shadow(0 0 10px rgba(0, 217, 255, 0.7));
+}
+
+.logo b {
+  color: var(--primary);
+}
+
+.navbar nav {
+  display: flex;
+  gap: 30px;
 }
 
 .navbar nav a {
-  color: var(--text-muted);
+  color: var(--muted);
   text-decoration: none;
-  margin: 0 10px;
-  font-size: 0.95rem;
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.25s ease;
 }
 
 .navbar nav a:hover {
-  color: var(--primary);
+  color: white;
 }
 
 .icon-btn {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-  padding: 6px 12px;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+
+  background: rgba(255,255,255,0.06);
+
+  color: white;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 12px;
+
   cursor: pointer;
+
+  transition: 0.25s ease;
 }
 
-main {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.icon-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.12);
 }
 
-/* Hero Section */
+/* =========================
+   HERO
+   ========================= */
+
 .hero {
   text-align: center;
-  margin: 3rem 0 2rem 0;
+
+  max-width: 900px;
+
+  margin: 0 auto;
+
+  padding: 90px 20px 55px;
 }
 
-.hero .badge {
+.badge {
   display: inline-block;
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--primary);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
+
+  padding: 8px 16px;
+
+  border-radius: 50px;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(124,92,255,0.22),
+      rgba(0,217,255,0.18)
+    );
+
+  border: 1px solid rgba(124,92,255,0.35);
+
+  box-shadow:
+    0 0 30px rgba(124,92,255,0.12);
 }
 
 .hero h1 {
-  font-size: 2.8rem;
-  line-height: 1.2;
+  margin-top: 24px;
+
+  font-size: clamp(42px, 7vw, 78px);
+
+  line-height: 1.02;
+
+  letter-spacing: -3px;
+
+  font-weight: 900;
 }
 
 .hero h1 span {
-  color: var(--primary);
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      var(--pink),
+      var(--secondary)
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
 }
 
 .hero p {
-  color: var(--text-muted);
-  margin-top: 10px;
+  max-width: 650px;
+
+  margin: 25px auto 0;
+
+  color: var(--muted);
+
+  font-size: 17px;
+
+  line-height: 1.7;
 }
 
-/* ==========================================================================
-   Generator Center Panel
-   ========================================================================== */
+/* =========================
+   GENERATOR
+   ========================= */
+
 .generator {
-  width: 100%;
-  max-width: 750px;
-  margin-bottom: 4rem;
+  width: min(1100px, 92%);
+
+  margin: auto;
 }
 
 .panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+
+  padding: 26px;
+
+  border-radius: var(--radius);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,32,66,0.92),
+      rgba(14,19,40,0.88)
+    );
+
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow);
+
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+
+  position: absolute;
+
+  width: 250px;
+  height: 250px;
+
+  background: rgba(124,92,255,0.12);
+
+  filter: blur(80px);
+
+  top: -120px;
+  right: -80px;
+
+  pointer-events: none;
 }
 
 .panel-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+
+  margin-bottom: 16px;
 }
 
-.sample-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
+.panel-top h2 {
+  font-size: 20px;
 }
 
-.chip-btn {
-  background: var(--bg-main);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  cursor: pointer;
+#counter {
+  color: var(--muted);
+  font-size: 13px;
 }
 
-.chip-btn:hover {
-  border-color: var(--primary);
-}
+/* =========================
+   TEXTAREA
+   ========================= */
 
 textarea {
   width: 100%;
-  min-height: 140px;
-  background: var(--bg-main);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  padding: 14px;
-  font-size: 1rem;
+  min-height: 230px;
+
   resize: vertical;
+
+  padding: 20px;
+
+  border-radius: 17px;
+
+  border: 1px solid rgba(255,255,255,0.1);
+
+  outline: none;
+
+  color: white;
+
+  background:
+    rgba(5, 8, 20, 0.7);
+
+  font-size: 16px;
+
+  line-height: 1.65;
+
+  transition: 0.25s ease;
 }
+
+textarea::placeholder {
+  color: #717b9e;
+}
+
+textarea:focus {
+  border-color: rgba(124,92,255,0.8);
+
+  box-shadow:
+    0 0 0 4px rgba(124,92,255,0.1),
+    0 0 30px rgba(124,92,255,0.08);
+}
+
+/* =========================
+   CONTROLS
+   ========================= */
 
 .controls {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
   gap: 15px;
-  margin: 20px 0;
+
+  margin-top: 18px;
 }
 
 .control label {
   display: block;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 6px;
+
+  margin-bottom: 8px;
+
+  color: var(--muted);
+
+  font-size: 12px;
+
+  font-weight: 700;
 }
 
-select, input[type="range"] {
+select {
   width: 100%;
-  padding: 8px 12px;
-  background: var(--bg-main);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+
+  height: 48px;
+
+  padding: 0 14px;
+
+  border-radius: 13px;
+
+  border: 1px solid var(--border);
+
+  outline: none;
+
+  color: white;
+
+  background: #161d3a;
+
+  cursor: pointer;
 }
+
+select:focus {
+  border-color: var(--primary);
+}
+
+select option {
+  background: #11162c;
+  color: white;
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
 
 .actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: 20px;
 }
 
-button.generate {
-  background: var(--primary);
+button {
+  font-family: inherit;
+}
+
+.secondary,
+.generate {
+  height: 50px;
+
+  padding: 0 22px;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  transition: 0.25s ease;
+}
+
+.secondary {
+  color: var(--muted);
+
+  background: rgba(255,255,255,0.06);
+
+  border: 1px solid var(--border);
+}
+
+.secondary:hover {
   color: white;
+
+  background: rgba(255,255,255,0.11);
+}
+
+.generate {
+  min-width: 190px;
+
+  color: white;
+
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
+
+  background:
+    linear-gradient(
+      100deg,
+      var(--primary),
+      var(--pink),
+      var(--secondary)
+    );
+
+  box-shadow:
+    0 10px 30px rgba(124,92,255,0.25);
 }
 
-button.secondary {
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border-color);
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
+.generate:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 40px rgba(124,92,255,0.35);
 }
 
-/* Audio Panel */
+.generate:active {
+  transform: scale(0.98);
+}
+
+.generate.loading {
+  opacity: 0.65;
+
+  pointer-events: none;
+}
+
+/* =========================
+   AUDIO PANEL
+   ========================= */
+
 .audio-panel {
-  margin-top: 15px;
-  background: var(--bg-card);
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 16px;
+  margin-top: 18px;
+
+  padding: 20px;
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(57,229,140,0.2);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(57,229,140,0.08),
+      rgba(0,217,255,0.05)
+    );
 }
 
-.hidden { display: none; }
+.audio-panel.hidden {
+  display: none;
+}
+
+.audio-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+}
+
+.audio-icon {
+  width: 45px;
+  height: 45px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--green),
+      var(--secondary)
+    );
+}
+
+.audio-info strong {
+  display: block;
+}
+
+.audio-info small {
+  color: var(--muted);
+}
 
 .audio-controls {
   display: flex;
+
   align-items: center;
-  gap: 15px;
-  margin-top: 10px;
+
+  gap: 14px;
+
+  margin-top: 18px;
 }
 
 .play-btn {
-  background: var(--primary);
+  width: 45px;
+  height: 45px;
+
   border: none;
-  color: white;
-  width: 36px;
-  height: 36px;
+
   border-radius: 50%;
+
+  background: var(--primary);
+
+  color: white;
+
   cursor: pointer;
+
+  font-size: 16px;
 }
 
 .progress {
-  flex-grow: 1;
-  height: 6px;
-  background: var(--bg-main);
-  border-radius: 3px;
+  flex: 1;
+
+  height: 7px;
+
+  border-radius: 20px;
+
   overflow: hidden;
+
+  background: rgba(255,255,255,0.08);
 }
 
 #progressBar {
   width: 0%;
+
   height: 100%;
-  background: var(--primary);
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      var(--pink),
+      var(--secondary)
+    );
 }
 
 .download-btn {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-  padding: 6px 12px;
-  border-radius: 6px;
+  height: 43px;
+
+  padding: 0 16px;
+
+  border-radius: 12px;
+
+  border: 1px solid var(--border);
+
+  background: rgba(255,255,255,0.06);
+
+  color: white;
+
   cursor: pointer;
-}
 
-/* ==========================================================================
-   Sections & Grid Layouts
-   ========================================================================== */
-section {
-  width: 100%;
-  margin-bottom: 4rem;
-}
-
-.section-title {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.section-title span {
-  color: var(--primary);
-  font-size: 0.8rem;
   font-weight: 700;
 }
 
+/* =========================
+   VOICE LIBRARY
+   ========================= */
+
+.voices-section {
+  width: min(1100px, 92%);
+
+  margin: 100px auto 0;
+}
+
+.section-title span {
+  color: var(--secondary);
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  letter-spacing: 2px;
+}
+
 .section-title h2 {
-  font-size: 2rem;
+  margin-top: 8px;
+
+  font-size: 34px;
 }
 
-/* About Section */
-.about-content {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-left: 4px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 2rem;
-}
-
-/* Details Section */
-.details-grid, .voice-grid, .features {
+.voice-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 16px;
+
+  margin-top: 25px;
 }
 
-.detail-card, .voice-card, .features > div {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  transition: transform 0.2s ease;
-}
-
-.detail-card:hover, .voice-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--primary);
-}
-
-/* FAQ Accordion */
-.faq-list {
+.voice-card {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 18px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,32,66,0.85),
+      rgba(15,20,42,0.8)
+    );
+
+  border: 1px solid var(--border);
+
+  transition: 0.25s ease;
 }
 
-.faq-item {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  padding: 1rem;
+.voice-card:hover {
+  transform: translateY(-5px);
+
+  border-color:
+    rgba(124,92,255,0.45);
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.25);
 }
 
-.faq-item summary {
-  font-weight: 600;
-  cursor: pointer;
+.voice-avatar {
+  width: 45px;
+  height: 45px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 14px;
+
+  font-weight: 900;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--pink)
+    );
 }
 
-.faq-item p {
-  margin-top: 10px;
-  color: var(--text-muted);
+.voice-card h3 {
+  font-size: 14px;
 }
+
+.voice-card p {
+  margin-top: 4px;
+
+  color: var(--muted);
+
+  font-size: 11px;
+}
+
+/* =========================
+   FEATURES
+   ========================= */
+
+.features {
+  width: min(1100px, 92%);
+
+  margin: 90px auto;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 18px;
+}
+
+.features > div {
+  padding: 28px;
+
+  border-radius: 20px;
+
+  background:
+    rgba(255,255,255,0.04);
+
+  border: 1px solid var(--border);
+}
+
+.features span {
+  font-size: 28px;
+}
+
+.features h3 {
+  margin-top: 15px;
+
+  font-size: 18px;
+}
+
+.features p {
+  margin-top: 8px;
+
+  color: var(--muted);
+
+  line-height: 1.6;
+
+  font-size: 14px;
+}
+
+/* =========================
+   FOOTER
+   ========================= */
 
 footer {
+  padding: 30px 20px;
+
   text-align: center;
-  padding: 2rem;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-muted);
-  width: 100%;
+
+  border-top: 1px solid var(--border);
+
+  color: var(--muted);
+
+  font-size: 13px;
+}
+
+/* =========================
+   LIGHT MODE
+   ========================= */
+
+body.light {
+  --bg: #f5f7ff;
+  --bg2: #ffffff;
+
+  --card: rgba(255,255,255,0.9);
+
+  --text: #10152b;
+  --muted: #5f6780;
+
+  --border: rgba(20,30,70,0.1);
+
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(124,92,255,0.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(0,217,255,0.12),
+      transparent 28%
+    ),
+    #f5f7ff;
+}
+
+body.light .navbar {
+  background: rgba(245,247,255,0.8);
+}
+
+body.light textarea {
+  color: #10152b;
+  background: rgba(255,255,255,0.85);
+}
+
+body.light select {
+  color: #10152b;
+  background: white;
+}
+
+body.light select option {
+  background: white;
+  color: #10152b;
+}
+
+body.light .panel,
+body.light .voice-card,
+body.light .features > div {
+  background: rgba(255,255,255,0.8);
+}
+
+body.light .secondary,
+body.light .download-btn,
+body.light .icon-btn {
+  color: #303750;
+  background: rgba(20,30,70,0.05);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 850px) {
+
+  .navbar {
+    padding: 0 4%;
+  }
+
+  .navbar nav {
+    display: none;
+  }
+
+  .hero {
+    padding-top: 65px;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .voice-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+
+  .navbar {
+    height: 68px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .hero {
+    padding: 55px 15px 40px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .panel {
+    padding: 17px;
+  }
+
+  textarea {
+    min-height: 190px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .secondary,
+  .generate {
+    width: 100%;
+  }
+
+  .audio-controls {
+    flex-wrap: wrap;
+  }
+
+  .progress {
+    order: 3;
+
+    flex-basis: 100%;
+  }
+
+  .download-btn {
+    margin-left: auto;
+  }
+
+  .voice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .voices-section {
+    margin-top: 70px;
+  }
+
+  .features {
+    margin-top: 65px;
+    margin-bottom: 65px;
+  }
+}
+
+/* =========================
+   SCROLLBAR
+   ========================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      var(--primary),
+      var(--pink)
+    );
+}
+
+/* =========================
+   SELECTION
+   ========================= */
+
+::selection {
+  background: var(--primary);
+  color: white;
 }
