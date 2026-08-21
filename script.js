@@ -1,14 +1,7 @@
-/* =========================================================
-   VOICEFORGE AI
-   Multilingual Browser Voice Engine
-   ========================================================= */
-
 const textInput = document.getElementById("textInput");
 const counter = document.getElementById("counter");
-
 const language = document.getElementById("language");
 const voiceSelect = document.getElementById("voiceSelect");
-
 const speed = document.getElementById("speed");
 
 const generateBtn = document.getElementById("generateBtn");
@@ -23,305 +16,299 @@ const stopBtn = document.getElementById("stopBtn");
 const themeBtn = document.getElementById("themeBtn");
 const progressBar = document.getElementById("progressBar");
 
+let audio = null;
+let audioUrl = null;
 let voices = [];
-let selectedVoice = null;
-let speechTimer = null;
 
 
 /* =========================
-   TEXT COUNTER
-   ========================= */
+   CHARACTER COUNTER
+========================= */
 
-function updateCounter() {
-
-  const length = textInput.value.length;
-
-  counter.textContent = `${length} / 5000`;
-}
-
-textInput.addEventListener(
-  "input",
-  updateCounter
-);
+textInput.addEventListener("input", () => {
+  counter.textContent =
+    `${textInput.value.length} / 5000`;
+});
 
 
 /* =========================
-   LOAD BROWSER VOICES
-   ========================= */
+   LOAD ELEVENLABS VOICES
+========================= */
 
-function loadVoices() {
+async function loadVoices() {
 
-  if (!("speechSynthesis" in window)) {
+  voiceSelect.innerHTML =
+    `<option value="">Loading voices...</option>`;
 
-    voiceSelect.innerHTML = `
-      <option>
-        Browser speech not supported
-      </option>
-    `;
+  try {
 
-    return;
-  }
+    const response =
+      await fetch("/api/voices");
 
-  voices = speechSynthesis.getVoices();
+    if (!response.ok) {
+      throw new Error("Voice API unavailable");
+    }
 
-  updateVoiceList();
-}
+    const data =
+      await response.json();
 
+    voices = data.voices || [];
 
-function updateVoiceList() {
+    voiceSelect.innerHTML = "";
 
-  const selectedLanguage =
-    language.value.toLowerCase();
+    if (!voices.length) {
 
-  voiceSelect.innerHTML = "";
+      voiceSelect.innerHTML =
+        `<option value="">
+          No voices available
+        </option>`;
 
-  const matchingVoices =
-    voices.filter(voice => {
+      return;
+    }
 
-      const voiceLang =
-        voice.lang.toLowerCase();
-
-      return (
-        voiceLang === selectedLanguage ||
-        voiceLang.startsWith(
-          selectedLanguage.split("-")[0]
-        )
-      );
-    });
-
-
-  const available =
-    matchingVoices.length
-      ? matchingVoices
-      : voices;
-
-
-  if (!available.length) {
-
-    voiceSelect.innerHTML = `
-      <option value="">
-        No voices available
-      </option>
-    `;
-
-    return;
-  }
-
-
-  available.forEach(
-    (voice, index) => {
+    voices.forEach((voice) => {
 
       const option =
         document.createElement("option");
 
-      option.value = voices.indexOf(voice);
+      option.value =
+        voice.voice_id;
 
       option.textContent =
-        `${voice.name} (${voice.lang})`;
+        voice.name;
 
       voiceSelect.appendChild(option);
 
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    /*
+      Fallback voice IDs.
+      Replace these with your own ElevenLabs
+      voice IDs when needed.
+    */
+
+    voiceSelect.innerHTML = `
+      <option value="">
+        Select an ElevenLabs voice
+      </option>
+    `;
+
+  }
+}
+
+
+/* =========================
+   GENERATE REAL AUDIO
+========================= */
+
+generateBtn.addEventListener(
+  "click",
+  async () => {
+
+    const text =
+      textInput.value.trim();
+
+    const voiceId =
+      voiceSelect.value;
+
+
+    if (!text) {
+
+      alert(
+        "Please enter some text first."
+      );
+
+      textInput.focus();
+
+      return;
     }
-  );
 
 
-  selectedVoice = available[0];
+    if (!voiceId) {
 
-  voiceSelect.value =
-    voices.indexOf(selectedVoice);
-}
+      alert(
+        "Please select a voice."
+      );
 
-
-/* Browser loads voices asynchronously */
-
-if ("speechSynthesis" in window) {
-
-  speechSynthesis.onvoiceschanged =
-    loadVoices;
-}
-
-loadVoices();
+      return;
+    }
 
 
-/* =========================
-   LANGUAGE CHANGE
-   ========================= */
+    generateBtn.disabled = true;
 
-language.addEventListener(
-  "change",
-  updateVoiceList
-);
+    generateBtn.innerHTML =
+      "⏳ Generating...";
 
-
-/* =========================
-   VOICE CHANGE
-   ========================= */
-
-voiceSelect.addEventListener(
-  "change",
-  () => {
-
-    const index =
-      Number(voiceSelect.value);
-
-    selectedVoice =
-      voices[index] || null;
-  }
-);
-
-
-/* =========================
-   SPEAK FUNCTION
-   ========================= */
-
-function speakText() {
-
-  const text =
-    textInput.value.trim();
-
-  if (!text) {
-
-    alert(
-      "Please enter some text first."
-    );
-
-    textInput.focus();
-
-    return;
-  }
-
-
-  if (!("speechSynthesis" in window)) {
-
-    alert(
-      "Your browser does not support text-to-speech."
-    );
-
-    return;
-  }
-
-
-  speechSynthesis.cancel();
-
-
-  const utterance =
-    new SpeechSynthesisUtterance(text);
-
-
-  if (selectedVoice) {
-
-    utterance.voice =
-      selectedVoice;
-  }
-
-
-  utterance.lang =
-    language.value;
-
-
-  utterance.rate =
-    Number(speed.value);
-
-
-  utterance.pitch =
-    1;
-
-
-  utterance.volume =
-    1;
-
-
-  utterance.onstart = () => {
 
     audioPanel.classList.remove(
       "hidden"
     );
 
     audioStatus.textContent =
-      "Speaking...";
-
-    playBtn.textContent =
-      "⏸";
-
-    startProgress();
-  };
+      "Generating AI voice...";
 
 
-  utterance.onend = () => {
+    try {
 
-    audioStatus.textContent =
-      "Completed";
+      const response =
+        await fetch(
+          "/api/generate",
+          {
+            method: "POST",
 
-    playBtn.textContent =
-      "▶";
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
 
-    stopProgress();
-  };
+            body: JSON.stringify({
 
+              text: text,
 
-  utterance.onerror = () => {
+              voiceId: voiceId,
 
-    audioStatus.textContent =
-      "Voice error";
+              modelId:
+                "eleven_multilingual_v2"
 
-    playBtn.textContent =
-      "▶";
-
-    stopProgress();
-  };
-
-
-  speechSynthesis.speak(
-    utterance
-  );
-}
+            })
+          }
+        );
 
 
-/* =========================
-   GENERATE BUTTON
-   ========================= */
+      if (!response.ok) {
 
-generateBtn.addEventListener(
-  "click",
-  () => {
+        let message =
+          "Voice generation failed.";
 
-    generateBtn.classList.add(
-      "loading"
-    );
+        try {
 
-    generateBtn.innerHTML =
-      "⏳ Generating...";
+          const error =
+            await response.json();
+
+          message =
+            error.error || message;
+
+        } catch {}
+
+        throw new Error(message);
+      }
 
 
-    setTimeout(() => {
+      const blob =
+        await response.blob();
 
-      speakText();
 
-      generateBtn.classList.remove(
-        "loading"
+      if (!blob.size) {
+
+        throw new Error(
+          "No audio was returned."
+        );
+      }
+
+
+      if (audioUrl) {
+        URL.revokeObjectURL(
+          audioUrl
+        );
+      }
+
+
+      audioUrl =
+        URL.createObjectURL(
+          blob
+        );
+
+
+      audio =
+        new Audio(audioUrl);
+
+
+      audioStatus.textContent =
+        "Voice generated successfully";
+
+
+      playBtn.textContent =
+        "▶";
+
+
+      audio.addEventListener(
+        "timeupdate",
+        updateProgress
       );
+
+
+      audio.addEventListener(
+        "ended",
+        () => {
+
+          playBtn.textContent =
+            "▶";
+
+          progressBar.style.width =
+            "0%";
+
+        }
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      audioStatus.textContent =
+        "Generation failed";
+
+      alert(error.message);
+
+    } finally {
+
+      generateBtn.disabled =
+        false;
 
       generateBtn.innerHTML =
         "🔊 Generate Voice";
 
-    }, 200);
+    }
+
   }
 );
 
 
 /* =========================
-   PLAY BUTTON
-   ========================= */
+   PLAY / PAUSE
+========================= */
 
 playBtn.addEventListener(
   "click",
   () => {
 
-    if (
-      speechSynthesis.speaking
-    ) {
+    if (!audio) {
 
-      speechSynthesis.pause();
+      alert(
+        "Generate a voice first."
+      );
+
+      return;
+    }
+
+
+    if (audio.paused) {
+
+      audio.play();
+
+      playBtn.textContent =
+        "⏸";
+
+      audioStatus.textContent =
+        "Playing...";
+
+    } else {
+
+      audio.pause();
 
       playBtn.textContent =
         "▶";
@@ -329,40 +316,25 @@ playBtn.addEventListener(
       audioStatus.textContent =
         "Paused";
 
-      return;
     }
 
-
-    if (
-      speechSynthesis.paused
-    ) {
-
-      speechSynthesis.resume();
-
-      playBtn.textContent =
-        "⏸";
-
-      audioStatus.textContent =
-        "Speaking...";
-
-      return;
-    }
-
-
-    speakText();
   }
 );
 
 
 /* =========================
    STOP
-   ========================= */
+========================= */
 
 stopBtn.addEventListener(
   "click",
   () => {
 
-    speechSynthesis.cancel();
+    if (!audio) return;
+
+    audio.pause();
+
+    audio.currentTime = 0;
 
     playBtn.textContent =
       "▶";
@@ -370,87 +342,125 @@ stopBtn.addEventListener(
     audioStatus.textContent =
       "Stopped";
 
-    stopProgress();
+    progressBar.style.width =
+      "0%";
   }
 );
 
 
 /* =========================
+   PROGRESS
+========================= */
+
+function updateProgress() {
+
+  if (!audio || !audio.duration)
+    return;
+
+  const percent =
+    (audio.currentTime /
+      audio.duration) * 100;
+
+  progressBar.style.width =
+    `${percent}%`;
+}
+
+
+/* =========================
+   DOWNLOAD MP3
+========================= */
+
+const downloadBtn =
+  document.getElementById(
+    "downloadBtn"
+  );
+
+
+if (downloadBtn) {
+
+  downloadBtn.addEventListener(
+    "click",
+    () => {
+
+      if (!audioUrl) {
+
+        alert(
+          "Generate a voice first."
+        );
+
+        return;
+      }
+
+
+      const link =
+        document.createElement("a");
+
+      link.href =
+        audioUrl;
+
+      link.download =
+        "voiceforge-ai.mp3";
+
+      document.body.appendChild(
+        link
+      );
+
+      link.click();
+
+      link.remove();
+
+    }
+  );
+}
+
+
+/* =========================
    CLEAR
-   ========================= */
+========================= */
 
 clearBtn.addEventListener(
   "click",
   () => {
 
-    speechSynthesis.cancel();
-
     textInput.value = "";
 
-    updateCounter();
+    counter.textContent =
+      "0 / 5000";
+
+    if (audio) {
+
+      audio.pause();
+
+      audio.currentTime = 0;
+
+    }
+
+    if (audioUrl) {
+
+      URL.revokeObjectURL(
+        audioUrl
+      );
+
+      audioUrl = null;
+
+    }
+
+    audio = null;
 
     audioPanel.classList.add(
       "hidden"
     );
 
-    playBtn.textContent =
-      "▶";
+    progressBar.style.width =
+      "0%";
 
-    stopProgress();
   }
 );
 
 
 /* =========================
-   PROGRESS ANIMATION
-   ========================= */
-
-function startProgress() {
-
-  progressBar.style.width =
-    "0%";
-
-  clearInterval(
-    speechTimer
-  );
-
-  let progress = 0;
-
-  speechTimer =
-    setInterval(() => {
-
-      progress += 1;
-
-      if (progress >= 100) {
-
-        progress = 100;
-
-        clearInterval(
-          speechTimer
-        );
-      }
-
-      progressBar.style.width =
-        `${progress}%`;
-
-    }, 100);
-}
-
-
-function stopProgress() {
-
-  clearInterval(
-    speechTimer
-  );
-
-  progressBar.style.width =
-    "0%";
-}
-
-
-/* =========================
    DARK / LIGHT MODE
-   ========================= */
+========================= */
 
 themeBtn.addEventListener(
   "click",
@@ -460,30 +470,30 @@ themeBtn.addEventListener(
       "light"
     );
 
-    const light =
+    const isLight =
       document.body.classList.contains(
         "light"
       );
 
     themeBtn.textContent =
-      light ? "🌙" : "☀️";
+      isLight ? "🌙" : "☀️";
 
     localStorage.setItem(
       "voiceforge-theme",
-      light ? "light" : "dark"
+      isLight
+        ? "light"
+        : "dark"
     );
+
   }
 );
 
 
-/* Restore theme */
-
-const savedTheme =
+if (
   localStorage.getItem(
     "voiceforge-theme"
-  );
-
-if (savedTheme === "light") {
+  ) === "light"
+) {
 
   document.body.classList.add(
     "light"
@@ -495,11 +505,7 @@ if (savedTheme === "light") {
 
 
 /* =========================
-   INITIALIZE
-   ========================= */
+   START
+========================= */
 
-updateCounter();
-
-console.log(
-  "VoiceForge AI loaded successfully."
-);
+loadVoices();
