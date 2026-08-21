@@ -19,12 +19,6 @@
   <meta property="og:url" content="https://www.voiceforge.ai/">
   <meta property="og:image" content="https://www.voiceforge.ai/og-image.jpg">
 
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="VoiceForge AI — Free AI Voice Generator">
-  <meta name="twitter:description" content="Turn your text into natural AI voices in multiple languages with custom pitch and speed controls.">
-  <meta name="twitter:image" content="https://www.voiceforge.ai/og-image.jpg">
-
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
@@ -65,53 +59,36 @@
     <button id="themeBtn" class="icon-btn" aria-label="Toggle Theme">☀️</button>
   </header>
 
-
   <main>
 
+    <!-- Hero Section -->
     <section class="hero">
       <div class="badge">✦ AI VOICE GENERATOR</div>
-
-      <h1>Turn your text into<br>
-        <span>natural AI voice.</span>
-      </h1>
-
-      <p>
-        Create high-quality voiceovers for videos, stories,
-        education and content.
-      </p>
+      <h1>Turn your text into<br><span>natural AI voice.</span></h1>
+      <p>Create high-quality voiceovers for videos, stories, education and content.</p>
     </section>
 
-
+    <!-- Generator Section (Center Aligned Panel) -->
     <section id="generator" class="generator">
-
       <div class="panel">
 
         <div class="panel-top">
           <h2>Text to Speech</h2>
-
           <span id="counter">0 / 5000</span>
         </div>
 
-        <!-- Sample Text Quick Action Buttons -->
-        <div class="sample-actions" style="margin-bottom: 12px;">
+        <div class="sample-actions">
           <small>Quick Templates:</small>
           <button type="button" class="chip-btn" onclick="insertSample('Welcome to our AI Text to Speech platform!')">Greeting</button>
           <button type="button" class="chip-btn" onclick="insertSample('Once upon a time, in a far-away realm of innovation...')">Story</button>
           <button type="button" class="chip-btn" onclick="insertSample('Welcome back to another episode of our podcast.')">Intro</button>
         </div>
 
-        <textarea
-          id="textInput"
-          maxlength="5000"
-          placeholder="Type or paste your text here..."
-        ></textarea>
-
+        <textarea id="textInput" maxlength="5000" placeholder="Type or paste your text here..."></textarea>
 
         <div class="controls">
-
           <div class="control">
             <label for="language">Language</label>
-
             <select id="language">
               <option value="hi">Hindi</option>
               <option value="en">English</option>
@@ -124,19 +101,15 @@
             </select>
           </div>
 
-
           <div class="control">
             <label for="voiceSelect">Voice</label>
-
             <select id="voiceSelect">
               <option value="">Loading voices...</option>
             </select>
           </div>
 
-
           <div class="control">
             <label for="speed">Speed</label>
-
             <select id="speed">
               <option value="0.75">0.75x</option>
               <option value="1" selected>1x</option>
@@ -146,36 +119,23 @@
             </select>
           </div>
 
-          <!-- Pitch Control Slider -->
           <div class="control">
             <label for="pitch">Pitch: <span id="pitchValue">1</span></label>
             <input type="range" id="pitch" min="0.5" max="1.5" step="0.1" value="1">
           </div>
-
         </div>
 
-
         <div class="actions">
-
-          <button id="clearBtn" class="secondary">
-            Clear
-          </button>
-
-          <button id="generateBtn" class="generate">
-            <span>🔊</span>
-            Generate Voice
-          </button>
-
+          <button id="clearBtn" class="secondary">Clear</button>
+          <button id="generateBtn" class="generate"><span>🔊</span> Generate Voice</button>
         </div>
 
       </div>
 
-
+      <!-- Audio Controls Panel -->
       <div id="audioPanel" class="audio-panel hidden">
-
         <div class="audio-info">
           <div class="audio-icon">🔊</div>
-
           <div>
             <strong>Generated Voice</strong>
             <small id="audioStatus">Ready</small>
@@ -183,42 +143,28 @@
         </div>
 
         <div class="audio-controls">
-
-          <button id="playBtn" class="play-btn">
-            ▶
-          </button>
-
+          <button id="playBtn" class="play-btn">▶</button>
           <div class="progress">
             <div id="progressBar"></div>
           </div>
-
-          <button id="downloadBtn" class="download-btn">
-            ⬇ Download
-          </button>
-
+          <button id="downloadBtn" class="download-btn">⬇ Download</button>
         </div>
-
       </div>
-
     </section>
 
-    <!-- NEW FEATURE: About Section -->
+    <!-- About Section -->
     <section id="about" class="about-section">
       <div class="section-title">
         <span>WHO WE ARE</span>
         <h2>About VoiceForge AI</h2>
       </div>
       <div class="about-content">
-        <p>
-          VoiceForge AI is a state-of-the-art Text-to-Speech (TTS) engine designed to transform written scripts into natural, human-like voiceovers. Built for content creators, educators, podcasters, and developers, our platform bridges the gap between written content and expressive audio production.
-        </p>
-        <p>
-          With multi-language support, custom pitch modulation, and fine-tuned pace adjustments, VoiceForge AI empowers users to craft localized studio-grade audio in seconds without complex studio equipment.
-        </p>
+        <p>VoiceForge AI is a state-of-the-art Text-to-Speech (TTS) engine designed to transform written scripts into natural, human-like voiceovers. Built for content creators, educators, podcasters, and developers, our platform bridges the gap between written content and expressive audio production.</p>
+        <p>With multi-language support, custom pitch modulation, and fine-tuned pace adjustments, VoiceForge AI empowers users to craft localized studio-grade audio in seconds without complex studio equipment.</p>
       </div>
     </section>
 
-    <!-- NEW FEATURE: Detailed Features Grid -->
+    <!-- Details Grid -->
     <section id="details" class="details-section">
       <div class="section-title">
         <span>POWERFUL CAPABILITIES</span>
@@ -252,30 +198,25 @@
       </div>
     </section>
 
-    <!-- Audio Generation History List -->
+    <!-- Generation History Section -->
     <section id="history" class="history-section">
-
       <div class="section-title">
         <span>GENERATION LOGS</span>
         <h2>Recent Audio History</h2>
       </div>
-
       <div id="historyList" class="history-list">
         <p class="empty-msg">No generated audio yet.</p>
       </div>
-
     </section>
 
-
+    <!-- Voices Section -->
     <section id="voices" class="voices-section">
-
       <div class="section-title">
         <span>VOICE LIBRARY</span>
         <h2>Choose your style</h2>
       </div>
 
       <div class="voice-grid">
-
         <div class="voice-card">
           <div class="voice-avatar">H</div>
           <div>
@@ -283,7 +224,6 @@
             <p>Indian • Natural</p>
           </div>
         </div>
-
         <div class="voice-card">
           <div class="voice-avatar">E</div>
           <div>
@@ -291,7 +231,6 @@
             <p>English • Natural</p>
           </div>
         </div>
-
         <div class="voice-card">
           <div class="voice-avatar">N</div>
           <div>
@@ -299,7 +238,6 @@
             <p>Professional • Clear</p>
           </div>
         </div>
-
         <div class="voice-card">
           <div class="voice-avatar">S</div>
           <div>
@@ -307,12 +245,10 @@
             <p>Warm • Narration</p>
           </div>
         </div>
-
       </div>
-
     </section>
 
-    <!-- NEW FEATURE: FAQ Section -->
+    <!-- FAQ Section -->
     <section id="faq" class="faq-section">
       <div class="section-title">
         <span>QUESTIONS & ANSWERS</span>
@@ -324,12 +260,10 @@
           <summary>Is VoiceForge AI free to use?</summary>
           <p>Yes, VoiceForge AI offers free instant text-to-speech generation for personal and commercial projects.</p>
         </details>
-
         <details class="faq-item">
           <summary>Which audio formats are supported for download?</summary>
           <p>All generated audio files can be downloaded directly in standard high-quality MP3/WAV audio formats.</p>
         </details>
-
         <details class="faq-item">
           <summary>Can I use the generated voiceovers on YouTube or Podcasts?</summary>
           <p>Absolutely. VoiceForge AI speech outputs are royalty-free and ready for YouTube, social media videos, audiobooks, and e-learning modules.</p>
@@ -337,31 +271,26 @@
       </div>
     </section>
 
-
+    <!-- Features Section -->
     <section id="features" class="features">
-
       <div>
         <span>⚡</span>
         <h3>Fast Generation</h3>
         <p>Generate voice quickly from your text.</p>
       </div>
-
       <div>
         <span>🌎</span>
         <h3>Multiple Languages</h3>
         <p>Support for Indian and international languages.</p>
       </div>
-
       <div>
         <span>📱</span>
         <h3>Mobile Friendly</h3>
         <p>Works on phones, tablets and computers.</p>
       </div>
-
     </section>
 
   </main>
-
 
   <footer>
     <p>© 2026 VoiceForge AI. All rights reserved.</p>
@@ -378,6 +307,5 @@
     }
   </script>
   <script src="script.js"></script>
-
 </body>
 </html>
