@@ -1199,4 +1199,91 @@ body.light .icon-btn {
     font-size: 30px;
   }
 }
+/* =========================
+   LOBO LOGO
+   ========================= */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.lobo-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 12px;
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  box-shadow:
+    0 0 20px rgba(124,92,255,0.25);
+
+  transition: 0.25s ease;
+}
+
+.lobo-logo:hover {
+  transform: scale(1.06);
+
+  box-shadow:
+    0 0 28px rgba(124,92,255,0.45);
+}
+
+
+/* FOOTER LOGO */
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.footer-lobo-logo {
+  width: 40px;
+  height: 40px;
+
+  object-fit: cover;
+  border-radius: 10px;
+
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.footer-logo b {
+  color: var(--primary);
+}
+
+
+/* MOBILE LOGO */
+
+@media (max-width: 560px) {
+
+  .lobo-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .logo {
+    gap: 7px;
+  }
+
+  .logo span {
+    font-size: 18px;
+  }
+
+  .footer-lobo-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+}
+
 
