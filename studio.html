@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Studio — VoiceAI</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        <a href="index.html">
+            <span>∿</span> VoiceAI
+        </a>
+    </div>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="pricing.html" class="nav-button">Get Started</a>
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="section studio-section">
+
+    <div class="section-heading">
+
+        <span>AI STUDIO</span>
+
+        <h1>
+            Your complete
+            <br>
+            audio workspace.
+        </h1>
+
+        <p>
+            Organize voice, music, effects and captions
+            in one simple studio.
+        </p>
+
+    </div>
+
+
+    <div class="studio-layout">
+
+        <!-- SIDEBAR -->
+
+        <aside class="studio-sidebar">
+
+            <button
+                class="studio-tab active"
+                data-track="voice"
+            >
+                🎙️ Voice
+            </button>
+
+            <button
+                class="studio-tab"
+                data-track="music"
+            >
+                🎵 Music
+            </button>
+
+            <button
+                class="studio-tab"
+                data-track="effects"
+            >
+                🔊 Effects
+            </button>
+
+            <button
+                class="studio-tab"
+                data-track="captions"
+            >
+                📝 Captions
+            </button>
+
+            <button
+                class="studio-tab"
+                data-track="dubbing"
+            >
+                🌍 Dubbing
+            </button>
+
+        </aside>
+
+
+        <!-- EDITOR -->
+
+        <div class="studio-editor">
+
+            <div class="editor-toolbar">
+
+                <strong>
+                    My Audio Project
+                </strong>
+
+                <div>
+
+                    <button
+                        id="newProject"
+                    >
+                        New Project
+                    </button>
+
+                    <button
+                        id="saveProject"
+                    >
+                        Save
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PREVIEW -->
+
+            <div class="editor-preview">
+
+                <div class="preview-icon">
+                    ▶
+                </div>
+
+                <h3>
+                    Preview Area
+                </h3>
+
+                <p id="studioStatus">
+                    Select a track to start editing.
+                </p>
+
+                <button
+                    class="primary-btn"
+                    id="playPreview"
+                >
+                    ▶ Play Preview
+                </button>
+
+            </div>
+
+
+            <!-- TIMELINE -->
+
+            <div class="timeline">
+
+                <div class="timeline-header">
+
+                    <span>
+                        Timeline
+                    </span>
+
+                    <span id="currentTrack">
+                        Voice Track
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="timeline-track active-track"
+                    data-track="voice"
+                >
+
+                    <span>
+                        🎙️ Voice
+                    </span>
+
+                    <div class="track-bar">
+                        Voice Audio
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="timeline-track"
+                    data-track="music"
+                >
+
+                    <span>
+                        🎵 Music
+                    </span>
+
+                    <div class="track-bar">
+                        Music
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="timeline-track"
+                    data-track="effects"
+                >
+
+                    <span>
+                        🔊 Effects
+                    </span>
+
+                    <div class="track-bar">
+                        Sound Effects
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="timeline-track"
+                    data-track="captions"
+                >
+
+                    <span>
+                        📝 Captions
+                    </span>
+
+                    <div class="track-bar">
+                        Captions
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TEXT EDITOR -->
+
+            <div class="studio-input">
+
+                <label for="studioText">
+                    Project text
+                </label>
+
+                <textarea
+                    id="studioText"
+                    placeholder="Write your script or project notes..."
+                ></textarea>
+
+                <div class="studio-actions">
+
+                    <button
+                        class="primary-btn"
+                        id="generateStudio"
+                    >
+                        Generate Voice
+                    </button>
+
+                    <button
+                        id="clearStudio"
+                    >
+                        Clear
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="section">
+
+    <div class="section-heading">
+
+        <span>WORKSPACE</span>
+
+        <h2>
+            Everything in one place.
+        </h2>
+
+    </div>
+
+
+    <div class="tools-grid">
+
+        <div class="tool-card">
+
+            <div class="tool-icon">
+                🎙️
+            </div>
+
+            <h3>
+                Voice Track
+            </h3>
+
+            <p>
+                Add generated voice recordings
+                to your project.
+            </p>
+
+        </div>
+
+
+        <div class="tool-card">
+
+            <div class="tool-icon">
+                🎵
+            </div>
+
+            <h3>
+                Music Track
+            </h3>
+
+            <p>
+                Keep background music
+                organized.
+            </p>
+
+        </div>
+
+
+        <div class="tool-card">
+
+            <div class="tool-icon">
+                🔊
+            </div>
+
+            <h3>
+                Sound Effects
+            </h3>
+
+            <p>
+                Add effects to your
+                audio project.
+            </p>
+
+        </div>
+
+
+        <div class="tool-card">
+
+            <div class="tool-icon">
+                📝
+            </div>
+
+            <h3>
+                Captions
+            </h3>
+
+            <p>
+                Prepare text and captions
+                for your content.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        <h2>∿ VoiceAI</h2>
+
+        <p>
+            AI voice and audio creation platform.
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <h4>Platform</h4>
+
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+
+    </div>
+
+
+    <div>
+
+        <h4>Company</h4>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+
+    <div>
+
+        <h4>Plans</h4>
+
+        <a href="pricing.html">Free</a>
+        <a href="pricing.html">Premium</a>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const tabs =
+        document.querySelectorAll(".studio-tab");
+
+    const tracks =
+        document.querySelectorAll(".timeline-track");
+
+    const status =
+        document.getElementById("studioStatus");
+
+    const currentTrack =
+        document.getElementById("currentTrack");
+
+
+    tabs.forEach(function (tab) {
+
+        tab.addEventListener("click", function () {
+
+            const selected =
+                tab.dataset.track;
+
+            tabs.forEach(function (item) {
+                item.classList.remove("active");
+            });
+
+            tab.classList.add("active");
+
+
+            tracks.forEach(function (track) {
+
+                track.classList.remove(
+                    "active-track"
+                );
+
+                if (
+                    track.dataset.track ===
+                    selected
+                ) {
+                    track.classList.add(
+                        "active-track"
+                    );
+                }
+
+            });
+
+
+            const name =
+                selected.charAt(0).toUpperCase() +
+                selected.slice(1);
+
+            currentTrack.textContent =
+                name + " Track";
+
+            status.textContent =
+                name +
+                " track selected.";
+
+        });
+
+    });
+
+
+    const playButton =
+        document.getElementById("playPreview");
+
+
+    playButton.addEventListener(
+        "click",
+        function () {
+
+            const text =
+                document.getElementById(
+                    "studioText"
+                ).value.trim();
+
+            if (!text) {
+
+                status.textContent =
+                    "Write some text first.";
+
+                return;
+
+            }
+
+
+            if (
+                "speechSynthesis" in window
+            ) {
+
+                speechSynthesis.cancel();
+
+                const speech =
+                    new SpeechSynthesisUtterance(
+                        text
+                    );
+
+                speech.rate = 1;
+                speech.pitch = 1;
+
+                speechSynthesis.speak(
+                    speech
+                );
+
+                status.textContent =
+                    "Playing voice preview...";
+
+            } else {
+
+                status.textContent =
+                    "Speech preview is not supported.";
+
+            }
+
+        }
+    );
+
+
+    document.getElementById(
+        "generateStudio"
+    ).addEventListener(
+        "click",
+        function () {
+
+            const text =
+                document.getElementById(
+                    "studioText"
+                ).value.trim();
+
+            if (!text) {
+
+                alert(
+                    "Please write your project text."
+                );
+
+                return;
+
+            }
+
+            status.textContent =
+                "Voice generation request ready.";
+
+        }
+    );
+
+
+    document.getElementById(
+        "clearStudio"
+    ).addEventListener(
+        "click",
+        function () {
+
+            document.getElementById(
+                "studioText"
+            ).value = "";
+
+            status.textContent =
+                "Project text cleared.";
+
+        }
+    );
+
+
+    document.getElementById(
+        "newProject"
+    ).addEventListener(
+        "click",
+        function () {
+
+            document.getElementById(
+                "studioText"
+            ).value = "";
+
+            status.textContent =
+                "New project created.";
+
+        }
+    );
+
+
+    document.getElementById(
+        "saveProject"
+    ).addEventListener(
+        "click",
+        function () {
+
+            const text =
+                document.getElementById(
+                    "studioText"
+                ).value;
+
+            localStorage.setItem(
+                "voiceAIStudioProject",
+                text
+            );
+
+            status.textContent =
+                "Project saved on this device.";
+
+        }
+    );
+
+});
+
+</script>
+
+</body>
+</html>
