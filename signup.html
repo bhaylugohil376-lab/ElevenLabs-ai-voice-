@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account — VoiceAI</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        <a href="index.html">
+            <span>∿</span> VoiceAI
+        </a>
+    </div>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="pricing.html" class="nav-button">Get Started</a>
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="login-section">
+
+    <div class="login-card">
+
+        <span>CREATE ACCOUNT</span>
+
+        <h1>
+            Start creating.
+        </h1>
+
+        <p class="login-subtitle">
+            Create your free VoiceAI account today.
+        </p>
+
+
+        <!-- GOOGLE SIGNUP -->
+
+        <button
+            type="button"
+            class="google-login-btn"
+            id="googleSignup"
+        >
+
+            <span class="google-icon">
+                G
+            </span>
+
+            Continue with Google
+
+        </button>
+
+
+        <div class="login-divider">
+            <span>OR</span>
+        </div>
+
+
+        <!-- SIGNUP FORM -->
+
+        <form id="signupForm">
+
+            <label for="name">
+                Full name
+            </label>
+
+            <input
+                id="name"
+                type="text"
+                placeholder="Your name"
+                autocomplete="name"
+                required
+            >
+
+
+            <label for="email">
+                Email address
+            </label>
+
+            <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+            >
+
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="Create a password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+            >
+
+
+            <label for="confirmPassword">
+                Confirm password
+            </label>
+
+            <input
+                id="confirmPassword"
+                type="password"
+                placeholder="Repeat your password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+            >
+
+
+            <label class="remember-option">
+
+                <input
+                    type="checkbox"
+                    id="terms"
+                    required
+                >
+
+                <span>
+                    I agree to the Terms & Privacy Policy
+                </span>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="primary-btn login-submit"
+            >
+                Create Free Account
+            </button>
+
+        </form>
+
+
+        <p class="create-account">
+
+            Already have an account?
+
+            <a href="login.html">
+                Login
+            </a>
+
+        </p>
+
+
+        <p class="login-note">
+            Free plan includes 5 AI uses per day.
+        </p>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        <h2>∿ VoiceAI</h2>
+
+        <p>
+            AI voice and audio creation platform.
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <h4>Platform</h4>
+
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+
+    </div>
+
+
+    <div>
+
+        <h4>Company</h4>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+
+    <div>
+
+        <h4>Plans</h4>
+
+        <a href="pricing.html">Free</a>
+        <a href="pricing.html">Premium</a>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        /* =========================
+           GOOGLE SIGNUP
+        ========================= */
+
+        const googleSignup =
+            document.getElementById(
+                "googleSignup"
+            );
+
+        if (googleSignup) {
+
+            googleSignup.addEventListener(
+                "click",
+                function () {
+
+                    alert(
+                        "Google Signup is ready for OAuth integration."
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           SIGNUP
+        ========================= */
+
+        const signupForm =
+            document.getElementById(
+                "signupForm"
+            );
+
+
+        if (signupForm) {
+
+            signupForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    const name =
+                        document.getElementById(
+                            "name"
+                        ).value.trim();
+
+
+                    const email =
+                        document.getElementById(
+                            "email"
+                        ).value.trim();
+
+
+                    const password =
+                        document.getElementById(
+                            "password"
+                        ).value;
+
+
+                    const confirmPassword =
+                        document.getElementById(
+                            "confirmPassword"
+                        ).value;
+
+
+                    if (
+                        password !==
+                        confirmPassword
+                    ) {
+
+                        alert(
+                            "Passwords do not match."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (password.length < 8) {
+
+                        alert(
+                            "Password must contain at least 8 characters."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (!name || !email) {
+
+                        alert(
+                            "Please complete all required fields."
+                        );
+
+                        return;
+
+                    }
+
+
+                    alert(
+                        "Account creation UI is working. Connect the authentication backend for real account creation."
+                    );
+
+                }
+            );
+
+        }
+
+    }
+
+);
+
+</script>
+
+</body>
+</html>
