@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Tools — VoiceAI</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        <a href="index.html">
+            <span>∿</span> VoiceAI
+        </a>
+    </div>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="pricing.html" class="nav-button">
+            Get Started
+        </a>
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="section">
+
+    <div class="section-heading">
+
+        <span>AI CREATOR SUITE</span>
+
+        <h1>
+            Powerful AI tools
+            <br>
+            in one workspace.
+        </h1>
+
+        <p>
+            Create, edit and transform audio with VoiceAI.
+            Free users get 5 uses per day across the platform.
+        </p>
+
+    </div>
+
+
+    <div class="tools-grid">
+
+        <a href="#tts" class="tool-card">
+            <div class="tool-icon">🎙️</div>
+            <h3>Text to Speech</h3>
+            <p>
+                Turn your text into natural AI speech.
+            </p>
+        </a>
+
+        <a href="voices.html" class="tool-card">
+            <div class="tool-icon">⭐</div>
+            <h3>Voice Library</h3>
+            <p>
+                Explore professional AI voices.
+            </p>
+        </a>
+
+        <a href="#clone" class="tool-card">
+            <div class="tool-icon">👤</div>
+            <h3>Voice Clone</h3>
+            <p>
+                Create a custom voice experience.
+            </p>
+        </a>
+
+        <a href="#changer" class="tool-card">
+            <div class="tool-icon">🔄</div>
+            <h3>Voice Changer</h3>
+            <p>
+                Transform an existing recording.
+            </p>
+        </a>
+
+        <a href="studio.html" class="tool-card">
+            <div class="tool-icon">✏️</div>
+            <h3>AI Studio</h3>
+            <p>
+                Edit audio projects in one workspace.
+            </p>
+        </a>
+
+        <a href="#dubbing" class="tool-card">
+            <div class="tool-icon">🌍</div>
+            <h3>Dubbing</h3>
+            <p>
+                Create multilingual content.
+            </p>
+        </a>
+
+        <a href="#music" class="tool-card">
+            <div class="tool-icon">🎵</div>
+            <h3>AI Music & SFX</h3>
+            <p>
+                Generate music and sound effects.
+            </p>
+        </a>
+
+        <a href="#stt" class="tool-card">
+            <div class="tool-icon">📝</div>
+            <h3>Speech to Text</h3>
+            <p>
+                Convert speech into text and captions.
+            </p>
+        </a>
+
+        <a href="#agents" class="tool-card">
+            <div class="tool-icon">🤖</div>
+            <h3>AI Voice Agents</h3>
+            <p>
+                Build conversational voice experiences.
+            </p>
+        </a>
+
+        <a href="pricing.html" class="tool-card">
+            <div class="tool-icon">💎</div>
+            <h3>Premium AI</h3>
+            <p>
+                Unlock premium voices and unlimited usage.
+            </p>
+        </a>
+
+    </div>
+
+</section>
+
+
+<section id="tts" class="feature-section">
+
+    <div class="feature-text">
+
+        <span>01 — TEXT TO SPEECH</span>
+
+        <h2>
+            Turn text into
+            realistic speech.
+        </h2>
+
+        <p>
+            Write your script, select a voice and generate
+            natural-sounding audio.
+        </p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <textarea
+            id="ttsText"
+            placeholder="Write your script..."
+        ></textarea>
+
+        <div class="feature-controls">
+
+            <select id="ttsVoice">
+                <option>Professional Voice</option>
+                <option>News Reader</option>
+                <option>Warm Narrator</option>
+                <option>Energetic Voice</option>
+            </select>
+
+            <button
+                class="primary-btn"
+                id="ttsGenerate"
+            >
+                Generate Voice
+            </button>
+
+        </div>
+
+        <p
+            id="ttsStatus"
+            style="margin-top:15px;color:#8f9bb6;"
+        ></p>
+
+    </div>
+
+</section>
+
+
+<section id="clone" class="feature-section">
+
+    <div class="feature-text">
+
+        <span>02 — VOICE CLONE</span>
+
+        <h2>
+            Build your own
+            voice experience.
+        </h2>
+
+        <p>
+            Upload a voice sample and prepare it for
+            your AI voice workflow.
+        </p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <input
+            type="file"
+            id="cloneFile"
+            accept="audio/*"
+        >
+
+        <p
+            id="cloneStatus"
+            style="margin-top:15px;color:#8f9bb6;"
+        >
+            No audio selected.
+        </p>
+
+        <button
+            class="primary-btn"
+            id="cloneButton"
+            style="margin-top:15px;"
+        >
+            Create Voice
+        </button>
+
+    </div>
+
+</section>
+
+
+<section id="dubbing" class="feature-section">
+
+    <div class="feature-text">
+
+        <span>03 — DUBBING</span>
+
+        <h2>
+            Make content
+            multilingual.
+        </h2>
+
+        <p>
+            Select your source and target language for
+            your dubbing workflow.
+        </p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <input type="file" accept="audio/*,video/*">
+
+        <div class="language-row">
+
+            <select>
+                <option>English</option>
+                <option>Hindi</option>
+                <option>Gujarati</option>
+            </select>
+
+            <span>→</span>
+
+            <select>
+                <option>Hindi</option>
+                <option>English</option>
+                <option>Gujarati</option>
+            </select>
+
+        </div>
+
+        <button
+            class="primary-btn"
+            id="dubbingButton"
+        >
+            Start Dubbing
+        </button>
+
+    </div>
+
+</section>
+
+
+<section id="music" class="feature-section">
+
+    <div class="feature-text">
+
+        <span>04 — MUSIC & SOUND EFFECTS</span>
+
+        <h2>
+            Add sound to
+            your ideas.
+        </h2>
+
+        <p>
+            Describe the sound you want to create.
+        </p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <textarea
+            placeholder="Describe your music or sound effect..."
+        ></textarea>
+
+        <button
+            class="primary-btn"
+            style="margin-top:15px;"
+        >
+            Generate Audio
+        </button>
+
+    </div>
+
+</section>
+
+
+<section id="stt" class="feature-section">
+
+    <div class="feature-text">
+
+        <span>05 — SPEECH TO TEXT</span>
+
+        <h2>
+            Turn speech
+            into text.
+        </h2>
+
+        <p>
+            Create transcripts and captions from audio.
+        </p>
+
+    </div>
+
+    <div class="feature-card">
+
+        <button
+            class="primary-btn"
+            id="recordButton"
+        >
+            🎙 Start Recording
+        </button>
+
+        <textarea
+            style="margin-top:15px;"
+            placeholder="Transcript will appear here..."
+        ></textarea>
+
+    </div>
+
+</section>
+
+
+<section id="agents" class="feature-section">
+
+    <div class="feature-text">
+
+        <span>06 — AI VOICE AGENTS</span>
+
+        <h2>
+            Build conversational AI.
+        </h2>
+
+        <p>
+            Create a simple conversational AI experience.
+        </p>
+
+    </div>
+
+    <div class="agent-card">
+
+        <div class="agent-message">
+            🤖 Hello! How can I help you today?
+        </div>
+
+        <div class="agent-input">
+
+            <input
+                id="agentInput"
+                type="text"
+                placeholder="Type a message..."
+            >
+
+            <button
+                class="primary-btn"
+                id="agentSend"
+            >
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        <h2>∿ VoiceAI</h2>
+
+        <p>
+            AI voice and audio creation platform.
+        </p>
+
+    </div>
+
+    <div>
+        <h4>Platform</h4>
+
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+    </div>
+
+    <div>
+        <h4>Company</h4>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <div>
+        <h4>Plans</h4>
+
+        <a href="pricing.html">Free</a>
+        <a href="pricing.html">Premium</a>
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
