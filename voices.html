@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Voice Library — VoiceAI</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        <a href="index.html">
+            <span>∿</span> VoiceAI
+        </a>
+    </div>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="pricing.html" class="nav-button">Get Started</a>
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="section voices-page">
+
+    <div class="section-heading">
+
+        <span>AI VOICE LIBRARY</span>
+
+        <h1>
+            Find the perfect
+            <br>
+            voice for your project.
+        </h1>
+
+        <p>
+            Explore professional voices for narration,
+            advertisements, videos, podcasts and more.
+        </p>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="voice-search">
+
+        <input
+            type="search"
+            id="voiceSearch"
+            placeholder="Search voices..."
+            autocomplete="off"
+        >
+
+        <select id="voiceCategory">
+
+            <option value="all">
+                All Voices
+            </option>
+
+            <option value="professional">
+                Professional
+            </option>
+
+            <option value="news">
+                News
+            </option>
+
+            <option value="advertisement">
+                Advertisement
+            </option>
+
+            <option value="narration">
+                Narration
+            </option>
+
+            <option value="energetic">
+                Energetic
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- VOICE PREVIEW TEXT -->
+
+    <div class="voice-preview-box">
+
+        <label for="previewText">
+            Preview text
+        </label>
+
+        <textarea
+            id="previewText"
+            rows="3"
+        >Welcome to VoiceAI. Create natural sounding audio for your next project.</textarea>
+
+    </div>
+
+
+    <!-- VOICE GRID -->
+
+    <div class="voice-grid" id="voiceGrid">
+
+
+        <!-- DAVID -->
+
+        <article
+            class="voice-card"
+            data-name="David Castlemore"
+            data-category="news professional narration"
+        >
+
+            <div class="voice-avatar">
+                D
+            </div>
+
+            <div class="voice-card-content">
+
+                <span class="voice-badge">
+                    PROFESSIONAL
+                </span>
+
+                <h3>
+                    David Castlemore
+                </h3>
+
+                <p>
+                    Newsreader · Documentary
+                </p>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-voice"
+                        data-voice="David Castlemore"
+                    >
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="select-voice"
+                        data-voice="David Castlemore"
+                    >
+                        Use Voice
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- BRYAN -->
+
+        <article
+            class="voice-card"
+            data-name="Bryan"
+            data-category="professional advertisement narration"
+        >
+
+            <div class="voice-avatar">
+                B
+            </div>
+
+            <div class="voice-card-content">
+
+                <span class="voice-badge">
+                    PRO
+                </span>
+
+                <h3>
+                    Bryan
+                </h3>
+
+                <p>
+                    Polished · Measured · Engaging
+                </p>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-voice"
+                        data-voice="Bryan"
+                    >
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="select-voice"
+                        data-voice="Bryan"
+                    >
+                        Use Voice
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- JUNIPER -->
+
+        <article
+            class="voice-card"
+            data-name="Juniper"
+            data-category="professional narration"
+        >
+
+            <div class="voice-avatar">
+                J
+            </div>
+
+            <div class="voice-card-content">
+
+                <span class="voice-badge">
+                    PRO
+                </span>
+
+                <h3>
+                    Juniper
+                </h3>
+
+                <p>
+                    Grounded · Professional · Conversational
+                </p>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-voice"
+                        data-voice="Juniper"
+                    >
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="select-voice"
+                        data-voice="Juniper"
+                    >
+                        Use Voice
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- HALE -->
+
+        <article
+            class="voice-card"
+            data-name="Hale"
+            data-category="advertisement professional"
+        >
+
+            <div class="voice-avatar">
+                H
+            </div>
+
+            <div class="voice-card-content">
+
+                <span class="voice-badge">
+                    PREMIUM
+                </span>
+
+                <h3>
+                    Hale
+                </h3>
+
+                <p>
+                    Smooth · Confident · Persuasive
+                </p>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-voice"
+                        data-voice="Hale"
+                    >
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="select-voice"
+                        data-voice="Hale"
+                    >
+                        Use Voice
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- JERRY -->
+
+        <article
+            class="voice-card"
+            data-name="Jerry B"
+            data-category="energetic advertisement"
+        >
+
+            <div class="voice-avatar">
+                J
+            </div>
+
+            <div class="voice-card-content">
+
+                <span class="voice-badge">
+                    PREMIUM
+                </span>
+
+                <h3>
+                    Jerry B
+                </h3>
+
+                <p>
+                    Upbeat · Energetic · Happy
+                </p>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-voice"
+                        data-voice="Jerry B"
+                    >
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="select-voice"
+                        data-voice="Jerry B"
+                    >
+                        Use Voice
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- ALLISON -->
+
+        <article
+            class="voice-card"
+            data-name="Allison"
+            data-category="energetic advertisement"
+        >
+
+            <div class="voice-avatar">
+                A
+            </div>
+
+            <div class="voice-card-content">
+
+                <span class="voice-badge">
+                    PREMIUM
+                </span>
+
+                <h3>
+                    Allison
+                </h3>
+
+                <p>
+                    Energetic · Clear · Bubbly
+                </p>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-voice"
+                        data-voice="Allison"
+                    >
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="select-voice"
+                        data-voice="Allison"
+                    >
+                        Use Voice
+                    </button>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+    </div>
+
+
+    <div
+        id="noVoices"
+        class="empty-state"
+        hidden
+    >
+        <h3>No voices found</h3>
+
+        <p>
+            Try another voice name or category.
+        </p>
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        <h2>∿ VoiceAI</h2>
+
+        <p>
+            AI voice and audio creation platform.
+        </p>
+
+    </div>
+
+    <div>
+        <h4>Platform</h4>
+
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+
+    </div>
+
+    <div>
+        <h4>Company</h4>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+    <div>
+        <h4>Plans</h4>
+
+        <a href="pricing.html">Free</a>
+        <a href="pricing.html">Premium</a>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
