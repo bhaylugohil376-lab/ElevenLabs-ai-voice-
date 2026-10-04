@@ -442,3 +442,198 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+// ========================================
+// VOICE LIBRARY
+// ========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("voiceSearch");
+    const categorySelect = document.getElementById("voiceCategory");
+    const voiceCards = document.querySelectorAll(".voice-card");
+    const noVoices = document.getElementById("noVoices");
+
+    function filterVoices() {
+
+        if (!searchInput || !categorySelect) {
+            return;
+        }
+
+        const search =
+            searchInput.value.toLowerCase().trim();
+
+        const category =
+            categorySelect.value.toLowerCase();
+
+        let visibleCount = 0;
+
+        voiceCards.forEach(function (card) {
+
+            const name =
+                card.dataset.name.toLowerCase();
+
+            const categories =
+                card.dataset.category.toLowerCase();
+
+            const searchMatch =
+                name.includes(search) ||
+                categories.includes(search);
+
+            const categoryMatch =
+                category === "all" ||
+                categories.includes(category);
+
+            if (searchMatch && categoryMatch) {
+
+                card.style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+        if (noVoices) {
+
+            noVoices.hidden =
+                visibleCount !== 0;
+
+        }
+
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener(
+            "input",
+            filterVoices
+        );
+    }
+
+    if (categorySelect) {
+        categorySelect.addEventListener(
+            "change",
+            filterVoices
+        );
+    }
+
+
+    // ========================================
+    // BROWSER VOICE PREVIEW
+    // ========================================
+
+    const previewButtons =
+        document.querySelectorAll(".preview-voice");
+
+    const previewText =
+        document.getElementById("previewText");
+
+    let currentSpeech = null;
+
+
+    previewButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            if (!("speechSynthesis" in window)) {
+
+                alert(
+                    "Voice preview is not supported by this browser."
+                );
+
+                return;
+            }
+
+            const text =
+                previewText
+                    ? previewText.value.trim()
+                    : "Welcome to VoiceAI.";
+
+            if (!text) {
+
+                alert("Please enter preview text.");
+
+                return;
+            }
+
+
+            speechSynthesis.cancel();
+
+
+            const utterance =
+                new SpeechSynthesisUtterance(text);
+
+
+            // Voice style approximation
+            const voiceName =
+                button.dataset.voice || "";
+
+
+            if (voiceName === "Jerry B" ||
+                voiceName === "Allison") {
+
+                utterance.rate = 1.12;
+                utterance.pitch = 1.08;
+
+            } else if (voiceName === "Hale") {
+
+                utterance.rate = 0.94;
+                utterance.pitch = 0.92;
+
+            } else if (voiceName === "David Castlemore") {
+
+                utterance.rate = 0.88;
+                utterance.pitch = 0.90;
+
+            } else {
+
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+
+            }
+
+
+            currentSpeech = utterance;
+
+            speechSynthesis.speak(utterance);
+
+        });
+
+    });
+
+
+    // ========================================
+    // USE VOICE
+    // ========================================
+
+    const useButtons =
+        document.querySelectorAll(".select-voice");
+
+
+    useButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const selectedVoice =
+                button.dataset.voice;
+
+            localStorage.setItem(
+                "selectedVoice",
+                selectedVoice
+            );
+
+            alert(
+                selectedVoice +
+                " selected successfully."
+            );
+
+        });
+
+    });
+
+});
+
