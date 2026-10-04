@@ -1,4 +1,334 @@
-<button type="button" class="google-login-btn" id="googleLogin">
-    <span class="google-icon">G</span>
-    Continue with Google
-</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login — VoiceAI</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        <a href="index.html">
+            <span>∿</span> VoiceAI
+        </a>
+    </div>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="pricing.html" class="nav-button">Get Started</a>
+    </div>
+
+</header>
+
+
+<main>
+
+<section class="login-section">
+
+    <div class="login-card">
+
+        <span>ACCOUNT</span>
+
+        <h1>
+            Welcome back.
+        </h1>
+
+        <p class="login-subtitle">
+            Sign in to continue creating with VoiceAI.
+        </p>
+
+
+        <!-- GOOGLE -->
+
+        <button
+            type="button"
+            class="google-login-btn"
+            id="googleLogin"
+        >
+
+            <span class="google-icon">
+                G
+            </span>
+
+            Continue with Google
+
+        </button>
+
+
+        <div class="login-divider">
+
+            <span>OR</span>
+
+        </div>
+
+
+        <!-- EMAIL -->
+
+        <form id="loginForm">
+
+            <label for="email">
+                Email address
+            </label>
+
+            <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+            >
+
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+            >
+
+
+            <div class="login-options">
+
+                <label class="remember-option">
+
+                    <input
+                        type="checkbox"
+                        id="rememberMe"
+                    >
+
+                    <span>
+                        Remember me
+                    </span>
+
+                </label>
+
+
+                <a href="#" id="forgotPassword">
+                    Forgot password?
+                </a>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="primary-btn login-submit"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <p class="create-account">
+
+            Don't have an account?
+
+            <a href="signup.html">
+                Create one
+            </a>
+
+        </p>
+
+
+        <p class="login-note">
+            Free accounts include 5 AI uses per day.
+        </p>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <div class="footer-brand">
+
+        <h2>∿ VoiceAI</h2>
+
+        <p>
+            AI voice and audio creation platform.
+        </p>
+
+    </div>
+
+
+    <div>
+
+        <h4>Platform</h4>
+
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+
+    </div>
+
+
+    <div>
+
+        <h4>Company</h4>
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+
+    <div>
+
+        <h4>Plans</h4>
+
+        <a href="pricing.html">Free</a>
+        <a href="pricing.html">Premium</a>
+
+    </div>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =========================
+           GOOGLE LOGIN
+        ========================= */
+
+        const googleLogin =
+            document.getElementById(
+                "googleLogin"
+            );
+
+
+        if (googleLogin) {
+
+            googleLogin.addEventListener(
+                "click",
+                function () {
+
+                    alert(
+                        "Google Login is ready for OAuth integration."
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           EMAIL LOGIN DEMO
+        ========================= */
+
+        const loginForm =
+            document.getElementById(
+                "loginForm"
+            );
+
+
+        if (loginForm) {
+
+            loginForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    const email =
+                        document.getElementById(
+                            "email"
+                        ).value.trim();
+
+
+                    const password =
+                        document.getElementById(
+                            "password"
+                        ).value;
+
+
+                    if (!email || !password) {
+
+                        alert(
+                            "Please enter your email and password."
+                        );
+
+                        return;
+
+                    }
+
+
+                    alert(
+                        "Login UI is working. Connect your authentication backend to enable real login."
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           FORGOT PASSWORD
+        ========================= */
+
+        const forgotPassword =
+            document.getElementById(
+                "forgotPassword"
+            );
+
+
+        if (forgotPassword) {
+
+            forgotPassword.addEventListener(
+                "click",
+                function (event) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Password reset will be connected to the authentication backend."
+                    );
+
+                }
+            );
+
+        }
+
+    }
+
+);
+
+</script>
+
+</body>
+</html>
