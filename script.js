@@ -1,511 +1,444 @@
-const textInput = document.getElementById("textInput");
-const counter = document.getElementById("counter");
-const language = document.getElementById("language");
-const voiceSelect = document.getElementById("voiceSelect");
-const speed = document.getElementById("speed");
+/* =========================================
+   VoiceAI - Main JavaScript
+========================================= */
 
-const generateBtn = document.getElementById("generateBtn");
-const clearBtn = document.getElementById("clearBtn");
+document.addEventListener("DOMContentLoaded", () => {
 
-const audioPanel = document.getElementById("audioPanel");
-const audioStatus = document.getElementById("audioStatus");
+    /* =====================================
+       MOBILE MENU
+    ===================================== */
 
-const playBtn = document.getElementById("playBtn");
-const stopBtn = document.getElementById("stopBtn");
+    const navbar = document.querySelector(".navbar");
+    const navLinks = document.querySelector(".nav-links");
 
-const themeBtn = document.getElementById("themeBtn");
-const progressBar = document.getElementById("progressBar");
+    if (navbar && navLinks) {
 
-let audio = null;
-let audioUrl = null;
-let voices = [];
+        const menuButton = document.createElement("button");
 
+        menuButton.className = "mobile-menu-btn";
+        menuButton.innerHTML = "☰";
+        menuButton.setAttribute("aria-label", "Open menu");
 
-/* =========================
-   CHARACTER COUNTER
-========================= */
+        navbar.insertBefore(menuButton, navLinks);
 
-textInput.addEventListener("input", () => {
-  counter.textContent =
-    `${textInput.value.length} / 5000`;
-});
+        menuButton.addEventListener("click", () => {
+            navLinks.classList.toggle("mobile-open");
 
+            if (navLinks.classList.contains("mobile-open")) {
+                menuButton.innerHTML = "✕";
+            } else {
+                menuButton.innerHTML = "☰";
+            }
+        });
 
-/* =========================
-   LOAD ELEVENLABS VOICES
-========================= */
-
-async function loadVoices() {
-
-  voiceSelect.innerHTML =
-    `<option value="">Loading voices...</option>`;
-
-  try {
-
-    const response =
-      await fetch("/api/voices");
-
-    if (!response.ok) {
-      throw new Error("Voice API unavailable");
+        navLinks.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("mobile-open");
+                menuButton.innerHTML = "☰";
+            });
+        });
     }
 
-    const data =
-      await response.json();
 
-    voices = data.voices || [];
+    /* =====================================
+       TEXT TO SPEECH DEMO
+    ===================================== */
 
-    voiceSelect.innerHTML = "";
+    const generateButtons = document.querySelectorAll(
+        ".primary-btn"
+    );
 
-    if (!voices.length) {
+    generateButtons.forEach(button => {
 
-      voiceSelect.innerHTML =
-        `<option value="">
-          No voices available
-        </option>`;
+        const text = button.textContent.trim().toLowerCase();
 
-      return;
+        if (
+            text.includes("generate voice") ||
+            text === "generate"
+        ) {
+
+            button.addEventListener("click", () => {
+
+                const textarea =
+                    button.closest(".feature-card, .hero-generator")
+                    ?.querySelector("textarea");
+
+                if (!textarea || !textarea.value.trim()) {
+
+                    alert("Please enter some text first.");
+
+                    return;
+                }
+
+                button.disabled = true;
+                const oldText = button.textContent;
+
+                button.textContent = "Generating...";
+
+                setTimeout(() => {
+
+                    button.disabled = false;
+                    button.textContent = oldText;
+
+                    alert(
+                        "Demo generation complete. Real AI generation API will be connected here."
+                    );
+
+                }, 1200);
+
+            });
+        }
+    });
+
+
+    /* =====================================
+       VOICE SEARCH
+    ===================================== */
+
+    const voiceSearch =
+        document.querySelector(".voice-search input");
+
+    const voiceCards =
+        document.querySelectorAll(".voice-card");
+
+    if (voiceSearch && voiceCards.length) {
+
+        voiceSearch.addEventListener("input", () => {
+
+            const query =
+                voiceSearch.value.toLowerCase().trim();
+
+            voiceCards.forEach(card => {
+
+                const content =
+                    card.textContent.toLowerCase();
+
+                card.style.display =
+                    content.includes(query)
+                        ? ""
+                        : "none";
+
+            });
+
+        });
     }
 
-    voices.forEach((voice) => {
 
-      const option =
-        document.createElement("option");
+    /* =====================================
+       VOICE PREVIEW
+    ===================================== */
 
-      option.value =
-        voice.voice_id;
+    document.querySelectorAll(".voice-card button")
+        .forEach(button => {
 
-      option.textContent =
-        voice.name;
+            button.addEventListener("click", () => {
 
-      voiceSelect.appendChild(option);
+                const card = button.closest(".voice-card");
+
+                const voiceName =
+                    card?.querySelector("h3")?.textContent
+                    || "Voice";
+
+                alert(
+                    voiceName +
+                    " preview will play here after the audio API is connected."
+                );
+
+            });
+
+        });
+
+
+    /* =====================================
+       FILE INPUT
+    ===================================== */
+
+    document.querySelectorAll(
+        'input[type="file"]'
+    ).forEach(input => {
+
+        input.addEventListener("change", () => {
+
+            if (!input.files || !input.files.length) {
+                return;
+            }
+
+            const fileName =
+                input.files[0].name;
+
+            const parent =
+                input.parentElement;
+
+            let fileText =
+                parent.querySelector(".selected-file");
+
+            if (!fileText) {
+
+                fileText =
+                    document.createElement("p");
+
+                fileText.className =
+                    "selected-file";
+
+                fileText.style.marginTop =
+                    "12px";
+
+                fileText.style.color =
+                    "#a78bfa";
+
+                parent.appendChild(fileText);
+            }
+
+            fileText.textContent =
+                "Selected: " + fileName;
+
+        });
 
     });
 
-  } catch (error) {
 
-    console.error(error);
+    /* =====================================
+       DUBBING
+    ===================================== */
 
-    /*
-      Fallback voice IDs.
-      Replace these with your own ElevenLabs
-      voice IDs when needed.
-    */
+    const dubbingButton =
+        document.querySelector(
+            ".feature-card .primary-btn"
+        );
 
-    voiceSelect.innerHTML = `
-      <option value="">
-        Select an ElevenLabs voice
-      </option>
-    `;
+    if (dubbingButton &&
+        dubbingButton.textContent
+            .toLowerCase()
+            .includes("dubbing")) {
 
-  }
-}
+        dubbingButton.addEventListener("click", () => {
 
+            alert(
+                "Dubbing demo ready. Connect your dubbing API for real processing."
+            );
 
-/* =========================
-   GENERATE REAL AUDIO
-========================= */
+        });
 
-generateBtn.addEventListener(
-  "click",
-  async () => {
-
-    const text =
-      textInput.value.trim();
-
-    const voiceId =
-      voiceSelect.value;
-
-
-    if (!text) {
-
-      alert(
-        "Please enter some text first."
-      );
-
-      textInput.focus();
-
-      return;
     }
 
 
-    if (!voiceId) {
+    /* =====================================
+       SPEECH TO TEXT RECORD BUTTON
+    ===================================== */
 
-      alert(
-        "Please select a voice."
-      );
+    const recordButton =
+        Array.from(
+            document.querySelectorAll("button")
+        ).find(button =>
+            button.textContent
+                .toLowerCase()
+                .includes("start recording")
+        );
 
-      return;
+    if (recordButton) {
+
+        let recording = false;
+
+        recordButton.addEventListener("click", () => {
+
+            recording = !recording;
+
+            if (recording) {
+
+                recordButton.textContent =
+                    "⏹ Stop Recording";
+
+                recordButton.style.background =
+                    "#dc2626";
+
+            } else {
+
+                recordButton.textContent =
+                    "🎙 Start Recording";
+
+                recordButton.style.background =
+                    "";
+
+            }
+
+        });
+
     }
 
 
-    generateBtn.disabled = true;
+    /* =====================================
+       AI AGENT CHAT DEMO
+    ===================================== */
 
-    generateBtn.innerHTML =
-      "⏳ Generating...";
+    const agentInput =
+        document.querySelector(".agent-input input");
+
+    const agentSend =
+        document.querySelector(".agent-input button");
+
+    const agentMessage =
+        document.querySelector(".agent-message");
+
+    if (
+        agentInput &&
+        agentSend &&
+        agentMessage
+    ) {
+
+        agentSend.addEventListener("click", () => {
+
+            const message =
+                agentInput.value.trim();
+
+            if (!message) {
+
+                alert("Please type a message.");
+
+                return;
+            }
+
+            agentMessage.textContent =
+                "🤖 You said: " + message;
+
+            agentInput.value = "";
+
+        });
+
+        agentInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (event.key === "Enter") {
+                    agentSend.click();
+                }
+
+            }
+        );
+
+    }
 
 
-    audioPanel.classList.remove(
-      "hidden"
-    );
+    /* =====================================
+       LOGIN DEMO
+    ===================================== */
 
-    audioStatus.textContent =
-      "Generating AI voice...";
+    const loginButton =
+        document.querySelector(".login-card .primary-btn");
+
+    if (loginButton) {
+
+        loginButton.addEventListener("click", () => {
+
+            const email =
+                document.querySelector(
+                    '.login-card input[type="email"]'
+                );
+
+            const password =
+                document.querySelector(
+                    '.login-card input[type="password"]'
+                );
+
+            if (!email?.value.trim()) {
+
+                alert("Please enter your email.");
+
+                return;
+            }
+
+            if (!password?.value.trim()) {
+
+                alert("Please enter your password.");
+
+                return;
+            }
+
+            alert(
+                "Login UI is working. Connect your authentication backend here."
+            );
+
+        });
+
+    }
 
 
-    try {
+    /* =====================================
+       PREMIUM BUTTON
+    ===================================== */
 
-      const response =
-        await fetch(
-          "/api/generate",
-          {
-            method: "POST",
+    document.querySelectorAll(
+        ".price-card .primary-btn"
+    ).forEach(button => {
 
-            headers: {
-              "Content-Type":
-                "application/json"
+        button.addEventListener("click", () => {
+
+            alert(
+                "Premium checkout will open here after payment integration."
+            );
+
+        });
+
+    });
+
+
+    /* =====================================
+       SCROLL REVEAL
+    ===================================== */
+
+    const revealItems =
+        document.querySelectorAll(
+            ".tool-card, .voice-card, .price-card, .feature-card"
+        );
+
+    const revealObserver =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add(
+                            "visible"
+                        );
+
+                    }
+
+                });
+
             },
-
-            body: JSON.stringify({
-
-              text: text,
-
-              voiceId: voiceId,
-
-              modelId:
-                "eleven_multilingual_v2"
-
-            })
-          }
+            {
+                threshold: 0.12
+            }
         );
 
-
-      if (!response.ok) {
-
-        let message =
-          "Voice generation failed.";
-
-        try {
-
-          const error =
-            await response.json();
-
-          message =
-            error.error || message;
-
-        } catch {}
-
-        throw new Error(message);
-      }
+    revealItems.forEach(item => {
+        revealObserver.observe(item);
+    });
 
 
-      const blob =
-        await response.blob();
+    /* =====================================
+       CURRENT PAGE
+    ===================================== */
 
+    const currentPage =
+        window.location.pathname
+            .split("/")
+            .pop() || "index.html";
 
-      if (!blob.size) {
+    document.querySelectorAll(
+        ".nav-links a"
+    ).forEach(link => {
 
-        throw new Error(
-          "No audio was returned."
-        );
-      }
+        const linkPage =
+            link.getAttribute("href");
 
+        if (linkPage === currentPage) {
 
-      if (audioUrl) {
-        URL.revokeObjectURL(
-          audioUrl
-        );
-      }
-
-
-      audioUrl =
-        URL.createObjectURL(
-          blob
-        );
-
-
-      audio =
-        new Audio(audioUrl);
-
-
-      audioStatus.textContent =
-        "Voice generated successfully";
-
-
-      playBtn.textContent =
-        "▶";
-
-
-      audio.addEventListener(
-        "timeupdate",
-        updateProgress
-      );
-
-
-      audio.addEventListener(
-        "ended",
-        () => {
-
-          playBtn.textContent =
-            "▶";
-
-          progressBar.style.width =
-            "0%";
+            link.classList.add("active");
 
         }
-      );
 
+    });
 
-    } catch (error) {
-
-      console.error(error);
-
-      audioStatus.textContent =
-        "Generation failed";
-
-      alert(error.message);
-
-    } finally {
-
-      generateBtn.disabled =
-        false;
-
-      generateBtn.innerHTML =
-        "🔊 Generate Voice";
-
-    }
-
-  }
-);
-
-
-/* =========================
-   PLAY / PAUSE
-========================= */
-
-playBtn.addEventListener(
-  "click",
-  () => {
-
-    if (!audio) {
-
-      alert(
-        "Generate a voice first."
-      );
-
-      return;
-    }
-
-
-    if (audio.paused) {
-
-      audio.play();
-
-      playBtn.textContent =
-        "⏸";
-
-      audioStatus.textContent =
-        "Playing...";
-
-    } else {
-
-      audio.pause();
-
-      playBtn.textContent =
-        "▶";
-
-      audioStatus.textContent =
-        "Paused";
-
-    }
-
-  }
-);
-
-
-/* =========================
-   STOP
-========================= */
-
-stopBtn.addEventListener(
-  "click",
-  () => {
-
-    if (!audio) return;
-
-    audio.pause();
-
-    audio.currentTime = 0;
-
-    playBtn.textContent =
-      "▶";
-
-    audioStatus.textContent =
-      "Stopped";
-
-    progressBar.style.width =
-      "0%";
-  }
-);
-
-
-/* =========================
-   PROGRESS
-========================= */
-
-function updateProgress() {
-
-  if (!audio || !audio.duration)
-    return;
-
-  const percent =
-    (audio.currentTime /
-      audio.duration) * 100;
-
-  progressBar.style.width =
-    `${percent}%`;
-}
-
-
-/* =========================
-   DOWNLOAD MP3
-========================= */
-
-const downloadBtn =
-  document.getElementById(
-    "downloadBtn"
-  );
-
-
-if (downloadBtn) {
-
-  downloadBtn.addEventListener(
-    "click",
-    () => {
-
-      if (!audioUrl) {
-
-        alert(
-          "Generate a voice first."
-        );
-
-        return;
-      }
-
-
-      const link =
-        document.createElement("a");
-
-      link.href =
-        audioUrl;
-
-      link.download =
-        "voiceforge-ai.mp3";
-
-      document.body.appendChild(
-        link
-      );
-
-      link.click();
-
-      link.remove();
-
-    }
-  );
-}
-
-
-/* =========================
-   CLEAR
-========================= */
-
-clearBtn.addEventListener(
-  "click",
-  () => {
-
-    textInput.value = "";
-
-    counter.textContent =
-      "0 / 5000";
-
-    if (audio) {
-
-      audio.pause();
-
-      audio.currentTime = 0;
-
-    }
-
-    if (audioUrl) {
-
-      URL.revokeObjectURL(
-        audioUrl
-      );
-
-      audioUrl = null;
-
-    }
-
-    audio = null;
-
-    audioPanel.classList.add(
-      "hidden"
-    );
-
-    progressBar.style.width =
-      "0%";
-
-  }
-);
-
-
-/* =========================
-   DARK / LIGHT MODE
-========================= */
-
-themeBtn.addEventListener(
-  "click",
-  () => {
-
-    document.body.classList.toggle(
-      "light"
-    );
-
-    const isLight =
-      document.body.classList.contains(
-        "light"
-      );
-
-    themeBtn.textContent =
-      isLight ? "🌙" : "☀️";
-
-    localStorage.setItem(
-      "voiceforge-theme",
-      isLight
-        ? "light"
-        : "dark"
-    );
-
-  }
-);
-
-
-if (
-  localStorage.getItem(
-    "voiceforge-theme"
-  ) === "light"
-) {
-
-  document.body.classList.add(
-    "light"
-  );
-
-  themeBtn.textContent =
-    "🌙";
-}
-
-
-/* =========================
-   START
-========================= */
-
-loadVoices();
+});
