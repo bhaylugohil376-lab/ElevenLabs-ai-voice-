@@ -1,639 +1,684 @@
-/* =========================================
-   VoiceAI - Main JavaScript
-========================================= */
+/* =========================================================
+   VOICEAI — FINAL SCRIPT
+   Frontend demo / UI logic
+   ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+"use strict";
 
-    /* =====================================
-       MOBILE MENU
-    ===================================== */
 
-    const navbar = document.querySelector(".navbar");
-    const navLinks = document.querySelector(".nav-links");
+/* =========================================================
+   DAILY FREE USAGE
+   Free users: 5 AI actions per 24-hour period
+   ========================================================= */
 
-    if (navbar && navLinks) {
+const FREE_DAILY_LIMIT = 5;
 
-        const menuButton = document.createElement("button");
+const USAGE_KEY = "voiceai_daily_usage";
+const USAGE_DATE_KEY = "voiceai_usage_date";
 
-        menuButton.className = "mobile-menu-btn";
-        menuButton.innerHTML = "☰";
-        menuButton.setAttribute("aria-label", "Open menu");
 
-        navbar.insertBefore(menuButton, navLinks);
+function getTodayKey() {
+    const now = new Date();
 
-        menuButton.addEventListener("click", () => {
-            navLinks.classList.toggle("mobile-open");
+    return (
+        now.getFullYear() +
+        "-" +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(now.getDate()).padStart(2, "0")
+    );
+}
 
-            if (navLinks.classList.contains("mobile-open")) {
-                menuButton.innerHTML = "✕";
-            } else {
-                menuButton.innerHTML = "☰";
-            }
-        });
 
-        navLinks.querySelectorAll("a").forEach(link => {
-            link.addEventListener("click", () => {
-                navLinks.classList.remove("mobile-open");
-                menuButton.innerHTML = "☰";
-            });
-        });
+function resetUsageIfNeeded() {
+
+    const today = getTodayKey();
+
+    const savedDate =
+        localStorage.getItem(USAGE_DATE_KEY);
+
+    if (savedDate !== today) {
+
+        localStorage.setItem(
+            USAGE_DATE_KEY,
+            today
+        );
+
+        localStorage.setItem(
+            USAGE_KEY,
+            "0"
+        );
+    }
+}
+
+
+function getDailyUsage() {
+
+    resetUsageIfNeeded();
+
+    return Number(
+        localStorage.getItem(USAGE_KEY) || "0"
+    );
+}
+
+
+function getRemainingFreeUses() {
+
+    return Math.max(
+        0,
+        FREE_DAILY_LIMIT - getDailyUsage()
+    );
+}
+
+
+function canUseFreeAI() {
+
+    resetUsageIfNeeded();
+
+    const usage = getDailyUsage();
+
+    if (usage >= FREE_DAILY_LIMIT) {
+
+        showToast(
+            "Daily free limit reached. 5 uses are available every 24 hours."
+        );
+
+        return false;
     }
 
+    return true;
+}
 
-    /* =====================================
-       TEXT TO SPEECH DEMO
-    ===================================== */
 
-    const generateButtons = document.querySelectorAll(
-        ".primary-btn"
+function recordFreeAIUse() {
+
+    resetUsageIfNeeded();
+
+    const usage = getDailyUsage();
+
+    localStorage.setItem(
+        USAGE_KEY,
+        String(usage + 1)
     );
 
-    generateButtons.forEach(button => {
-
-        const text = button.textContent.trim().toLowerCase();
-
-        if (
-            text.includes("generate voice") ||
-            text === "generate"
-        ) {
-
-            button.addEventListener("click", () => {
-
-                const textarea =
-                    button.closest(".feature-card, .hero-generator")
-                    ?.querySelector("textarea");
-
-                if (!textarea || !textarea.value.trim()) {
-
-                    alert("Please enter some text first.");
-
-                    return;
-                }
-
-                button.disabled = true;
-                const oldText = button.textContent;
-
-                button.textContent = "Generating...";
-
-                setTimeout(() => {
-
-                    button.disabled = false;
-                    button.textContent = oldText;
-
-                    alert(
-                        "Demo generation complete. Real AI generation API will be connected here."
-                    );
-
-                }, 1200);
-
-            });
-        }
-    });
+    updateUsageDisplay();
+}
 
 
-    /* =====================================
-       VOICE SEARCH
-    ===================================== */
+function updateUsageDisplay() {
 
-    const voiceSearch =
-        document.querySelector(".voice-search input");
+    const remaining =
+        getRemainingFreeUses();
 
-    const voiceCards =
-        document.querySelectorAll(".voice-card");
+    document
+        .querySelectorAll("[data-free-uses]")
+        .forEach(element => {
 
-    if (voiceSearch && voiceCards.length) {
-
-        voiceSearch.addEventListener("input", () => {
-
-            const query =
-                voiceSearch.value.toLowerCase().trim();
-
-            voiceCards.forEach(card => {
-
-                const content =
-                    card.textContent.toLowerCase();
-
-                card.style.display =
-                    content.includes(query)
-                        ? ""
-                        : "none";
-
-            });
-
+            element.textContent =
+                remaining;
         });
-    }
+}
 
 
-    /* =====================================
-       VOICE PREVIEW
-    ===================================== */
+/* =========================================================
+   TOAST
+   ========================================================= */
 
-    document.querySelectorAll(".voice-card button")
-        .forEach(button => {
+function showToast(message) {
 
-            button.addEventListener("click", () => {
-
-                const card = button.closest(".voice-card");
-
-                const voiceName =
-                    card?.querySelector("h3")?.textContent
-                    || "Voice";
-
-                alert(
-                    voiceName +
-                    " preview will play here after the audio API is connected."
-                );
-
-            });
-
-        });
-
-
-    /* =====================================
-       FILE INPUT
-    ===================================== */
-
-    document.querySelectorAll(
-        'input[type="file"]'
-    ).forEach(input => {
-
-        input.addEventListener("change", () => {
-
-            if (!input.files || !input.files.length) {
-                return;
-            }
-
-            const fileName =
-                input.files[0].name;
-
-            const parent =
-                input.parentElement;
-
-            let fileText =
-                parent.querySelector(".selected-file");
-
-            if (!fileText) {
-
-                fileText =
-                    document.createElement("p");
-
-                fileText.className =
-                    "selected-file";
-
-                fileText.style.marginTop =
-                    "12px";
-
-                fileText.style.color =
-                    "#a78bfa";
-
-                parent.appendChild(fileText);
-            }
-
-            fileText.textContent =
-                "Selected: " + fileName;
-
-        });
-
-    });
-
-
-    /* =====================================
-       DUBBING
-    ===================================== */
-
-    const dubbingButton =
-        document.querySelector(
-            ".feature-card .primary-btn"
+    let toast =
+        document.getElementById(
+            "voiceaiToast"
         );
 
-    if (dubbingButton &&
-        dubbingButton.textContent
-            .toLowerCase()
-            .includes("dubbing")) {
+    if (!toast) {
 
-        dubbingButton.addEventListener("click", () => {
+        toast =
+            document.createElement("div");
 
-            alert(
-                "Dubbing demo ready. Connect your dubbing API for real processing."
-            );
+        toast.id =
+            "voiceaiToast";
 
-        });
+        toast.style.position =
+            "fixed";
 
+        toast.style.left =
+            "50%";
+
+        toast.style.bottom =
+            "25px";
+
+        toast.style.transform =
+            "translateX(-50%)";
+
+        toast.style.zIndex =
+            "99999";
+
+        toast.style.padding =
+            "13px 18px";
+
+        toast.style.borderRadius =
+            "10px";
+
+        toast.style.background =
+            "#171920";
+
+        toast.style.border =
+            "1px solid #343741";
+
+        toast.style.color =
+            "#ffffff";
+
+        toast.style.fontSize =
+            "13px";
+
+        toast.style.boxShadow =
+            "0 15px 50px rgba(0,0,0,.4)";
+
+        document.body.appendChild(
+            toast
+        );
     }
 
+    toast.textContent =
+        message;
 
-    /* =====================================
-       SPEECH TO TEXT RECORD BUTTON
-    ===================================== */
+    toast.style.opacity =
+        "1";
 
-    const recordButton =
-        Array.from(
-            document.querySelectorAll("button")
-        ).find(button =>
-            button.textContent
-                .toLowerCase()
-                .includes("start recording")
+    clearTimeout(
+        toast._timer
+    );
+
+    toast._timer =
+        setTimeout(() => {
+
+            toast.style.opacity =
+                "0";
+
+        }, 3000);
+}
+
+
+/* =========================================================
+   AI ACTION HANDLER
+   ========================================================= */
+
+function runFreeAIAction(
+    callback
+) {
+
+    if (!canUseFreeAI()) {
+        return;
+    }
+
+    recordFreeAIUse();
+
+    if (typeof callback === "function") {
+        callback();
+    }
+}
+
+
+/* =========================================================
+   DEMO GENERATION
+   ========================================================= */
+
+function simulateGeneration(button) {
+
+    if (!canUseFreeAI()) {
+        return;
+    }
+
+    recordFreeAIUse();
+
+    const originalText =
+        button.textContent;
+
+    button.disabled = true;
+
+    button.textContent =
+        "Generating...";
+
+    setTimeout(() => {
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            originalText;
+
+        showToast(
+            "Demo generation completed successfully."
         );
 
-    if (recordButton) {
-
-        let recording = false;
-
-        recordButton.addEventListener("click", () => {
-
-            recording = !recording;
-
-            if (recording) {
-
-                recordButton.textContent =
-                    "⏹ Stop Recording";
-
-                recordButton.style.background =
-                    "#dc2626";
-
-            } else {
-
-                recordButton.textContent =
-                    "🎙 Start Recording";
-
-                recordButton.style.background =
-                    "";
-
-            }
-
-        });
-
-    }
+    }, 1500);
+}
 
 
-    /* =====================================
-       AI AGENT CHAT DEMO
-    ===================================== */
+/* =========================================================
+   VOICE PREVIEW
+   Browser SpeechSynthesis demo
+   ========================================================= */
 
-    const agentInput =
-        document.querySelector(".agent-input input");
+let currentSpeech = null;
 
-    const agentSend =
-        document.querySelector(".agent-input button");
 
-    const agentMessage =
-        document.querySelector(".agent-message");
+function previewVoice(text, voiceName) {
 
     if (
-        agentInput &&
-        agentSend &&
-        agentMessage
+        !("speechSynthesis" in window)
     ) {
 
-        agentSend.addEventListener("click", () => {
-
-            const message =
-                agentInput.value.trim();
-
-            if (!message) {
-
-                alert("Please type a message.");
-
-                return;
-            }
-
-            agentMessage.textContent =
-                "🤖 You said: " + message;
-
-            agentInput.value = "";
-
-        });
-
-        agentInput.addEventListener(
-            "keydown",
-            event => {
-
-                if (event.key === "Enter") {
-                    agentSend.click();
-                }
-
-            }
+        showToast(
+            "Voice preview is not supported in this browser."
         );
 
+        return;
     }
 
+    window.speechSynthesis.cancel();
 
-    /* =====================================
-       LOGIN DEMO
-    ===================================== */
-
-    const loginButton =
-        document.querySelector(".login-card .primary-btn");
-
-    if (loginButton) {
-
-        loginButton.addEventListener("click", () => {
-
-            const email =
-                document.querySelector(
-                    '.login-card input[type="email"]'
-                );
-
-            const password =
-                document.querySelector(
-                    '.login-card input[type="password"]'
-                );
-
-            if (!email?.value.trim()) {
-
-                alert("Please enter your email.");
-
-                return;
-            }
-
-            if (!password?.value.trim()) {
-
-                alert("Please enter your password.");
-
-                return;
-            }
-
-            alert(
-                "Login UI is working. Connect your authentication backend here."
-            );
-
-        });
-
-    }
-
-
-    /* =====================================
-       PREMIUM BUTTON
-    ===================================== */
-
-    document.querySelectorAll(
-        ".price-card .primary-btn"
-    ).forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            alert(
-                "Premium checkout will open here after payment integration."
-            );
-
-        });
-
-    });
-
-
-    /* =====================================
-       SCROLL REVEAL
-    ===================================== */
-
-    const revealItems =
-        document.querySelectorAll(
-            ".tool-card, .voice-card, .price-card, .feature-card"
+    const speech =
+        new SpeechSynthesisUtterance(
+            text
         );
 
-    const revealObserver =
-        new IntersectionObserver(
-            entries => {
+    speech.rate = 0.95;
+    speech.pitch = 1;
+    speech.volume = 1;
 
-                entries.forEach(entry => {
+    const voices =
+        window.speechSynthesis
+            .getVoices();
 
-                    if (entry.isIntersecting) {
+    const matchedVoice =
+        voices.find(
+            voice =>
+                voice.name
+                    .toLowerCase()
+                    .includes(
+                        String(
+                            voiceName || ""
+                        ).toLowerCase()
+                    )
+        );
 
-                        entry.target.classList.add(
-                            "visible"
+    if (matchedVoice) {
+        speech.voice =
+            matchedVoice;
+    }
+
+    currentSpeech =
+        speech;
+
+    window.speechSynthesis
+        .speak(speech);
+}
+
+
+/* =========================================================
+   MOBILE / INTERNAL PAGE LINKS
+   ========================================================= */
+
+function setupPageLinks() {
+
+    document
+        .querySelectorAll(
+            'a[href^="#"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                function (event) {
+
+                    const targetId =
+                        this.getAttribute(
+                            "href"
                         );
 
+                    if (
+                        !targetId ||
+                        targetId === "#"
+                    ) {
+                        return;
                     }
 
-                });
+                    const target =
+                        document.querySelector(
+                            targetId
+                        );
 
-            },
-            {
-                threshold: 0.12
-            }
-        );
+                    if (!target) {
+                        return;
+                    }
 
-    revealItems.forEach(item => {
-        revealObserver.observe(item);
-    });
+                    event.preventDefault();
 
+                    target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
 
-    /* =====================================
-       CURRENT PAGE
-    ===================================== */
-
-    const currentPage =
-        window.location.pathname
-            .split("/")
-            .pop() || "index.html";
-
-    document.querySelectorAll(
-        ".nav-links a"
-    ).forEach(link => {
-
-        const linkPage =
-            link.getAttribute("href");
-
-        if (linkPage === currentPage) {
-
-            link.classList.add("active");
-
-        }
-
-    });
-
-});
-
-// ========================================
-// VOICE LIBRARY
-// ========================================
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const searchInput = document.getElementById("voiceSearch");
-    const categorySelect = document.getElementById("voiceCategory");
-    const voiceCards = document.querySelectorAll(".voice-card");
-    const noVoices = document.getElementById("noVoices");
-
-    function filterVoices() {
-
-        if (!searchInput || !categorySelect) {
-            return;
-        }
-
-        const search =
-            searchInput.value.toLowerCase().trim();
-
-        const category =
-            categorySelect.value.toLowerCase();
-
-        let visibleCount = 0;
-
-        voiceCards.forEach(function (card) {
-
-            const name =
-                card.dataset.name.toLowerCase();
-
-            const categories =
-                card.dataset.category.toLowerCase();
-
-            const searchMatch =
-                name.includes(search) ||
-                categories.includes(search);
-
-            const categoryMatch =
-                category === "all" ||
-                categories.includes(category);
-
-            if (searchMatch && categoryMatch) {
-
-                card.style.display = "";
-
-                visibleCount++;
-
-            } else {
-
-                card.style.display = "none";
-
-            }
+                }
+            );
 
         });
+}
 
-        if (noVoices) {
 
-            noVoices.hidden =
-                visibleCount !== 0;
+/* =========================================================
+   CONTACT FORM
+   ========================================================= */
 
-        }
+function setupContactForm() {
 
-    }
-
-    if (searchInput) {
-        searchInput.addEventListener(
-            "input",
-            filterVoices
+    const form =
+        document.getElementById(
+            "contactForm"
         );
+
+    if (!form) {
+        return;
     }
 
-    if (categorySelect) {
-        categorySelect.addEventListener(
-            "change",
-            filterVoices
-        );
-    }
+    form.addEventListener(
+        "submit",
+        function (event) {
 
+            event.preventDefault();
 
-    // ========================================
-    // BROWSER VOICE PREVIEW
-    // ========================================
-
-    const previewButtons =
-        document.querySelectorAll(".preview-voice");
-
-    const previewText =
-        document.getElementById("previewText");
-
-    let currentSpeech = null;
-
-
-    previewButtons.forEach(function (button) {
-
-        button.addEventListener("click", function () {
-
-            if (!("speechSynthesis" in window)) {
-
-                alert(
-                    "Voice preview is not supported by this browser."
+            const status =
+                document.getElementById(
+                    "contactStatus"
                 );
 
-                return;
-            }
+            if (status) {
 
-            const text =
-                previewText
-                    ? previewText.value.trim()
-                    : "Welcome to VoiceAI.";
-
-            if (!text) {
-
-                alert("Please enter preview text.");
-
-                return;
-            }
-
-
-            speechSynthesis.cancel();
-
-
-            const utterance =
-                new SpeechSynthesisUtterance(text);
-
-
-            // Voice style approximation
-            const voiceName =
-                button.dataset.voice || "";
-
-
-            if (voiceName === "Jerry B" ||
-                voiceName === "Allison") {
-
-                utterance.rate = 1.12;
-                utterance.pitch = 1.08;
-
-            } else if (voiceName === "Hale") {
-
-                utterance.rate = 0.94;
-                utterance.pitch = 0.92;
-
-            } else if (voiceName === "David Castlemore") {
-
-                utterance.rate = 0.88;
-                utterance.pitch = 0.90;
-
-            } else {
-
-                utterance.rate = 1.0;
-                utterance.pitch = 1.0;
+                status.textContent =
+                    "Message saved in this demo. Connect your backend/email API for real delivery.";
 
             }
 
+            form.reset();
 
-            currentSpeech = utterance;
-
-            speechSynthesis.speak(utterance);
-
-        });
-
-    });
-
-
-    // ========================================
-    // USE VOICE
-    // ========================================
-
-    const useButtons =
-        document.querySelectorAll(".select-voice");
-
-
-    useButtons.forEach(function (button) {
-
-        button.addEventListener("click", function () {
-
-            const selectedVoice =
-                button.dataset.voice;
-
-            localStorage.setItem(
-                "selectedVoice",
-                selectedVoice
+            showToast(
+                "Message submitted."
             );
 
-            alert(
-                selectedVoice +
-                " selected successfully."
+        }
+    );
+}
+
+
+/* =========================================================
+   GENERATE BUTTONS
+   ========================================================= */
+
+function setupGenerateButtons() {
+
+    document
+        .querySelectorAll(
+            ".generate-ai-btn, .generate-voice-btn, .generate-audio-btn"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    simulateGeneration(
+                        this
+                    );
+
+                }
             );
 
         });
+}
 
-    });
 
-});
+/* =========================================================
+   VOICE PREVIEW BUTTONS
+   ========================================================= */
 
+function setupVoicePreview() {
+
+    document
+        .querySelectorAll(
+            ".preview-voice, [data-preview-voice]"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const card =
+                        this.closest(
+                            ".voice-card"
+                        );
+
+                    const nameElement =
+                        card
+                            ? card.querySelector(
+                                "h3"
+                            )
+                            : null;
+
+                    const voiceName =
+                        nameElement
+                            ? nameElement.textContent
+                            : "";
+
+                    const text =
+                        "Hello, welcome to VoiceAI. This is a voice preview.";
+
+                    previewVoice(
+                        text,
+                        voiceName
+                    );
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================================================
+   FILE INPUT FEEDBACK
+   ========================================================= */
+
+function setupFileInputs() {
+
+    document
+        .querySelectorAll(
+            'input[type="file"]'
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                "change",
+                function () {
+
+                    if (
+                        !this.files ||
+                        !this.files.length
+                    ) {
+                        return;
+                    }
+
+                    showToast(
+                        "Selected: " +
+                        this.files[0].name
+                    );
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================================================
+   STUDIO SIDEBAR
+   ========================================================= */
+
+function setupStudio() {
+
+    document
+        .querySelectorAll(
+            ".studio-sidebar button"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    document
+                        .querySelectorAll(
+                            ".studio-sidebar button"
+                        )
+                        .forEach(item => {
+
+                            item.classList
+                                .remove(
+                                    "active"
+                                );
+
+                        });
+
+                    this.classList
+                        .add("active");
+
+                    showToast(
+                        this.textContent.trim() +
+                        " tool selected."
+                    );
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================================================
+   DUBBING DEMO
+   ========================================================= */
+
+function setupDubbing() {
+
+    document
+        .querySelectorAll(
+            ".dubbing-btn"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    simulateGeneration(
+                        this
+                    );
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================================================
+   RECORDING DEMO
+   ========================================================= */
+
+let recording = false;
+
+
+function setupRecording() {
+
+    document
+        .querySelectorAll(
+            ".record-btn"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    if (!recording) {
+
+                        if (
+                            !canUseFreeAI()
+                        ) {
+                            return;
+                        }
+
+                        recording =
+                            true;
+
+                        this.textContent =
+                            "■ Stop Recording";
+
+                        showToast(
+                            "Recording started."
+                        );
+
+                    } else {
+
+                        recording =
+                            false;
+
+                        recordFreeAIUse();
+
+                        this.textContent =
+                            "🎙 Start Recording";
+
+                        showToast(
+                            "Recording stopped."
+                        );
+                    }
+
+                }
+            );
+
+        });
+}
+
+
+/* =========================================================
+   PAGE READY
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        resetUsageIfNeeded();
+
+        updateUsageDisplay();
+
+        setupPageLinks();
+
+        setupContactForm();
+
+        setupGenerateButtons();
+
+        setupVoicePreview();
+
+        setupFileInputs();
+
+        setupStudio();
+
+        setupDubbing();
+
+        setupRecording();
+
+    }
+);
