@@ -2,46 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
         name="description"
-        content="VoiceAI — AI voice and audio creation platform."
+        content="VoiceAI — Professional AI voice, video and audio creation platform."
     >
 
-    <title>VoiceAI — AI Voice Studio</title>
+    <title>VoiceAI — AI Creator Platform</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-
-<!-- =====================================================
-     NAVBAR
-     ===================================================== -->
+<!-- ================= NAVBAR ================= -->
 
 <header class="navbar">
 
     <div class="logo">
         <a href="index.html">
-            <span>∿</span>
-            VoiceAI
+            <span>∿</span> VoiceAI
         </a>
     </div>
 
-
     <nav class="nav-links">
 
-        <a href="index.html">
+        <a href="index.html" class="active">
             Home
         </a>
 
@@ -63,20 +50,13 @@
 
     </nav>
 
-
     <div class="nav-actions">
 
-        <a
-            href="login.html"
-            class="login-btn"
-        >
+        <a href="login.html" class="login-btn">
             Login
         </a>
 
-        <a
-            href="signup.html"
-            class="nav-button"
-        >
+        <a href="signup.html" class="nav-button">
             Get Started
         </a>
 
@@ -85,100 +65,67 @@
 </header>
 
 
-
-<!-- =====================================================
-     HERO
-     ===================================================== -->
+<!-- ================= HOME ================= -->
 
 <main>
 
 
-<section
-    id="home"
-    class="hero"
->
-
+<section class="hero">
 
     <div class="hero-content">
 
-
         <span class="badge">
-            NEXT GENERATION AI VOICE PLATFORM
+            NEXT GENERATION AI CREATOR PLATFORM
         </span>
 
-
         <h1>
-
             Create
-
-            <span>
-                Natural AI Voice
-            </span>
-
-            in Seconds
-
+            <span>Realistic AI Voice</span>
+            & Content
         </h1>
 
-
         <p>
-
-            Generate realistic speech, explore voices,
-            edit audio, create captions and build AI
-            voice projects from one powerful workspace.
-
+            Generate professional voiceovers, create audio,
+            test AI video workflows and build creative projects
+            from one powerful workspace.
         </p>
 
-
         <div class="hero-buttons">
-
 
             <a
                 href="tools.html"
                 class="primary-btn"
             >
-                Try for Free
+                Start Creating
             </a>
-
 
             <a
-                href="tools.html"
+                href="video.html"
                 class="secondary-btn"
             >
-                Explore AI Tools
+                Test AI Video
             </a>
 
-
         </div>
-
 
         <div class="hero-info">
 
-            <span>
-                ✓ All sections available
-            </span>
+            <span>✓ All tools available</span>
 
-            <span>
-                ✓ 5 free uses/day
-            </span>
+            <span>✓ 5 free uses / day</span>
 
-            <span>
-                ✓ Mobile + PC
-            </span>
+            <span>✓ PC + Mobile</span>
 
         </div>
 
-
     </div>
-
 
 
     <!-- HERO GENERATOR -->
 
     <div class="hero-generator">
 
-
         <div class="generator-header">
-
 
             <div>
 
@@ -192,23 +139,20 @@
 
             </div>
 
-
             <span class="status-dot">
                 ●
             </span>
-
 
         </div>
 
 
         <textarea
             id="heroText"
-            placeholder="Type your text here..."
-        >Welcome to VoiceAI. Create realistic AI voice in seconds.</textarea>
+            placeholder="Type your script here..."
+        >Welcome to VoiceAI. Create professional AI voice content in seconds.</textarea>
 
 
         <div class="generator-row">
-
 
             <select id="heroVoice">
 
@@ -217,15 +161,19 @@
                 </option>
 
                 <option>
-                    News Reader
+                    Male — News
                 </option>
 
                 <option>
-                    Warm Narrator
+                    Male — Advertisement
                 </option>
 
                 <option>
-                    Energetic
+                    Female — Professional
+                </option>
+
+                <option>
+                    Female — Energetic
                 </option>
 
             </select>
@@ -238,7 +186,6 @@
                 Generate
             </button>
 
-
         </div>
 
 
@@ -246,83 +193,57 @@
             〰〰〰〰〰〰〰〰〰
         </div>
 
-
     </div>
-
 
 </section>
 
 
+<!-- ================= QUICK ACCESS ================= -->
 
-<!-- =====================================================
-     AI TOOLS
-     ===================================================== -->
-
-<section
-    id="tools"
-    class="section"
->
-
+<section class="section">
 
     <div class="section-heading">
 
-
         <span>
-            AI CREATOR SUITE
+            CREATOR WORKSPACE
         </span>
 
-
         <h2>
-
-            Everything you need
-
-            <br>
-
-            for AI audio
-
+            Everything in one place.
         </h2>
 
-
         <p>
-            Access every tool from one simple workspace.
+            Choose a tool and start creating.
         </p>
 
-
     </div>
-
 
 
     <div class="tools-grid">
 
 
-        <a
-            href="tools.html#tts"
-            class="tool-card"
-        >
+        <a href="tools.html" class="tool-card">
 
             <div class="tool-icon">
                 🎙️
             </div>
 
             <h3>
-                Text to Speech
+                AI Tools
             </h3>
 
             <p>
-                Convert text into natural AI speech.
+                Text to speech, voice tools, dubbing,
+                music and more.
             </p>
 
         </a>
 
 
-
-        <a
-            href="voices.html"
-            class="tool-card"
-        >
+        <a href="voices.html" class="tool-card">
 
             <div class="tool-icon">
-                ⭐
+                🎧
             </div>
 
             <h3>
@@ -330,62 +251,16 @@
             </h3>
 
             <p>
-                Browse realistic voices and styles.
+                Explore realistic male and female voices.
             </p>
 
         </a>
 
 
-
-        <a
-            href="tools.html#clone"
-            class="tool-card"
-        >
+        <a href="studio.html" class="tool-card">
 
             <div class="tool-icon">
-                👤
-            </div>
-
-            <h3>
-                Voice Clone
-            </h3>
-
-            <p>
-                Create your own AI voice project.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="tools.html#changer"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                🔄
-            </div>
-
-            <h3>
-                Voice Changer
-            </h3>
-
-            <p>
-                Transform an existing voice recording.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="studio.html"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                ✏️
+                ✨
             </div>
 
             <h3>
@@ -393,252 +268,107 @@
             </h3>
 
             <p>
-                Edit and organize your audio projects.
+                Edit and organize your creative projects.
             </p>
 
         </a>
 
 
-
-        <a
-            href="tools.html#dubbing"
-            class="tool-card"
-        >
+        <a href="video.html" class="tool-card">
 
             <div class="tool-icon">
-                🌍
+                🎬
             </div>
 
             <h3>
-                Dubbing
+                AI Video Testing
             </h3>
 
             <p>
-                Create multilingual voice projects.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="tools.html#music"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                🎵
-            </div>
-
-            <h3>
-                Music & SFX
-            </h3>
-
-            <p>
-                Create music and sound effects.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="tools.html#stt"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                📝
-            </div>
-
-            <h3>
-                Speech to Text
-            </h3>
-
-            <p>
-                Convert speech into text and captions.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="tools.html#agents"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                🤖
-            </div>
-
-            <h3>
-                AI Voice Agents
-            </h3>
-
-            <p>
-                Build conversational AI voice agents.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="pricing.html"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                💳
-            </div>
-
-            <h3>
-                Premium
-            </h3>
-
-            <p>
-                Unlock advanced AI capabilities.
+                Upload and test your AI video workflow.
             </p>
 
         </a>
 
 
     </div>
-
 
 </section>
 
 
-
-<!-- =====================================================
-     WHY VOICEAI
-     ===================================================== -->
+<!-- ================= AI VIDEO ================= -->
 
 <section class="feature-section">
 
-
     <div class="feature-text">
 
-
         <span>
-            WHY VOICEAI
+            AI VIDEO
         </span>
 
-
         <h2>
-
-            One workspace
-
-            <br>
-
-            for your voice projects.
-
+            Test your video workflow.
         </h2>
 
-
         <p>
-
-            Create voiceovers, explore voice styles,
-            prepare captions, work with audio and
-            organize projects from one platform.
-
+            Upload a video, preview your content,
+            select an AI voice and prepare it for
+            your final project.
         </p>
 
-
-        <div class="hero-buttons">
-
-            <a
-                href="about.html"
-                class="primary-btn"
-            >
-                About VoiceAI
-            </a>
-
-            <a
-                href="faq.html"
-                class="secondary-btn"
-            >
-                Read FAQ
-            </a>
-
-        </div>
-
+        <a
+            href="video.html"
+            class="primary-btn"
+        >
+            Open AI Video
+        </a>
 
     </div>
-
 
 
     <div class="feature-card">
 
+        <div class="editor-preview">
 
-        <div class="tool-icon">
-            ✨
-        </div>
+            <div class="preview-icon">
+                ▶
+            </div>
 
+            <h3>
+                AI Video Testing
+            </h3>
 
-        <h3>
-            Built for creators
-        </h3>
-
-
-        <p>
-
-            Designed for advertisements,
-            narration, social content, podcasts,
-            videos and creative projects.
-
-        </p>
-
-
-        <div class="price-limit">
-
-            <strong>
-                5
-            </strong>
-
-            <span>
-                Free AI uses / day
-            </span>
+            <p>
+                Video + Voice + Preview
+            </p>
 
         </div>
-
 
     </div>
-
 
 </section>
 
 
-
-<!-- =====================================================
-     VOICE PREVIEW
-     ===================================================== -->
+<!-- ================= VOICE LIBRARY PREVIEW ================= -->
 
 <section class="section">
 
-
     <div class="section-heading">
-
 
         <span>
             VOICE LIBRARY
         </span>
 
-
         <h2>
             Find the right voice.
         </h2>
 
-
         <p>
-            Explore voice styles designed for different
-            types of content.
+            Male and female voices for different
+            creative projects.
         </p>
 
-
     </div>
-
 
 
     <div class="voice-grid">
@@ -646,134 +376,96 @@
 
         <div class="voice-card">
 
-
             <div class="voice-avatar">
                 D
             </div>
 
+            <h3>
+                David
+            </h3>
 
-            <div class="voice-card-content">
+            <p>
+                Male · News · Documentary
+            </p>
 
-
-                <span class="voice-badge">
-                    PROFESSIONAL
-                </span>
-
-
-                <h3>
-                    David Castlemore
-                </h3>
-
-
-                <p>
-                    Newsreader · Documentary
-                </p>
-
-
-                <div class="voice-actions">
-
-                    <button
-                        type="button"
-                        class="preview-voice"
-                    >
-                        ▶ Preview
-                    </button>
-
-                </div>
-
-
-            </div>
-
+            <button
+                type="button"
+                class="preview-voice"
+            >
+                ▶ Preview
+            </button>
 
         </div>
 
 
-
         <div class="voice-card">
-
 
             <div class="voice-avatar">
                 B
             </div>
 
+            <h3>
+                Bryan
+            </h3>
 
-            <div class="voice-card-content">
+            <p>
+                Male · Ads · Narration
+            </p>
 
-
-                <span class="voice-badge">
-                    ADVERTISING
-                </span>
-
-
-                <h3>
-                    Bryan
-                </h3>
-
-
-                <p>
-                    Polished · Engaging
-                </p>
-
-
-                <div class="voice-actions">
-
-                    <button
-                        type="button"
-                        class="preview-voice"
-                    >
-                        ▶ Preview
-                    </button>
-
-                </div>
-
-
-            </div>
-
+            <button
+                type="button"
+                class="preview-voice"
+            >
+                ▶ Preview
+            </button>
 
         </div>
 
 
-
         <div class="voice-card">
-
 
             <div class="voice-avatar">
                 J
             </div>
 
+            <h3>
+                Juniper
+            </h3>
 
-            <div class="voice-card-content">
+            <p>
+                Female · Professional
+            </p>
 
+            <button
+                type="button"
+                class="preview-voice"
+            >
+                ▶ Preview
+            </button>
 
-                <span class="voice-badge">
-                    CONVERSATIONAL
-                </span>
-
-
-                <h3>
-                    Juniper
-                </h3>
-
-
-                <p>
-                    Grounded · Professional
-                </p>
-
-
-                <div class="voice-actions">
-
-                    <button
-                        type="button"
-                        class="preview-voice"
-                    >
-                        ▶ Preview
-                    </button>
-
-                </div>
+        </div>
 
 
+        <div class="voice-card">
+
+            <div class="voice-avatar">
+                A
             </div>
 
+            <h3>
+                Allison
+            </h3>
+
+            <p>
+                Female · Commercial · Energetic
+            </p>
+
+            <button
+                type="button"
+                class="preview-voice"
+            >
+                ▶ Preview
+            </button>
 
         </div>
 
@@ -787,143 +479,136 @@
             href="voices.html"
             class="secondary-btn"
         >
-            View All Voices
+            View Voice Library
         </a>
 
     </div>
 
-
 </section>
 
 
+<!-- ================= ABOUT / FAQ / CONTACT ================= -->
 
-<!-- =====================================================
-     STUDIO
-     ===================================================== -->
-
-<section class="feature-section">
-
-
-    <div class="feature-card">
-
-
-        <div class="editor-preview">
-
-            <div class="preview-icon">
-                ▶
-            </div>
-
-            <strong>
-                AI Studio
-            </strong>
-
-            <span>
-                Voice · Music · Effects · Captions
-            </span>
-
-        </div>
-
-
-        <div class="timeline">
-
-            <div class="timeline-track">
-
-                <span>
-                    Voice
-                </span>
-
-                <div class="track-bar">
-                    Voice Track
-                </div>
-
-            </div>
-
-
-            <div class="timeline-track">
-
-                <span>
-                    Music
-                </span>
-
-                <div class="track-bar">
-                    Music Track
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-
-    <div class="feature-text">
-
-
-        <span>
-            AI STUDIO
-        </span>
-
-
-        <h2>
-            Build projects in one place.
-        </h2>
-
-
-        <p>
-
-            Organize voice, music, effects and
-            captions inside a dedicated workspace.
-
-        </p>
-
-
-        <a
-            href="studio.html"
-            class="primary-btn"
-        >
-            Open Studio
-        </a>
-
-
-    </div>
-
-
-</section>
-
-
-
-<!-- =====================================================
-     FREE + PREMIUM
-     ===================================================== -->
-
-<section class="section pricing-section">
-
+<section class="section">
 
     <div class="section-heading">
 
-
         <span>
-            SIMPLE PLANS
+            VOICEAI INFORMATION
         </span>
 
+        <h2>
+            Learn more about the platform.
+        </h2>
+
+        <p>
+            Explore VoiceAI, get answers or contact support.
+        </p>
+
+    </div>
+
+
+    <div class="tools-grid">
+
+
+        <!-- ABOUT -->
+
+        <a
+            href="about.html"
+            class="tool-card"
+        >
+
+            <div class="tool-icon">
+                ℹ️
+            </div>
+
+            <h3>
+                About
+            </h3>
+
+            <p>
+                Learn about VoiceAI and its creator tools.
+            </p>
+
+            <span class="card-link">
+                Open About →
+            </span>
+
+        </a>
+
+
+        <!-- FAQ -->
+
+        <a
+            href="faq.html"
+            class="tool-card"
+        >
+
+            <div class="tool-icon">
+                ❓
+            </div>
+
+            <h3>
+                FAQ
+            </h3>
+
+            <p>
+                Find answers about tools, plans and usage.
+            </p>
+
+            <span class="card-link">
+                Open FAQ →
+            </span>
+
+        </a>
+
+
+        <!-- CONTACT -->
+
+        <a
+            href="contact.html"
+            class="tool-card"
+        >
+
+            <div class="tool-icon">
+                ✉️
+            </div>
+
+            <h3>
+                Contact
+            </h3>
+
+            <p>
+                Contact support for help and questions.
+            </p>
+
+            <span class="card-link">
+                Contact Us →
+            </span>
+
+        </a>
+
+
+    </div>
+
+</section>
+
+
+<!-- ================= PRICING PREVIEW ================= -->
+
+<section class="section pricing-section">
+
+    <div class="section-heading">
+
+        <span>
+            SIMPLE PRICING
+        </span>
 
         <h2>
             Start free. Upgrade when you need more.
         </h2>
 
-
-        <p>
-            Free users get 5 AI uses per day.
-            Premium is designed for higher usage
-            and advanced features.
-        </p>
-
-
     </div>
-
 
 
     <div class="pricing-grid">
@@ -931,21 +616,17 @@
 
         <div class="price-card">
 
-
-            <span class="plan-label">
+            <span>
                 FREE
             </span>
 
-
             <h3>
-                ₹0
+                $0
             </h3>
 
-
             <p>
-                For trying the platform.
+                Try the platform.
             </p>
-
 
             <ul>
 
@@ -966,41 +647,35 @@
                 </li>
 
                 <li>
-                    ✓ Mobile + PC
+                    ✓ PC + Mobile
                 </li>
 
             </ul>
 
-
             <a
                 href="signup.html"
-                class="secondary-btn plan-button"
+                class="secondary-btn"
             >
                 Start Free
             </a>
 
-
         </div>
-
 
 
         <div class="price-card premium">
 
-
-            <span class="plan-label">
+            <span>
                 PREMIUM
             </span>
 
-
             <h3>
-                Premium
+                $20
+                <small>/month</small>
             </h3>
-
 
             <p>
                 For advanced creators.
             </p>
-
 
             <ul>
 
@@ -1009,7 +684,7 @@
                 </li>
 
                 <li>
-                    ✓ Higher usage
+                    ✓ Higher / unlimited usage*
                 </li>
 
                 <li>
@@ -1021,19 +696,17 @@
                 </li>
 
                 <li>
-                    ✓ Priority processing*
+                    ✓ Download outputs
                 </li>
 
             </ul>
 
-
             <a
                 href="pricing.html"
-                class="primary-btn plan-button"
+                class="primary-btn"
             >
                 View Premium
             </a>
-
 
         </div>
 
@@ -1042,148 +715,39 @@
 
 
     <p class="pricing-note">
-        *Final processing limits depend on the connected
-        AI provider and seller's backend/API configuration.
+        *Actual usage depends on the connected AI provider
+        and backend/API limits.
     </p>
 
-
 </section>
-
-
-
-<!-- =====================================================
-     ABOUT / FAQ / CONTACT
-     ===================================================== -->
-
-<section class="section">
-
-
-    <div class="section-heading">
-
-        <span>
-            VOICEAI
-        </span>
-
-        <h2>
-            Need more information?
-        </h2>
-
-        <p>
-            Learn about the platform, find answers,
-            or contact support.
-        </p>
-
-    </div>
-
-
-
-    <div class="tools-grid">
-
-
-        <a
-            href="about.html"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                ℹ️
-            </div>
-
-            <h3>
-                About
-            </h3>
-
-            <p>
-                Learn more about VoiceAI.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="faq.html"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                ❓
-            </div>
-
-            <h3>
-                FAQ
-            </h3>
-
-            <p>
-                Find answers to common questions.
-            </p>
-
-        </a>
-
-
-
-        <a
-            href="contact.html"
-            class="tool-card"
-        >
-
-            <div class="tool-icon">
-                ✉️
-            </div>
-
-            <h3>
-                Contact
-            </h3>
-
-            <p>
-                Contact the VoiceAI support team.
-            </p>
-
-        </a>
-
-
-    </div>
-
-
-</section>
-
 
 
 </main>
 
 
-
-<!-- =====================================================
-     FOOTER
-     ===================================================== -->
+<!-- ================= FOOTER ================= -->
 
 <footer>
 
 
     <div class="footer-brand">
 
-
         <h2>
             ∿ VoiceAI
         </h2>
 
-
         <p>
-            AI voice and audio creation platform.
+            Professional AI voice, video and audio creation.
         </p>
-
 
     </div>
 
 
-
     <div>
-
 
         <h4>
             Platform
         </h4>
-
 
         <a href="index.html">
             Home
@@ -1201,18 +765,18 @@
             Studio
         </a>
 
+        <a href="video.html">
+            AI Video
+        </a>
 
     </div>
 
 
-
     <div>
-
 
         <h4>
             Company
         </h4>
-
 
         <a href="about.html">
             About
@@ -1226,27 +790,26 @@
             Contact
         </a>
 
-
     </div>
-
 
 
     <div>
 
-
         <h4>
-            Plans
+            Account
         </h4>
 
+        <a href="login.html">
+            Login
+        </a>
 
-        <a href="pricing.html">
-            Free
+        <a href="signup.html">
+            Sign Up
         </a>
 
         <a href="pricing.html">
-            Premium
+            Premium — $20
         </a>
-
 
     </div>
 
@@ -1254,13 +817,7 @@
 </footer>
 
 
-
-<!-- =====================================================
-     JAVASCRIPT
-     ===================================================== -->
-
 <script src="script.js"></script>
-
 
 </body>
 </html>
