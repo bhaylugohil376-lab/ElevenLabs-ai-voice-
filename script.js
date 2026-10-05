@@ -1,86 +1,170 @@
 /* =========================================================
-   VOICEAI — FINAL SCRIPT
-   Frontend demo / UI logic
+   VOICEAI — MAIN SCRIPT
    ========================================================= */
 
 "use strict";
 
 
 /* =========================================================
-   DAILY FREE USAGE
-   Free users: 5 AI actions per 24-hour period
+   CONFIG
    ========================================================= */
 
-const FREE_DAILY_LIMIT = 5;
+const VOICEAI_CONFIG = {
 
-const USAGE_KEY = "voiceai_daily_usage";
-const USAGE_DATE_KEY = "voiceai_usage_date";
+    freeDailyLimit: 5,
+
+    storageKey: "voiceai_usage",
+
+    premiumStorageKey: "voiceai_premium",
+
+    apiBase: "/api"
+
+};
 
 
-function getTodayKey() {
-    const now = new Date();
+/* =========================================================
+   DOM READY
+   ========================================================= */
 
-    return (
-        now.getFullYear() +
-        "-" +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        "-" +
-        String(now.getDate()).padStart(2, "0")
+document.addEventListener("DOMContentLoaded", () => {
+
+    initUsageSystem();
+
+    initHeroGenerator();
+
+    initVoicePreviewButtons();
+
+    initDownloadButtons();
+
+    initFileInputs();
+
+    initMobileNavigation();
+
+});
+
+
+/* =========================================================
+   USAGE SYSTEM
+   ========================================================= */
+
+function getUsageData() {
+
+    const saved = localStorage.getItem(
+        VOICEAI_CONFIG.storageKey
     );
-}
 
+    if (!saved) {
 
-function resetUsageIfNeeded() {
+        return {
+            date: getTodayKey(),
+            count: 0
+        };
 
-    const today = getTodayKey();
+    }
 
-    const savedDate =
-        localStorage.getItem(USAGE_DATE_KEY);
+    try {
 
-    if (savedDate !== today) {
+        const data = JSON.parse(saved);
+
+        if (data.date !== getTodayKey()) {
+
+            const fresh = {
+                date: getTodayKey(),
+                count: 0
+            };
+
+            localStorage.setItem(
+                VOICEAI_CONFIG.storageKey,
+                JSON.stringify(fresh)
+            );
+
+            return fresh;
+        }
+
+        return data;
+
+    } catch (error) {
+
+        const fresh = {
+            date: getTodayKey(),
+            count: 0
+        };
 
         localStorage.setItem(
-            USAGE_DATE_KEY,
-            today
+            VOICEAI_CONFIG.storageKey,
+            JSON.stringify(fresh)
         );
 
-        localStorage.setItem(
-            USAGE_KEY,
-            "0"
-        );
+        return fresh;
     }
 }
 
 
-function getDailyUsage() {
+function saveUsageData(data) {
 
-    resetUsageIfNeeded();
-
-    return Number(
-        localStorage.getItem(USAGE_KEY) || "0"
+    localStorage.setItem(
+        VOICEAI_CONFIG.storageKey,
+        JSON.stringify(data)
     );
+
 }
 
 
-function getRemainingFreeUses() {
+function getTodayKey() {
 
-    return Math.max(
-        0,
-        FREE_DAILY_LIMIT - getDailyUsage()
-    );
+    const now = new Date();
+
+    return [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0")
+    ].join("-");
+
 }
 
 
-function canUseFreeAI() {
+/* =========================================================
+   PREMIUM CHECK
+   ========================================================= */
 
-    resetUsageIfNeeded();
+function isPremiumUser() {
 
-    const usage = getDailyUsage();
+    return localStorage.getItem(
+        VOICEAI_CONFIG.premiumStorageKey
+    ) === "true";
 
-    if (usage >= FREE_DAILY_LIMIT) {
+}
+
+
+/*
+ * IMPORTANT:
+ * Client-side premium status is only for demo/UI.
+ *
+ * Real production premium access MUST be verified
+ * on the backend after payment.
+ */
+
+
+/* =========================================================
+   CHECK USAGE
+   ========================================================= */
+
+function canUseAI() {
+
+    if (isPremiumUser()) {
+
+        return true;
+    }
+
+    const usage = getUsageData();
+
+    if (
+        usage.count >=
+        VOICEAI_CONFIG.freeDailyLimit
+    ) {
 
         showToast(
-            "Daily free limit reached. 5 uses are available every 24 hours."
+            "Free limit reached. You have used 5 AI generations today."
         );
 
         return false;
@@ -90,33 +174,610 @@ function canUseFreeAI() {
 }
 
 
-function recordFreeAIUse() {
+/* =========================================================
+   INCREASE USAGE
+   ========================================================= */
 
-    resetUsageIfNeeded();
+function consumeAIUse() {
 
-    const usage = getDailyUsage();
+    if (isPremiumUser()) {
 
-    localStorage.setItem(
-        USAGE_KEY,
-        String(usage + 1)
-    );
+        return true;
+    }
+
+    const usage = getUsageData();
+
+    usage.count += 1;
+
+    saveUsageData(usage);
 
     updateUsageDisplay();
+
+    return true;
 }
 
 
+/* =========================================================
+   USAGE DISPLAY
+   ========================================================= */
+
 function updateUsageDisplay() {
 
-    const remaining =
-        getRemainingFreeUses();
+    const elements =
+        document.querySelectorAll(
+            "[data-usage-count]"
+        );
 
-    document
-        .querySelectorAll("[data-free-uses]")
-        .forEach(element => {
+    const usage = getUsageData();
+
+    elements.forEach((element) => {
+
+        if (isPremiumUser()) {
 
             element.textContent =
-                remaining;
+                "Premium · Unlimited";
+
+            return;
+        }
+
+        const remaining =
+            Math.max(
+                0,
+                VOICEAI_CONFIG.freeDailyLimit -
+                usage.count
+            );
+
+        element.textContent =
+            `${remaining} free uses remaining today`;
+
+    });
+
+}
+
+
+/* =========================================================
+   INIT USAGE
+   ========================================================= */
+
+function initUsageSystem() {
+
+    getUsageData();
+
+    updateUsageDisplay();
+
+}
+
+
+/* =========================================================
+   HERO GENERATOR
+   ========================================================= */
+
+function initHeroGenerator() {
+
+    const button =
+        document.querySelector(
+            ".generate-ai-btn"
+        );
+
+    if (!button) {
+        return;
+    }
+
+    button.addEventListener(
+        "click",
+        async () => {
+
+            const text =
+                document.querySelector(
+                    "#heroText"
+                );
+
+            const voice =
+                document.querySelector(
+                    "#heroVoice"
+                );
+
+            if (!text || !voice) {
+                return;
+            }
+
+            const value =
+                text.value.trim();
+
+            if (!value) {
+
+                showToast(
+                    "Please enter some text first."
+                );
+
+                text.focus();
+
+                return;
+            }
+
+            if (!canUseAI()) {
+                return;
+            }
+
+            button.disabled = true;
+
+            button.textContent =
+                "Generating...";
+
+            try {
+
+                const result =
+                    await generateSpeech({
+                        text: value,
+                        voice: voice.value
+                    });
+
+                if (
+                    result &&
+                    result.success
+                ) {
+
+                    consumeAIUse();
+
+                    showToast(
+                        "Voice generated successfully."
+                    );
+
+                    if (result.audioUrl) {
+
+                        createAudioResult(
+                            result.audioUrl
+                        );
+
+                    }
+
+                } else {
+
+                    showToast(
+                        result?.message ||
+                        "Voice generation is not available yet."
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "VoiceAI generation error:",
+                    error
+                );
+
+                showToast(
+                    "Unable to generate voice. Check your API connection."
+                );
+
+            } finally {
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Generate";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TTS API
+   ========================================================= */
+
+async function generateSpeech(payload) {
+
+    /*
+     * Production endpoint:
+     *
+     * POST /api/generate
+     *
+     * Expected JSON:
+     * {
+     *   text: "...",
+     *   voice: "..."
+     * }
+     *
+     * Expected response:
+     * {
+     *   success: true,
+     *   audioUrl: "..."
+     * }
+     */
+
+    const response =
+        await fetch(
+            `${VOICEAI_CONFIG.apiBase}/generate`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify(
+                    payload
+                )
+            }
+        );
+
+    if (!response.ok) {
+
+        throw new Error(
+            `API error: ${response.status}`
+        );
+
+    }
+
+    return await response.json();
+
+}
+
+
+/* =========================================================
+   AUDIO RESULT
+   ========================================================= */
+
+function createAudioResult(
+    audioUrl
+) {
+
+    let container =
+        document.querySelector(
+            "#voiceaiAudioResult"
+        );
+
+    if (!container) {
+
+        container =
+            document.createElement(
+                "div"
+            );
+
+        container.id =
+            "voiceaiAudioResult";
+
+        container.style.marginTop =
+            "15px";
+
+        const generator =
+            document.querySelector(
+                ".hero-generator"
+            );
+
+        if (generator) {
+
+            generator.appendChild(
+                container
+            );
+
+        }
+
+    }
+
+    container.innerHTML = "";
+
+    const audio =
+        document.createElement(
+            "audio"
+        );
+
+    audio.controls = true;
+
+    audio.preload = "metadata";
+
+    audio.src = audioUrl;
+
+    audio.style.width =
+        "100%";
+
+    const download =
+        document.createElement(
+            "a"
+        );
+
+    download.href =
+        audioUrl;
+
+    download.download =
+        "voiceai-generated-audio.mp3";
+
+    download.className =
+        "primary-btn";
+
+    download.textContent =
+        "Download Audio";
+
+    download.style.marginTop =
+        "10px";
+
+    container.appendChild(
+        audio
+    );
+
+    container.appendChild(
+        download
+    );
+
+}
+
+
+/* =========================================================
+   VOICE PREVIEW
+   ========================================================= */
+
+function initVoicePreviewButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            ".preview-voice"
+        );
+
+    buttons.forEach((button) => {
+
+        button.addEventListener(
+            "click",
+            async () => {
+
+                const card =
+                    button.closest(
+                        ".voice-card"
+                    );
+
+                if (!card) {
+                    return;
+                }
+
+                const name =
+                    card.querySelector(
+                        "h3"
+                    )?.textContent
+                    ?.trim();
+
+                if (!name) {
+                    return;
+                }
+
+                const audioUrl =
+                    button.dataset.audio;
+
+                if (audioUrl) {
+
+                    playVoicePreview(
+                        audioUrl,
+                        button
+                    );
+
+                    return;
+                }
+
+                /*
+                 * If the voice card has no preview
+                 * URL yet, show a clear message instead
+                 * of pretending it is real.
+                 */
+
+                showToast(
+                    `${name} preview will use the connected voice API.`
+                );
+
+            }
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   PLAY PREVIEW
+   ========================================================= */
+
+let currentPreviewAudio = null;
+
+function playVoicePreview(
+    audioUrl,
+    button
+) {
+
+    if (currentPreviewAudio) {
+
+        currentPreviewAudio.pause();
+
+        currentPreviewAudio.currentTime =
+            0;
+
+    }
+
+    const audio =
+        new Audio(audioUrl);
+
+    currentPreviewAudio =
+        audio;
+
+    const oldText =
+        button.textContent;
+
+    button.textContent =
+        "⏸ Playing...";
+
+    audio.play()
+        .catch(() => {
+
+            showToast(
+                "Unable to play voice preview."
+            );
+
         });
+
+    audio.addEventListener(
+        "ended",
+        () => {
+
+            button.textContent =
+                oldText;
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DOWNLOAD BUTTONS
+   ========================================================= */
+
+function initDownloadButtons() {
+
+    document.addEventListener(
+        "click",
+        (event) => {
+
+            const button =
+                event.target.closest(
+                    "[data-download]"
+                );
+
+            if (!button) {
+                return;
+            }
+
+            const url =
+                button.dataset.download;
+
+            if (!url) {
+
+                showToast(
+                    "Download file is not ready."
+                );
+
+                return;
+            }
+
+            downloadFile(
+                url,
+                button.dataset.filename ||
+                "voiceai-output"
+            );
+
+        }
+    );
+
+}
+
+
+function downloadFile(
+    url,
+    filename
+) {
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+    link.href = url;
+
+    link.download =
+        filename;
+
+    link.target = "_blank";
+
+    document.body.appendChild(
+        link
+    );
+
+    link.click();
+
+    link.remove();
+
+}
+
+
+/* =========================================================
+   FILE INPUTS
+   ========================================================= */
+
+function initFileInputs() {
+
+    const inputs =
+        document.querySelectorAll(
+            'input[type="file"]'
+        );
+
+    inputs.forEach((input) => {
+
+        input.addEventListener(
+            "change",
+            () => {
+
+                if (
+                    !input.files ||
+                    !input.files.length
+                ) {
+                    return;
+                }
+
+                const file =
+                    input.files[0];
+
+                const maxSize =
+                    200 * 1024 * 1024;
+
+                if (
+                    file.size > maxSize
+                ) {
+
+                    showToast(
+                        "File is too large. Maximum size is 200MB."
+                    );
+
+                    input.value = "";
+
+                    return;
+                }
+
+                showToast(
+                    `${file.name} selected.`
+                );
+
+            }
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   MOBILE NAVIGATION
+   ========================================================= */
+
+function initMobileNavigation() {
+
+    /*
+     * Main navigation uses separate HTML pages.
+     * No SPA route replacement is used.
+     *
+     * This keeps:
+     *
+     * Home       -> index.html
+     * Tools      -> tools.html
+     * Voices     -> voices.html
+     * Studio     -> studio.html
+     * Pricing    -> pricing.html
+     * About      -> about.html
+     * FAQ        -> faq.html
+     * Contact    -> contact.html
+     * AI Video   -> video.html
+     */
+
 }
 
 
@@ -127,57 +788,46 @@ function updateUsageDisplay() {
 function showToast(message) {
 
     let toast =
-        document.getElementById(
-            "voiceaiToast"
+        document.querySelector(
+            "#voiceaiToast"
         );
 
     if (!toast) {
 
         toast =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         toast.id =
             "voiceaiToast";
 
-        toast.style.position =
-            "fixed";
-
-        toast.style.left =
-            "50%";
-
-        toast.style.bottom =
-            "25px";
-
-        toast.style.transform =
-            "translateX(-50%)";
-
-        toast.style.zIndex =
-            "99999";
-
-        toast.style.padding =
-            "13px 18px";
-
-        toast.style.borderRadius =
-            "10px";
-
-        toast.style.background =
-            "#171920";
-
-        toast.style.border =
-            "1px solid #343741";
-
-        toast.style.color =
-            "#ffffff";
-
-        toast.style.fontSize =
-            "13px";
-
-        toast.style.boxShadow =
-            "0 15px 50px rgba(0,0,0,.4)";
+        Object.assign(
+            toast.style,
+            {
+                position: "fixed",
+                left: "50%",
+                bottom: "25px",
+                transform: "translateX(-50%)",
+                zIndex: "99999",
+                maxWidth: "90%",
+                padding: "12px 18px",
+                borderRadius: "10px",
+                background: "#ffffff",
+                color: "#08090d",
+                fontSize: "13px",
+                fontWeight: "700",
+                boxShadow:
+                    "0 15px 40px rgba(0,0,0,.35)",
+                opacity: "0",
+                pointerEvents: "none"
+            }
+        );
 
         document.body.appendChild(
             toast
         );
+
     }
 
     toast.textContent =
@@ -187,498 +837,41 @@ function showToast(message) {
         "1";
 
     clearTimeout(
-        toast._timer
+        toast._timeout
     );
 
-    toast._timer =
-        setTimeout(() => {
+    toast._timeout =
+        setTimeout(
+            () => {
 
-            toast.style.opacity =
-                "0";
+                toast.style.opacity =
+                    "0";
 
-        }, 3000);
-}
-
-
-/* =========================================================
-   AI ACTION HANDLER
-   ========================================================= */
-
-function runFreeAIAction(
-    callback
-) {
-
-    if (!canUseFreeAI()) {
-        return;
-    }
-
-    recordFreeAIUse();
-
-    if (typeof callback === "function") {
-        callback();
-    }
-}
-
-
-/* =========================================================
-   DEMO GENERATION
-   ========================================================= */
-
-function simulateGeneration(button) {
-
-    if (!canUseFreeAI()) {
-        return;
-    }
-
-    recordFreeAIUse();
-
-    const originalText =
-        button.textContent;
-
-    button.disabled = true;
-
-    button.textContent =
-        "Generating...";
-
-    setTimeout(() => {
-
-        button.disabled =
-            false;
-
-        button.textContent =
-            originalText;
-
-        showToast(
-            "Demo generation completed successfully."
+            },
+            3000
         );
 
-    }, 1500);
 }
 
 
 /* =========================================================
-   VOICE PREVIEW
-   Browser SpeechSynthesis demo
+   PUBLIC HELPERS
    ========================================================= */
 
-let currentSpeech = null;
+window.VoiceAI = {
 
+    canUseAI,
 
-function previewVoice(text, voiceName) {
+    consumeAIUse,
 
-    if (
-        !("speechSynthesis" in window)
-    ) {
+    getUsageData,
 
-        showToast(
-            "Voice preview is not supported in this browser."
-        );
+    isPremiumUser,
 
-        return;
-    }
+    showToast,
 
-    window.speechSynthesis.cancel();
+    generateSpeech,
 
-    const speech =
-        new SpeechSynthesisUtterance(
-            text
-        );
+    downloadFile
 
-    speech.rate = 0.95;
-    speech.pitch = 1;
-    speech.volume = 1;
-
-    const voices =
-        window.speechSynthesis
-            .getVoices();
-
-    const matchedVoice =
-        voices.find(
-            voice =>
-                voice.name
-                    .toLowerCase()
-                    .includes(
-                        String(
-                            voiceName || ""
-                        ).toLowerCase()
-                    )
-        );
-
-    if (matchedVoice) {
-        speech.voice =
-            matchedVoice;
-    }
-
-    currentSpeech =
-        speech;
-
-    window.speechSynthesis
-        .speak(speech);
-}
-
-
-/* =========================================================
-   MOBILE / INTERNAL PAGE LINKS
-   ========================================================= */
-
-function setupPageLinks() {
-
-    document
-        .querySelectorAll(
-            'a[href^="#"]'
-        )
-        .forEach(link => {
-
-            link.addEventListener(
-                "click",
-                function (event) {
-
-                    const targetId =
-                        this.getAttribute(
-                            "href"
-                        );
-
-                    if (
-                        !targetId ||
-                        targetId === "#"
-                    ) {
-                        return;
-                    }
-
-                    const target =
-                        document.querySelector(
-                            targetId
-                        );
-
-                    if (!target) {
-                        return;
-                    }
-
-                    event.preventDefault();
-
-                    target.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
-
-                }
-            );
-
-        });
-}
-
-
-/* =========================================================
-   CONTACT FORM
-   ========================================================= */
-
-function setupContactForm() {
-
-    const form =
-        document.getElementById(
-            "contactForm"
-        );
-
-    if (!form) {
-        return;
-    }
-
-    form.addEventListener(
-        "submit",
-        function (event) {
-
-            event.preventDefault();
-
-            const status =
-                document.getElementById(
-                    "contactStatus"
-                );
-
-            if (status) {
-
-                status.textContent =
-                    "Message saved in this demo. Connect your backend/email API for real delivery.";
-
-            }
-
-            form.reset();
-
-            showToast(
-                "Message submitted."
-            );
-
-        }
-    );
-}
-
-
-/* =========================================================
-   GENERATE BUTTONS
-   ========================================================= */
-
-function setupGenerateButtons() {
-
-    document
-        .querySelectorAll(
-            ".generate-ai-btn, .generate-voice-btn, .generate-audio-btn"
-        )
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    simulateGeneration(
-                        this
-                    );
-
-                }
-            );
-
-        });
-}
-
-
-/* =========================================================
-   VOICE PREVIEW BUTTONS
-   ========================================================= */
-
-function setupVoicePreview() {
-
-    document
-        .querySelectorAll(
-            ".preview-voice, [data-preview-voice]"
-        )
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    const card =
-                        this.closest(
-                            ".voice-card"
-                        );
-
-                    const nameElement =
-                        card
-                            ? card.querySelector(
-                                "h3"
-                            )
-                            : null;
-
-                    const voiceName =
-                        nameElement
-                            ? nameElement.textContent
-                            : "";
-
-                    const text =
-                        "Hello, welcome to VoiceAI. This is a voice preview.";
-
-                    previewVoice(
-                        text,
-                        voiceName
-                    );
-
-                }
-            );
-
-        });
-}
-
-
-/* =========================================================
-   FILE INPUT FEEDBACK
-   ========================================================= */
-
-function setupFileInputs() {
-
-    document
-        .querySelectorAll(
-            'input[type="file"]'
-        )
-        .forEach(input => {
-
-            input.addEventListener(
-                "change",
-                function () {
-
-                    if (
-                        !this.files ||
-                        !this.files.length
-                    ) {
-                        return;
-                    }
-
-                    showToast(
-                        "Selected: " +
-                        this.files[0].name
-                    );
-
-                }
-            );
-
-        });
-}
-
-
-/* =========================================================
-   STUDIO SIDEBAR
-   ========================================================= */
-
-function setupStudio() {
-
-    document
-        .querySelectorAll(
-            ".studio-sidebar button"
-        )
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    document
-                        .querySelectorAll(
-                            ".studio-sidebar button"
-                        )
-                        .forEach(item => {
-
-                            item.classList
-                                .remove(
-                                    "active"
-                                );
-
-                        });
-
-                    this.classList
-                        .add("active");
-
-                    showToast(
-                        this.textContent.trim() +
-                        " tool selected."
-                    );
-
-                }
-            );
-
-        });
-}
-
-
-/* =========================================================
-   DUBBING DEMO
-   ========================================================= */
-
-function setupDubbing() {
-
-    document
-        .querySelectorAll(
-            ".dubbing-btn"
-        )
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    simulateGeneration(
-                        this
-                    );
-
-                }
-            );
-
-        });
-}
-
-
-/* =========================================================
-   RECORDING DEMO
-   ========================================================= */
-
-let recording = false;
-
-
-function setupRecording() {
-
-    document
-        .querySelectorAll(
-            ".record-btn"
-        )
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    if (!recording) {
-
-                        if (
-                            !canUseFreeAI()
-                        ) {
-                            return;
-                        }
-
-                        recording =
-                            true;
-
-                        this.textContent =
-                            "■ Stop Recording";
-
-                        showToast(
-                            "Recording started."
-                        );
-
-                    } else {
-
-                        recording =
-                            false;
-
-                        recordFreeAIUse();
-
-                        this.textContent =
-                            "🎙 Start Recording";
-
-                        showToast(
-                            "Recording stopped."
-                        );
-                    }
-
-                }
-            );
-
-        });
-}
-
-
-/* =========================================================
-   PAGE READY
-   ========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        resetUsageIfNeeded();
-
-        updateUsageDisplay();
-
-        setupPageLinks();
-
-        setupContactForm();
-
-        setupGenerateButtons();
-
-        setupVoicePreview();
-
-        setupFileInputs();
-
-        setupStudio();
-
-        setupDubbing();
-
-        setupRecording();
-
-    }
-);
+};
