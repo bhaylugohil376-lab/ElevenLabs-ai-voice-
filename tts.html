@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech — VoiceAI</title>
+
+    <style>
+        :root {
+            --bg: #fffdf7;
+            --card: #ffffff;
+            --text: #3b2117;
+            --muted: #806f66;
+            --orange: #d96b27;
+            --orange-dark: #b95418;
+            --orange-light: #fff0e5;
+            --border: #eadfd7;
+            --shadow: 0 18px 50px rgba(59, 33, 23, .08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        textarea,
+        select,
+        input {
+            font: inherit;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            width: 100%;
+            min-height: 76px;
+            background: rgba(255,255,255,.96);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--orange);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            color: #624e44;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .login-btn {
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .nav-button {
+            background: var(--orange);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .profile-nav {
+            color: var(--orange);
+            font-weight: 700;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            border: 0;
+            background: none;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        /* PAGE */
+
+        .tts-page {
+            width: 100%;
+            max-width: 1250px;
+            margin: auto;
+            padding: 60px 24px 90px;
+        }
+
+        .tts-heading {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto 45px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 7px 13px;
+            background: var(--orange-light);
+            color: var(--orange-dark);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .tts-heading h1 {
+            font-size: clamp(36px, 5vw, 62px);
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+        }
+
+        .tts-heading p {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* USAGE */
+
+        .usage-bar {
+            max-width: 1000px;
+            margin: 0 auto 25px;
+            padding: 15px 18px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .usage-text {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .usage-text strong {
+            color: var(--text);
+        }
+
+        .usage-plan {
+            color: var(--orange);
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        /* WORKSPACE */
+
+        .workspace {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .workspace-top {
+            padding: 26px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .workspace-title h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .workspace-title p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #4c7b4c;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #55a355;
+        }
+
+        .workspace-body {
+            display: grid;
+            grid-template-columns: 1.3fr .7fr;
+            gap: 0;
+        }
+
+        /* SCRIPT */
+
+        .script-area {
+            padding: 28px;
+            border-right: 1px solid var(--border);
+        }
+
+        .field-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .char-count {
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        #scriptInput {
+            width: 100%;
+            min-height: 300px;
+            resize: vertical;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+            outline: none;
+            color: var(--text);
+            background: #fffefa;
+            line-height: 1.7;
+        }
+
+        #scriptInput:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(217,107,39,.10);
+        }
+
+        .quick-text {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 13px;
+        }
+
+        .quick-text button {
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .quick-text button:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        /* SETTINGS */
+
+        .settings-area {
+            padding: 28px;
+        }
+
+        .settings-area h3 {
+            margin-bottom: 20px;
+            font-size: 17px;
+        }
+
+        .setting {
+            margin-bottom: 21px;
+        }
+
+        .setting label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .setting select,
+        .setting input {
+            width: 100%;
+            height: 45px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            color: var(--text);
+            padding: 0 12px;
+            outline: none;
+        }
+
+        .setting select:focus,
+        .setting input:focus {
+            border-color: var(--orange);
+        }
+
+        .voice-preview {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px;
+            background: #fff8f2;
+            border: 1px solid #f1ded0;
+            border-radius: 12px;
+        }
+
+        .voice-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .voice-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: var(--orange);
+            color: white;
+            font-weight: 800;
+        }
+
+        .voice-info strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .voice-info span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .preview-btn {
+            border: 1px solid var(--orange);
+            background: white;
+            color: var(--orange);
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .range-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .range-row input[type="range"] {
+            height: auto;
+            padding: 0;
+            border: 0;
+        }
+
+        .range-value {
+            min-width: 42px;
+            text-align: right;
+            color: var(--orange);
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        /* ACTION */
+
+        .workspace-footer {
+            padding: 20px 28px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .generate-btn {
+            border: 0;
+            background: var(--orange);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 11px;
+            cursor: pointer;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(217,107,39,.2);
+        }
+
+        .generate-btn:hover {
+            background: var(--orange-dark);
+        }
+
+        .generate-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .footer-note {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* OUTPUT */
+
+        .output-card {
+            max-width: 1000px;
+            margin: 28px auto 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            display: none;
+        }
+
+        .output-card.show {
+            display: block;
+        }
+
+        .output-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 17px;
+        }
+
+        .output-head h3 {
+            font-size: 18px;
+        }
+
+        .download-btn {
+            border: 1px solid var(--orange);
+            color: var(--orange);
+            background: white;
+            padding: 9px 14px;
+            border-radius: 9px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .audio-box {
+            background: #fff8f2;
+            border: 1px solid #f1ded0;
+            padding: 16px;
+            border-radius: 14px;
+        }
+
+        audio {
+            width: 100%;
+        }
+
+        .output-message {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 12px;
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+
+        .site-footer {
+            border-top: 1px solid var(--border);
+            background: white;
+            padding: 45px 6% 25px;
+        }
+
+        .footer-main {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 35px;
+        }
+
+        .footer-brand p {
+            color: var(--muted);
+            margin-top: 12px;
+            max-width: 350px;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+
+        .footer-column h4 {
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .footer-column a {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .footer-column a:hover {
+            color: var(--orange);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 35px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 850px) {
+
+            .nav-links,
+            .nav-actions {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .workspace-body {
+                grid-template-columns: 1fr;
+            }
+
+            .script-area {
+                border-right: 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                min-height: 68px;
+                padding: 0 18px;
+            }
+
+            .tts-page {
+                padding: 38px 14px 60px;
+            }
+
+            .tts-heading h1 {
+                letter-spacing: -1px;
+            }
+
+            .usage-bar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .workspace-top {
+                padding: 20px;
+            }
+
+            .script-area,
+            .settings-area {
+                padding: 20px;
+            }
+
+            #scriptInput {
+                min-height: 230px;
+            }
+
+            .workspace-footer {
+                padding: 18px 20px;
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .generate-btn {
+                width: 100%;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+            }
+
+            .output-card {
+                padding: 18px;
+            }
+
+            .output-head {
+                align-items: flex-start;
+                gap: 10px;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="index.html" class="logo">
+        ∿ <span>Voice</span>AI
+    </a>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="nav-actions">
+        <a href="profile.html" class="profile-nav">Profile</a>
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="pricing.html" class="nav-button">Get Started</a>
+    </div>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+
+</header>
+
+
+<main class="tts-page">
+
+    <section class="tts-heading">
+
+        <span class="eyebrow">AI VOICE STUDIO</span>
+
+        <h1>Turn your words into natural AI voice.</h1>
+
+        <p>
+            Create professional voiceovers for ads, videos, reels,
+            podcasts, narration and more.
+        </p>
+
+    </section>
+
+
+    <div class="usage-bar">
+
+        <div class="usage-text">
+            Free usage:
+            <strong id="usageCount">0 / 5 generations today</strong>
+        </div>
+
+        <a href="pricing.html" class="usage-plan">
+            Upgrade to Premium →
+        </a>
+
+    </div>
+
+
+    <section class="workspace">
+
+        <div class="workspace-top">
+
+            <div class="workspace-title">
+                <h2>Text to Speech</h2>
+                <p>Write your script and choose the perfect voice.</p>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                Ready
+            </div>
+
+        </div>
+
+
+        <div class="workspace-body">
+
+            <!-- SCRIPT -->
+
+            <div class="script-area">
+
+                <div class="field-label">
+                    <span>Your script</span>
+                    <span class="char-count">
+                        <span id="charCount">0</span> characters
+                    </span>
+                </div>
+
+                <textarea
+                    id="scriptInput"
+                    maxlength="5000"
+                    placeholder="Write or paste your script here...
+
+Example:
+Welcome to VoiceAI. Create natural AI voices for your next project in seconds."
+                ></textarea>
+
+
+                <div class="quick-text">
+
+                    <button onclick="insertExample('ad')">
+                        Ad
+                    </button>
+
+                    <button onclick="insertExample('reel')">
+                        Reel
+                    </button>
+
+                    <button onclick="insertExample('youtube')">
+                        YouTube
+                    </button>
+
+                    <button onclick="insertExample('podcast')">
+                        Podcast
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SETTINGS -->
+
+            <div class="settings-area">
+
+                <h3>Voice settings</h3>
+
+
+                <div class="setting">
+
+                    <label for="voiceSelect">
+                        Voice
+                    </label>
+
+                    <select id="voiceSelect">
+
+                        <option value="David">
+                            David — Professional Male
+                        </option>
+
+                        <option value="Bryan">
+                            Bryan — Polished Male
+                        </option>
+
+                        <option value="Hale">
+                            Hale — Confident Male
+                        </option>
+
+                        <option value="Jerry">
+                            Jerry B — Energetic Male
+                        </option>
+
+                        <option value="Jessica">
+                            Jessica — Professional Female
+                        </option>
+
+                        <option value="Juniper">
+                            Juniper — Grounded Female
+                        </option>
+
+                        <option value="Allison">
+                            Allison — Energetic Female
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="voice-preview">
+
+                    <div class="voice-info">
+
+                        <div class="voice-avatar" id="voiceAvatar">
+                            D
+                        </div>
+
+                        <div>
+                            <strong id="voiceName">
+                                David
+                            </strong>
+
+                            <span>
+                                Professional voice
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="preview-btn"
+                        id="previewBtn">
+                        ▶ Preview
+                    </button>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <label for="languageSelect">
+                        Language
+                    </label>
+
+                    <select id="languageSelect">
+
+                        <option value="en-US">
+                            English — US
+                        </option>
+
+                        <option value="en-GB">
+                            English — UK
+                        </option>
+
+                        <option value="hi-IN">
+                            Hindi — India
+                        </option>
+
+                        <option value="gu-IN">
+                            Gujarati — India
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <label for="speed">
+                        Speed
+                    </label>
+
+                    <div class="range-row">
+
+                        <input
+                            type="range"
+                            id="speed"
+                            min="0.6"
+                            max="1.5"
+                            step="0.1"
+                            value="1">
+
+                        <span
+                            class="range-value"
+                            id="speedValue">
+                            1.0x
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <label for="style">
+                        Voice style
+                    </label>
+
+                    <select id="style">
+
+                        <option>Natural</option>
+                        <option>Professional</option>
+                        <option>Friendly</option>
+                        <option>Energetic</option>
+                        <option>Calm</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="workspace-footer">
+
+            <span class="footer-note">
+                Free users get 5 generations per 24 hours.
+            </span>
+
+            <button
+                class="generate-btn"
+                id="generateBtn">
+                Generate Voice →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- OUTPUT -->
+
+    <section class="output-card" id="outputCard">
+
+        <div class="output-head">
+
+            <h3>Your generated voice</h3>
+
+            <button
+                class="download-btn"
+                id="downloadBtn"
+                disabled>
+                Download Audio
+            </button>
+
+        </div>
+
+        <div class="audio-box">
+
+            <audio
+                id="audioPlayer"
+                controls>
+            </audio>
+
+            <p class="output-message" id="outputMessage">
+                Your generated audio will appear here.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="footer-main">
+
+        <div class="footer-brand">
+
+            <a href="index.html" class="logo">
+                ∿ <span>Voice</span>AI
+            </a>
+
+            <p>
+                Create natural AI voices, audio and creative content
+                with one powerful workspace.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>Platform</h4>
+
+            <a href="tools.html">AI Tools</a>
+            <a href="voices.html">Voice Library</a>
+            <a href="studio.html">Studio</a>
+            <a href="pricing.html">Pricing</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>Tools</h4>
+
+            <a href="tts.html">Text to Speech</a>
+            <a href="image.html">Text to Image</a>
+            <a href="clone.html">Voice Clone</a>
+            <a href="stt.html">Speech to Text</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>Account</h4>
+
+            <a href="profile.html">Profile</a>
+            <a href="login.html">Login</a>
+            <a href="forgot-password.html">Forgot Password</a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+        © 2026 VoiceAI. All rights reserved.
+    </div>
+
+</footer>
+
+
+<script>
+
+    const scriptInput = document.getElementById("scriptInput");
+    const charCount = document.getElementById("charCount");
+
+    const voiceSelect = document.getElementById("voiceSelect");
+    const voiceName = document.getElementById("voiceName");
+    const voiceAvatar = document.getElementById("voiceAvatar");
+
+    const speed = document.getElementById("speed");
+    const speedValue = document.getElementById("speedValue");
+
+    const previewBtn = document.getElementById("previewBtn");
+    const generateBtn = document.getElementById("generateBtn");
+
+    const outputCard = document.getElementById("outputCard");
+    const audioPlayer = document.getElementById("audioPlayer");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const outputMessage = document.getElementById("outputMessage");
+
+    const usageCount = document.getElementById("usageCount");
+
+
+    /* CHARACTER COUNTER */
+
+    scriptInput.addEventListener("input", () => {
+
+        charCount.textContent =
+            scriptInput.value.length;
+
+    });
+
+
+    /* SPEED */
+
+    speed.addEventListener("input", () => {
+
+        speedValue.textContent =
+            Number(speed.value).toFixed(1) + "x";
+
+    });
+
+
+    /* VOICE */
+
+    voiceSelect.addEventListener("change", () => {
+
+        const selected =
+            voiceSelect.options[
+                voiceSelect.selectedIndex
+            ].text;
+
+        const name =
+            selected.split(" — ")[0];
+
+        voiceName.textContent = name;
+
+        voiceAvatar.textContent =
+            name.charAt(0).toUpperCase();
+
+    });
+
+
+    /* EXAMPLE TEXT */
+
+    function insertExample(type) {
+
+        const examples = {
+
+            ad:
+            "Discover VoiceAI — powerful natural AI voices for your next advertisement. Create professional voiceovers in seconds.",
+
+            reel:
+            "Stop scrolling! Create professional AI voiceovers for your reels with VoiceAI. Fast, natural and easy to use.",
+
+            youtube:
+            "Welcome back to the channel. Today we're exploring the latest tools that can help you create better content faster.",
+
+            podcast:
+            "Welcome to today's episode. In this conversation, we'll explore creativity, technology and the future of AI voice."
+
+        };
+
+        scriptInput.value = examples[type] || "";
+
+        scriptInput.dispatchEvent(
+            new Event("input")
+        );
+
+    }
+
+
+    /* LOCAL VOICE PREVIEW */
+
+    previewBtn.addEventListener("click", () => {
+
+        const text =
+            scriptInput.value.trim();
+
+        if (!text) {
+
+            alert("Please enter some text first.");
+
+            return;
+        }
+
+        if (!("speechSynthesis" in window)) {
+
+            alert(
+                "Voice preview is not supported in this browser."
+            );
+
+            return;
+        }
+
+        speechSynthesis.cancel();
+
+        const utterance =
+            new SpeechSynthesisUtterance(text);
+
+        utterance.lang =
+            document.getElementById(
+                "languageSelect"
+            ).value;
+
+        utterance.rate =
+            Number(speed.value);
+
+        utterance.pitch = 1;
+
+        speechSynthesis.speak(utterance);
+
+    });
+
+
+    /* GENERATE */
+
+    generateBtn.addEventListener("click", async () => {
+
+        const text =
+            scriptInput.value.trim();
+
+        if (!text) {
+
+            alert("Please enter your script.");
+
+            return;
+        }
+
+
+        generateBtn.disabled = true;
+
+        generateBtn.textContent =
+            "Generating...";
+
+
+        /*
+         * REAL BACKEND:
+         * POST /api/tts
+         *
+         * Expected response:
+         * {
+         *   "audioUrl": "https://..."
+         * }
+         */
+
+        try {
+
+            const response =
+                await fetch("/api/tts", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        text: text,
+
+                        voice:
+                            voiceSelect.value,
+
+                        language:
+                            document.getElementById(
+                                "languageSelect"
+                            ).value,
+
+                        speed:
+                            Number(speed.value),
+
+                        style:
+                            document.getElementById(
+                                "style"
+                            ).value
+
+                    })
+
+                });
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "TTS backend unavailable"
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.audioUrl) {
+
+                throw new Error(
+                    "No audio returned"
+                );
+
+            }
+
+
+            audioPlayer.src =
+                data.audioUrl;
+
+            downloadBtn.disabled = false;
+
+            downloadBtn.onclick = () => {
+
+                const link =
+                    document.createElement("a");
+
+                link.href =
+                    data.audioUrl;
+
+                link.download =
+                    "voiceai-voice.mp3";
+
+                document.body.appendChild(link);
+
+                link.click();
+
+                link.remove();
+
+            };
+
+
+            outputMessage.textContent =
+                "Your AI voice is ready. You can preview or download the audio.";
+
+            outputCard.classList.add("show");
+
+            window.scrollTo({
+                top:
+                    outputCard.offsetTop - 100,
+                behavior: "smooth"
+            });
+
+
+        } catch (error) {
+
+            outputCard.classList.add("show");
+
+            outputMessage.innerHTML =
+                "<strong>Backend connection required.</strong><br>" +
+                "Voice preview works directly in your browser. " +
+                "For real AI-generated downloadable audio, connect your /api/tts backend.";
+
+            downloadBtn.disabled = true;
+
+        }
+
+
+        generateBtn.disabled = false;
+
+        generateBtn.textContent =
+            "Generate Voice →";
+
+    });
+
+
+    /* MOBILE MENU */
+
+    const mobileMenuBtn =
+        document.getElementById(
+            "mobileMenuBtn"
+        );
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        () => {
+
+            const links =
+                document.querySelector(
+                    ".nav-links"
+                );
+
+            if (links.style.display === "flex") {
+
+                links.style.display = "none";
+
+            } else {
+
+                links.style.display = "flex";
+
+                links.style.position = "absolute";
+                links.style.top = "68px";
+                links.style.left = "0";
+                links.style.right = "0";
+                links.style.padding = "20px";
+                links.style.background = "white";
+                links.style.borderBottom =
+                    "1px solid #eadfd7";
+                links.style.flexDirection =
+                    "column";
+                links.style.alignItems =
+                    "flex-start";
+
+            }
+
+        }
+    );
+
+
+    /* USAGE DISPLAY */
+
+    const today =
+        new Date().toISOString().slice(0,10);
+
+    const savedDate =
+        localStorage.getItem(
+            "voiceai_usage_date"
+        );
+
+    let usage =
+        Number(
+            localStorage.getItem(
+                "voiceai_tts_usage"
+            ) || 0
+        );
+
+
+    if (savedDate !== today) {
+
+        usage = 0;
+
+        localStorage.setItem(
+            "voiceai_usage_date",
+            today
+        );
+
+        localStorage.setItem(
+            "voiceai_tts_usage",
+            "0"
+        );
+
+    }
+
+
+    function updateUsage() {
+
+        usageCount.textContent =
+            usage + " / 5 generations today";
+
+    }
+
+    updateUsage();
+
+</script>
+
+</body>
+</html>
