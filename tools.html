@@ -4,456 +4,1016 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="description"
+          content="VoiceAI — AI Creator Tools">
+
     <title>AI Tools — VoiceAI</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =====================================================
+           TOOLS PAGE
+        ===================================================== */
+
+        .tools-page {
+            min-height: 100vh;
+        }
+
+        .tools-hero {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+            padding: 85px 0 55px;
+            text-align: center;
+        }
+
+        .tools-hero h1 {
+            margin-top: 18px;
+            font-size: clamp(42px, 6vw, 68px);
+            line-height: 1;
+            letter-spacing: -3px;
+        }
+
+        .tools-hero h1 span {
+            color: var(--orange);
+        }
+
+        .tools-hero p {
+            max-width: 650px;
+            margin: 22px auto 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .tools-search {
+            width: min(580px, 100%);
+            margin: 30px auto 0;
+            position: relative;
+        }
+
+        .tools-search input {
+            width: 100%;
+            height: 52px;
+            padding: 0 18px 0 48px;
+
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+
+            outline: none;
+            color: var(--text);
+            font-size: 14px;
+
+            box-shadow: var(--shadow-small);
+        }
+
+        .tools-search input:focus {
+            border-color: var(--orange);
+            box-shadow:
+                0 0 0 4px rgba(217, 107, 39, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 17px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9b918a;
+        }
+
+        .tools-page-grid {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+            padding: 25px 0 110px;
+
+            display: grid;
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+        .page-tool-card {
+            position: relative;
+
+            padding: 27px;
+
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 21px;
+
+            box-shadow:
+                0 7px 25px rgba(60, 30, 10, 0.035);
+
+            transition:
+                transform .22s ease,
+                box-shadow .22s ease,
+                border-color .22s ease;
+        }
+
+        .page-tool-card:hover {
+            transform: translateY(-6px);
+            border-color: #e2c4b0;
+            box-shadow:
+                0 22px 45px rgba(60, 30, 10, 0.09);
+        }
+
+        .page-tool-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-tool-icon {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 16px;
+
+            background: var(--orange-light);
+
+            font-size: 24px;
+        }
+
+        .page-tool-arrow {
+            color: #a39992;
+            font-size: 20px;
+        }
+
+        .page-tool-card h2 {
+            margin-top: 20px;
+
+            font-size: 20px;
+            letter-spacing: -.6px;
+        }
+
+        .page-tool-card p {
+            margin-top: 9px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .page-tool-link {
+            display: inline-block;
+
+            margin-top: 18px;
+
+            color: var(--orange);
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .page-tool-card.featured {
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff6ec,
+                    #ffffff
+                );
+
+            border-color: #efd7c5;
+        }
+
+        .tool-tag {
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 4px 8px;
+
+            border-radius: 5px;
+
+            background: var(--orange);
+            color: white;
+
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: .7px;
+        }
+
+        .tools-category {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+
+            padding-top: 30px;
+        }
+
+        .tools-category h3 {
+            font-size: 13px;
+            color: #7d736c;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+            .tools-page-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .tools-hero {
+                padding-top: 55px;
+            }
+
+            .tools-hero h1 {
+                font-size: 43px;
+                letter-spacing: -2px;
+            }
+
+            .tools-page-grid {
+                grid-template-columns: 1fr;
+                padding-bottom: 70px;
+            }
+        }
+    </style>
 </head>
 
-<body>
+<body class="tools-page">
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
 
 <header class="navbar">
 
-    <div class="logo">
-        <a href="index.html">
-            <span>∿</span> VoiceAI
-        </a>
-    </div>
+    <a href="index.html" class="logo">
+        <span>∿</span>
+        VoiceAI
+    </a>
 
     <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="tools.html" class="active">
+            AI Tools
+        </a>
+
+        <a href="voices.html">
+            Voices
+        </a>
+
+        <a href="studio.html">
+            Studio
+        </a>
+
+        <a href="pricing.html">
+            Pricing
+        </a>
+
     </nav>
 
     <div class="nav-actions">
-        <a href="login.html" class="login-btn">Login</a>
-        <a href="pricing.html" class="nav-button">
+
+        <a href="profile.html"
+           class="profile-nav">
+            Profile
+        </a>
+
+        <a href="login.html"
+           class="login-btn">
+            Login
+        </a>
+
+        <a href="pricing.html"
+           class="nav-button">
             Get Started
         </a>
+
     </div>
+
+    <button
+        class="mobile-menu-btn"
+        id="mobileMenuBtn"
+        type="button">
+        ☰
+    </button>
 
 </header>
 
 
-<main>
+<!-- =====================================================
+     MOBILE MENU
+===================================================== -->
 
-<section class="section">
+<div class="mobile-menu" id="mobileMenu">
 
-    <div class="section-heading">
+    <a href="index.html">
+        Home
+    </a>
 
-        <span>AI CREATOR SUITE</span>
+    <a href="tools.html">
+        AI Tools
+    </a>
 
-        <h1>
-            Powerful AI tools
-            <br>
-            in one workspace.
-        </h1>
+    <a href="voices.html">
+        Voices
+    </a>
 
-        <p>
-            Create, edit and transform audio with VoiceAI.
-            Free users get 5 uses per day across the platform.
-        </p>
+    <a href="studio.html">
+        Studio
+    </a>
 
-    </div>
+    <a href="pricing.html">
+        Pricing
+    </a>
 
+    <a href="profile.html">
+        Profile
+    </a>
 
-    <div class="tools-grid">
+    <a href="login.html">
+        Login
+    </a>
 
-        <a href="#tts" class="tool-card">
-            <div class="tool-icon">🎙️</div>
-            <h3>Text to Speech</h3>
-            <p>
-                Turn your text into natural AI speech.
-            </p>
-        </a>
-
-        <a href="voices.html" class="tool-card">
-            <div class="tool-icon">⭐</div>
-            <h3>Voice Library</h3>
-            <p>
-                Explore professional AI voices.
-            </p>
-        </a>
-
-        <a href="#clone" class="tool-card">
-            <div class="tool-icon">👤</div>
-            <h3>Voice Clone</h3>
-            <p>
-                Create a custom voice experience.
-            </p>
-        </a>
-
-        <a href="#changer" class="tool-card">
-            <div class="tool-icon">🔄</div>
-            <h3>Voice Changer</h3>
-            <p>
-                Transform an existing recording.
-            </p>
-        </a>
-
-        <a href="studio.html" class="tool-card">
-            <div class="tool-icon">✏️</div>
-            <h3>AI Studio</h3>
-            <p>
-                Edit audio projects in one workspace.
-            </p>
-        </a>
-
-        <a href="#dubbing" class="tool-card">
-            <div class="tool-icon">🌍</div>
-            <h3>Dubbing</h3>
-            <p>
-                Create multilingual content.
-            </p>
-        </a>
-
-        <a href="#music" class="tool-card">
-            <div class="tool-icon">🎵</div>
-            <h3>AI Music & SFX</h3>
-            <p>
-                Generate music and sound effects.
-            </p>
-        </a>
-
-        <a href="#stt" class="tool-card">
-            <div class="tool-icon">📝</div>
-            <h3>Speech to Text</h3>
-            <p>
-                Convert speech into text and captions.
-            </p>
-        </a>
-
-        <a href="#agents" class="tool-card">
-            <div class="tool-icon">🤖</div>
-            <h3>AI Voice Agents</h3>
-            <p>
-                Build conversational voice experiences.
-            </p>
-        </a>
-
-        <a href="pricing.html" class="tool-card">
-            <div class="tool-icon">💎</div>
-            <h3>Premium AI</h3>
-            <p>
-                Unlock premium voices and unlimited usage.
-            </p>
-        </a>
-
-    </div>
-
-</section>
+</div>
 
 
-<section id="tts" class="feature-section">
+<!-- =====================================================
+     HERO
+===================================================== -->
 
-    <div class="feature-text">
+<section class="tools-hero">
 
-        <span>01 — TEXT TO SPEECH</span>
+    <span class="section-eyebrow">
+        AI CREATOR SUITE
+    </span>
 
-        <h2>
-            Turn text into
-            realistic speech.
-        </h2>
+    <h1>
+        Powerful tools.
+        <br>
+        <span>One workspace.</span>
+    </h1>
 
-        <p>
-            Write your script, select a voice and generate
-            natural-sounding audio.
-        </p>
-
-    </div>
-
-    <div class="feature-card">
-
-        <textarea
-            id="ttsText"
-            placeholder="Write your script..."
-        ></textarea>
-
-        <div class="feature-controls">
-
-            <select id="ttsVoice">
-                <option>Professional Voice</option>
-                <option>News Reader</option>
-                <option>Warm Narrator</option>
-                <option>Energetic Voice</option>
-            </select>
-
-            <button
-                class="primary-btn"
-                id="ttsGenerate"
-            >
-                Generate Voice
-            </button>
-
-        </div>
-
-        <p
-            id="ttsStatus"
-            style="margin-top:15px;color:#8f9bb6;"
-        ></p>
-
-    </div>
-
-</section>
+    <p>
+        Create voices, images, music, captions,
+        videos and conversational AI projects
+        using dedicated professional workspaces.
+    </p>
 
 
-<section id="clone" class="feature-section">
+    <div class="tools-search">
 
-    <div class="feature-text">
-
-        <span>02 — VOICE CLONE</span>
-
-        <h2>
-            Build your own
-            voice experience.
-        </h2>
-
-        <p>
-            Upload a voice sample and prepare it for
-            your AI voice workflow.
-        </p>
-
-    </div>
-
-    <div class="feature-card">
+        <span class="search-icon">
+            🔎
+        </span>
 
         <input
-            type="file"
-            id="cloneFile"
-            accept="audio/*"
-        >
-
-        <p
-            id="cloneStatus"
-            style="margin-top:15px;color:#8f9bb6;"
-        >
-            No audio selected.
-        </p>
-
-        <button
-            class="primary-btn"
-            id="cloneButton"
-            style="margin-top:15px;"
-        >
-            Create Voice
-        </button>
+            type="search"
+            id="toolSearch"
+            placeholder="Search AI tools..."
+            autocomplete="off">
 
     </div>
 
 </section>
 
 
-<section id="dubbing" class="feature-section">
+<!-- =====================================================
+     TOOLS
+===================================================== -->
 
-    <div class="feature-text">
+<div class="tools-category">
 
-        <span>03 — DUBBING</span>
+    <h3>
+        All AI Tools
+    </h3>
 
-        <h2>
-            Make content
-            multilingual.
-        </h2>
+</div>
 
-        <p>
-            Select your source and target language for
-            your dubbing workflow.
-        </p>
 
-    </div>
+<section class="tools-page-grid"
+         id="toolsGrid">
 
-    <div class="feature-card">
 
-        <input type="file" accept="audio/*,video/*">
+    <!-- 01 TEXT TO SPEECH -->
 
-        <div class="language-row">
+    <a href="tts.html"
+       class="page-tool-card"
+       data-tool="text to speech voice">
 
-            <select>
-                <option>English</option>
-                <option>Hindi</option>
-                <option>Gujarati</option>
-            </select>
+        <div class="page-tool-top">
 
-            <span>→</span>
+            <div class="page-tool-icon">
+                🎙️
+            </div>
 
-            <select>
-                <option>Hindi</option>
-                <option>English</option>
-                <option>Gujarati</option>
-            </select>
+            <span class="page-tool-arrow">
+                ↗
+            </span>
 
         </div>
 
-        <button
-            class="primary-btn"
-            id="dubbingButton"
-        >
-            Start Dubbing
-        </button>
-
-    </div>
-
-</section>
-
-
-<section id="music" class="feature-section">
-
-    <div class="feature-text">
-
-        <span>04 — MUSIC & SOUND EFFECTS</span>
-
         <h2>
-            Add sound to
-            your ideas.
+            Text to Speech
         </h2>
 
         <p>
-            Describe the sound you want to create.
+            Convert your scripts into natural
+            AI speech for narration, videos,
+            ads and content.
         </p>
 
-    </div>
+        <span class="page-tool-link">
+            Open Text to Speech →
+        </span>
 
-    <div class="feature-card">
-
-        <textarea
-            placeholder="Describe your music or sound effect..."
-        ></textarea>
-
-        <button
-            class="primary-btn"
-            style="margin-top:15px;"
-        >
-            Generate Audio
-        </button>
-
-    </div>
-
-</section>
+    </a>
 
 
-<section id="stt" class="feature-section">
+    <!-- 02 TEXT TO IMAGE -->
 
-    <div class="feature-text">
+    <a href="image.html"
+       class="page-tool-card featured"
+       data-tool="text to image ai image">
 
-        <span>05 — SPEECH TO TEXT</span>
+        <div class="page-tool-top">
 
-        <h2>
-            Turn speech
-            into text.
-        </h2>
+            <div class="page-tool-icon">
+                🖼️
+            </div>
 
-        <p>
-            Create transcripts and captions from audio.
-        </p>
-
-    </div>
-
-    <div class="feature-card">
-
-        <button
-            class="primary-btn"
-            id="recordButton"
-        >
-            🎙 Start Recording
-        </button>
-
-        <textarea
-            style="margin-top:15px;"
-            placeholder="Transcript will appear here..."
-        ></textarea>
-
-    </div>
-
-</section>
-
-
-<section id="agents" class="feature-section">
-
-    <div class="feature-text">
-
-        <span>06 — AI VOICE AGENTS</span>
-
-        <h2>
-            Build conversational AI.
-        </h2>
-
-        <p>
-            Create a simple conversational AI experience.
-        </p>
-
-    </div>
-
-    <div class="agent-card">
-
-        <div class="agent-message">
-            🤖 Hello! How can I help you today?
-        </div>
-
-        <div class="agent-input">
-
-            <input
-                id="agentInput"
-                type="text"
-                placeholder="Type a message..."
-            >
-
-            <button
-                class="primary-btn"
-                id="agentSend"
-            >
-                Send
-            </button>
+            <span class="page-tool-arrow">
+                ↗
+            </span>
 
         </div>
 
-    </div>
+        <span class="tool-tag">
+            NEW
+        </span>
+
+        <h2>
+            Text to Image
+        </h2>
+
+        <p>
+            Turn creative prompts into
+            AI-generated images for
+            ads, social media and projects.
+        </p>
+
+        <span class="page-tool-link">
+            Create Image →
+        </span>
+
+    </a>
+
+
+    <!-- 03 VOICE LIBRARY -->
+
+    <a href="voices.html"
+       class="page-tool-card"
+       data-tool="voice library voices male female">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                🎧
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            Voice Library
+        </h2>
+
+        <p>
+            Browse professional male and
+            female voice profiles with
+            preview support.
+        </p>
+
+        <span class="page-tool-link">
+            Explore Voices →
+        </span>
+
+    </a>
+
+
+    <!-- 04 VOICE CLONE -->
+
+    <a href="clone.html"
+       class="page-tool-card"
+       data-tool="voice clone cloning">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                👤
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            Voice Clone
+        </h2>
+
+        <p>
+            Create personalized voice projects
+            from supported voice recordings.
+        </p>
+
+        <span class="page-tool-link">
+            Open Voice Clone →
+        </span>
+
+    </a>
+
+
+    <!-- 05 VOICE CHANGER -->
+
+    <a href="changer.html"
+       class="page-tool-card"
+       data-tool="voice changer change voice">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                🔄
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            Voice Changer
+        </h2>
+
+        <p>
+            Transform supported recordings
+            into different voice styles.
+        </p>
+
+        <span class="page-tool-link">
+            Open Voice Changer →
+        </span>
+
+    </a>
+
+
+    <!-- 06 AI STUDIO -->
+
+    <a href="studio.html"
+       class="page-tool-card"
+       data-tool="ai studio audio editor">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                ✨
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            AI Studio
+        </h2>
+
+        <p>
+            Edit, organize and manage
+            creative audio projects.
+        </p>
+
+        <span class="page-tool-link">
+            Open Studio →
+        </span>
+
+    </a>
+
+
+    <!-- 07 DUBBING -->
+
+    <a href="dubbing.html"
+       class="page-tool-card"
+       data-tool="dubbing translation languages">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                🌍
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            Dubbing
+        </h2>
+
+        <p>
+            Create multilingual versions
+            of supported content and projects.
+        </p>
+
+        <span class="page-tool-link">
+            Open Dubbing →
+        </span>
+
+    </a>
+
+
+    <!-- 08 MUSIC -->
+
+    <a href="music.html"
+       class="page-tool-card"
+       data-tool="music sound effects sfx">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                🎵
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            Music & SFX
+        </h2>
+
+        <p>
+            Create AI-assisted music concepts
+            and sound-effect projects.
+        </p>
+
+        <span class="page-tool-link">
+            Open Music & SFX →
+        </span>
+
+    </a>
+
+
+    <!-- 09 SPEECH TO TEXT -->
+
+    <a href="stt.html"
+       class="page-tool-card"
+       data-tool="speech to text transcript captions">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                📝
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            Speech to Text
+        </h2>
+
+        <p>
+            Convert supported recordings
+            into transcripts and captions.
+        </p>
+
+        <span class="page-tool-link">
+            Open Speech to Text →
+        </span>
+
+    </a>
+
+
+    <!-- 10 AI AGENTS -->
+
+    <a href="agents.html"
+       class="page-tool-card"
+       data-tool="ai voice agents conversational">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                🤖
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            AI Voice Agents
+        </h2>
+
+        <p>
+            Build conversational AI experiences
+            for supported workflows.
+        </p>
+
+        <span class="page-tool-link">
+            Open AI Agents →
+        </span>
+
+    </a>
+
+
+    <!-- 11 PREMIUM -->
+
+    <a href="pricing.html"
+       class="page-tool-card"
+       data-tool="premium subscription pricing">
+
+        <div class="page-tool-top">
+
+            <div class="page-tool-icon">
+                💎
+            </div>
+
+            <span class="page-tool-arrow">
+                ↗
+            </span>
+
+        </div>
+
+        <h2>
+            Premium
+        </h2>
+
+        <p>
+            Unlock advanced features and
+            higher usage limits.
+        </p>
+
+        <span class="page-tool-link">
+            View Premium →
+        </span>
+
+    </a>
 
 </section>
 
-</main>
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer">
+
+    <div class="footer-main">
+
+        <div class="footer-brand">
+
+            <a href="index.html"
+               class="logo">
+
+                <span>∿</span>
+                VoiceAI
+
+            </a>
+
+            <p>
+                Professional AI voice, image and
+                creative tools for modern creators.
+            </p>
+
+        </div>
 
 
-<footer>
+        <div class="footer-column">
 
-    <div class="footer-brand">
+            <h4>
+                Platform
+            </h4>
 
-        <h2>∿ VoiceAI</h2>
+            <a href="tts.html">
+                Text to Speech
+            </a>
+
+            <a href="image.html">
+                Text to Image
+            </a>
+
+            <a href="voices.html">
+                Voice Library
+            </a>
+
+            <a href="studio.html">
+                AI Studio
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                Tools
+            </h4>
+
+            <a href="clone.html">
+                Voice Clone
+            </a>
+
+            <a href="changer.html">
+                Voice Changer
+            </a>
+
+            <a href="dubbing.html">
+                Dubbing
+            </a>
+
+            <a href="stt.html">
+                Speech to Text
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                Account
+            </h4>
+
+            <a href="profile.html">
+                Profile
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+            <a href="forgot-password.html">
+                Forgot Password
+            </a>
+
+            <a href="pricing.html">
+                Pricing
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
 
         <p>
-            AI voice and audio creation platform.
+            © 2026 VoiceAI. All rights reserved.
         </p>
 
-    </div>
+        <div>
 
-    <div>
-        <h4>Platform</h4>
+            <a href="index.html#about">
+                About
+            </a>
 
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-    </div>
+            <a href="index.html#faq">
+                FAQ
+            </a>
 
-    <div>
-        <h4>Company</h4>
+            <a href="index.html#contact">
+                Contact
+            </a>
 
-        <a href="about.html">About</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
-    </div>
+        </div>
 
-    <div>
-        <h4>Plans</h4>
-
-        <a href="pricing.html">Free</a>
-        <a href="pricing.html">Premium</a>
     </div>
 
 </footer>
 
 
-<script src="script.js"></script>
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+const mobileMenuBtn =
+    document.getElementById("mobileMenuBtn");
+
+const mobileMenu =
+    document.getElementById("mobileMenu");
+
+
+if (mobileMenuBtn && mobileMenu) {
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        function () {
+
+            mobileMenu.classList.toggle("open");
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   TOOL SEARCH
+===================================================== */
+
+const toolSearch =
+    document.getElementById("toolSearch");
+
+const toolCards =
+    document.querySelectorAll(".page-tool-card");
+
+
+if (toolSearch) {
+
+    toolSearch.addEventListener(
+        "input",
+        function () {
+
+            const query =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            toolCards.forEach(
+                function(card) {
+
+                    const keywords =
+                        (
+                            card.dataset.tool ||
+                            ""
+                        ).toLowerCase();
+
+                    const content =
+                        card.innerText.toLowerCase();
+
+
+                    const match =
+                        !query ||
+                        keywords.includes(query) ||
+                        content.includes(query);
+
+
+                    card.style.display =
+                        match ? "" : "none";
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE MOBILE MENU
+===================================================== */
+
+document
+    .querySelectorAll(".mobile-menu a")
+    .forEach(function(link) {
+
+        link.addEventListener(
+            "click",
+            function() {
+
+                mobileMenu.classList.remove("open");
+
+            }
+        );
+
+    });
+
+</script>
 
 </body>
 </html>
