@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VoiceAI AI Music and Sound Effects Studio">
+  <title>AI Music & Sound Effects — VoiceAI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f6fa;
+      --card: #ffffff;
+      --text: #17181d;
+      --muted: #747782;
+      --border: #e4e5eb;
+      --primary: #6d4aff;
+      --primary-dark: #5635dc;
+      --soft: #efecff;
+      --green: #159866;
+      --red: #d53d3d;
+    }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      height: 68px;
+      background: rgba(255,255,255,.97);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-inner {
+      width: min(1180px, calc(100% - 30px));
+      height: 100%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #5e616b;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .nav-btn.primary {
+      color: white;
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* HERO */
+
+    .hero {
+      width: min(1000px, calc(100% - 30px));
+      margin: auto;
+      text-align: center;
+      padding: 58px 0 35px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--soft);
+      color: var(--primary);
+      padding: 8px 13px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 17px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 5vw, 55px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 15px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* MAIN */
+
+    .container {
+      width: min(1000px, calc(100% - 30px));
+      margin: auto;
+      padding-bottom: 75px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 9px 30px rgba(25,25,45,.045);
+    }
+
+    .card-title {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .icon-box {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      background: var(--soft);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+    }
+
+    .icon-box svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .card-title h2 {
+      font-size: 17px;
+    }
+
+    .card-title p {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    /* PROMPT */
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      color: #4f525b;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 185px;
+      resize: vertical;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 14px;
+      outline: none;
+      color: var(--text);
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(109,74,255,.07);
+    }
+
+    .counter {
+      display: flex;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 5px;
+    }
+
+    .quick-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .quick-btn {
+      border: 1px solid var(--border);
+      background: #fafafd;
+      color: #555862;
+      padding: 7px 9px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .quick-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* SETTINGS */
+
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    select {
+      width: 100%;
+      height: 43px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0 11px;
+      background: white;
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    /* RANGE */
+
+    .range-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fafafd;
+    }
+
+    .range-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-bottom: 9px;
+    }
+
+    .range-top strong {
+      color: var(--primary);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    /* CHECKBOX */
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fafafd;
+      margin-bottom: 16px;
+    }
+
+    .check-row input {
+      margin-top: 2px;
+      accent-color: var(--primary);
+    }
+
+    .check-row span {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    /* GENERATE */
+
+    .generate-btn {
+      width: 100%;
+      height: 48px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 850;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .generate-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .generate-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: white;
+      border-radius: 50%;
+      display: none;
+      animation: spin .7s linear infinite;
+    }
+
+    .loading .spinner {
+      display: block;
+    }
+
+    .loading .btn-text {
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* USAGE */
+
+    .usage {
+      margin-top: 13px;
+      padding: 11px;
+      border: 1px solid #e7e3ff;
+      background: #faf9ff;
+      border-radius: 9px;
+    }
+
+    .usage-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .usage-top strong {
+      color: var(--primary);
+    }
+
+    .progress {
+      height: 5px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #e5e3eb;
+    }
+
+    .progress div {
+      width: 20%;
+      height: 100%;
+      background: var(--primary);
+    }
+
+    /* MESSAGE */
+
+    .message {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      color: #a72b2b;
+      background: #fff0f0;
+      border: 1px solid #ffd8d8;
+    }
+
+    .message.info {
+      color: #5337ca;
+      background: var(--soft);
+      border: 1px solid #ddd7ff;
+    }
+
+    /* RESULT */
+
+    .result {
+      display: none;
+      margin-top: 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 21px;
+      box-shadow: 0 9px 30px rgba(25,25,45,.045);
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .result-status {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #eaf9f2;
+      color: var(--green);
+      display: grid;
+      place-items: center;
+    }
+
+    .result-status svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .result-head h2 {
+      font-size: 15px;
+    }
+
+    .result-head p {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .audio-box {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: #fafafd;
+    }
+
+    audio {
+      width: 100%;
+      height: 40px;
+    }
+
+    .download-btn {
+      margin-top: 10px;
+      width: 100%;
+      height: 42px;
+      border-radius: 9px;
+      background: #18191d;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .download-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* FEATURES */
+
+    .features {
+      margin-top: 45px;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 25px;
+      margin-bottom: 24px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 14px;
+    }
+
+    .feature {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 19px;
+    }
+
+    .feature svg {
+      width: 22px;
+      height: 22px;
+      color: var(--primary);
+      margin-bottom: 11px;
+    }
+
+    .feature h3 {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 27px 15px;
+    }
+
+    .footer-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .footer-copy,
+    .footer-links {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 800px) {
+      .nav-links {
+        display: none;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .nav-inner {
+        width: calc(100% - 20px);
+      }
+
+      .nav-actions .nav-btn:first-child {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .hero h1 {
+        font-size: 37px;
+        letter-spacing: -1.3px;
+      }
+
+      .hero p {
+        font-size: 13px;
+      }
+
+      .container {
+        width: calc(100% - 20px);
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 13px;
+      }
+
+      .two-cols {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <header class="navbar">
+    <div class="nav-inner">
+
+      <a href="index.html" class="logo">
+        ∿ <span>VoiceAI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="profile.html" class="nav-btn">
+          Profile
+        </a>
+
+        <a href="pricing.html" class="nav-btn primary">
+          Upgrade
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="badge">
+      <span class="badge-dot"></span>
+      AI Music & Sound Effects
+    </div>
+
+    <h1>
+      Create original
+      <span>AI audio</span>
+    </h1>
+
+    <p>
+      Generate music, background scores and sound effects
+      for videos, ads, podcasts, games and social content.
+    </p>
+
+  </section>
+
+
+  <main class="container">
+
+    <section class="workspace">
+
+      <!-- PROMPT -->
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <div class="icon-box">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+
+              <path d="M9 18V5l10-2v13"/>
+              <circle cx="6" cy="18" r="3"/>
+              <circle cx="16" cy="16" r="3"/>
+
+            </svg>
+
+          </div>
+
+          <div>
+            <h2>Describe your audio</h2>
+            <p>Tell AI what you want to create</p>
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="prompt">
+            Prompt
+          </label>
+
+          <textarea
+            id="prompt"
+            maxlength="1000"
+            placeholder="Example: Cinematic motivational background music with powerful drums, emotional piano and a modern trailer atmosphere..."
+          ></textarea>
+
+          <div class="counter">
+            <span id="counter">0 / 1000</span>
+          </div>
+
+          <div class="quick-prompts">
+
+            <button class="quick-btn"
+                    data-prompt="Energetic modern advertising music with punchy drums and an uplifting melody.">
+              Advertisement
+            </button>
+
+            <button class="quick-btn"
+                    data-prompt="Calm cinematic background music with soft piano, warm strings and emotional atmosphere.">
+              Cinematic
+            </button>
+
+            <button class="quick-btn"
+                    data-prompt="Upbeat social media background music with modern electronic beats and positive energy.">
+              Social Media
+            </button>
+
+            <button class="quick-btn"
+                    data-prompt="Epic fantasy trailer music with orchestral strings, deep drums and dramatic tension.">
+              Epic
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- SETTINGS -->
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <div class="icon-box">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+
+              <path d="M4 7h16"/>
+              <path d="M4 12h16"/>
+              <path d="M4 17h16"/>
+              <circle cx="9" cy="7" r="2"/>
+              <circle cx="15" cy="12" r="2"/>
+              <circle cx="11" cy="17" r="2"/>
+
+            </svg>
+
+          </div>
+
+          <div>
+            <h2>Generation settings</h2>
+            <p>Customize your audio</p>
+          </div>
+
+        </div>
+
+
+        <div class="two-cols">
+
+          <div class="field">
+
+            <label for="audioType">
+              Audio type
+            </label>
+
+            <select id="audioType">
+
+              <option value="music">
+                Music
+              </option>
+
+              <option value="sfx">
+                Sound Effect
+              </option>
+
+              <option value="background">
+                Background Score
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="genre">
+              Genre
+            </label>
+
+            <select id="genre">
+
+              <option value="cinematic">
+                Cinematic
+              </option>
+
+              <option value="pop">
+                Pop
+              </option>
+
+              <option value="electronic">
+                Electronic
+              </option>
+
+              <option value="ambient">
+                Ambient
+              </option>
+
+              <option value="lofi">
+                Lo-fi
+              </option>
+
+              <option value="rock">
+                Rock
+              </option>
+
+              <option value="classical">
+                Classical
+              </option>
+
+              <option value="hiphop">
+                Hip Hop
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="two-cols">
+
+          <div class="field">
+
+            <label for="duration">
+              Duration
+            </label>
+
+            <select id="duration">
+
+              <option value="15">
+                15 seconds
+              </option>
+
+              <option value="30">
+                30 seconds
+              </option>
+
+              <option value="60" selected>
+                60 seconds
+              </option>
+
+              <option value="120">
+                2 minutes
+              </option>
+
+              <option value="180">
+                3 minutes
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="format">
+              Output format
+            </label>
+
+            <select id="format">
+
+              <option value="mp3">
+                MP3
+              </option>
+
+              <option value="wav">
+                WAV
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label for="variation">
+            Creativity
+          </label>
+
+          <div class="range-wrap">
+
+            <div class="range-top">
+
+              <span>
+                More predictable
+              </span>
+
+              <strong id="variationValue">
+                Balanced
+              </strong>
+
+              <span>
+                More creative
+              </span>
+
+            </div>
+
+            <input
+              type="range"
+              id="variation"
+              min="0"
+              max="100"
+              value="50"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="check-row">
+
+          <input
+            type="checkbox"
+            id="instrumental"
+            checked
+          >
+
+          <span>
+            Create instrumental audio without vocals or lyrics.
+          </span>
+
+        </div>
+
+
+        <button
+          class="generate-btn"
+          id="generateBtn"
+        >
+
+          <span class="spinner"></span>
+
+          <span class="btn-text">
+            Generate AI Audio
+          </span>
+
+        </button>
+
+
+        <div class="usage">
+
+          <div class="usage-top">
+            <span>
+              Free usage
+            </span>
+
+            <strong>
+              1 / 5 today
+            </strong>
+          </div>
+
+          <div class="progress">
+            <div></div>
+          </div>
+
+        </div>
+
+
+        <div
+          class="message"
+          id="message"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RESULT -->
+
+    <section
+      class="result"
+      id="result"
+    >
+
+      <div class="result-head">
+
+        <div class="result-status">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+
+            <path d="m5 12 4 4L19 6"/>
+
+          </svg>
+
+        </div>
+
+        <div>
+
+          <h2>
+            Audio generated
+          </h2>
+
+          <p>
+            Your AI-created audio is ready.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="audio-box">
+
+        <audio
+          id="resultAudio"
+          controls
+        ></audio>
+
+        <a
+          href="#"
+          id="downloadBtn"
+          class="download-btn"
+          download
+        >
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.8">
+
+            <path d="M12 3v12"/>
+            <path d="m7 10 5 5 5-5"/>
+            <path d="M4 20h16"/>
+
+          </svg>
+
+          Download Audio
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+
+    <section class="features">
+
+      <h2>
+        Built for creators
+      </h2>
+
+      <div class="feature-grid">
+
+        <div class="feature">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.8">
+
+            <path d="M9 18V5l10-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="16" cy="16" r="3"/>
+
+          </svg>
+
+          <h3>
+            Original music
+          </h3>
+
+          <p>
+            Generate custom background tracks for videos,
+            ads, podcasts and creative projects.
+          </p>
+
+        </div>
+
+
+        <div class="feature">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.8">
+
+            <path d="M4 12h3l2-7 4 14 2-7h5"/>
+
+          </svg>
+
+          <h3>
+            Sound effects
+          </h3>
+
+          <p>
+            Create custom sound effects from simple
+            natural-language descriptions.
+          </p>
+
+        </div>
+
+
+        <div class="feature">
+
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="1.8">
+
+            <path d="M12 3v18"/>
+            <path d="M5 8h14"/>
+            <path d="M5 16h14"/>
+
+          </svg>
+
+          <h3>
+            Flexible control
+          </h3>
+
+          <p>
+            Choose duration, genre, creativity and output
+            format for every generation.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="footer-inner">
+
+      <div class="footer-copy">
+        © 2026 VoiceAI. All rights reserved.
+      </div>
+
+      <div class="footer-links">
+
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="forgot-password.html">Forgot Password</a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+
+    const promptInput =
+      document.getElementById("prompt");
+
+    const counter =
+      document.getElementById("counter");
+
+    const variation =
+      document.getElementById("variation");
+
+    const variationValue =
+      document.getElementById("variationValue");
+
+    const generateBtn =
+      document.getElementById("generateBtn");
+
+    const message =
+      document.getElementById("message");
+
+    const result =
+      document.getElementById("result");
+
+    const resultAudio =
+      document.getElementById("resultAudio");
+
+    const downloadBtn =
+      document.getElementById("downloadBtn");
+
+
+    /* COUNTER */
+
+    promptInput.addEventListener(
+      "input",
+      () => {
+
+        counter.textContent =
+          promptInput.value.length +
+          " / 1000";
+
+      }
+    );
+
+
+    /* QUICK PROMPTS */
+
+    document.querySelectorAll(
+      ".quick-btn"
+    ).forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          promptInput.value =
+            button.dataset.prompt;
+
+          counter.textContent =
+            promptInput.value.length +
+            " / 1000";
+
+          promptInput.focus();
+
+        }
+      );
+
+    });
+
+
+    /* CREATIVITY */
+
+    variation.addEventListener(
+      "input",
+      () => {
+
+        const value =
+          Number(variation.value);
+
+        if (value < 35) {
+          variationValue.textContent =
+            "Focused";
+        } else if (value < 70) {
+          variationValue.textContent =
+            "Balanced";
+        } else {
+          variationValue.textContent =
+            "Creative";
+        }
+
+      }
+    );
+
+
+    /* MESSAGE */
+
+    function showMessage(
+      text,
+      type
+    ) {
+
+      message.textContent =
+        text;
+
+      message.className =
+        "message show " + type;
+
+    }
+
+
+    function hideMessage() {
+
+      message.textContent = "";
+
+      message.className =
+        "message";
+
+    }
+
+
+    /* GENERATE */
+
+    generateBtn.addEventListener(
+      "click",
+      async () => {
+
+        hideMessage();
+
+
+        const prompt =
+          promptInput.value.trim();
+
+
+        if (!prompt) {
+
+          showMessage(
+            "Please describe the music or sound effect you want to create.",
+            "error"
+          );
+
+          promptInput.focus();
+
+          return;
+        }
+
+
+        const audioType =
+          document.getElementById(
+            "audioType"
+          ).value;
+
+
+        const genre =
+          document.getElementById(
+            "genre"
+          ).value;
+
+
+        const duration =
+          document.getElementById(
+            "duration"
+          ).value;
+
+
+        const format =
+          document.getElementById(
+            "format"
+          ).value;
+
+
+        const instrumental =
+          document.getElementById(
+            "instrumental"
+          ).checked;
+
+
+        const creativity =
+          variation.value;
+
+
+        const payload = {
+
+          prompt: prompt,
+
+          type: audioType,
+
+          genre: genre,
+
+          duration:
+            Number(duration),
+
+          format: format,
+
+          creativity:
+            Number(creativity),
+
+          instrumental:
+            instrumental
+
+        };
+
+
+        generateBtn.disabled =
+          true;
+
+        generateBtn.classList.add(
+          "loading"
+        );
+
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/music/generate",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+                body:
+                  JSON.stringify(payload)
+              }
+            );
+
+
+          if (!response.ok) {
+
+            let errorText =
+              "Music generation service is not available.";
+
+            try {
+
+              const data =
+                await response.json();
+
+              if (data.message) {
+                errorText =
+                  data.message;
+              }
+
+            } catch (_) {}
+
+            throw new Error(
+              errorText
+            );
+
+          }
+
+
+          const data =
+            await response.json();
+
+
+          const audioUrl =
+            data.audioUrl ||
+            data.outputUrl ||
+            data.url;
+
+
+          if (!audioUrl) {
+
+            throw new Error(
+              "The server did not return an audio file."
+            );
+
+          }
+
+
+          resultAudio.src =
+            audioUrl;
+
+
+          downloadBtn.href =
+            audioUrl;
+
+
+          downloadBtn.download =
+            "voiceai-ai-audio." +
+            format;
+
+
+          result.classList.add(
+            "show"
+          );
+
+
+          showMessage(
+            "Your AI audio has been generated successfully.",
+            "info"
+          );
+
+
+          result.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          showMessage(
+            error.message ||
+            "Unable to generate audio. Please try again.",
+            "error"
+          );
+
+        } finally {
+
+          generateBtn.disabled =
+            false;
+
+          generateBtn.classList.remove(
+            "loading"
+          );
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
