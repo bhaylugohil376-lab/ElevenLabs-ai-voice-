@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Text to Image — VoiceAI</title>
+
+    <style>
+        :root {
+            --bg: #fffdf7;
+            --card: #ffffff;
+            --text: #3b2117;
+            --muted: #806f66;
+            --orange: #d96b27;
+            --orange-dark: #b95418;
+            --orange-light: #fff0e5;
+            --border: #eadfd7;
+            --shadow: 0 18px 50px rgba(59,33,23,.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            min-height: 76px;
+            padding: 0 5%;
+            background: rgba(255,255,255,.97);
+            border-bottom: 1px solid var(--border);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: var(--orange);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-size: 14px;
+            font-weight: 600;
+            color: #624e44;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .login-btn {
+            font-size: 14px;
+            font-weight: 700;
+            padding: 10px 15px;
+        }
+
+        .profile-nav {
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .nav-button {
+            background: var(--orange);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            border: 0;
+            background: none;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        /* MAIN */
+
+        .image-page {
+            max-width: 1250px;
+            margin: auto;
+            padding: 60px 24px 90px;
+        }
+
+        .page-heading {
+            max-width: 760px;
+            margin: 0 auto 42px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 7px 13px;
+            background: var(--orange-light);
+            color: var(--orange-dark);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .page-heading h1 {
+            font-size: clamp(38px, 5vw, 62px);
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* WORKSPACE */
+
+        .image-workspace {
+            max-width: 1050px;
+            margin: auto;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .workspace-head {
+            padding: 25px 28px;
+            border-bottom: 1px solid var(--border);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .workspace-head h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .workspace-head p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .free-badge {
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: var(--orange-light);
+            color: var(--orange-dark);
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .workspace-body {
+            display: grid;
+            grid-template-columns: 1.25fr .75fr;
+        }
+
+        /* PROMPT */
+
+        .prompt-panel {
+            padding: 28px;
+            border-right: 1px solid var(--border);
+        }
+
+        .field-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .prompt-count {
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        #imagePrompt {
+            width: 100%;
+            min-height: 250px;
+            resize: vertical;
+
+            border: 1px solid var(--border);
+            border-radius: 16px;
+
+            padding: 17px;
+
+            background: #fffefa;
+            color: var(--text);
+
+            outline: none;
+            line-height: 1.7;
+        }
+
+        #imagePrompt:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(217,107,39,.1);
+        }
+
+        .prompt-examples {
+            margin-top: 13px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .prompt-examples button {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 7px 11px;
+            color: var(--muted);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .prompt-examples button:hover {
+            color: var(--orange);
+            border-color: var(--orange);
+        }
+
+        /* SETTINGS */
+
+        .settings-panel {
+            padding: 28px;
+        }
+
+        .settings-panel h3 {
+            font-size: 17px;
+            margin-bottom: 20px;
+        }
+
+        .setting {
+            margin-bottom: 21px;
+        }
+
+        .setting label {
+            display: block;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .setting select {
+            width: 100%;
+            height: 45px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            color: var(--text);
+            padding: 0 12px;
+            outline: none;
+        }
+
+        .setting select:focus {
+            border-color: var(--orange);
+        }
+
+        /* STYLE BUTTONS */
+
+        .style-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .style-btn {
+            min-height: 42px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: white;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .style-btn.active {
+            background: var(--orange-light);
+            border-color: var(--orange);
+            color: var(--orange-dark);
+        }
+
+        /* ACTION */
+
+        .workspace-footer {
+            padding: 20px 28px;
+            border-top: 1px solid var(--border);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-note {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .generate-btn {
+            border: 0;
+            background: var(--orange);
+            color: white;
+
+            padding: 14px 25px;
+            border-radius: 11px;
+
+            font-weight: 800;
+            cursor: pointer;
+
+            box-shadow: 0 8px 20px rgba(217,107,39,.2);
+        }
+
+        .generate-btn:hover {
+            background: var(--orange-dark);
+        }
+
+        .generate-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        /* OUTPUT */
+
+        .output-section {
+            max-width: 1050px;
+            margin: 30px auto 0;
+            display: none;
+        }
+
+        .output-section.show {
+            display: block;
+        }
+
+        .output-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .output-head h2 {
+            font-size: 20px;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .image-result {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .image-preview {
+            min-height: 280px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff0e5,
+                    #f8ebe3,
+                    #fdf8ef
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 25px;
+            text-align: center;
+        }
+
+        .placeholder-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .image-preview p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .result-bottom {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .result-name {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .download-btn {
+            border: 1px solid var(--orange);
+            background: white;
+            color: var(--orange);
+
+            padding: 8px 12px;
+            border-radius: 8px;
+
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .download-btn:hover {
+            background: var(--orange);
+            color: white;
+        }
+
+        .backend-message {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff8f2;
+            border: 1px solid #f1ded0;
+            border-radius: 12px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+
+        .site-footer {
+            border-top: 1px solid var(--border);
+            background: white;
+            padding: 45px 6% 25px;
+        }
+
+        .footer-main {
+            max-width: 1200px;
+            margin: auto;
+
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 35px;
+        }
+
+        .footer-brand p {
+            margin-top: 12px;
+            max-width: 350px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer-column h4 {
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .footer-column a {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .footer-column a:hover {
+            color: var(--orange);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 35px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 850px) {
+
+            .nav-links,
+            .nav-actions {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .workspace-body {
+                grid-template-columns: 1fr;
+            }
+
+            .prompt-panel {
+                border-right: 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                min-height: 68px;
+                padding: 0 18px;
+            }
+
+            .image-page {
+                padding: 38px 14px 60px;
+            }
+
+            .page-heading h1 {
+                letter-spacing: -1px;
+            }
+
+            .workspace-head {
+                padding: 20px;
+                align-items: flex-start;
+                gap: 12px;
+                flex-direction: column;
+            }
+
+            .prompt-panel,
+            .settings-panel {
+                padding: 20px;
+            }
+
+            #imagePrompt {
+                min-height: 220px;
+            }
+
+            .workspace-footer {
+                padding: 18px 20px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .generate-btn {
+                width: 100%;
+            }
+
+            .output-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .output-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="index.html" class="logo">
+        ∿ <span>Voice</span>AI
+    </a>
+
+    <nav class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="tools.html">AI Tools</a>
+
+        <a href="voices.html">Voices</a>
+
+        <a href="studio.html">Studio</a>
+
+        <a href="pricing.html">Pricing</a>
+
+    </nav>
+
+    <div class="nav-actions">
+
+        <a href="profile.html" class="profile-nav">
+            Profile
+        </a>
+
+        <a href="login.html" class="login-btn">
+            Login
+        </a>
+
+        <a href="pricing.html" class="nav-button">
+            Get Started
+        </a>
+
+    </div>
+
+    <button
+        class="mobile-menu-btn"
+        id="mobileMenuBtn">
+        ☰
+    </button>
+
+</header>
+
+
+<main class="image-page">
+
+    <section class="page-heading">
+
+        <span class="eyebrow">
+            AI IMAGE STUDIO
+        </span>
+
+        <h1>
+            Turn ideas into images.
+        </h1>
+
+        <p>
+            Describe your idea and create visuals for ads,
+            thumbnails, social media, products and creative projects.
+        </p>
+
+    </section>
+
+
+    <section class="image-workspace">
+
+        <div class="workspace-head">
+
+            <div>
+                <h2>
+                    Text to Image
+                </h2>
+
+                <p>
+                    Describe exactly what you want to create.
+                </p>
+            </div>
+
+            <span class="free-badge">
+                FREE • 5 DAILY
+            </span>
+
+        </div>
+
+
+        <div class="workspace-body">
+
+            <!-- PROMPT -->
+
+            <div class="prompt-panel">
+
+                <div class="field-label">
+
+                    <span>
+                        Image prompt
+                    </span>
+
+                    <span
+                        class="prompt-count">
+
+                        <span id="promptCount">
+                            0
+                        </span>
+                        / 2000
+
+                    </span>
+
+                </div>
+
+
+                <textarea
+                    id="imagePrompt"
+                    maxlength="2000"
+                    placeholder="Example:
+A premium cinematic advertisement for a futuristic AI voice studio, elegant dark background, glowing orange light, professional product photography, ultra detailed."
+                ></textarea>
+
+
+                <div class="prompt-examples">
+
+                    <button
+                        onclick="usePrompt('product')">
+                        Product Ad
+                    </button>
+
+                    <button
+                        onclick="usePrompt('cinematic')">
+                        Cinematic
+                    </button>
+
+                    <button
+                        onclick="usePrompt('social')">
+                        Social Media
+                    </button>
+
+                    <button
+                        onclick="usePrompt('portrait')">
+                        Portrait
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SETTINGS -->
+
+            <div class="settings-panel">
+
+                <h3>
+                    Image settings
+                </h3>
+
+
+                <div class="setting">
+
+                    <label>
+                        Style
+                    </label>
+
+                    <div class="style-grid">
+
+                        <button
+                            class="style-btn active"
+                            data-style="Photographic">
+                            Photographic
+                        </button>
+
+                        <button
+                            class="style-btn"
+                            data-style="Illustrated">
+                            Illustrated
+                        </button>
+
+                        <button
+                            class="style-btn"
+                            data-style="Cinematic">
+                            Cinematic
+                        </button>
+
+                        <button
+                            class="style-btn"
+                            data-style="Minimal">
+                            Minimal
+                        </button>
+
+                        <button
+                            class="style-btn"
+                            data-style="3D">
+                            3D
+                        </button>
+
+                        <button
+                            class="style-btn"
+                            data-style="Anime">
+                            Anime
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <label for="aspectRatio">
+                        Aspect ratio
+                    </label>
+
+                    <select id="aspectRatio">
+
+                        <option value="1:1">
+                            1:1 — Square
+                        </option>
+
+                        <option value="16:9">
+                            16:9 — Landscape
+                        </option>
+
+                        <option value="9:16">
+                            9:16 — Portrait
+                        </option>
+
+                        <option value="4:5">
+                            4:5 — Social
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <label for="quality">
+                        Quality
+                    </label>
+
+                    <select id="quality">
+
+                        <option value="standard">
+                            Standard
+                        </option>
+
+                        <option value="high">
+                            High
+                        </option>
+
+                        <option value="ultra">
+                            Ultra
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <label for="images">
+                        Number of images
+                    </label>
+
+                    <select id="images">
+
+                        <option value="1">
+                            1 Image
+                        </option>
+
+                        <option value="2">
+                            2 Images
+                        </option>
+
+                        <option value="4">
+                            4 Images
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="workspace-footer">
+
+            <span class="footer-note">
+                AI image generation requires your image-generation backend/API.
+            </span>
+
+            <button
+                class="generate-btn"
+                id="generateBtn">
+
+                Generate Image →
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- OUTPUT -->
+
+    <section
+        class="output-section"
+        id="outputSection">
+
+        <div class="output-head">
+
+            <h2>
+                Generated images
+            </h2>
+
+        </div>
+
+
+        <div
+            class="output-grid"
+            id="outputGrid">
+
+        </div>
+
+
+        <div
+            class="backend-message"
+            id="backendMessage">
+
+            Connect your <strong>/api/image/generate</strong>
+            endpoint to display real AI-generated images here.
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+
+    <div class="footer-main">
+
+        <div class="footer-brand">
+
+            <a href="index.html" class="logo">
+                ∿ <span>Voice</span>AI
+            </a>
+
+            <p>
+                Create AI voice, images and creative content
+                from one professional workspace.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                Platform
+            </h4>
+
+            <a href="tools.html">
+                AI Tools
+            </a>
+
+            <a href="voices.html">
+                Voice Library
+            </a>
+
+            <a href="studio.html">
+                Studio
+            </a>
+
+            <a href="pricing.html">
+                Pricing
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                AI Tools
+            </h4>
+
+            <a href="tts.html">
+                Text to Speech
+            </a>
+
+            <a href="image.html">
+                Text to Image
+            </a>
+
+            <a href="clone.html">
+                Voice Clone
+            </a>
+
+            <a href="stt.html">
+                Speech to Text
+            </a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>
+                Account
+            </h4>
+
+            <a href="profile.html">
+                Profile
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+            <a href="forgot-password.html">
+                Forgot Password
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+        © 2026 VoiceAI. All rights reserved.
+    </div>
+
+</footer>
+
+
+<script>
+
+    const imagePrompt =
+        document.getElementById("imagePrompt");
+
+    const promptCount =
+        document.getElementById("promptCount");
+
+    const generateBtn =
+        document.getElementById("generateBtn");
+
+    const outputSection =
+        document.getElementById("outputSection");
+
+    const outputGrid =
+        document.getElementById("outputGrid");
+
+    const backendMessage =
+        document.getElementById("backendMessage");
+
+
+    /* PROMPT COUNTER */
+
+    imagePrompt.addEventListener(
+        "input",
+        () => {
+
+            promptCount.textContent =
+                imagePrompt.value.length;
+
+        }
+    );
+
+
+    /* PROMPT EXAMPLES */
+
+    function usePrompt(type) {
+
+        const prompts = {
+
+            product:
+            "A premium product advertisement for a futuristic AI voice studio, elegant studio lighting, clean luxury composition, orange glowing accents, professional commercial photography, ultra detailed.",
+
+            cinematic:
+            "A cinematic futuristic city at night, dramatic lighting, atmospheric fog, glowing orange and gold lights, realistic environment, high-end movie still.",
+
+            social:
+            "A modern social media advertisement for an AI technology brand, premium design, clean composition, bold visual elements, professional commercial photography.",
+
+            portrait:
+            "A professional studio portrait of a confident creative professional, cinematic lighting, natural skin texture, premium editorial photography, detailed background."
+
+        };
+
+        imagePrompt.value =
+            prompts[type] || "";
+
+        imagePrompt.dispatchEvent(
+            new Event("input")
+        );
+
+    }
+
+
+    /* STYLE */
+
+    let selectedStyle =
+        "Photographic";
+
+    document
+        .querySelectorAll(".style-btn")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    document
+                        .querySelectorAll(
+                            ".style-btn"
+                        )
+                        .forEach(btn =>
+                            btn.classList.remove(
+                                "active"
+                            )
+                        );
+
+                    button.classList.add(
+                        "active"
+                    );
+
+                    selectedStyle =
+                        button.dataset.style;
+
+                }
+            );
+
+        });
+
+
+    /* GENERATE */
+
+    generateBtn.addEventListener(
+        "click",
+        async () => {
+
+            const prompt =
+                imagePrompt.value.trim();
+
+            if (!prompt) {
+
+                alert(
+                    "Please describe the image you want to create."
+                );
+
+                return;
+
+            }
+
+
+            generateBtn.disabled = true;
+
+            generateBtn.textContent =
+                "Generating...";
+
+
+            outputSection.classList.add(
+                "show"
+            );
+
+            backendMessage.style.display =
+                "none";
+
+
+            try {
+
+                /*
+                 * REAL BACKEND
+                 *
+                 * POST /api/image/generate
+                 *
+                 * Expected:
+                 *
+                 * {
+                 *   "images": [
+                 *      {
+                 *        "url": "https://..."
+                 *      }
+                 *   ]
+                 * }
+                 */
+
+                const response =
+                    await fetch(
+                        "/api/image/generate",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+
+                                prompt: prompt,
+
+                                style:
+                                    selectedStyle,
+
+                                aspectRatio:
+                                    document
+                                    .getElementById(
+                                        "aspectRatio"
+                                    ).value,
+
+                                quality:
+                                    document
+                                    .getElementById(
+                                        "quality"
+                                    ).value,
+
+                                count:
+                                    Number(
+                                        document
+                                        .getElementById(
+                                            "images"
+                                        ).value
+                                    )
+
+                            })
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Image API unavailable"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    !data.images ||
+                    !Array.isArray(data.images)
+                ) {
+
+                    throw new Error(
+                        "Invalid image response"
+                    );
+
+                }
+
+
+                outputGrid.innerHTML = "";
+
+
+                data.images.forEach(
+                    (image, index) => {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+                        card.className =
+                            "image-result";
+
+
+                        card.innerHTML = `
+
+                            <div class="image-preview"
+                                 style="padding:0;background:#f5eee8;">
+
+                                <img
+                                    src="${image.url}"
+                                    alt="Generated AI image"
+                                    style="
+                                        width:100%;
+                                        height:100%;
+                                        min-height:280px;
+                                        object-fit:cover;
+                                        display:block;
+                                    "
+                                >
+
+                            </div>
+
+                            <div class="result-bottom">
+
+                                <span class="result-name">
+                                    AI Image ${index + 1}
+                                </span>
+
+                                <a
+                                    class="download-btn"
+                                    href="${image.url}"
+                                    download="voiceai-image-${index + 1}.png">
+
+                                    Download
+
+                                </a>
+
+                            </div>
+
+                        `;
+
+                        outputGrid.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                /*
+                 * IMPORTANT:
+                 * No fake image is shown.
+                 */
+
+                outputGrid.innerHTML = `
+
+                    <div
+                        class="image-result"
+                        style="grid-column:1/-1;">
+
+                        <div class="image-preview">
+
+                            <div>
+
+                                <div class="placeholder-icon">
+                                    ✦
+                                </div>
+
+                                <p>
+                                    Image generation backend
+                                    is not connected yet.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+
+                backendMessage.style.display =
+                    "block";
+
+                backendMessage.innerHTML =
+                    "<strong>Backend required.</strong><br>" +
+                    "Connect <strong>/api/image/generate</strong> " +
+                    "to generate real AI images and enable downloads.";
+
+            }
+
+
+            generateBtn.disabled = false;
+
+            generateBtn.textContent =
+                "Generate Image →";
+
+        }
+    );
+
+
+    /* MOBILE MENU */
+
+    const mobileMenuBtn =
+        document.getElementById(
+            "mobileMenuBtn"
+        );
+
+
+    mobileMenuBtn.addEventListener(
+        "click",
+        () => {
+
+            const links =
+                document.querySelector(
+                    ".nav-links"
+                );
+
+
+            if (
+                links.style.display ===
+                "flex"
+            ) {
+
+                links.style.display =
+                    "none";
+
+            } else {
+
+                links.style.display =
+                    "flex";
+
+                links.style.position =
+                    "absolute";
+
+                links.style.top =
+                    "68px";
+
+                links.style.left =
+                    "0";
+
+                links.style.right =
+                    "0";
+
+                links.style.padding =
+                    "20px";
+
+                links.style.background =
+                    "white";
+
+                links.style.borderBottom =
+                    "1px solid #eadfd7";
+
+                links.style.flexDirection =
+                    "column";
+
+                links.style.alignItems =
+                    "flex-start";
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
