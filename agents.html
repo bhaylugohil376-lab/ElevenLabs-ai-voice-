@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VoiceAI AI Voice Agents">
+  <title>AI Voice Agents — VoiceAI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f7f8fc;
+      --card: #ffffff;
+      --text: #171a24;
+      --muted: #727887;
+      --border: #e5e7ed;
+      --primary: #6757e8;
+      --primary-dark: #5143ca;
+      --soft: #f0edff;
+      --success: #168653;
+      --danger: #d64545;
+      --shadow: 0 12px 35px rgba(25, 28, 45, .08);
+      --radius: 18px;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      height: 70px;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-inner {
+      width: 100%;
+      max-width: 1450px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .nav-links a {
+      color: #555b6b;
+      font-size: 14px;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-btn {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 10px 15px;
+      border-radius: 11px;
+      font-weight: 700;
+    }
+
+    .upgrade-btn {
+      border: 0;
+      background: var(--primary);
+      color: #fff;
+      padding: 11px 17px;
+      border-radius: 11px;
+      font-weight: 700;
+    }
+
+    .upgrade-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    /* PAGE */
+
+    .page {
+      width: min(1400px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 42px 0 70px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 30px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--soft);
+      color: var(--primary);
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 13px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -1.8px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .usage {
+      min-width: 220px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 17px;
+      box-shadow: var(--shadow);
+    }
+
+    .usage-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .usage-bar {
+      height: 7px;
+      background: #ececf2;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .usage-fill {
+      width: 20%;
+      height: 100%;
+      background: var(--primary);
+      border-radius: inherit;
+    }
+
+    .usage small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    /* WORKSPACE */
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(330px, .9fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-header h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .panel-header p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .panel-body {
+      padding: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 17px;
+    }
+
+    .field {
+      margin-bottom: 17px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #fbfbfd;
+      color: var(--text);
+      border-radius: 11px;
+      padding: 12px 13px;
+      outline: none;
+      transition: .2s;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 145px;
+      line-height: 1.6;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(103,87,232,.1);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    /* VOICE */
+
+    .voice-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .voice-option {
+      position: relative;
+    }
+
+    .voice-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .voice-option label {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 12px;
+      padding: 13px 10px;
+      cursor: pointer;
+      margin: 0;
+      transition: .2s;
+    }
+
+    .voice-option input:checked + label {
+      border-color: var(--primary);
+      background: var(--soft);
+      color: var(--primary);
+    }
+
+    .voice-name {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .voice-type {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    /* SETTINGS */
+
+    .setting-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .range-wrap {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 12px;
+      background: #fbfbfd;
+    }
+
+    .range-top {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      accent-color: var(--primary);
+    }
+
+    /* BUTTONS */
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 17px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #f0f1f5;
+      color: #343844;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e6eb;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    /* TEST PANEL */
+
+    .test-panel {
+      min-height: 610px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .agent-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+    }
+
+    .chat {
+      flex: 1;
+      min-height: 350px;
+      max-height: 470px;
+      overflow-y: auto;
+      padding: 20px;
+      background: #fafaff;
+    }
+
+    .message {
+      max-width: 84%;
+      padding: 11px 13px;
+      border-radius: 13px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .message.agent {
+      background: #fff;
+      border: 1px solid var(--border);
+      margin-right: auto;
+    }
+
+    .message.user {
+      background: var(--primary);
+      color: #fff;
+      margin-left: auto;
+    }
+
+    .chat-input {
+      padding: 15px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      background: #fff;
+    }
+
+    .chat-input input {
+      flex: 1;
+    }
+
+    .send-btn {
+      width: 46px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--primary);
+      color: white;
+      font-size: 18px;
+    }
+
+    .test-note {
+      padding: 0 20px 16px;
+      color: var(--muted);
+      font-size: 11px;
+      background: #fff;
+    }
+
+    /* FEATURES */
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .feature {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: var(--soft);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      margin-bottom: 13px;
+    }
+
+    .feature h3 {
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* ALERT */
+
+    .alert {
+      display: none;
+      margin-top: 15px;
+      padding: 11px 13px;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .alert.error {
+      display: block;
+      color: var(--danger);
+      background: #fff1f1;
+      border: 1px solid #ffd6d6;
+    }
+
+    .alert.success {
+      display: block;
+      color: var(--success);
+      background: #edfff5;
+      border: 1px solid #c9f4dc;
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #fff;
+      padding: 25px 30px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-inner {
+      max-width: 1400px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1100px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .test-panel {
+        min-height: 560px;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .nav-links {
+        display: none;
+      }
+
+      .navbar {
+        padding: 0 18px;
+      }
+
+      .page {
+        width: min(100% - 28px, 720px);
+        padding-top: 28px;
+      }
+
+      .hero {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .usage {
+        width: 100%;
+      }
+
+      .voice-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .profile-btn {
+        display: none;
+      }
+
+      .upgrade-btn {
+        padding: 9px 12px;
+        font-size: 12px;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .panel-body {
+        padding: 16px;
+      }
+
+      .form-grid,
+      .setting-row {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .voice-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+
+      .chat {
+        min-height: 320px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+
+      <a href="index.html" class="logo">
+        ∿ <span>Voice</span>AI
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="agents.html" class="active">Agents</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="profile.html" class="profile-btn">Profile</a>
+        <a href="pricing.html" class="upgrade-btn">Upgrade</a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <main class="page">
+
+    <!-- HERO -->
+    <section class="hero">
+
+      <div>
+        <div class="eyebrow">
+          AI VOICE AGENTS
+        </div>
+
+        <h1>Build AI agents<br>that can talk.</h1>
+
+        <p>
+          Create conversational voice agents for customer support,
+          sales, bookings, websites and automated conversations.
+        </p>
+      </div>
+
+      <div class="usage">
+        <div class="usage-top">
+          <span>Free AI usage</span>
+          <strong>1 / 5</strong>
+        </div>
+
+        <div class="usage-bar">
+          <div class="usage-fill"></div>
+        </div>
+
+        <small>5 AI actions per 24 hours</small>
+      </div>
+
+    </section>
+
+
+    <!-- WORKSPACE -->
+    <section class="workspace">
+
+      <!-- LEFT -->
+      <div class="panel">
+
+        <div class="panel-header">
+          <h2>Agent configuration</h2>
+          <p>Configure your agent's personality, voice and behavior.</p>
+        </div>
+
+        <div class="panel-body">
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label for="agentName">Agent name</label>
+              <input
+                id="agentName"
+                type="text"
+                placeholder="e.g. Support Assistant"
+                maxlength="80"
+              >
+            </div>
+
+            <div class="field">
+              <label for="agentDescription">Description</label>
+              <input
+                id="agentDescription"
+                type="text"
+                placeholder="What does this agent do?"
+                maxlength="150"
+              >
+            </div>
+
+            <div class="field">
+              <label for="language">Language</label>
+              <select id="language">
+                <option value="en-US">English — US</option>
+                <option value="en-GB">English — UK</option>
+                <option value="hi-IN">Hindi</option>
+                <option value="gu-IN">Gujarati</option>
+                <option value="es-ES">Spanish</option>
+                <option value="fr-FR">French</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="model">AI model</label>
+              <select id="model">
+                <option value="fast">VoiceAI Fast</option>
+                <option value="balanced">VoiceAI Balanced</option>
+                <option value="advanced">VoiceAI Advanced</option>
+              </select>
+            </div>
+
+            <div class="field full">
+
+              <label>Agent voice</label>
+
+              <div class="voice-grid">
+
+                <div class="voice-option">
+                  <input
+                    type="radio"
+                    id="voiceDavid"
+                    name="voice"
+                    value="david"
+                    checked
+                  >
+                  <label for="voiceDavid">
+                    <span class="voice-name">David</span>
+                    <span class="voice-type">Professional Male</span>
+                  </label>
+                </div>
+
+                <div class="voice-option">
+                  <input
+                    type="radio"
+                    id="voiceMarcus"
+                    name="voice"
+                    value="marcus"
+                  >
+                  <label for="voiceMarcus">
+                    <span class="voice-name">Marcus</span>
+                    <span class="voice-type">Deep & Confident</span>
+                  </label>
+                </div>
+
+                <div class="voice-option">
+                  <input
+                    type="radio"
+                    id="voiceSarah"
+                    name="voice"
+                    value="sarah"
+                  >
+                  <label for="voiceSarah">
+                    <span class="voice-name">Sarah</span>
+                    <span class="voice-type">Warm Female</span>
+                  </label>
+                </div>
+
+                <div class="voice-option">
+                  <input
+                    type="radio"
+                    id="voiceEmma"
+                    name="voice"
+                    value="emma"
+                  >
+                  <label for="voiceEmma">
+                    <span class="voice-name">Emma</span>
+                    <span class="voice-type">Clear & Friendly</span>
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <div class="field full">
+
+              <label for="systemPrompt">System instructions</label>
+
+              <textarea
+                id="systemPrompt"
+                placeholder="You are a helpful customer support agent. Answer clearly, politely and briefly..."
+              ></textarea>
+
+              <div class="hint">
+                Define the agent's personality, rules, goals and behavior.
+              </div>
+
+            </div>
+
+
+            <div class="field full">
+
+              <label for="greeting">Opening greeting</label>
+
+              <input
+                id="greeting"
+                type="text"
+                value="Hi! How can I help you today?"
+                maxlength="300"
+              >
+
+            </div>
+
+
+            <div class="field full">
+
+              <div class="setting-row">
+
+                <div class="range-wrap">
+
+                  <div class="range-top">
+                    <span>Temperature</span>
+                    <span id="temperatureValue">0.5</span>
+                  </div>
+
+                  <input
+                    id="temperature"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value="0.5"
+                  >
+
+                </div>
+
+                <div class="range-wrap">
+
+                  <div class="range-top">
+                    <span>Response speed</span>
+                    <span id="speedValue">1.0x</span>
+                  </div>
+
+                  <input
+                    id="responseSpeed"
+                    type="range"
+                    min="0.5"
+                    max="2"
+                    step="0.1"
+                    value="1"
+                  >
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div id="alertBox" class="alert"></div>
+
+
+          <div class="actions">
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="resetBtn"
+            >
+              Reset
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="saveBtn"
+            >
+              Save Agent
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- RIGHT TEST PANEL -->
+      <div class="panel test-panel">
+
+        <div class="panel-header">
+
+          <h2>Test your agent</h2>
+
+          <p>
+            Send a message and preview how your agent responds.
+          </p>
+
+          <div class="agent-status">
+            <span class="status-dot"></span>
+            Ready to test
+          </div>
+
+        </div>
+
+
+        <div class="chat" id="chat">
+
+          <div class="message agent">
+            Hi! How can I help you today?
+          </div>
+
+        </div>
+
+
+        <div class="test-note">
+          Test mode uses your configured agent. Live phone/web deployment
+          requires the VoiceAI backend.
+        </div>
+
+
+        <div class="chat-input">
+
+          <input
+            type="text"
+            id="messageInput"
+            placeholder="Type a message..."
+            maxlength="1000"
+          >
+
+          <button
+            type="button"
+            class="send-btn"
+            id="sendBtn"
+            aria-label="Send message"
+          >
+            →
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FEATURES -->
+    <section class="features">
+
+      <article class="feature">
+
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 3v18M8 7v10M16 7v10M5 10v4M19 10v4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <h3>Natural conversations</h3>
+
+        <p>
+          Build agents with natural responses, custom instructions
+          and configurable voice behavior.
+        </p>
+
+      </article>
+
+
+      <article class="feature">
+
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 5h16v14H4z"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+            <path
+              d="M8 9h8M8 13h5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <h3>Custom instructions</h3>
+
+        <p>
+          Define exactly how your AI should answer, what it should
+          avoid and what goals it should follow.
+        </p>
+
+      </article>
+
+
+      <article class="feature">
+
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+            <path
+              d="M9 12l2 2 4-4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+
+        <h3>Deploy safely</h3>
+
+        <p>
+          Connect your finished agent to your website, applications
+          or supported voice infrastructure through your backend.
+        </p>
+
+      </article>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-inner">
+
+      <div>
+        © 2026 VoiceAI. All rights reserved.
+      </div>
+
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="profile.html">Profile</a>
+        <a href="forgot-password.html">Forgot Password</a>
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+
+    const $ = (id) => document.getElementById(id);
+
+    const temperature = $("temperature");
+    const temperatureValue = $("temperatureValue");
+
+    const responseSpeed = $("responseSpeed");
+    const speedValue = $("speedValue");
+
+    const alertBox = $("alertBox");
+
+    const chat = $("chat");
+    const messageInput = $("messageInput");
+    const sendBtn = $("sendBtn");
+
+    /* SLIDERS */
+
+    temperature.addEventListener("input", () => {
+      temperatureValue.textContent = temperature.value;
+    });
+
+    responseSpeed.addEventListener("input", () => {
+      speedValue.textContent = Number(responseSpeed.value).toFixed(1) + "x";
+    });
+
+
+    /* ALERT */
+
+    function showAlert(message, type = "error") {
+
+      alertBox.textContent = message;
+      alertBox.className = "alert " + type;
+
+    }
+
+
+    /* COLLECT AGENT */
+
+    function getAgentData() {
+
+      const selectedVoice =
+        document.querySelector('input[name="voice"]:checked');
+
+      return {
+
+        name: $("agentName").value.trim(),
+
+        description:
+          $("agentDescription").value.trim(),
+
+        language:
+          $("language").value,
+
+        model:
+          $("model").value,
+
+        voice:
+          selectedVoice ? selectedVoice.value : "david",
+
+        systemPrompt:
+          $("systemPrompt").value.trim(),
+
+        greeting:
+          $("greeting").value.trim(),
+
+        temperature:
+          Number(temperature.value),
+
+        responseSpeed:
+          Number(responseSpeed.value)
+
+      };
+
+    }
+
+
+    /* SAVE AGENT */
+
+    $("saveBtn").addEventListener("click", async () => {
+
+      const agent = getAgentData();
+
+      if (!agent.name) {
+
+        showAlert("Please enter an agent name.");
+
+        $("agentName").focus();
+
+        return;
+
+      }
+
+      if (!agent.systemPrompt) {
+
+        showAlert("Please add system instructions.");
+
+        $("systemPrompt").focus();
+
+        return;
+
+      }
+
+      const button = $("saveBtn");
+
+      button.disabled = true;
+      button.textContent = "Saving...";
+
+      try {
+
+        const response = await fetch("/api/agents", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify(agent)
+
+        });
+
+        if (!response.ok) {
+          throw new Error("Unable to save agent.");
+        }
+
+        const data = await response.json();
+
+        if (!data || data.success === false) {
+          throw new Error(
+            data?.message || "Agent could not be saved."
+          );
+        }
+
+        if (data.id) {
+          localStorage.setItem(
+            "voiceaiAgentId",
+            data.id
+          );
+        }
+
+        showAlert(
+          "Agent saved successfully.",
+          "success"
+        );
+
+      } catch (error) {
+
+        showAlert(
+          "Agent could not be saved. Connect the /api/agents backend endpoint."
+        );
+
+      } finally {
+
+        button.disabled = false;
+        button.textContent = "Save Agent";
+
+      }
+
+    });
+
+
+    /* TEST AGENT */
+
+    async function sendMessage() {
+
+      const message =
+        messageInput.value.trim();
+
+      if (!message) return;
+
+      const userBubble =
+        document.createElement("div");
+
+      userBubble.className = "message user";
+      userBubble.textContent = message;
+
+      chat.appendChild(userBubble);
+
+      messageInput.value = "";
+
+      chat.scrollTop = chat.scrollHeight;
+
+      const thinking =
+        document.createElement("div");
+
+      thinking.className = "message agent";
+      thinking.textContent = "Thinking...";
+
+      chat.appendChild(thinking);
+
+      chat.scrollTop = chat.scrollHeight;
+
+      sendBtn.disabled = true;
+
+      try {
+
+        const agent = getAgentData();
+
+        const response = await fetch(
+          "/api/agents/test",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+
+              agent: agent,
+
+              message: message
+
+            })
+
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "Agent test failed."
+          );
+        }
+
+        const data =
+          await response.json();
+
+        const reply =
+          data.reply ||
+          data.message ||
+          data.output;
+
+        if (!reply) {
+          throw new Error(
+            "No agent response received."
+          );
+        }
+
+        thinking.textContent = reply;
+
+      } catch (error) {
+
+        thinking.textContent =
+          "Test backend is not connected yet. Connect /api/agents/test to enable live AI responses.";
+
+      } finally {
+
+        sendBtn.disabled = false;
+
+        chat.scrollTop =
+          chat.scrollHeight;
+
+      }
+
+    }
+
+
+    sendBtn.addEventListener(
+      "click",
+      sendMessage
+    );
+
+
+    messageInput.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "Enter") {
+
+          event.preventDefault();
+
+          sendMessage();
+
+        }
+
+      }
+    );
+
+
+    /* RESET */
+
+    $("resetBtn").addEventListener(
+      "click",
+      () => {
+
+        $("agentName").value = "";
+        $("agentDescription").value = "";
+
+        $("language").value = "en-US";
+        $("model").value = "fast";
+
+        $("voiceDavid").checked = true;
+
+        $("systemPrompt").value = "";
+
+        $("greeting").value =
+          "Hi! How can I help you today?";
+
+        temperature.value = 0.5;
+        temperatureValue.textContent = "0.5";
+
+        responseSpeed.value = 1;
+        speedValue.textContent = "1.0x";
+
+        alertBox.className = "alert";
+        alertBox.textContent = "";
+
+        chat.innerHTML = `
+          <div class="message agent">
+            Hi! How can I help you today?
+          </div>
+        `;
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
