@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="VoiceAI Voice Changer">
-  <title>Voice Changer — VoiceAI</title>
+
+  <title>Video Voice Transfer — VoiceAI</title>
 
   <style>
     * {
@@ -13,333 +13,194 @@
       padding: 0;
     }
 
-    :root {
-      --bg: #f7f8fc;
-      --card: #ffffff;
-      --text: #15161a;
-      --muted: #70737d;
-      --border: #e6e7ec;
-      --primary: #6d4aff;
-      --primary-dark: #5435dc;
-      --soft: #f0edff;
-      --success: #16834b;
-      --danger: #d33b3b;
-    }
-
     body {
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      background: #f7f7fb;
+      color: #171717;
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
     a {
-      color: inherit;
       text-decoration: none;
+      color: inherit;
     }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    /* NAVBAR */
 
     .navbar {
       height: 72px;
-      background: rgba(255,255,255,.96);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .nav-inner {
-      width: min(1180px, calc(100% - 32px));
-      margin: auto;
+      background: #fff;
+      border-bottom: 1px solid #e9e9ee;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      padding: 0 6%;
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
-      letter-spacing: -.5px;
-      white-space: nowrap;
-    }
-
-    .logo span {
-      color: var(--primary);
+      color: #6d35d8;
     }
 
     .nav-links {
       display: flex;
+      gap: 28px;
       align-items: center;
-      gap: 26px;
     }
 
     .nav-links a {
-      color: #555863;
       font-size: 14px;
       font-weight: 600;
-      transition: .2s;
+      color: #555;
     }
 
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--primary);
+    .nav-links a:hover {
+      color: #6d35d8;
     }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .profile-btn,
-    .upgrade-btn {
+    .nav-btn {
+      background: #6d35d8;
+      color: white !important;
+      padding: 11px 18px;
       border-radius: 10px;
-      padding: 10px 15px;
-      font-size: 13px;
-      font-weight: 700;
     }
 
-    .profile-btn {
-      border: 1px solid var(--border);
-      background: white;
+    .container {
+      width: min(1180px, 92%);
+      margin: auto;
     }
-
-    .upgrade-btn {
-      background: var(--primary);
-      color: white;
-    }
-
-    /* HERO */
 
     .hero {
-      width: min(1180px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 62px 0 35px;
       text-align: center;
+      padding: 65px 0 35px;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--soft);
-      color: var(--primary);
+    .badge {
+      display: inline-block;
+      background: #eee7ff;
+      color: #6d35d8;
+      padding: 8px 14px;
       border-radius: 30px;
-      padding: 8px 13px;
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 13px;
+      font-weight: 700;
       margin-bottom: 18px;
     }
 
-    .eyebrow-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--primary);
-      border-radius: 50%;
-    }
-
-    .hero h1 {
+    h1 {
       font-size: clamp(34px, 5vw, 58px);
       line-height: 1.05;
+      margin-bottom: 18px;
       letter-spacing: -2px;
-      margin-bottom: 16px;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
     }
 
     .hero p {
-      max-width: 650px;
+      max-width: 680px;
       margin: auto;
-      color: var(--muted);
+      color: #666;
+      font-size: 17px;
       line-height: 1.7;
-      font-size: 16px;
     }
 
-    /* WORKSPACE */
-
     .workspace {
-      width: min(1000px, calc(100% - 32px));
-      margin: 20px auto 80px;
       display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 20px;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 24px;
+      padding-bottom: 70px;
     }
 
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 8px 30px rgba(20,20,40,.04);
+      background: #fff;
+      border: 1px solid #e7e7ed;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 12px 35px rgba(20, 20, 40, .05);
     }
 
-    .card-title {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      margin-bottom: 20px;
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 7px;
     }
 
-    .icon-box {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: var(--soft);
-      color: var(--primary);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-
-    .icon-box svg {
-      width: 21px;
-      height: 21px;
-    }
-
-    .card-title h2 {
-      font-size: 18px;
-    }
-
-    .card-title p {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 3px;
-    }
-
-    /* UPLOAD */
-
-    .upload-box {
-      border: 2px dashed #d9d8e8;
-      border-radius: 16px;
-      padding: 35px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: .2s;
-      background: #fcfcff;
-    }
-
-    .upload-box:hover,
-    .upload-box.dragover {
-      border-color: var(--primary);
-      background: #f8f6ff;
-    }
-
-    .upload-icon {
-      width: 54px;
-      height: 54px;
-      margin: 0 auto 13px;
-      border-radius: 15px;
-      background: var(--soft);
-      color: var(--primary);
-      display: grid;
-      place-items: center;
-    }
-
-    .upload-icon svg {
-      width: 25px;
-      height: 25px;
-    }
-
-    .upload-box h3 {
-      font-size: 16px;
-      margin-bottom: 6px;
-    }
-
-    .upload-box p {
-      color: var(--muted);
-      font-size: 13px;
+    .muted {
+      color: #777;
+      font-size: 14px;
       line-height: 1.6;
     }
 
-    .browse-text {
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    #audioFile {
-      display: none;
-    }
-
-    .file-info {
-      display: none;
-      margin-top: 14px;
-      padding: 13px;
-      background: #f7f7fa;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .file-info.show {
+    .upload {
+      margin-top: 22px;
+      min-height: 280px;
+      border: 2px dashed #cfc7e8;
+      background: #faf8ff;
+      border-radius: 17px;
       display: flex;
-    }
-
-    .file-name {
-      font-size: 13px;
-      font-weight: 700;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .file-size {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 3px;
-    }
-
-    .remove-file {
-      border: 0;
-      background: #fff0f0;
-      color: var(--danger);
-      border-radius: 8px;
-      padding: 7px 10px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
+      padding: 25px;
     }
 
-    /* FORM */
+    .upload:hover {
+      border-color: #6d35d8;
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .upload strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 7px;
+    }
+
+    .upload input {
+      display: none;
+    }
+
+    video {
+      width: 100%;
+      max-height: 420px;
+      border-radius: 14px;
+      margin-top: 18px;
+      background: #111;
+    }
 
     .field {
-      margin-bottom: 18px;
+      margin-top: 20px;
     }
 
     .field label {
       display: block;
       font-size: 13px;
-      font-weight: 750;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
-    .field select {
+    select,
+    input[type="text"],
+    input[type="range"] {
       width: 100%;
-      height: 46px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: white;
-      padding: 0 13px;
-      outline: none;
-      color: var(--text);
     }
 
-    .field select:focus {
-      border-color: var(--primary);
+    select,
+    input[type="text"] {
+      height: 48px;
+      border: 1px solid #dddde5;
+      border-radius: 11px;
+      padding: 0 13px;
+      background: white;
+      font-size: 14px;
+      outline: none;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: #6d35d8;
     }
 
     .voice-grid {
@@ -349,319 +210,160 @@
     }
 
     .voice-option {
-      position: relative;
+      border: 1px solid #e1e1e7;
+      border-radius: 13px;
+      padding: 13px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .voice-option:hover {
+      border-color: #6d35d8;
+      background: #faf8ff;
     }
 
     .voice-option input {
-      position: absolute;
-      opacity: 0;
+      margin-right: 7px;
     }
 
-    .voice-label {
-      display: block;
-      padding: 13px;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      cursor: pointer;
-      transition: .2s;
+    .voice-name {
+      font-weight: 700;
+      font-size: 14px;
     }
 
-    .voice-label strong {
-      display: block;
-      font-size: 13px;
-    }
-
-    .voice-label small {
-      color: var(--muted);
-      display: block;
-      margin-top: 3px;
-      font-size: 11px;
-    }
-
-    .voice-option input:checked + .voice-label {
-      border-color: var(--primary);
-      background: var(--soft);
-      box-shadow: 0 0 0 2px rgba(109,74,255,.08);
-    }
-
-    /* SLIDER */
-
-    .slider-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .slider-value {
-      color: var(--primary);
+    .voice-type {
+      color: #888;
       font-size: 12px;
-      font-weight: 800;
+      margin-top: 4px;
     }
 
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--primary);
-    }
-
-    /* BUTTON */
-
-    .generate-btn {
-      width: 100%;
-      height: 50px;
-      border: 0;
-      border-radius: 11px;
-      background: var(--primary);
-      color: white;
-      cursor: pointer;
-      font-weight: 800;
-      margin-top: 5px;
-      transition: .2s;
+    .range-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 9px;
+      gap: 12px;
     }
 
-    .generate-btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
+    .range-value {
+      min-width: 45px;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .generate-btn:disabled {
+    .primary {
+      width: 100%;
+      border: 0;
+      background: #6d35d8;
+      color: white;
+      height: 52px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 25px;
+    }
+
+    .primary:hover {
+      background: #5b29bd;
+    }
+
+    .primary:disabled {
       opacity: .55;
       cursor: not-allowed;
-      transform: none;
     }
 
-    .generate-btn svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* USAGE */
-
-    .usage {
-      margin-top: 17px;
-      padding: 13px;
-      background: #faf9ff;
-      border: 1px solid #ebe8ff;
+    .secondary {
+      width: 100%;
+      border: 1px solid #dddde5;
+      background: white;
+      color: #333;
+      height: 48px;
       border-radius: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
     }
 
-    .usage-top {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-
-    .usage-top span:last-child {
-      color: var(--primary);
-      font-weight: 800;
-    }
-
-    .progress {
-      height: 6px;
-      background: #e8e6ee;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .progress div {
-      width: 20%;
-      height: 100%;
-      background: var(--primary);
-      border-radius: inherit;
-    }
-
-    /* RESULT */
-
-    .result-card {
+    .result {
       display: none;
-      margin-top: 20px;
+      margin-top: 25px;
+      padding-top: 22px;
+      border-top: 1px solid #eee;
     }
 
-    .result-card.show {
+    .result h3 {
+      margin-bottom: 10px;
+    }
+
+    .download {
       display: block;
-    }
-
-    .result-box {
-      background: #faf9ff;
-      border: 1px solid #e9e5ff;
-      border-radius: 14px;
-      padding: 17px;
-    }
-
-    .result-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--success);
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 13px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--success);
-      border-radius: 50%;
-    }
-
-    audio {
-      width: 100%;
-      height: 42px;
-    }
-
-    .download-btn {
-      margin-top: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      height: 44px;
-      border-radius: 10px;
-      background: #17181c;
+      text-align: center;
+      background: #111;
       color: white;
-      font-size: 13px;
-      font-weight: 750;
+      padding: 14px;
+      border-radius: 11px;
+      font-weight: 700;
+      margin-top: 12px;
     }
 
-    .download-btn svg {
-      width: 17px;
-      height: 17px;
-    }
-
-    /* MESSAGE */
-
-    .message {
-      display: none;
-      margin-top: 13px;
+    .status {
+      margin-top: 15px;
+      padding: 12px;
       border-radius: 10px;
-      padding: 11px 13px;
-      font-size: 12px;
-      line-height: 1.5;
+      background: #f3f3f7;
+      color: #555;
+      font-size: 13px;
+      display: none;
     }
 
-    .message.show {
-      display: block;
+    .status.error {
+      background: #fff0f0;
+      color: #b42318;
     }
 
-    .message.error {
-      background: #fff1f1;
-      color: #a92727;
-      border: 1px solid #ffd8d8;
+    .status.success {
+      background: #edfff4;
+      color: #087443;
     }
-
-    .message.info {
-      background: #f0edff;
-      color: #5335d0;
-      border: 1px solid #ddd6ff;
-    }
-
-    /* FEATURES */
 
     .features {
-      width: min(1000px, calc(100% - 32px));
-      margin: 0 auto 80px;
-    }
-
-    .features h2 {
-      text-align: center;
-      font-size: 28px;
-      margin-bottom: 30px;
-    }
-
-    .feature-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 15px;
+      margin-bottom: 70px;
     }
 
     .feature {
       background: white;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 21px;
+      border: 1px solid #e7e7ed;
+      border-radius: 16px;
+      padding: 22px;
     }
 
-    .feature svg {
-      width: 23px;
-      height: 23px;
-      color: var(--primary);
-      margin-bottom: 13px;
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
     }
 
     .feature h3 {
-      font-size: 15px;
+      font-size: 16px;
       margin-bottom: 7px;
     }
 
     .feature p {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.65;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.6;
     }
-
-    /* FOOTER */
 
     footer {
-      border-top: 1px solid var(--border);
+      border-top: 1px solid #e7e7ed;
       background: white;
-      padding: 30px 16px;
+      padding: 30px 6%;
+      text-align: center;
+      color: #777;
+      font-size: 13px;
     }
-
-    .footer-inner {
-      width: min(1180px, 100%);
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-copy {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 18px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    /* LOADING */
-
-    .spinner {
-      width: 17px;
-      height: 17px;
-      border: 2px solid rgba(255,255,255,.35);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
-      display: none;
-    }
-
-    .loading .spinner {
-      display: block;
-    }
-
-    .loading .btn-text {
-      display: none;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* MOBILE */
 
     @media (max-width: 850px) {
       .nav-links {
@@ -672,71 +374,26 @@
         grid-template-columns: 1fr;
       }
 
-      .feature-grid {
-        grid-template-columns: 1fr 1fr;
+      .features {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 560px) {
-      .navbar {
-        height: 64px;
-      }
-
-      .nav-inner {
-        width: calc(100% - 22px);
-      }
-
-      .logo {
-        font-size: 19px;
-      }
-
-      .profile-btn {
-        display: none;
-      }
-
-      .upgrade-btn {
-        padding: 9px 11px;
-        font-size: 11px;
-      }
-
+    @media (max-width: 500px) {
       .hero {
-        padding: 42px 0 25px;
-      }
-
-      .hero h1 {
-        font-size: 36px;
-        letter-spacing: -1.5px;
-      }
-
-      .hero p {
-        font-size: 14px;
-      }
-
-      .workspace,
-      .features {
-        width: calc(100% - 22px);
+        padding-top: 45px;
       }
 
       .card {
-        padding: 17px;
-        border-radius: 14px;
+        padding: 18px;
       }
 
       .voice-grid {
         grid-template-columns: 1fr;
       }
 
-      .feature-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .footer-links {
-        flex-wrap: wrap;
+      h1 {
+        letter-spacing: -1px;
       }
     }
   </style>
@@ -744,194 +401,163 @@
 
 <body>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="nav-inner">
+<nav class="navbar">
+  <a href="index.html" class="logo">VoiceAI</a>
 
-      <a href="index.html" class="logo">
-        ∿ <span>VoiceAI</span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html" class="active">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
-      </nav>
-
-      <div class="nav-actions">
-        <a href="profile.html" class="profile-btn">Profile</a>
-        <a href="pricing.html" class="upgrade-btn">Upgrade</a>
-      </div>
-
-    </div>
-  </header>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="tools.html">AI Tools</a>
+    <a href="voices.html">Voices</a>
+    <a href="studio.html">Studio</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="profile.html" class="nav-btn">Profile</a>
+  </div>
+</nav>
 
 
-  <!-- HERO -->
+<main class="container">
+
   <section class="hero">
+    <span class="badge">AI VIDEO VOICE TRANSFER</span>
 
-    <div class="eyebrow">
-      <span class="eyebrow-dot"></span>
-      AI Voice Changer
-    </div>
-
-    <h1>Transform your <span>voice</span></h1>
+    <h1>
+      Replace your video voice<br>
+      with an AI voice.
+    </h1>
 
     <p>
-      Upload your audio and transform it into a different voice while
-      keeping the original words and delivery.
+      Upload a video, choose an AI voice, and replace the original
+      speech while keeping the video timing and visuals.
     </p>
-
   </section>
 
 
-  <!-- WORKSPACE -->
-  <main class="workspace">
+  <section class="workspace">
 
-    <!-- LEFT -->
-    <section class="card">
+    <!-- VIDEO -->
+    <div class="card">
 
-      <div class="card-title">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M12 3v18"/>
-            <path d="M8 7v10"/>
-            <path d="M16 6v12"/>
-            <path d="M4 10v4"/>
-            <path d="M20 9v6"/>
-          </svg>
-        </div>
+      <h2>1. Upload your video</h2>
+
+      <p class="muted">
+        MP4, MOV, WebM and other supported video formats.
+      </p>
+
+      <label class="upload" for="videoInput">
 
         <div>
-          <h2>Upload your voice</h2>
-          <p>MP3, WAV, M4A or other supported audio</p>
-        </div>
-      </div>
+          <div class="upload-icon">🎥</div>
 
+          <strong>Drop your video here</strong>
 
-      <div class="upload-box" id="uploadBox">
+          <span class="muted">
+            or click to browse
+          </span>
 
-        <input
-          type="file"
-          id="audioFile"
-          accept="audio/*"
-        >
-
-        <div class="upload-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M12 16V4"/>
-            <path d="m7 9 5-5 5 5"/>
-            <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>
-          </svg>
+          <input
+            id="videoInput"
+            type="file"
+            accept="video/*"
+          >
         </div>
 
-        <h3>Drop your audio here</h3>
+      </label>
 
-        <p>
-          or <span class="browse-text">browse files</span><br>
-          Maximum recommended file size: 25 MB
-        </p>
+      <video
+        id="sourceVideo"
+        controls
+        playsinline
+        style="display:none;">
+      </video>
 
-      </div>
+      <div id="fileInfo" class="status"></div>
 
-
-      <div class="file-info" id="fileInfo">
-
-        <div style="min-width:0;">
-          <div class="file-name" id="fileName"></div>
-          <div class="file-size" id="fileSize"></div>
-        </div>
-
-        <button class="remove-file" id="removeFile">
-          Remove
-        </button>
-
-      </div>
+    </div>
 
 
-      <div class="message" id="message"></div>
+    <!-- SETTINGS -->
+    <div class="card">
 
-    </section>
+      <h2>2. Choose AI voice</h2>
 
-
-    <!-- RIGHT -->
-    <section class="card">
-
-      <div class="card-title">
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <circle cx="12" cy="8" r="4"/>
-            <path d="M4 21c.8-4 3.4-6 8-6s7.2 2 8 6"/>
-          </svg>
-        </div>
-
-        <div>
-          <h2>Choose target voice</h2>
-          <p>Select how your transformed voice should sound</p>
-        </div>
-      </div>
+      <p class="muted">
+        Select the voice that should replace the original speaker.
+      </p>
 
 
       <div class="field">
 
-        <label>Voice style</label>
+        <label>AI Voice</label>
 
         <div class="voice-grid">
 
-          <div class="voice-option">
+          <label class="voice-option">
             <input
               type="radio"
               name="voice"
-              id="voiceDavid"
-              value="david"
+              value="male"
               checked
             >
-            <label class="voice-label" for="voiceDavid">
-              <strong>David</strong>
-              <small>Professional male</small>
-            </label>
-          </div>
 
-          <div class="voice-option">
+            <span class="voice-name">
+              Marcus
+            </span>
+
+            <div class="voice-type">
+              Male · Professional
+            </div>
+          </label>
+
+
+          <label class="voice-option">
             <input
               type="radio"
               name="voice"
-              id="voiceMarcus"
-              value="marcus"
+              value="female"
             >
-            <label class="voice-label" for="voiceMarcus">
-              <strong>Marcus</strong>
-              <small>Deep & confident</small>
-            </label>
-          </div>
 
-          <div class="voice-option">
+            <span class="voice-name">
+              Sarah
+            </span>
+
+            <div class="voice-type">
+              Female · Natural
+            </div>
+          </label>
+
+
+          <label class="voice-option">
             <input
               type="radio"
               name="voice"
-              id="voiceSarah"
-              value="sarah"
+              value="energetic"
             >
-            <label class="voice-label" for="voiceSarah">
-              <strong>Sarah</strong>
-              <small>Warm female</small>
-            </label>
-          </div>
 
-          <div class="voice-option">
+            <span class="voice-name">
+              Jerry
+            </span>
+
+            <div class="voice-type">
+              Male · Energetic
+            </div>
+          </label>
+
+
+          <label class="voice-option">
             <input
               type="radio"
               name="voice"
-              id="voiceEmma"
-              value="emma"
+              value="calm"
             >
-            <label class="voice-label" for="voiceEmma">
-              <strong>Emma</strong>
-              <small>Clear & friendly</small>
-            </label>
-          </div>
+
+            <span class="voice-name">
+              Allison
+            </span>
+
+            <div class="voice-type">
+              Female · Calm
+            </div>
+          </label>
 
         </div>
 
@@ -940,13 +566,32 @@
 
       <div class="field">
 
-        <label for="language">Language</label>
+        <label for="language">
+          Language
+        </label>
 
         <select id="language">
-          <option value="en-US">English — US</option>
-          <option value="en-GB">English — UK</option>
-          <option value="hi-IN">Hindi — India</option>
-          <option value="gu-IN">Gujarati — India</option>
+
+          <option value="en">
+            English
+          </option>
+
+          <option value="hi">
+            Hindi
+          </option>
+
+          <option value="gu">
+            Gujarati
+          </option>
+
+          <option value="es">
+            Spanish
+          </option>
+
+          <option value="fr">
+            French
+          </option>
+
         </select>
 
       </div>
@@ -954,108 +599,130 @@
 
       <div class="field">
 
-        <div class="slider-row">
-          <label style="margin:0;">Voice strength</label>
-          <span class="slider-value" id="strengthValue">70%</span>
+        <label for="style">
+          Voice Style
+        </label>
+
+        <select id="style">
+
+          <option value="natural">
+            Natural
+          </option>
+
+          <option value="professional">
+            Professional
+          </option>
+
+          <option value="advertisement">
+            Advertisement
+          </option>
+
+          <option value="energetic">
+            Energetic
+          </option>
+
+          <option value="calm">
+            Calm
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Voice Strength
+        </label>
+
+        <div class="range-row">
+
+          <input
+            id="strength"
+            type="range"
+            min="0"
+            max="100"
+            value="80"
+          >
+
+          <span
+            id="strengthValue"
+            class="range-value">
+            80%
+          </span>
+
         </div>
 
+      </div>
+
+
+      <div class="field">
+
+        <label for="projectName">
+          Project name
+        </label>
+
         <input
-          type="range"
-          id="strength"
-          min="0"
-          max="100"
-          value="70"
+          id="projectName"
+          type="text"
+          placeholder="My AI Video"
         >
 
       </div>
 
 
-      <div class="field">
+      <button
+        id="convertBtn"
+        class="primary"
+        disabled>
 
-        <label for="style">Delivery style</label>
-
-        <select id="style">
-          <option value="natural">Natural</option>
-          <option value="professional">Professional</option>
-          <option value="energetic">Energetic</option>
-          <option value="calm">Calm</option>
-          <option value="dramatic">Dramatic</option>
-        </select>
-
-      </div>
-
-
-      <button class="generate-btn" id="generateBtn">
-
-        <span class="spinner"></span>
-
-        <span class="btn-text">
-          Generate Changed Voice
-        </span>
+        Convert Video Voice
 
       </button>
 
 
-      <div class="usage">
+      <button
+        id="resetBtn"
+        class="secondary">
 
-        <div class="usage-top">
-          <span>Free usage</span>
-          <span>1 / 5 today</span>
-        </div>
+        Reset
 
-        <div class="progress">
-          <div></div>
-        </div>
+      </button>
 
+
+      <div
+        id="status"
+        class="status">
       </div>
 
-    </section>
 
-  </main>
+      <div
+        id="result"
+        class="result">
 
+        <h3>
+          Converted Video
+        </h3>
 
-  <!-- RESULT -->
-  <section class="workspace" style="margin-top:-55px;">
+        <p class="muted">
+          Your AI voice transfer is ready.
+        </p>
 
-    <div class="card result-card" id="resultCard">
-
-      <div class="card-title">
-
-        <div class="icon-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M3 12h3l2-7 4 14 2-7h7"/>
-          </svg>
-        </div>
-
-        <div>
-          <h2>Your changed voice</h2>
-          <p>Preview and download your generated audio</p>
-        </div>
-
-      </div>
-
-      <div class="result-box">
-
-        <div class="result-status">
-          <span class="status-dot"></span>
-          Voice transformation completed
-        </div>
-
-        <audio id="resultAudio" controls></audio>
+        <video
+          id="resultVideo"
+          controls
+          playsinline>
+        </video>
 
         <a
           id="downloadBtn"
-          class="download-btn"
+          class="download"
           href="#"
-          download="voiceai-changed-voice.mp3"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M12 3v12"/>
-            <path d="m7 10 5 5 5-5"/>
-            <path d="M4 20h16"/>
-          </svg>
+          download="voiceai-video.mp4">
 
-          Download Audio
+          ⬇ Download Converted Video
+
         </a>
 
       </div>
@@ -1065,398 +732,442 @@
   </section>
 
 
-  <!-- FEATURES -->
   <section class="features">
 
-    <h2>Built for creators</h2>
+    <div class="feature">
+      <div class="feature-icon">🎙️</div>
 
-    <div class="feature-grid">
+      <h3>
+        AI Voice Transfer
+      </h3>
 
-      <div class="feature">
-
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M12 3a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0V8a5 5 0 0 0-5-5Z"/>
-          <path d="M19 11v1a7 7 0 0 1-14 0v-1"/>
-          <path d="M12 19v3"/>
-        </svg>
-
-        <h3>Natural results</h3>
-
-        <p>
-          Preserve the original speech while transforming the
-          voice characteristics.
-        </p>
-
-      </div>
+      <p>
+        Replace the original spoken voice with a selected AI voice.
+      </p>
+    </div>
 
 
-      <div class="feature">
+    <div class="feature">
+      <div class="feature-icon">⏱️</div>
 
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M4 12a8 8 0 1 0 16 0"/>
-          <path d="M12 4v8l5 3"/>
-        </svg>
+      <h3>
+        Timing Preservation
+      </h3>
 
-        <h3>Fast processing</h3>
-
-        <p>
-          Built for quick voice transformations suitable for
-          videos, ads and social content.
-        </p>
-
-      </div>
+      <p>
+        The backend can align generated speech with the original timing.
+      </p>
+    </div>
 
 
-      <div class="feature">
+    <div class="feature">
+      <div class="feature-icon">⬇️</div>
 
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M12 3 5 6v5c0 4.5 2.9 7.6 7 10 4.1-2.4 7-5.5 7-10V6l-7-3Z"/>
-          <path d="m9 12 2 2 4-4"/>
-        </svg>
+      <h3>
+        Download
+      </h3>
 
-        <h3>Permission focused</h3>
-
-        <p>
-          Only transform voices you have permission to use.
-          Never clone or imitate someone without authorization.
-        </p>
-
-      </div>
-
+      <p>
+        Preview the final video and download the converted result.
+      </p>
     </div>
 
   </section>
 
-
-  <!-- FOOTER -->
-  <footer>
-
-    <div class="footer-inner">
-
-      <div class="footer-copy">
-        © 2026 VoiceAI. All rights reserved.
-      </div>
-
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="forgot-password.html">Forgot Password</a>
-      </div>
-
-    </div>
-
-  </footer>
+</main>
 
 
-  <script>
-    const uploadBox = document.getElementById("uploadBox");
-    const audioFile = document.getElementById("audioFile");
-
-    const fileInfo = document.getElementById("fileInfo");
-    const fileName = document.getElementById("fileName");
-    const fileSize = document.getElementById("fileSize");
-    const removeFile = document.getElementById("removeFile");
-
-    const generateBtn = document.getElementById("generateBtn");
-    const message = document.getElementById("message");
-
-    const strength = document.getElementById("strength");
-    const strengthValue = document.getElementById("strengthValue");
-
-    const resultCard = document.getElementById("resultCard");
-    const resultAudio = document.getElementById("resultAudio");
-    const downloadBtn = document.getElementById("downloadBtn");
-
-    let selectedFile = null;
+<footer>
+  © 2026 VoiceAI · AI Voice & Video Studio
+</footer>
 
 
-    /* UPLOAD */
+<script>
 
-    uploadBox.addEventListener("click", () => {
-      audioFile.click();
-    });
+const videoInput =
+  document.getElementById("videoInput");
+
+const sourceVideo =
+  document.getElementById("sourceVideo");
+
+const fileInfo =
+  document.getElementById("fileInfo");
+
+const convertBtn =
+  document.getElementById("convertBtn");
+
+const resetBtn =
+  document.getElementById("resetBtn");
+
+const statusBox =
+  document.getElementById("status");
+
+const result =
+  document.getElementById("result");
+
+const resultVideo =
+  document.getElementById("resultVideo");
+
+const downloadBtn =
+  document.getElementById("downloadBtn");
+
+const strength =
+  document.getElementById("strength");
+
+const strengthValue =
+  document.getElementById("strengthValue");
 
 
-    audioFile.addEventListener("change", () => {
-
-      if (!audioFile.files.length) return;
-
-      handleFile(audioFile.files[0]);
-
-    });
+let selectedFile = null;
+let sourceObjectUrl = null;
 
 
-    function handleFile(file) {
+strength.addEventListener(
+  "input",
+  () => {
 
-      if (!file.type.startsWith("audio/")) {
+    strengthValue.textContent =
+      strength.value + "%";
 
-        showMessage(
-          "Please select a valid audio file.",
-          "error"
-        );
+  }
+);
 
-        return;
-      }
 
-      if (file.size > 25 * 1024 * 1024) {
+videoInput.addEventListener(
+  "change",
+  () => {
 
-        showMessage(
-          "File is larger than 25 MB. Please choose a smaller audio file.",
-          "error"
-        );
+    const file =
+      videoInput.files[0];
 
-        return;
-      }
+    if (!file) return;
 
-      selectedFile = file;
+    selectedFile = file;
 
-      fileName.textContent = file.name;
+    if (sourceObjectUrl) {
+      URL.revokeObjectURL(sourceObjectUrl);
+    }
 
-      fileSize.textContent =
-        formatFileSize(file.size);
+    sourceObjectUrl =
+      URL.createObjectURL(file);
 
-      fileInfo.classList.add("show");
+    sourceVideo.src =
+      sourceObjectUrl;
 
-      resultCard.classList.remove("show");
+    sourceVideo.style.display =
+      "block";
 
-      showMessage(
-        "Audio uploaded successfully. Choose a target voice and generate.",
-        "info"
+    fileInfo.style.display =
+      "block";
+
+    fileInfo.className =
+      "status success";
+
+    fileInfo.textContent =
+      `${file.name} · ${(file.size / 1024 / 1024).toFixed(1)} MB`;
+
+    convertBtn.disabled =
+      false;
+
+    hideStatus();
+
+    result.style.display =
+      "none";
+
+  }
+);
+
+
+convertBtn.addEventListener(
+  "click",
+  async () => {
+
+    if (!selectedFile) {
+
+      showStatus(
+        "Please upload a video first.",
+        true
       );
 
-    }
-
-
-    function formatFileSize(bytes) {
-
-      if (bytes < 1024) {
-        return bytes + " B";
-      }
-
-      if (bytes < 1024 * 1024) {
-        return (bytes / 1024).toFixed(1) + " KB";
-      }
-
-      return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+      return;
 
     }
 
 
-    /* REMOVE */
+    const voice =
+      document.querySelector(
+        'input[name="voice"]:checked'
+      )?.value || "male";
 
-    removeFile.addEventListener("click", () => {
+    const language =
+      document.getElementById(
+        "language"
+      ).value;
 
-      selectedFile = null;
+    const style =
+      document.getElementById(
+        "style"
+      ).value;
 
-      audioFile.value = "";
-
-      fileInfo.classList.remove("show");
-
-      resultCard.classList.remove("show");
-
-      hideMessage();
-
-    });
-
-
-    /* DRAG & DROP */
-
-    uploadBox.addEventListener("dragover", (event) => {
-
-      event.preventDefault();
-
-      uploadBox.classList.add("dragover");
-
-    });
+    const projectName =
+      document.getElementById(
+        "projectName"
+      ).value.trim() ||
+      "My AI Video";
 
 
-    uploadBox.addEventListener("dragleave", () => {
+    const formData =
+      new FormData();
 
-      uploadBox.classList.remove("dragover");
+    formData.append(
+      "video",
+      selectedFile
+    );
 
-    });
+    formData.append(
+      "voice",
+      voice
+    );
 
+    formData.append(
+      "language",
+      language
+    );
 
-    uploadBox.addEventListener("drop", (event) => {
+    formData.append(
+      "style",
+      style
+    );
 
-      event.preventDefault();
+    formData.append(
+      "strength",
+      strength.value
+    );
 
-      uploadBox.classList.remove("dragover");
-
-      const files = event.dataTransfer.files;
-
-      if (files.length) {
-        handleFile(files[0]);
-      }
-
-    });
-
-
-    /* SLIDER */
-
-    strength.addEventListener("input", () => {
-
-      strengthValue.textContent =
-        strength.value + "%";
-
-    });
-
-
-    /* MESSAGE */
-
-    function showMessage(text, type) {
-
-      message.textContent = text;
-
-      message.className =
-        "message show " + type;
-
-    }
+    formData.append(
+      "projectName",
+      projectName
+    );
 
 
-    function hideMessage() {
+    convertBtn.disabled =
+      true;
 
-      message.className = "message";
+    convertBtn.textContent =
+      "Converting…";
 
-      message.textContent = "";
-
-    }
-
-
-    /* GENERATE */
-
-    generateBtn.addEventListener("click", async () => {
-
-      hideMessage();
-
-      if (!selectedFile) {
-
-        showMessage(
-          "Please upload an audio file first.",
-          "error"
-        );
-
-        return;
-      }
+    showStatus(
+      "Uploading video and processing AI voice…",
+      false
+    );
 
 
-      const selectedVoice =
-        document.querySelector(
-          'input[name="voice"]:checked'
-        ).value;
+    try {
 
-      const language =
-        document.getElementById("language").value;
-
-      const deliveryStyle =
-        document.getElementById("style").value;
-
-
-      const formData = new FormData();
-
-      formData.append("audio", selectedFile);
-      formData.append("voice", selectedVoice);
-      formData.append("language", language);
-      formData.append("strength", strength.value);
-      formData.append("style", deliveryStyle);
-
-
-      generateBtn.disabled = true;
-
-      generateBtn.classList.add("loading");
-
-
-      try {
-
-        const response = await fetch(
-          "/api/voice-changer",
+      const response =
+        await fetch(
+          "/api/video-voice-transfer",
           {
             method: "POST",
-            body: formData
+            body: formData,
+            credentials: "include"
           }
         );
 
 
-        if (!response.ok) {
+      const contentType =
+        response.headers.get(
+          "content-type"
+        ) || "";
 
-          let errorMessage =
-            "Voice changer service is not available.";
 
-          try {
+      if (!response.ok) {
 
-            const errorData =
-              await response.json();
+        let message =
+          "Video voice conversion failed.";
 
-            if (errorData.message) {
-              errorMessage = errorData.message;
-            }
+        if (
+          contentType.includes(
+            "application/json"
+          )
+        ) {
 
-          } catch (_) {}
+          const data =
+            await response.json();
 
-          throw new Error(errorMessage);
-
+          message =
+            data.error ||
+            data.message ||
+            message;
         }
 
+        throw new Error(message);
+      }
 
-        const data = await response.json();
+
+      let outputUrl = null;
 
 
-        const audioUrl =
-          data.audioUrl ||
+      if (
+        contentType.includes(
+          "application/json"
+        )
+      ) {
+
+        const data =
+          await response.json();
+
+        outputUrl =
+          data.videoUrl ||
           data.outputUrl ||
           data.url;
 
+      } else {
 
-        if (!audioUrl) {
+        const blob =
+          await response.blob();
 
-          throw new Error(
-            "The server did not return an audio file."
-          );
-
-        }
-
-
-        resultAudio.src = audioUrl;
-
-        downloadBtn.href = audioUrl;
-
-        resultCard.classList.add("show");
+        outputUrl =
+          URL.createObjectURL(blob);
+      }
 
 
-        showMessage(
-          "Voice transformation completed successfully.",
-          "info"
+      if (!outputUrl) {
+
+        throw new Error(
+          "No converted video was returned."
         );
-
-
-        resultCard.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-          error.message ||
-          "Unable to generate changed voice. Please try again.",
-          "error"
-        );
-
-      } finally {
-
-        generateBtn.disabled = false;
-
-        generateBtn.classList.remove("loading");
 
       }
 
-    });
-  </script>
+
+      resultVideo.src =
+        outputUrl;
+
+      downloadBtn.href =
+        outputUrl;
+
+      downloadBtn.download =
+        "voiceai-converted-video.mp4";
+
+
+      result.style.display =
+        "block";
+
+      showStatus(
+        "Video voice transfer completed successfully.",
+        false,
+        true
+      );
+
+      result.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      showStatus(
+        error.message ||
+        "Something went wrong.",
+        true
+      );
+
+    } finally {
+
+      convertBtn.disabled =
+        !selectedFile;
+
+      convertBtn.textContent =
+        "Convert Video Voice";
+
+    }
+
+  }
+);
+
+
+resetBtn.addEventListener(
+  "click",
+  () => {
+
+    videoInput.value = "";
+
+    selectedFile = null;
+
+    sourceVideo.removeAttribute(
+      "src"
+    );
+
+    sourceVideo.load();
+
+    sourceVideo.style.display =
+      "none";
+
+    fileInfo.style.display =
+      "none";
+
+    result.style.display =
+      "none";
+
+    hideStatus();
+
+    convertBtn.disabled =
+      true;
+
+    document.getElementById(
+      "projectName"
+    ).value = "";
+
+  }
+);
+
+
+function showStatus(
+  message,
+  error = false,
+  success = false
+) {
+
+  statusBox.style.display =
+    "block";
+
+  statusBox.textContent =
+    message;
+
+  statusBox.className =
+    "status";
+
+  if (error) {
+    statusBox.classList.add(
+      "error"
+    );
+  }
+
+  if (success) {
+    statusBox.classList.add(
+      "success"
+    );
+  }
+
+}
+
+
+function hideStatus() {
+
+  statusBox.style.display =
+    "none";
+
+  statusBox.textContent =
+    "";
+
+}
+
+
+</script>
 
 </body>
 </html>
