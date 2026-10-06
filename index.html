@@ -1,255 +1,1081 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description"
-          content="VoiceAI — professional AI voice, image, audio and creative studio.">
+<title>VoiceAI — AI Voice Studio</title>
 
-    <title>VoiceAI — AI Voice Studio</title>
+<style>
+:root{
+    --bg:#fffdf8;
+    --white:#fff;
+    --text:#302019;
+    --muted:#81736c;
+    --orange:#d96b27;
+    --orange-dark:#b95217;
+    --orange-soft:#fff1e6;
+    --border:#eadfd7;
+    --shadow:0 18px 55px rgba(48,32,25,.08);
+}
 
-    <link rel="stylesheet" href="style.css">
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    height:76px;
+    width:100%;
+    background:rgba(255,255,255,.97);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:850;
+    letter-spacing:-1px;
+    white-space:nowrap;
+}
+
+.logo-mark{
+    color:var(--orange);
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:27px;
+}
+
+.nav-links a{
+    font-size:14px;
+    font-weight:650;
+    color:#604d43;
+    transition:.2s;
+}
+
+.nav-links a:hover{
+    color:var(--orange);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.login-btn{
+    padding:10px 16px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.nav-button{
+    padding:11px 18px;
+    background:var(--orange);
+    color:#fff;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:750;
+}
+
+.nav-button:hover{
+    background:var(--orange-dark);
+}
+
+.mobile-menu-btn{
+    display:none;
+    border:0;
+    background:transparent;
+    cursor:pointer;
+    color:var(--text);
+}
+
+.mobile-menu{
+    display:none;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    width:100%;
+    padding:90px 6% 75px;
+}
+
+.hero-inner{
+    max-width:1250px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:65px;
+    align-items:center;
+}
+
+.hero-content{
+    max-width:650px;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 13px;
+    border-radius:30px;
+    background:var(--orange-soft);
+    color:var(--orange);
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.badge-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--orange);
+}
+
+.hero h1{
+    font-size:clamp(42px,5vw,70px);
+    line-height:1.02;
+    letter-spacing:-3px;
+    margin-bottom:22px;
+}
+
+.hero h1 span{
+    color:var(--orange);
+}
+
+.hero-description{
+    max-width:580px;
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.75;
+    margin-bottom:30px;
+}
+
+.hero-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.primary-btn,
+.secondary-btn{
+    min-height:48px;
+    padding:0 21px;
+    border-radius:11px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    font-size:14px;
+    font-weight:800;
+}
+
+.primary-btn{
+    background:var(--orange);
+    color:#fff;
+}
+
+.primary-btn:hover{
+    background:var(--orange-dark);
+}
+
+.secondary-btn{
+    background:#fff;
+    border:1px solid var(--border);
+}
+
+.hero-info{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    margin-top:25px;
+    color:var(--muted);
+    font-size:12px;
+}
+
+.hero-info span{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+
+/* =========================
+   HERO GENERATOR
+========================= */
+
+.hero-generator{
+    width:100%;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:24px;
+    box-shadow:var(--shadow);
+    padding:24px;
+}
+
+.generator-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.generator-title{
+    font-size:15px;
+    font-weight:800;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#39834a;
+    font-size:12px;
+    font-weight:700;
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+    background:#42a35a;
+    border-radius:50%;
+}
+
+.generator-label{
+    display:block;
+    font-size:12px;
+    font-weight:750;
+    margin-bottom:8px;
+}
+
+.generator-text{
+    width:100%;
+    min-height:125px;
+    resize:vertical;
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:14px;
+    outline:none;
+    color:var(--text);
+    background:#fff;
+}
+
+.generator-text:focus{
+    border-color:var(--orange);
+    box-shadow:0 0 0 4px rgba(217,107,39,.09);
+}
+
+.generator-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:14px;
+}
+
+.generator-select{
+    width:100%;
+    height:46px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:0 12px;
+    background:#fff;
+    color:var(--text);
+    outline:none;
+}
+
+.generate-ai-btn{
+    width:100%;
+    height:48px;
+    border:0;
+    border-radius:11px;
+    margin-top:14px;
+    background:var(--orange);
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.generate-ai-btn:hover{
+    background:var(--orange-dark);
+}
+
+.audio-preview{
+    margin-top:17px;
+    display:none;
+}
+
+.audio-preview audio{
+    width:100%;
+}
+
+
+/* =========================
+   SECTION COMMON
+========================= */
+
+.section{
+    padding:85px 6%;
+}
+
+.section-inner{
+    max-width:1250px;
+    margin:auto;
+}
+
+.section-heading{
+    max-width:680px;
+    margin:0 auto 45px;
+    text-align:center;
+}
+
+.section-eyebrow{
+    color:var(--orange);
+    font-size:12px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:10px;
+}
+
+.section-heading h2{
+    font-size:clamp(30px,4vw,46px);
+    letter-spacing:-1.5px;
+    margin-bottom:13px;
+}
+
+.section-heading p{
+    color:var(--muted);
+    line-height:1.7;
+    font-size:15px;
+}
+
+
+/* =========================
+   TOOLS
+========================= */
+
+.tools-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.tool-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:23px;
+    min-height:190px;
+    transition:.25s;
+    display:flex;
+    flex-direction:column;
+}
+
+.tool-card:hover{
+    transform:translateY(-4px);
+    box-shadow:var(--shadow);
+    border-color:#dfc8b9;
+}
+
+.tool-icon{
+    width:46px;
+    height:46px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:13px;
+    background:var(--orange-soft);
+    color:var(--orange);
+    margin-bottom:20px;
+}
+
+.tool-icon svg{
+    width:23px;
+    height:23px;
+}
+
+.tool-card h3{
+    font-size:16px;
+    margin-bottom:8px;
+}
+
+.tool-card p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+}
+
+.tool-link{
+    margin-top:auto;
+    padding-top:16px;
+    color:var(--orange);
+    font-size:12px;
+    font-weight:800;
+}
+
+
+/* =========================
+   VIDEO TESTING
+========================= */
+
+.video-testing{
+    background:#fff8f2;
+}
+
+.video-layout{
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    gap:35px;
+    align-items:center;
+}
+
+.video-copy h2{
+    font-size:40px;
+    letter-spacing:-1.4px;
+    margin-bottom:15px;
+}
+
+.video-copy p{
+    color:var(--muted);
+    line-height:1.7;
+}
+
+.video-upload{
+    margin-top:25px;
+}
+
+.video-upload label{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--orange);
+    color:#fff;
+    padding:13px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:800;
+}
+
+.video-upload input{
+    display:none;
+}
+
+.video-preview-box{
+    min-height:320px;
+    background:#211711;
+    border-radius:22px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid #3d2a20;
+}
+
+.video-preview-box video{
+    width:100%;
+    max-height:500px;
+    display:none;
+}
+
+.video-placeholder{
+    color:#b9aaa2;
+    text-align:center;
+    padding:30px;
+}
+
+.video-placeholder svg{
+    width:48px;
+    height:48px;
+    margin-bottom:12px;
+}
+
+
+/* =========================
+   ABOUT
+========================= */
+
+.about-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.about-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:28px;
+}
+
+.about-card-icon{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--orange-soft);
+    color:var(--orange);
+    margin-bottom:20px;
+}
+
+.about-card-icon svg{
+    width:22px;
+}
+
+.about-card h3{
+    font-size:17px;
+    margin-bottom:10px;
+}
+
+.about-card p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+}
+
+
+/* =========================
+   FAQ
+========================= */
+
+.faq-list{
+    max-width:850px;
+    margin:auto;
+}
+
+.faq-item{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin-bottom:11px;
+    overflow:hidden;
+}
+
+.faq-item summary{
+    padding:19px 21px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:750;
+    list-style:none;
+}
+
+.faq-item summary::-webkit-details-marker{
+    display:none;
+}
+
+.faq-item p{
+    padding:0 21px 20px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+}
+
+
+/* =========================
+   CONTACT
+========================= */
+
+.contact-section{
+    background:#fff8f2;
+}
+
+.contact-form{
+    max-width:800px;
+    margin:auto;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:28px;
+    box-shadow:var(--shadow);
+}
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:750;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:13px;
+    outline:none;
+    color:var(--text);
+    background:#fff;
+}
+
+.form-group textarea{
+    min-height:130px;
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+    border-color:var(--orange);
+}
+
+.contact-submit{
+    border:0;
+    background:var(--orange);
+    color:#fff;
+    padding:13px 21px;
+    border-radius:10px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer{
+    background:#2d1d16;
+    color:#fff;
+    padding:50px 6% 25px;
+}
+
+.footer-main{
+    max-width:1250px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1.5fr 1fr 1fr 1fr;
+    gap:40px;
+}
+
+.footer-brand h3{
+    font-size:22px;
+    margin-bottom:10px;
+}
+
+.footer-brand h3 span{
+    color:#f18a45;
+}
+
+.footer-brand p{
+    max-width:310px;
+    color:#c8b9b1;
+    font-size:13px;
+    line-height:1.7;
+}
+
+.footer-column h4{
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.footer-column a{
+    display:block;
+    color:#c8b9b1;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.footer-column a:hover{
+    color:#fff;
+}
+
+.footer-bottom{
+    max-width:1250px;
+    margin:35px auto 0;
+    padding-top:20px;
+    border-top:1px solid rgba(255,255,255,.12);
+    text-align:center;
+    color:#9f9189;
+    font-size:12px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1050px){
+
+    .hero-inner{
+        grid-template-columns:1fr;
+    }
+
+    .hero-content{
+        max-width:760px;
+        margin:auto;
+        text-align:center;
+    }
+
+    .hero-description{
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .hero-buttons,
+    .hero-info{
+        justify-content:center;
+    }
+
+    .hero-generator{
+        max-width:700px;
+        margin:auto;
+    }
+
+    .tools-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .video-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+
+@media(max-width:800px){
+
+    .nav-links,
+    .nav-actions{
+        display:none;
+    }
+
+    .mobile-menu-btn{
+        display:block;
+    }
+
+    .mobile-menu{
+        position:absolute;
+        top:76px;
+        left:0;
+        width:100%;
+        background:#fff;
+        border-bottom:1px solid var(--border);
+        padding:15px 20px;
+        box-shadow:0 15px 30px rgba(0,0,0,.07);
+    }
+
+    .mobile-menu.active{
+        display:block;
+    }
+
+    .mobile-menu a{
+        display:block;
+        padding:13px 4px;
+        border-bottom:1px solid #f1e9e3;
+        font-size:14px;
+        font-weight:700;
+    }
+
+    .mobile-menu a:last-child{
+        border-bottom:0;
+    }
+
+    .navbar{
+        padding:0 20px;
+    }
+
+    .about-grid{
+        grid-template-columns:1fr;
+    }
+
+    .footer-main{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+
+@media(max-width:560px){
+
+    .hero{
+        padding:55px 16px;
+    }
+
+    .hero h1{
+        letter-spacing:-2px;
+    }
+
+    .hero-description{
+        font-size:15px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+    }
+
+    .primary-btn,
+    .secondary-btn{
+        width:100%;
+    }
+
+    .generator-row{
+        grid-template-columns:1fr;
+    }
+
+    .section{
+        padding:60px 16px;
+    }
+
+    .tools-grid{
+        grid-template-columns:1fr;
+    }
+
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .footer-main{
+        grid-template-columns:1fr;
+    }
+
+    .video-preview-box{
+        min-height:240px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<!-- =========================================================
+
+<!-- =========================
      NAVBAR
-========================================================= -->
+========================= -->
 
 <header class="navbar">
 
     <a href="index.html" class="logo">
-        <span>∿</span>
-        VoiceAI
+        <span class="logo-mark">∿</span> VoiceAI
     </a>
 
     <nav class="nav-links">
-
-        <a href="index.html" class="active">
-            Home
-        </a>
-
-        <a href="tools.html">
-            AI Tools
-        </a>
-
-        <a href="voices.html">
-            Voices
-        </a>
-
-        <a href="studio.html">
-            Studio
-        </a>
-
-        <a href="pricing.html">
-            Pricing
-        </a>
-
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
     </nav>
 
     <div class="nav-actions">
-
-        <a href="profile.html"
-           class="profile-nav">
-            Profile
-        </a>
-
-        <a href="login.html"
-           class="login-btn">
-            Login
-        </a>
-
-        <a href="pricing.html"
-           class="nav-button">
-            Get Started
-        </a>
-
+        <a href="login.html" class="login-btn">Login</a>
+        <a href="pricing.html" class="nav-button">Get Started</a>
     </div>
 
     <button
         class="mobile-menu-btn"
         id="mobileMenuBtn"
-        type="button"
-        aria-label="Open menu">
-        ☰
+        aria-label="Open menu"
+    >
+        <svg width="25" height="25" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
     </button>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="login.html">Login</a>
+    </div>
 
 </header>
 
 
-<!-- =========================================================
-     MOBILE MENU
-========================================================= -->
-
-<div class="mobile-menu" id="mobileMenu">
-
-    <a href="index.html">
-        Home
-    </a>
-
-    <a href="tools.html">
-        AI Tools
-    </a>
-
-    <a href="voices.html">
-        Voices
-    </a>
-
-    <a href="studio.html">
-        Studio
-    </a>
-
-    <a href="pricing.html">
-        Pricing
-    </a>
-
-    <a href="profile.html">
-        Profile
-    </a>
-
-    <a href="login.html">
-        Login
-    </a>
-
-</div>
-
-
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
-<main>
-
-
-<!-- =========================================================
+<!-- =========================
      HERO
-========================================================= -->
+========================= -->
 
-<section id="home" class="hero">
+<section class="hero">
 
-    <div class="hero-content">
+    <div class="hero-inner">
 
-        <div class="hero-badge">
-            <span class="badge-dot"></span>
-            NEXT GENERATION AI CREATOR PLATFORM
-        </div>
+        <div class="hero-content">
 
-        <h1>
-            Create
-            <span>Natural AI Voice</span>
-            in Seconds
-        </h1>
+            <div class="badge">
+                <span class="badge-dot"></span>
+                AI Voice Studio
+            </div>
 
-        <p class="hero-description">
-            Generate realistic speech, create AI images,
-            explore professional voices and build powerful
-            audio projects from one modern workspace.
-        </p>
+            <h1>
+                Create voices that
+                <span>sound real.</span>
+            </h1>
 
-        <div class="hero-buttons">
+            <p class="hero-description">
+                Generate natural AI voices, create voiceovers,
+                transform audio, build conversations and create
+                professional content from one powerful workspace.
+            </p>
 
-            <a href="tts.html"
-               class="primary-btn">
-                <span>Try AI Voice</span>
-                <span>→</span>
-            </a>
+            <div class="hero-buttons">
 
-            <a href="tools.html"
-               class="secondary-btn">
-                Explore AI Tools
-            </a>
+                <a href="tts.html" class="primary-btn">
+                    Start Creating
+                    <svg width="17" height="17" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14"/>
+                        <path d="m13 6 6 6-6 6"/>
+                    </svg>
+                </a>
 
-        </div>
-
-        <div class="hero-info">
-
-            <span>
-                ✓ 5 free AI uses/day
-            </span>
-
-            <span>
-                ✓ Voice + Image tools
-            </span>
-
-            <span>
-                ✓ Mobile + PC
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         HERO GENERATOR
-    ===================================================== -->
-
-    <div class="hero-generator">
-
-        <div class="generator-glow"></div>
-
-        <div class="generator-header">
-
-            <div>
-
-                <div class="generator-label">
-                    AI VOICE GENERATOR
-                </div>
-
-                <h3>
-                    Create Speech
-                </h3>
+                <a href="tools.html" class="secondary-btn">
+                    Explore AI Tools
+                </a>
 
             </div>
 
-            <span class="status-badge">
-                <span class="status-dot"></span>
-                Ready
-            </span>
+            <div class="hero-info">
+                <span>
+                    <svg width="15" height="15" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6 9 17l-5-5"/>
+                    </svg>
+                    Free plan available
+                </span>
+
+                <span>
+                    <svg width="15" height="15" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path d="M8 12h8"/>
+                    </svg>
+                    5 AI uses / day
+                </span>
+
+                <span>
+                    <svg width="15" height="15" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/>
+                    </svg>
+                    Secure workspace
+                </span>
+            </div>
 
         </div>
 
 
-        <label for="heroText"
-               class="input-label">
-            Your text
-        </label>
+        <!-- HERO GENERATOR -->
 
-        <textarea
-            id="heroText"
-            class="hero-textarea"
-            placeholder="Type your text here..."
-            rows="6"
-        >Welcome to VoiceAI. Create realistic AI voice in seconds.</textarea>
+        <div class="hero-generator">
+
+            <div class="generator-header">
+
+                <div class="generator-title">
+                    Quick Voice Generator
+                </div>
+
+                <div class="status">
+                    <span class="status-dot"></span>
+                    Ready
+                </div>
+
+            </div>
+
+            <label class="generator-label">
+                Your script
+            </label>
+
+            <textarea
+                id="heroText"
+                class="generator-text"
+                placeholder="Type something you want your AI voice to say..."
+            ></textarea>
 
 
-        <div class="generator-bottom">
+            <div class="generator-row">
 
-            <div class="voice-select-wrap">
+                <select id="heroVoice" class="generator-select">
 
-                <label for="heroVoice">
-                    Voice
-                </label>
-
-                <select id="heroVoice">
-
-                    <option value="professional">
-                        Professional Voice
+                    <option value="alloy">
+                        Alloy — Professional
                     </option>
 
-                    <option value="news">
-                        News Reader
+                    <option value="nova">
+                        Nova — Warm Female
                     </option>
 
-                    <option value="narrator">
-                        Warm Narrator
+                    <option value="onyx">
+                        Onyx — Deep Male
                     </option>
 
-                    <option value="energetic">
-                        Energetic Voice
+                    <option value="shimmer">
+                        Shimmer — Clear Female
                     </option>
+
+                </select>
+
+
+                <select id="heroLanguage" class="generator-select">
+
+                    <option>English</option>
+                    <option>Hindi</option>
+                    <option>Gujarati</option>
+                    <option>Spanish</option>
 
                 </select>
 
@@ -257,50 +1083,22 @@
 
 
             <button
-                type="button"
                 class="generate-ai-btn"
-                id="generateAiBtn">
-
-                <span>Generate</span>
-                <span>→</span>
-
+                id="heroGenerateBtn"
+            >
+                Generate Voice
             </button>
 
-        </div>
 
-
-        <div class="generator-player">
-
-            <div class="player-icon">
-                ▶
+            <div
+                class="audio-preview"
+                id="heroAudioPreview"
+            >
+                <audio
+                    id="heroAudio"
+                    controls
+                ></audio>
             </div>
-
-            <div class="wave-container">
-
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-
-            </div>
-
-            <span class="player-time">
-                00:00
-            </span>
 
         </div>
 
@@ -309,639 +1107,399 @@
 </section>
 
 
-<!-- =========================================================
-     TRUST BAR
-========================================================= -->
-
-<section class="trust-section">
-
-    <p>
-        BUILT FOR MODERN CONTENT CREATORS
-    </p>
-
-    <div class="trust-items">
-
-        <span>🎙️ Voice</span>
-        <span>🖼️ Images</span>
-        <span>🎬 Video</span>
-        <span>🎵 Audio</span>
-        <span>🤖 AI Agents</span>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
+<!-- =========================
      AI TOOLS
-========================================================= -->
+========================= -->
 
-<section id="tools"
-         class="section tools-section">
+<section class="section">
 
-    <div class="section-heading">
+    <div class="section-inner">
 
-        <span class="section-eyebrow">
-            AI CREATOR SUITE
-        </span>
+        <div class="section-heading">
 
-        <h2>
-            Everything you need
-            <br>
-            <span>to create with AI</span>
-        </h2>
-
-        <p>
-            Powerful creative tools with each workspace
-            available on its own professional page.
-        </p>
-
-    </div>
-
-
-    <div class="tools-grid">
-
-
-        <!-- TEXT TO SPEECH -->
-
-        <a href="tts.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    🎙️
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
+            <div class="section-eyebrow">
+                AI Workspace
             </div>
-
-            <h3>
-                Text to Speech
-            </h3>
-
-            <p>
-                Convert text into natural AI speech
-                for videos, ads and narration.
-            </p>
-
-            <span class="tool-link">
-                Open Tool →
-            </span>
-
-        </a>
-
-
-        <!-- TEXT TO IMAGE -->
-
-        <a href="image.html"
-           class="tool-card featured-tool">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon image-icon">
-                    🖼️
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <span class="new-badge">
-                NEW
-            </span>
-
-            <h3>
-                Text to Image
-            </h3>
-
-            <p>
-                Turn simple prompts into high-quality
-                AI images for creative projects.
-            </p>
-
-            <span class="tool-link">
-                Create Image →
-            </span>
-
-        </a>
-
-
-        <!-- VOICE LIBRARY -->
-
-        <a href="voices.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    🎧
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                Voice Library
-            </h3>
-
-            <p>
-                Explore realistic male and female
-                voices for professional content.
-            </p>
-
-            <span class="tool-link">
-                Explore Voices →
-            </span>
-
-        </a>
-
-
-        <!-- VOICE CLONE -->
-
-        <a href="clone.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    👤
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                Voice Clone
-            </h3>
-
-            <p>
-                Create a personalized voice project
-                from supported recordings.
-            </p>
-
-            <span class="tool-link">
-                Open Tool →
-            </span>
-
-        </a>
-
-
-        <!-- VOICE CHANGER -->
-
-        <a href="changer.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    🔄
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                Voice Changer
-            </h3>
-
-            <p>
-                Transform supported recordings into
-                different AI voice styles.
-            </p>
-
-            <span class="tool-link">
-                Open Tool →
-            </span>
-
-        </a>
-
-
-        <!-- AI STUDIO -->
-
-        <a href="studio.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    ✨
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                AI Studio
-            </h3>
-
-            <p>
-                Edit, organize and manage your
-                creative audio projects.
-            </p>
-
-            <span class="tool-link">
-                Open Studio →
-            </span>
-
-        </a>
-
-
-        <!-- DUBBING -->
-
-        <a href="dubbing.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    🌍
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                Dubbing
-            </h3>
-
-            <p>
-                Create multilingual versions of
-                supported content.
-            </p>
-
-            <span class="tool-link">
-                Open Tool →
-            </span>
-
-        </a>
-
-
-        <!-- MUSIC -->
-
-        <a href="music.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    🎵
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                Music & SFX
-            </h3>
-
-            <p>
-                Explore AI-assisted music and
-                sound-effect creation.
-            </p>
-
-            <span class="tool-link">
-                Open Tool →
-            </span>
-
-        </a>
-
-
-        <!-- SPEECH TO TEXT -->
-
-        <a href="stt.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    📝
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                Speech to Text
-            </h3>
-
-            <p>
-                Convert supported recordings into
-                transcripts and captions.
-            </p>
-
-            <span class="tool-link">
-                Open Tool →
-            </span>
-
-        </a>
-
-
-        <!-- AI AGENTS -->
-
-        <a href="agents.html"
-           class="tool-card">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    🤖
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                AI Voice Agents
-            </h3>
-
-            <p>
-                Build conversational AI experiences
-                for supported workflows.
-            </p>
-
-            <span class="tool-link">
-                Open Agents →
-            </span>
-
-        </a>
-
-
-        <!-- PREMIUM -->
-
-        <a href="pricing.html"
-           class="tool-card premium-tool">
-
-            <div class="tool-card-top">
-
-                <div class="tool-icon">
-                    💎
-                </div>
-
-                <span class="tool-arrow">
-                    ↗
-                </span>
-
-            </div>
-
-            <h3>
-                Premium
-            </h3>
-
-            <p>
-                Unlock advanced features and
-                higher usage limits.
-            </p>
-
-            <span class="tool-link">
-                View Premium →
-            </span>
-
-        </a>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
-     VIDEO TESTING
-========================================================= -->
-
-<section id="video-testing"
-         class="section video-section">
-
-    <div class="section-heading">
-
-        <span class="section-eyebrow">
-            AI VIDEO TESTING
-        </span>
-
-        <h2>
-            Test your video workflow.
-        </h2>
-
-        <p>
-            Upload a video and preview it directly
-            inside your VoiceAI workspace.
-        </p>
-
-    </div>
-
-
-    <div class="video-testing-card">
-
-        <div class="video-card-header">
-
-            <div>
-
-                <span class="small-label">
-                    VIDEO PREVIEW
-                </span>
-
-                <h3>
-                    Upload your video
-                </h3>
-
-            </div>
-
-            <span class="video-status">
-                Local Preview
-            </span>
-
-        </div>
-
-
-        <label
-            for="videoTestInput"
-            class="video-upload">
-
-            <div class="upload-icon">
-                ↑
-            </div>
-
-            <h4>
-                Choose a video
-            </h4>
-
-            <p>
-                MP4, WebM or supported video format
-            </p>
-
-            <span class="upload-button">
-                Select Video
-            </span>
-
-        </label>
-
-
-        <input
-            type="file"
-            id="videoTestInput"
-            accept="video/*"
-            hidden
-        >
-
-
-        <div
-            id="videoPreviewBox"
-            class="video-preview-box"
-            style="display:none;">
-
-            <video
-                id="videoPreview"
-                controls>
-            </video>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
-     ABOUT
-========================================================= -->
-
-<section id="about"
-         class="section about-section">
-
-    <div class="about-layout">
-
-        <div class="about-content">
-
-            <span class="section-eyebrow">
-                ABOUT VOICEAI
-            </span>
 
             <h2>
-                One modern workspace
-                for AI creation.
+                Everything you need to create
             </h2>
 
             <p>
-                VoiceAI is designed to bring voice,
-                image, audio and creative AI tools
-                into one simple workspace.
+                Professional AI audio and creative tools,
+                each available on its own dedicated workspace.
             </p>
 
-            <p>
-                Whether you're creating advertisements,
-                videos, narration, podcasts or digital
-                content, VoiceAI gives you a professional
-                starting point.
-            </p>
+        </div>
 
-            <a href="tools.html"
-               class="primary-btn">
-                Explore Platform →
+
+        <div class="tools-grid">
+
+
+            <!-- TTS -->
+
+            <a href="tts.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M4 9v6"/>
+                        <path d="M8 6v12"/>
+                        <path d="M12 4v16"/>
+                        <path d="M16 7v10"/>
+                        <path d="M20 9v6"/>
+                    </svg>
+                </div>
+
+                <h3>Text to Speech</h3>
+
+                <p>
+                    Turn written scripts into natural AI voiceovers.
+                </p>
+
+                <span class="tool-link">Open tool →</span>
+
+            </a>
+
+
+            <!-- TEXT TO IMAGE -->
+
+            <a href="image.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="4" width="18" height="16" rx="2"/>
+                        <circle cx="8.5" cy="9" r="1.5"/>
+                        <path d="m4 17 5-5 3 3 2-2 6 5"/>
+                    </svg>
+                </div>
+
+                <h3>Text to Image</h3>
+
+                <p>
+                    Create visual content from simple text prompts.
+                </p>
+
+                <span class="tool-link">Open tool →</span>
+
+            </a>
+
+
+            <!-- VOICES -->
+
+            <a href="voices.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/>
+                        <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+                        <path d="M12 18v3"/>
+                        <path d="M8 21h8"/>
+                    </svg>
+                </div>
+
+                <h3>Voice Library</h3>
+
+                <p>
+                    Browse professional male and female AI voices.
+                </p>
+
+                <span class="tool-link">Open library →</span>
+
+            </a>
+
+
+            <!-- CLONE -->
+
+            <a href="clone.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <circle cx="9" cy="9" r="3"/>
+                        <path d="M3 20c0-3.3 2.7-6 6-6"/>
+                        <path d="M16 5v6"/>
+                        <path d="M13 8h6"/>
+                        <path d="m16 14 5 5"/>
+                        <path d="m21 14-5 5"/>
+                    </svg>
+                </div>
+
+                <h3>Voice Clone</h3>
+
+                <p>
+                    Create a custom voice from permitted recordings.
+                </p>
+
+                <span class="tool-link">Open tool →</span>
+
+            </a>
+
+
+            <!-- VOICE CHANGER -->
+
+            <a href="changer.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M4 7h10"/>
+                        <path d="M18 7h2"/>
+                        <path d="M8 17h12"/>
+                        <path d="M4 17h2"/>
+                        <circle cx="16" cy="7" r="2"/>
+                        <circle cx="8" cy="17" r="2"/>
+                    </svg>
+                </div>
+
+                <h3>Voice Changer</h3>
+
+                <p>
+                    Transform recordings into different voice styles.
+                </p>
+
+                <span class="tool-link">Open tool →</span>
+
+            </a>
+
+
+            <!-- STUDIO -->
+
+            <a href="studio.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M4 19V5"/>
+                        <path d="M8 15V9"/>
+                        <path d="M12 18V6"/>
+                        <path d="M16 13V11"/>
+                        <path d="M20 17V7"/>
+                    </svg>
+                </div>
+
+                <h3>AI Studio</h3>
+
+                <p>
+                    Edit voice, audio and timelines in one workspace.
+                </p>
+
+                <span class="tool-link">Open studio →</span>
+
+            </a>
+
+
+            <!-- DUBBING -->
+
+            <a href="dubbing.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M4 5h16v11H8l-4 4V5Z"/>
+                        <path d="M9 9h6"/>
+                        <path d="M9 12h4"/>
+                    </svg>
+                </div>
+
+                <h3>Dubbing</h3>
+
+                <p>
+                    Adapt spoken content into different languages.
+                </p>
+
+                <span class="tool-link">Open tool →</span>
+
+            </a>
+
+
+            <!-- MUSIC -->
+
+            <a href="music.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 18V5l10-2v13"/>
+                        <circle cx="6" cy="18" r="3"/>
+                        <circle cx="16" cy="16" r="3"/>
+                    </svg>
+                </div>
+
+                <h3>Music & SFX</h3>
+
+                <p>
+                    Create music beds and sound effects for content.
+                </p>
+
+                <span class="tool-link">Open tool →</span>
+
+            </a>
+
+
+            <!-- STT -->
+
+            <a href="stt.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/>
+                        <path d="M5 10v1a7 7 0 0 0 14 0v-1"/>
+                        <path d="M12 18v3"/>
+                    </svg>
+                </div>
+
+                <h3>Speech to Text</h3>
+
+                <p>
+                    Convert spoken audio into editable text.
+                </p>
+
+                <span class="tool-link">Open tool →</span>
+
+            </a>
+
+
+            <!-- AGENTS -->
+
+            <a href="agents.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <rect x="4" y="5" width="16" height="14" rx="3"/>
+                        <path d="M8 10h.01"/>
+                        <path d="M16 10h.01"/>
+                        <path d="M8 15h8"/>
+                        <path d="M9 5V3"/>
+                        <path d="M15 5V3"/>
+                    </svg>
+                </div>
+
+                <h3>AI Voice Agents</h3>
+
+                <p>
+                    Build conversational voice experiences.
+                </p>
+
+                <span class="tool-link">Open agents →</span>
+
+            </a>
+
+
+            <!-- PRICING -->
+
+            <a href="pricing.html" class="tool-card">
+
+                <div class="tool-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path d="M3 10h18"/>
+                        <path d="M7 15h4"/>
+                    </svg>
+                </div>
+
+                <h3>Premium</h3>
+
+                <p>
+                    Unlock higher usage and premium capabilities.
+                </p>
+
+                <span class="tool-link">View plans →</span>
+
             </a>
 
         </div>
 
+    </div>
 
-        <div class="about-cards">
+</section>
 
 
-            <div class="about-card">
+<!-- =========================
+     AI VIDEO TESTING
+========================= -->
 
-                <div class="about-number">
-                    01
+<section class="section video-testing" id="video-testing">
+
+    <div class="section-inner">
+
+        <div class="video-layout">
+
+            <div class="video-copy">
+
+                <div class="section-eyebrow">
+                    Video Testing
                 </div>
 
-                <h3>
-                    Fast Workflow
-                </h3>
+                <h2>
+                    Test your video content
+                </h2>
 
                 <p>
-                    Move from idea to production
-                    without switching between
-                    multiple platforms.
+                    Upload a video to preview it inside your VoiceAI
+                    workspace. This section is designed for future
+                    AI video analysis and processing features.
                 </p>
+
+                <div class="video-upload">
+
+                    <label for="videoTestInput">
+
+                        <svg width="18" height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2">
+                            <path d="M12 16V4"/>
+                            <path d="m7 9 5-5 5 5"/>
+                            <path d="M5 20h14"/>
+                        </svg>
+
+                        Upload Video
+
+                    </label>
+
+                    <input
+                        type="file"
+                        id="videoTestInput"
+                        accept="video/*"
+                    >
+
+                </div>
 
             </div>
 
 
-            <div class="about-card">
+            <div class="video-preview-box">
 
-                <div class="about-number">
-                    02
+                <div
+                    class="video-placeholder"
+                    id="videoPlaceholder"
+                >
+
+                    <svg viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5">
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path d="m10 9 5 3-5 3V9Z"/>
+                    </svg>
+
+                    <div>
+                        Select a video to preview
+                    </div>
+
                 </div>
 
-                <h3>
-                    Professional Voices
-                </h3>
-
-                <p>
-                    Explore voice profiles designed
-                    for narration, ads and content.
-                </p>
-
-            </div>
-
-
-            <div class="about-card">
-
-                <div class="about-number">
-                    03
-                </div>
-
-                <h3>
-                    Creator Friendly
-                </h3>
-
-                <p>
-                    Designed for desktop, tablet
-                    and mobile workflows.
-                </p>
-
-            </div>
-
-
-            <div class="about-card">
-
-                <div class="about-number">
-                    04
-                </div>
-
-                <h3>
-                    Multiple AI Tools
-                </h3>
-
-                <p>
-                    Voice, image, audio and
-                    conversational AI tools.
-                </p>
+                <video
+                    id="videoPreview"
+                    controls
+                ></video>
 
             </div>
 
@@ -952,263 +1510,275 @@
 </section>
 
 
-<!-- =========================================================
-     PROFILE
-========================================================= -->
+<!-- =========================
+     ABOUT
+========================= -->
 
-<section id="profile"
-         class="section profile-section">
+<section class="section" id="about">
 
-    <div class="profile-home-card">
+    <div class="section-inner">
 
-        <div class="profile-avatar">
-            👤
-        </div>
+        <div class="section-heading">
 
-        <div class="profile-home-content">
-
-            <span class="section-eyebrow">
-                YOUR WORKSPACE
-            </span>
+            <div class="section-eyebrow">
+                About VoiceAI
+            </div>
 
             <h2>
-                Manage your VoiceAI profile.
+                Built for modern creators
             </h2>
 
             <p>
-                View your projects, account settings,
-                usage and saved AI creations.
+                VoiceAI brings voice, audio and creative AI tools
+                together in one simple workspace.
             </p>
 
         </div>
 
-        <a href="profile.html"
-           class="secondary-btn">
-            Open Profile →
-        </a>
+
+        <div class="about-grid">
+
+            <div class="about-card">
+
+                <div class="about-card-icon">
+
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/>
+                        <path d="m9 12 2 2 4-4"/>
+                    </svg>
+
+                </div>
+
+                <h3>Professional quality</h3>
+
+                <p>
+                    Designed for creators, marketing teams,
+                    businesses and professional workflows.
+                </p>
+
+            </div>
+
+
+            <div class="about-card">
+
+                <div class="about-card-icon">
+
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 3v18"/>
+                        <path d="M3 12h18"/>
+                        <circle cx="12" cy="12" r="8"/>
+                    </svg>
+
+                </div>
+
+                <h3>One workspace</h3>
+
+                <p>
+                    Voice generation, editing, dubbing,
+                    transcription and creative tools in one place.
+                </p>
+
+            </div>
+
+
+            <div class="about-card">
+
+                <div class="about-card-icon">
+
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8">
+                        <path d="M4 12a8 8 0 0 1 16 0"/>
+                        <path d="M4 12v5a2 2 0 0 0 2 2h2v-7H6a2 2 0 0 0-2 2Z"/>
+                        <path d="M20 12v5a2 2 0 0 1-2 2h-2v-7h2a2 2 0 0 1 2 2Z"/>
+                    </svg>
+
+                </div>
+
+                <h3>Simple to use</h3>
+
+                <p>
+                    Clean interfaces, separate tool pages and
+                    responsive layouts for desktop and mobile.
+                </p>
+
+            </div>
+
+        </div>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
+<!-- =========================
      FAQ
-========================================================= -->
+========================= -->
 
-<section id="faq"
-         class="section faq-section">
+<section class="section" id="faq">
 
-    <div class="section-heading">
+    <div class="section-inner">
 
-        <span class="section-eyebrow">
-            FAQ
-        </span>
+        <div class="section-heading">
 
-        <h2>
-            Frequently asked questions.
-        </h2>
+            <div class="section-eyebrow">
+                FAQ
+            </div>
 
-        <p>
-            Quick answers about the VoiceAI platform.
-        </p>
+            <h2>
+                Frequently asked questions
+            </h2>
 
-    </div>
+        </div>
 
 
-    <div class="faq-list">
+        <div class="faq-list">
+
+            <details class="faq-item">
+
+                <summary>
+                    Can I use VoiceAI for free?
+                </summary>
+
+                <p>
+                    Yes. The planned Free plan includes limited AI
+                    usage, currently shown as 5 AI uses per 24 hours.
+                </p>
+
+            </details>
 
 
-        <details>
+            <details class="faq-item">
 
-            <summary>
-                <span>Is VoiceAI free?</span>
-                <span>+</span>
-            </summary>
+                <summary>
+                    Are the voices real human voices?
+                </summary>
 
-            <p>
-                Yes. VoiceAI is planned with a free
-                plan that provides access to supported
-                tools with a daily usage limit.
-            </p>
+                <p>
+                    The voice library can contain natural AI voices.
+                    Actual generated audio depends on the connected
+                    AI voice provider and backend.
+                </p>
 
-        </details>
-
-
-        <details>
-
-            <summary>
-                <span>How many free AI uses are available?</span>
-                <span>+</span>
-            </summary>
-
-            <p>
-                The planned free limit is 5 AI uses
-                per 24-hour period. The exact limit
-                can be controlled by the backend.
-            </p>
-
-        </details>
+            </details>
 
 
-        <details>
+            <details class="faq-item">
 
-            <summary>
-                <span>How much is Premium?</span>
-                <span>+</span>
-            </summary>
+                <summary>
+                    Can I download generated audio?
+                </summary>
 
-            <p>
-                The planned Premium price is
-                $20 per month with additional
-                features and higher usage limits.
-            </p>
+                <p>
+                    Yes. Tool pages with generated audio will include
+                    a Download option when the backend returns an
+                    audio file.
+                </p>
 
-        </details>
-
-
-        <details>
-
-            <summary>
-                <span>Can I use VoiceAI on mobile?</span>
-                <span>+</span>
-            </summary>
-
-            <p>
-                Yes. The interface is designed to
-                work across mobile, tablet and PC.
-            </p>
-
-        </details>
+            </details>
 
 
-        <details>
+            <details class="faq-item">
 
-            <summary>
-                <span>Can I download generated files?</span>
-                <span>+</span>
-            </summary>
+                <summary>
+                    Is VoiceAI available on mobile?
+                </summary>
 
-            <p>
-                Yes. Supported AI tools will include
-                download options for generated outputs.
-            </p>
+                <p>
+                    The interface is designed to be responsive for
+                    both desktop and mobile devices.
+                </p>
 
-        </details>
+            </details>
 
 
-        <details>
+            <details class="faq-item">
 
-            <summary>
-                <span>Is Text to Image available?</span>
-                <span>+</span>
-            </summary>
+                <summary>
+                    Does Google login work automatically?
+                </summary>
 
-            <p>
-                Yes. Text to Image has its own
-                dedicated workspace at image.html.
-            </p>
+                <p>
+                    Google login requires a connected authentication
+                    backend and Google OAuth configuration.
+                </p>
 
-        </details>
+            </details>
+
+        </div>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
+<!-- =========================
      CONTACT
-========================================================= -->
+========================= -->
 
-<section id="contact"
-         class="section contact-section">
+<section class="section contact-section" id="contact">
 
-    <div class="contact-layout">
+    <div class="section-inner">
 
+        <div class="section-heading">
 
-        <div class="contact-content">
-
-            <span class="section-eyebrow">
-                CONTACT
-            </span>
+            <div class="section-eyebrow">
+                Contact
+            </div>
 
             <h2>
                 Let's build something
-                amazing.
             </h2>
 
             <p>
-                Have a question about VoiceAI?
-                Send us a message and our team
-                can help with your project.
+                Send us a message and our team can help with
+                VoiceAI, accounts and integrations.
             </p>
-
-
-            <div class="contact-info">
-
-                <div>
-                    <span>✉</span>
-                    <div>
-                        <strong>Email</strong>
-                        <p>support@voiceai.example</p>
-                    </div>
-                </div>
-
-
-                <div>
-                    <span>⚡</span>
-                    <div>
-                        <strong>Response</strong>
-                        <p>Support for account questions</p>
-                    </div>
-                </div>
-
-            </div>
 
         </div>
 
 
-        <div class="contact-card">
+        <form
+            class="contact-form"
+            id="contactForm"
+        >
 
-            <form id="contactForm">
+            <div class="contact-grid">
 
-                <div class="form-row">
+                <div class="form-group">
 
-                    <div class="form-group">
+                    <label for="contactName">
+                        Name
+                    </label>
 
-                        <label for="contactName">
-                            Name
-                        </label>
-
-                        <input
-                            type="text"
-                            id="contactName"
-                            placeholder="Your name"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label for="contactEmail">
-                            Email
-                        </label>
-
-                        <input
-                            type="email"
-                            id="contactEmail"
-                            placeholder="you@example.com"
-                            required
-                        >
-
-                    </div>
+                    <input
+                        id="contactName"
+                        type="text"
+                        placeholder="Your name"
+                        required
+                    >
 
                 </div>
 
 
                 <div class="form-group">
+
+                    <label for="contactEmail">
+                        Email
+                    </label>
+
+                    <input
+                        id="contactEmail"
+                        type="email"
+                        placeholder="you@example.com"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
 
                     <label for="contactMessage">
                         Message
@@ -1216,199 +1786,83 @@
 
                     <textarea
                         id="contactMessage"
-                        rows="6"
-                        placeholder="Write your message..."
+                        placeholder="How can we help?"
                         required
                     ></textarea>
 
                 </div>
 
+            </div>
 
-                <button
-                    type="submit"
-                    class="primary-btn contact-submit">
 
-                    Send Message
-                    <span>→</span>
+            <button
+                type="submit"
+                class="contact-submit"
+            >
+                Send Message
+            </button>
 
-                </button>
-
-                <p
-                    id="contactStatus"
-                    class="form-status">
-                </p>
-
-            </form>
-
-        </div>
+        </form>
 
     </div>
 
 </section>
 
 
-<!-- =========================================================
-     FINAL CTA
-========================================================= -->
-
-<section class="final-cta section">
-
-    <div class="final-cta-inner">
-
-        <span class="section-eyebrow">
-            START CREATING
-        </span>
-
-        <h2>
-            Your next creation
-            starts here.
-        </h2>
-
-        <p>
-            Explore VoiceAI and start building
-            with the free plan.
-        </p>
-
-        <div class="hero-buttons">
-
-            <a href="tts.html"
-               class="primary-btn">
-                Start Creating →
-            </a>
-
-            <a href="pricing.html"
-               class="secondary-btn">
-                View Pricing
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-</main>
-
-
-<!-- =========================================================
+<!-- =========================
      FOOTER
-========================================================= -->
+========================= -->
 
 <footer class="site-footer">
 
     <div class="footer-main">
 
-
         <div class="footer-brand">
 
-            <a href="index.html"
-               class="logo">
-
-                <span>∿</span>
-                VoiceAI
-
-            </a>
+            <h3>
+                <span>∿ VoiceAI</span>
+            </h3>
 
             <p>
-                Professional AI voice, image and
-                creative tools for modern creators.
+                AI-powered voice, audio and creative tools
+                for creators, businesses and professionals.
             </p>
 
-            <div class="footer-socials">
+        </div>
 
-                <a href="#" aria-label="X">
-                    X
-                </a>
 
-                <a href="#" aria-label="YouTube">
-                    ▶
-                </a>
+        <div class="footer-column">
 
-                <a href="#" aria-label="Instagram">
-                    ◎
-                </a>
+            <h4>Platform</h4>
 
-            </div>
+            <a href="tools.html">AI Tools</a>
+            <a href="voices.html">Voices</a>
+            <a href="studio.html">Studio</a>
+            <a href="pricing.html">Pricing</a>
 
         </div>
 
 
         <div class="footer-column">
 
-            <h4>
-                Platform
-            </h4>
+            <h4>Tools</h4>
 
-            <a href="tts.html">
-                Text to Speech
-            </a>
-
-            <a href="image.html">
-                Text to Image
-            </a>
-
-            <a href="voices.html">
-                Voice Library
-            </a>
-
-            <a href="studio.html">
-                AI Studio
-            </a>
-
-            <a href="agents.html">
-                AI Agents
-            </a>
+            <a href="tts.html">Text to Speech</a>
+            <a href="image.html">Text to Image</a>
+            <a href="clone.html">Voice Clone</a>
+            <a href="stt.html">Speech to Text</a>
 
         </div>
 
 
         <div class="footer-column">
 
-            <h4>
-                Company
-            </h4>
+            <h4>Company</h4>
 
-            <a href="#about">
-                About
-            </a>
-
-            <a href="#faq">
-                FAQ
-            </a>
-
-            <a href="#contact">
-                Contact
-            </a>
-
-            <a href="pricing.html">
-                Pricing
-            </a>
-
-        </div>
-
-
-        <div class="footer-column">
-
-            <h4>
-                Account
-            </h4>
-
-            <a href="profile.html">
-                Profile
-            </a>
-
-            <a href="login.html">
-                Login
-            </a>
-
-            <a href="forgot-password.html">
-                Forgot Password
-            </a>
-
-            <a href="pricing.html">
-                Get Started
-            </a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="login.html">Login</a>
 
         </div>
 
@@ -1416,39 +1870,17 @@
 
 
     <div class="footer-bottom">
-
-        <p>
-            © 2026 VoiceAI. All rights reserved.
-        </p>
-
-        <div>
-
-            <a href="#">
-                Privacy
-            </a>
-
-            <a href="#">
-                Terms
-            </a>
-
-        </div>
-
+        © 2026 VoiceAI. All rights reserved.
     </div>
 
 </footer>
 
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
-<script src="script.js"></script>
-
 <script>
 
-/* =========================================================
+/* =========================
    MOBILE MENU
-========================================================= */
+========================= */
 
 const mobileMenuBtn =
     document.getElementById("mobileMenuBtn");
@@ -1456,305 +1888,170 @@ const mobileMenuBtn =
 const mobileMenu =
     document.getElementById("mobileMenu");
 
-
-if (mobileMenuBtn && mobileMenu) {
-
-    mobileMenuBtn.addEventListener(
-        "click",
-        function () {
-
-            mobileMenu.classList.toggle(
-                "open"
-            );
-
-        }
-    );
+mobileMenuBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("active");
+});
 
 
-    mobileMenu
-        .querySelectorAll("a")
-        .forEach(function(link) {
-
-            link.addEventListener(
-                "click",
-                function() {
-
-                    mobileMenu.classList.remove(
-                        "open"
-                    );
-
-                }
-            );
-
-        });
-
-}
-
-
-/* =========================================================
+/* =========================
    VIDEO PREVIEW
-========================================================= */
+========================= */
 
 const videoInput =
-    document.getElementById(
-        "videoTestInput"
-    );
+    document.getElementById("videoTestInput");
 
 const videoPreview =
-    document.getElementById(
-        "videoPreview"
-    );
+    document.getElementById("videoPreview");
 
-const videoPreviewBox =
-    document.getElementById(
-        "videoPreviewBox"
-    );
+const videoPlaceholder =
+    document.getElementById("videoPlaceholder");
 
 
-if (videoInput) {
+videoInput.addEventListener("change", function(){
 
-    videoInput.addEventListener(
-        "change",
-        function() {
+    const file = this.files[0];
 
-            const file =
-                this.files &&
-                this.files[0];
+    if(!file){
+        return;
+    }
 
-            if (!file) {
-                return;
-            }
+    const url = URL.createObjectURL(file);
 
+    videoPreview.src = url;
+    videoPreview.style.display = "block";
+    videoPlaceholder.style.display = "none";
 
-            if (
-                !file.type.startsWith(
-                    "video/"
-                )
-            ) {
-
-                alert(
-                    "Please select a valid video file."
-                );
-
-                this.value = "";
-
-                return;
-            }
+});
 
 
-            const url =
-                URL.createObjectURL(
-                    file
-                );
+/* =========================
+   HERO VOICE PREVIEW
+========================= */
+
+const heroGenerateBtn =
+    document.getElementById("heroGenerateBtn");
+
+const heroText =
+    document.getElementById("heroText");
+
+const heroAudioPreview =
+    document.getElementById("heroAudioPreview");
 
 
-            if (videoPreview) {
+heroGenerateBtn.addEventListener("click", function(){
 
-                videoPreview.src =
-                    url;
+    const text = heroText.value.trim();
 
-            }
+    if(!text){
 
+        alert("Please enter some text first.");
 
-            if (videoPreviewBox) {
-
-                videoPreviewBox.style.display =
-                    "block";
-
-            }
-
-        }
-    );
-
-}
+        return;
+    }
 
 
-/* =========================================================
+    /*
+      Browser preview only.
+
+      Actual downloadable AI audio should come
+      from your /api/tts backend.
+    */
+
+    if("speechSynthesis" in window){
+
+        window.speechSynthesis.cancel();
+
+        const speech =
+            new SpeechSynthesisUtterance(text);
+
+        speech.lang = "en-US";
+        speech.rate = 1;
+
+        window.speechSynthesis.speak(speech);
+
+        heroAudioPreview.style.display = "none";
+
+    }else{
+
+        alert(
+            "Voice preview is not supported in this browser."
+        );
+
+    }
+
+});
+
+
+/* =========================
    CONTACT FORM
-========================================================= */
+========================= */
 
 const contactForm =
-    document.getElementById(
-        "contactForm"
-    );
-
-const contactStatus =
-    document.getElementById(
-        "contactStatus"
-    );
+    document.getElementById("contactForm");
 
 
-if (contactForm) {
+contactForm.addEventListener("submit", async function(e){
 
-    contactForm.addEventListener(
-        "submit",
-        async function(event) {
+    e.preventDefault();
 
-            event.preventDefault();
+    const name =
+        document.getElementById("contactName").value.trim();
 
+    const email =
+        document.getElementById("contactEmail").value.trim();
 
-            const name =
-                document.getElementById(
-                    "contactName"
-                ).value.trim();
-
-            const email =
-                document.getElementById(
-                    "contactEmail"
-                ).value.trim();
-
-            const message =
-                document.getElementById(
-                    "contactMessage"
-                ).value.trim();
+    const message =
+        document.getElementById("contactMessage").value.trim();
 
 
-            if (
-                !name ||
-                !email ||
-                !message
-            ) {
+    if(!name || !email || !message){
 
-                if (contactStatus) {
+        alert("Please complete all fields.");
 
-                    contactStatus.textContent =
-                        "Please complete all fields.";
+        return;
+    }
 
-                    contactStatus.className =
-                        "form-status error";
 
-                }
+    try{
 
-                return;
+        const response = await fetch(
+            "/api/contact",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+                    name:name,
+                    email:email,
+                    message:message
+                })
             }
+        );
 
 
-            if (contactStatus) {
+        if(!response.ok){
 
-                contactStatus.textContent =
-                    "Sending...";
-
-                contactStatus.className =
-                    "form-status";
-
-            }
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        "/api/contact",
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body:
-                                JSON.stringify({
-                                    name,
-                                    email,
-                                    message
-                                })
-                        }
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Contact API unavailable."
-                    );
-
-                }
-
-
-                contactForm.reset();
-
-
-                if (contactStatus) {
-
-                    contactStatus.textContent =
-                        "Message sent successfully.";
-
-                    contactStatus.className =
-                        "form-status success";
-
-                }
-
-
-            } catch (error) {
-
-                console.error(error);
-
-
-                if (contactStatus) {
-
-                    contactStatus.textContent =
-                        "Contact API is not connected yet.";
-
-                    contactStatus.className =
-                        "form-status error";
-
-                }
-
-            }
+            throw new Error("Request failed");
 
         }
-    );
-
-}
 
 
-/* =========================================================
-   HERO GENERATOR
-========================================================= */
+        alert("Message sent successfully.");
 
-const generateBtn =
-    document.getElementById(
-        "generateAiBtn"
-    );
+        contactForm.reset();
 
+    }catch(error){
 
-if (generateBtn) {
+        alert(
+            "Contact service is not connected yet. Please connect the backend API."
+        );
 
-    generateBtn.addEventListener(
-        "click",
-        function() {
+    }
 
-            const text =
-                document.getElementById(
-                    "heroText"
-                )?.value.trim();
-
-
-            if (!text) {
-
-                alert(
-                    "Please enter some text first."
-                );
-
-                return;
-            }
-
-
-            /*
-             * The actual TTS API should be
-             * connected here.
-             *
-             * We do not fake generated audio.
-             */
-
-            window.location.href =
-                "tts.html";
-
-        }
-    );
-
-}
+});
 
 </script>
 
