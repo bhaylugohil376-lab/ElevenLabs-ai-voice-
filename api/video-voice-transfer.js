@@ -3,536 +3,304 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { execFile } from "child_process";
+import { promisify } from "util";
 import ffmpegPath from "ffmpeg-static";
+
+const execFileAsync = promisify(execFile);
 
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 };
 
-function runFFmpeg(args) {
-  return new Promise((resolve, reject) => {
-    execFile(
-      ffmpegPath,
-      args,
-      {
-        maxBuffer: 1024 * 1024 * 10,
-      },
-      (error, stdout, stderr) => {
-        if (error) {
-          console.error("FFmpeg:", stderr);
-          reject(error);
-          return;
-        }
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
 
-        resolve({
-          stdout,
-          stderr,
-        });
-      }
-    );
-  });
-}
-
-function getFirst(value) {
-  if (Array.isArray(value)) {
-    return value[0];
-  }
-
-  return value;
+function getValue(value, fallback = "") {
+  if (Array.isArray(value)) return value[0] ?? fallback;
+  return value ?? fallback;
 }
 
 async function parseForm(req) {
   const form = formidable({
     multiples: false,
-    maxFileSize: 500 * 1024 * 1024,
     keepExtensions: true,
+    maxFileSize: 100 * 1024 * 1024
   });
 
   return new Promise((resolve, reject) => {
     form.parse(req, (error, fields, files) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve({
-        fields,
-        files,
-      });
+      if (error) reject(error);
+      else resolve({ fields, files });
     });
   });
 }
 
-async function getVoiceId(apiKey, voiceType) {
-  /*
-    Frontend sends:
-    male
-    female
-    energetic
-    calm
+async function elevenLabsTTS({
+  text,
+  voiceId,
+  language
+}) {
+  const response = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+    {
+      method: "POST",
+      headers: {
+        "xi-api-key": ELEVENLABS_API_KEY,
+        "Content-Type": "application/json",
+        "Accept": "audio/mpeg"
+      },
+      body: JSON.stringify({
+        text,
+        model_id: "eleven_multilingual_v2",
+        language_code: language || undefined,
+        voice_settings: {
+          stability: 0.45,
+          similarity_boost: 0.8,
+          style: 0.2,
+          use_speaker_boost: true
+        }
+      })
+    }
+  );
 
-    We dynamically find an available ElevenLabs voice.
-  */
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`ElevenLabs TTS error: ${errorText}`);
+  }
 
+  return Buffer.from(await response.arrayBuffer());
+}
+
+async function getVoiceId(type) {
   const response = await fetch(
     "https://api.elevenlabs.io/v2/voices?page_size=100",
     {
       headers: {
-        "xi-api-key": apiKey,
-        Accept: "application/json",
-      },
+        "xi-api-key": ELEVENLABS_API_KEY
+      }
     }
   );
 
   if (!response.ok) {
-    throw new Error(
-      "Unable to load ElevenLabs voices."
-    );
+    throw new Error("Unable to load ElevenLabs voices.");
   }
 
   const data = await response.json();
-
-  const voices = Array.isArray(data.voices)
-    ? data.voices
-    : [];
-
-  if (!voices.length) {
-    throw new Error(
-      "No ElevenLabs voices are available."
-    );
-  }
+  const voices = Array.isArray(data.voices) ? data.voices : [];
 
   const wantedGender =
-    voiceType === "female" || voiceType === "calm"
+    String(type).toLowerCase() === "female"
       ? "female"
       : "male";
 
-  let matching =
-    voices.filter((voice) => {
-      const gender =
-        String(
-          voice?.labels?.gender ||
-          voice?.gender ||
-          ""
-        ).toLowerCase();
+  const matching = voices.filter((voice) => {
+    const labels = voice.labels || {};
+    return String(labels.gender || "").toLowerCase() === wantedGender;
+  });
 
-      return gender === wantedGender;
-    });
+  const selected = matching[0] || voices[0];
 
-  if (!matching.length) {
-    matching = voices;
+  if (!selected?.voice_id) {
+    throw new Error("No suitable AI voice found.");
   }
 
-  /*
-    For energetic/calm, prefer a voice whose labels
-    or description mention the requested style.
-  */
-
-  if (
-    voiceType === "energetic" ||
-    voiceType === "calm"
-  ) {
-    const styleMatch =
-      matching.find((voice) => {
-        const text =
-          JSON.stringify(voice)
-            .toLowerCase();
-
-        return text.includes(voiceType);
-      });
-
-    if (styleMatch?.voice_id) {
-      return styleMatch.voice_id;
-    }
-  }
-
-  return matching[0].voice_id;
-}
-
-async function extractAudio(videoPath, audioPath) {
-  await runFFmpeg([
-    "-y",
-    "-i",
-    videoPath,
-    "-vn",
-    "-ac",
-    "1",
-    "-ar",
-    "16000",
-    "-c:a",
-    "pcm_s16le",
-    audioPath,
-  ]);
-}
-
-async function transcribeAudio(apiKey, audioPath) {
-  const audioBuffer =
-    fs.readFileSync(audioPath);
-
-  const blob = new Blob(
-    [audioBuffer],
-    {
-      type: "audio/wav",
-    }
-  );
-
-  const form = new FormData();
-
-  form.append(
-    "file",
-    blob,
-    "voiceai-audio.wav"
-  );
-
-  form.append(
-    "model_id",
-    "scribe_v1"
-  );
-
-  const response = await fetch(
-    "https://api.elevenlabs.io/v1/speech-to-text",
-    {
-      method: "POST",
-      headers: {
-        "xi-api-key": apiKey,
-      },
-      body: form,
-    }
-  );
-
-  if (!response.ok) {
-    let message =
-      "Speech transcription failed.";
-
-    try {
-      const error =
-        await response.json();
-
-      message =
-        error?.detail?.message ||
-        error?.detail ||
-        message;
-    } catch {}
-
-    throw new Error(message);
-  }
-
-  const data =
-    await response.json();
-
-  const text =
-    data?.text ||
-    data?.transcript ||
-    "";
-
-  if (!text.trim()) {
-    throw new Error(
-      "No speech was detected in the video."
-    );
-  }
-
-  return text.trim();
-}
-
-async function generateVoice(
-  apiKey,
-  voiceId,
-  text,
-  language,
-  style,
-  outputPath
-) {
-  let stability = 0.5;
-  let similarityBoost = 0.75;
-  let styleAmount = 0.2;
-
-  switch (style) {
-    case "professional":
-      stability = 0.65;
-      similarityBoost = 0.8;
-      styleAmount = 0.15;
-      break;
-
-    case "advertisement":
-      stability = 0.4;
-      similarityBoost = 0.8;
-      styleAmount = 0.45;
-      break;
-
-    case "energetic":
-      stability = 0.35;
-      similarityBoost = 0.8;
-      styleAmount = 0.55;
-      break;
-
-    case "calm":
-      stability = 0.75;
-      similarityBoost = 0.8;
-      styleAmount = 0.1;
-      break;
-  }
-
-  const body = {
-    text,
-    model_id: "eleven_multilingual_v2",
-
-    voice_settings: {
-      stability,
-      similarity_boost: similarityBoost,
-      style: styleAmount,
-      use_speaker_boost: true,
-    },
-
-    speed: 1,
-  };
-
-  if (language) {
-    body.language_code =
-      language;
-  }
-
-  const response =
-    await fetch(
-      `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(
-        voiceId
-      )}`,
-      {
-        method: "POST",
-
-        headers: {
-          "xi-api-key": apiKey,
-          "Content-Type":
-            "application/json",
-          Accept: "audio/mpeg",
-        },
-
-        body: JSON.stringify(body),
-      }
-    );
-
-  if (!response.ok) {
-    let message =
-      "AI voice generation failed.";
-
-    try {
-      const error =
-        await response.json();
-
-      message =
-        error?.detail?.message ||
-        error?.detail ||
-        message;
-    } catch {}
-
-    throw new Error(message);
-  }
-
-  const audioBuffer =
-    Buffer.from(
-      await response.arrayBuffer()
-    );
-
-  fs.writeFileSync(
-    outputPath,
-    audioBuffer
-  );
-}
-
-async function createFinalVideo(
-  videoPath,
-  aiAudioPath,
-  outputPath
-) {
-  /*
-    Replace original audio with AI audio.
-    Video stream is copied without re-encoding.
-  */
-
-  await runFFmpeg([
-    "-y",
-
-    "-i",
-    videoPath,
-
-    "-i",
-    aiAudioPath,
-
-    "-map",
-    "0:v:0",
-    "-map",
-    "1:a:0",
-
-    "-c:v",
-    "copy",
-
-    "-c:a",
-    "aac",
-    "-b:a",
-    "192k",
-
-    "-shortest",
-
-    outputPath,
-  ]);
+  return selected.voice_id;
 }
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      error: "Method not allowed.",
-    });
-  }
-
-  const apiKey =
-    process.env.ELEVENLABS_API_KEY;
-
-  if (!apiKey) {
-    return res.status(500).json({
-      success: false,
-      error:
-        "ELEVENLABS_API_KEY is not configured.",
-    });
-  }
-
-  const tempDir =
-    fs.mkdtempSync(
-      path.join(
-        os.tmpdir(),
-        "voiceai-video-"
-      )
-    );
-
-  let videoPath = null;
-  let originalAudioPath = null;
-  let aiAudioPath = null;
-  let outputPath = null;
+  let tempDir = null;
 
   try {
-    const {
-      fields,
-      files,
-    } = await parseForm(req);
-
-    const videoFile =
-      getFirst(files.video);
-
-    if (!videoFile) {
-      return res.status(400).json({
+    if (req.method !== "POST") {
+      return res.status(405).json({
         success: false,
-        error:
-          "Video file is required.",
+        error: "POST method required."
       });
     }
 
-    videoPath =
-      videoFile.filepath;
+    if (!ELEVENLABS_API_KEY) {
+      return res.status(500).json({
+        success: false,
+        error: "ELEVENLABS_API_KEY is not configured."
+      });
+    }
 
-    originalAudioPath =
-      path.join(
-        tempDir,
-        "original.wav"
-      );
+    const { fields, files } = await parseForm(req);
 
-    aiAudioPath =
-      path.join(
-        tempDir,
-        "ai-voice.mp3"
-      );
+    const uploadedVideo =
+      files.video ||
+      files.file ||
+      files.videoFile;
 
-    outputPath =
-      path.join(
-        tempDir,
-        "voiceai-output.mp4"
-      );
+    if (!uploadedVideo) {
+      return res.status(400).json({
+        success: false,
+        error: "Video file is required."
+      });
+    }
 
-    const voiceType =
-      String(
-        getFirst(fields.voice) ||
-          "male"
-      ).toLowerCase();
+    const videoFile = Array.isArray(uploadedVideo)
+      ? uploadedVideo[0]
+      : uploadedVideo;
 
-    const language =
-      String(
-        getFirst(fields.language) ||
-          ""
-      ).toLowerCase();
+    const language = getValue(fields.language, "en");
+    const voiceType = getValue(fields.voiceType, "male");
+    const projectName = getValue(
+      fields.projectName,
+      "VoiceAI Video"
+    );
 
-    const style =
-      String(
-        getFirst(fields.style) ||
-          "natural"
-      ).toLowerCase();
+    tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "voiceai-")
+    );
 
-    const strength =
-      Number(
-        getFirst(fields.strength) ||
-          80
-      );
+    const inputVideo = videoFile.filepath;
 
-    /*
-      1. Extract original video's speech audio.
-    */
+    const originalAudio = path.join(
+      tempDir,
+      "original.wav"
+    );
 
-    await extractAudio(
-      videoPath,
-      originalAudioPath
+    const generatedAudio = path.join(
+      tempDir,
+      "ai-voice.mp3"
+    );
+
+    const outputVideo = path.join(
+      tempDir,
+      "voiceai-output.mp4"
     );
 
     /*
-      2. Convert original speech to text.
-    */
+     * 1. Extract original video audio.
+     */
+    await execFileAsync(ffmpegPath, [
+      "-y",
+      "-i",
+      inputVideo,
+      "-vn",
+      "-ac",
+      "1",
+      "-ar",
+      "16000",
+      "-acodec",
+      "pcm_s16le",
+      originalAudio
+    ]);
+
+    /*
+     * 2. Speech-to-Text.
+     */
+    const audioBuffer = fs.readFileSync(originalAudio);
+
+    const sttForm = new FormData();
+
+    sttForm.append(
+      "file",
+      new Blob([audioBuffer], {
+        type: "audio/wav"
+      }),
+      "audio.wav"
+    );
+
+    sttForm.append(
+      "model_id",
+      "scribe_v1"
+    );
+
+    const sttResponse = await fetch(
+      "https://api.elevenlabs.io/v1/speech-to-text",
+      {
+        method: "POST",
+        headers: {
+          "xi-api-key": ELEVENLABS_API_KEY
+        },
+        body: sttForm
+      }
+    );
+
+    if (!sttResponse.ok) {
+      const errorText = await sttResponse.text();
+
+      throw new Error(
+        `Speech-to-Text error: ${errorText}`
+      );
+    }
+
+    const sttData = await sttResponse.json();
 
     const transcript =
-      await transcribeAudio(
-        apiKey,
-        originalAudioPath
+      sttData.text ||
+      sttData.transcript ||
+      "";
+
+    if (!transcript.trim()) {
+      throw new Error(
+        "No speech was detected in the video."
       );
+    }
 
     /*
-      3. Find an available AI voice.
-    */
-
-    const voiceId =
-      await getVoiceId(
-        apiKey,
-        voiceType
-      );
+     * 3. Select AI voice.
+     */
+    const voiceId = await getVoiceId(
+      voiceType
+    );
 
     /*
-      4. Generate new AI voice.
-    */
-
-    await generateVoice(
-      apiKey,
+     * 4. Generate AI voice.
+     */
+    const aiAudio = await elevenLabsTTS({
+      text: transcript,
       voiceId,
-      transcript,
-      language,
-      style,
-      aiAudioPath
+      language
+    });
+
+    fs.writeFileSync(
+      generatedAudio,
+      aiAudio
     );
 
     /*
-      5. Replace original audio
-         with AI-generated voice.
-    */
+     * 5. Replace original audio.
+     *
+     * Video stream stays unchanged.
+     * AI-generated audio becomes the new soundtrack.
+     */
+    await execFileAsync(ffmpegPath, [
+      "-y",
+      "-i",
+      inputVideo,
+      "-i",
+      generatedAudio,
 
-    await createFinalVideo(
-      videoPath,
-      aiAudioPath,
-      outputPath
+      "-map",
+      "0:v:0",
+      "-map",
+      "1:a:0",
+
+      "-c:v",
+      "copy",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "192k",
+
+      "-shortest",
+
+      outputVideo
+    ]);
+
+    const result = fs.readFileSync(
+      outputVideo
     );
 
-    /*
-      Return the generated MP4 directly.
-    */
+    const safeName = projectName
+      .replace(/[^a-zA-Z0-9-_]/g, "-")
+      .slice(0, 60);
 
-    const outputBuffer =
-      fs.readFileSync(
-        outputPath
-      );
+    res.statusCode = 200;
 
     res.setHeader(
       "Content-Type",
@@ -541,17 +309,15 @@ export default async function handler(req, res) {
 
     res.setHeader(
       "Content-Disposition",
-      'attachment; filename="voiceai-converted-video.mp4"'
+      `attachment; filename="${safeName || "voiceai-video"}.mp4"`
     );
 
     res.setHeader(
-      "Cache-Control",
-      "no-store"
+      "Content-Length",
+      result.length
     );
 
-    return res.status(200).send(
-      outputBuffer
-    );
+    return res.end(result);
 
   } catch (error) {
     console.error(
@@ -563,23 +329,25 @@ export default async function handler(req, res) {
       success: false,
       error:
         error?.message ||
-        "Video voice transfer failed.",
+        "Video voice transfer failed."
     });
 
   } finally {
-
     /*
-      Clean temporary files.
-    */
-
-    try {
-      fs.rmSync(
-        tempDir,
-        {
+     * Cleanup temporary files.
+     */
+    if (tempDir) {
+      try {
+        fs.rmSync(tempDir, {
           recursive: true,
-          force: true,
-        }
-      );
-    } catch {}
+          force: true
+        });
+      } catch (cleanupError) {
+        console.error(
+          "Cleanup error:",
+          cleanupError
+        );
+      }
+    }
   }
 }
