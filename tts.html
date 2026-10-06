@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Text to Speech | VoiceAI</title>
+<title>Text to Speech — VoiceAI</title>
 
 <style>
 *{
@@ -13,22 +13,10 @@
   padding:0;
 }
 
-:root{
-  --primary:#6c45f5;
-  --primary-dark:#5935d8;
-  --text:#17151d;
-  --muted:#777481;
-  --border:#e6e4ed;
-  --bg:#f7f7fb;
-  --white:#fff;
-  --success:#087443;
-  --danger:#b42318;
-}
-
 body{
   font-family:Inter,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  background:#f7f7fb;
+  color:#17151d;
   overflow-x:hidden;
 }
 
@@ -37,1500 +25,1284 @@ a{
   color:inherit;
 }
 
-button,
-input,
-textarea,
-select{
+button,input,textarea,select{
   font:inherit;
 }
 
-/* NAVBAR */
-
 .navbar{
-  height:74px;
+  height:72px;
   background:#fff;
-  border-bottom:1px solid var(--border);
-  padding:0 5%;
+  border-bottom:1px solid #e8e5ed;
   display:flex;
   align-items:center;
   justify-content:space-between;
+  padding:0 5%;
   position:sticky;
   top:0;
   z-index:100;
 }
 
 .logo{
-  font-size:23px;
+  font-size:24px;
   font-weight:800;
-  white-space:nowrap;
 }
 
 .logo span{
-  color:var(--primary);
+  color:#6d28d9;
 }
 
 .nav-links{
   display:flex;
-  align-items:center;
   gap:25px;
+}
+
+.nav-links a{
+  color:#68636f;
   font-size:14px;
-  font-weight:700;
-  color:#5d5965;
+  font-weight:600;
 }
 
 .nav-links a:hover,
-.nav-links .active{
-  color:var(--primary);
+.nav-links a.active{
+  color:#6d28d9;
 }
 
 .nav-actions{
   display:flex;
   gap:9px;
-  align-items:center;
 }
 
-.nav-btn{
-  padding:10px 15px;
-  border:1px solid var(--border);
+.btn{
+  border:0;
   border-radius:10px;
-  background:#fff;
-  font-size:13px;
-  font-weight:800;
+  padding:11px 17px;
+  cursor:pointer;
+  font-weight:700;
 }
 
-.upgrade{
+.btn-light{
+  background:#f0edf5;
+  color:#393340;
+}
+
+.btn-primary{
+  background:#6d28d9;
   color:#fff;
-  background:var(--primary);
-  border-color:var(--primary);
 }
 
-/* PAGE */
+.btn-primary:hover{
+  background:#5b21b6;
+}
 
-.page{
-  width:min(1180px,92%);
-  margin:auto;
-  padding:55px 0 75px;
+.mobile-menu{
+  display:none;
 }
 
 .hero{
-  margin-bottom:30px;
+  max-width:1100px;
+  margin:auto;
+  padding:60px 24px 35px;
+  text-align:center;
 }
 
 .badge{
   display:inline-block;
-  padding:7px 12px;
-  border-radius:20px;
-  background:#eeeaff;
-  color:var(--primary);
-  font-size:11px;
-  font-weight:850;
-  margin-bottom:14px;
+  background:#eee7ff;
+  color:#6422c4;
+  padding:7px 13px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:17px;
 }
 
 .hero h1{
-  font-size:clamp(34px,5vw,54px);
-  letter-spacing:-1.6px;
-  line-height:1.08;
-  margin-bottom:12px;
-}
-
-.hero h1 span{
-  color:var(--primary);
+  font-size:46px;
+  letter-spacing:-2px;
+  line-height:1.1;
+  margin-bottom:15px;
 }
 
 .hero p{
-  max-width:700px;
-  color:var(--muted);
+  max-width:650px;
+  margin:auto;
+  color:#6c6873;
   line-height:1.7;
-  font-size:15px;
 }
 
-/* WORKSPACE */
-
 .workspace{
+  max-width:1100px;
+  margin:0 auto 60px;
+  padding:0 24px;
+}
+
+.layout{
   display:grid;
-  grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+  grid-template-columns:1.45fr .75fr;
   gap:20px;
-  align-items:start;
 }
 
 .panel{
   background:#fff;
-  border:1px solid var(--border);
+  border:1px solid #e5e2ea;
   border-radius:18px;
-  padding:23px;
+  padding:22px;
 }
 
-.panel-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
+.panel h2{
+  font-size:18px;
+  margin-bottom:5px;
+}
+
+.panel-sub{
+  color:#77717e;
+  font-size:13px;
   margin-bottom:20px;
 }
 
-.panel-title h2{
-  font-size:18px;
-}
-
-.usage{
-  font-size:11px;
-  font-weight:800;
-  color:var(--primary);
-  background:#f0ecff;
-  padding:7px 10px;
-  border-radius:20px;
-  white-space:nowrap;
-}
-
-/* SCRIPT */
-
-.field{
-  margin-bottom:18px;
-}
-
-.field label{
-  display:block;
-  margin-bottom:8px;
-  font-size:11px;
-  font-weight:850;
-  letter-spacing:.3px;
-}
-
-textarea,
-select,
-input[type="text"]{
-  width:100%;
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:11px;
-  outline:none;
-}
-
 textarea{
-  min-height:270px;
-  padding:15px;
+  width:100%;
+  min-height:260px;
   resize:vertical;
-  line-height:1.65;
-  font-size:14px;
+  border:1px solid #ddd9e5;
+  border-radius:13px;
+  padding:16px;
+  outline:none;
+  line-height:1.6;
+  color:#28242e;
+  background:#fcfbfd;
 }
 
 textarea:focus,
 select:focus,
 input:focus{
-  border-color:#a897ff;
+  border-color:#8b5cf6;
+  box-shadow:0 0 0 3px #8b5cf61a;
 }
 
 .counter{
-  display:flex;
-  justify-content:space-between;
-  margin-top:6px;
-  color:#8a8791;
-  font-size:11px;
+  text-align:right;
+  color:#77717e;
+  font-size:12px;
+  margin-top:7px;
 }
 
-/* CONTROLS */
-
-.controls{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
+.field{
+  margin-bottom:16px;
 }
 
-select{
-  padding:12px;
+.field label{
+  display:block;
   font-size:13px;
+  font-weight:700;
+  margin-bottom:7px;
 }
 
-.range-wrap{
+select,
+input[type="text"]{
+  width:100%;
+  border:1px solid #ddd9e5;
+  background:#fff;
+  border-radius:10px;
+  padding:12px;
+  outline:none;
+}
+
+.voice-box{
+  border:1px solid #ddd9e5;
+  border-radius:13px;
   padding:13px;
-  border:1px solid var(--border);
-  border-radius:11px;
+  background:#faf9fc;
+  margin-bottom:16px;
 }
 
-.range-top{
+.voice-title{
   display:flex;
   justify-content:space-between;
-  margin-bottom:9px;
+  align-items:center;
+  gap:10px;
+}
+
+.voice-name{
+  font-weight:800;
+  font-size:14px;
+}
+
+.voice-id{
+  color:#817b88;
+  font-size:10px;
+  margin-top:4px;
+  word-break:break-all;
+}
+
+.voice-status{
+  color:#6d28d9;
+  font-size:11px;
+  font-weight:700;
+}
+
+.voice-preview{
+  width:100%;
+  height:35px;
+  margin-top:10px;
+}
+
+.range-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+input[type="range"]{
+  flex:1;
+  accent-color:#6d28d9;
+}
+
+.range-value{
+  min-width:40px;
+  text-align:right;
   font-size:12px;
   font-weight:700;
 }
 
-input[type="range"]{
+.generate{
   width:100%;
-  accent-color:var(--primary);
-}
-
-/* BUTTONS */
-
-.button-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:11px;
-  margin-top:20px;
-}
-
-button{
+  margin-top:5px;
+  padding:14px;
+  border-radius:11px;
+  border:0;
+  background:#6d28d9;
+  color:#fff;
+  font-weight:800;
   cursor:pointer;
 }
 
-.preview-btn,
-.generate-btn{
-  border-radius:11px;
-  padding:13px;
-  font-size:13px;
-  font-weight:850;
-}
-
-.preview-btn{
-  background:#fff;
-  border:1px solid var(--border);
-  color:var(--text);
-}
-
-.generate-btn{
-  background:var(--primary);
-  border:1px solid var(--primary);
-  color:#fff;
-}
-
-.generate-btn:hover{
-  background:var(--primary-dark);
-}
-
-.generate-btn:disabled{
+.generate:disabled{
   opacity:.6;
   cursor:not-allowed;
 }
 
-/* RIGHT PANEL */
-
-.voice-card{
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:15px;
-  margin-bottom:12px;
-  cursor:pointer;
-  transition:.2s;
+.usage{
+  margin-top:15px;
+  background:#f5f1fb;
+  border-radius:11px;
+  padding:12px;
+  font-size:12px;
+  color:#665d70;
 }
 
-.voice-card:hover{
-  border-color:#bcb0ff;
-}
-
-.voice-card.selected{
-  border-color:var(--primary);
-  background:#f8f6ff;
-}
-
-.voice-top{
-  display:flex;
-  align-items:center;
-  gap:11px;
-}
-
-.voice-avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#eeeaff;
-  color:var(--primary);
-  font-weight:900;
-}
-
-.voice-info{
-  flex:1;
-}
-
-.voice-info h3{
-  font-size:13px;
-  margin-bottom:4px;
-}
-
-.voice-info p{
-  font-size:11px;
-  color:var(--muted);
-}
-
-.radio{
-  width:18px;
-  height:18px;
-  accent-color:var(--primary);
-}
-
-.preview-small{
-  width:100%;
-  margin-top:11px;
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:9px;
-  padding:8px;
-  font-size:11px;
-  font-weight:800;
-}
-
-/* AUDIO RESULT */
-
-.result{
+.output{
   margin-top:20px;
+  display:none;
+  border:1px solid #ded9e7;
+  border-radius:14px;
+  padding:16px;
+  background:#faf9fc;
+}
+
+.output h3{
+  font-size:15px;
+  margin-bottom:10px;
+}
+
+.output audio{
+  width:100%;
+}
+
+.download{
+  display:inline-block;
+  margin-top:12px;
+  background:#17151d;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.message{
+  margin-top:12px;
+  font-size:13px;
   display:none;
 }
 
-.result.show{
+.message.error{
   display:block;
+  color:#b42318;
 }
 
-.result-box{
-  border:1px solid var(--border);
-  background:#faf9ff;
-  border-radius:14px;
-  padding:17px;
+.message.success{
+  display:block;
+  color:#157347;
 }
 
-.result-title{
+.library{
+  margin-top:20px;
+}
+
+.library-head{
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:9px;
+  gap:10px;
   margin-bottom:13px;
 }
 
-.result-title h3{
-  font-size:14px;
+.library-head h3{
+  font-size:16px;
 }
 
-.result-icon{
-  width:32px;
-  height:32px;
-  border-radius:9px;
-  background:#e9f9f0;
-  color:var(--success);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-}
-
-audio{
-  width:100%;
-}
-
-.download-row{
-  display:flex;
-  gap:9px;
-  margin-top:12px;
-}
-
-.download-btn,
-.new-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:11px 14px;
-  border-radius:9px;
+.library-link{
+  color:#6d28d9;
   font-size:12px;
-  font-weight:850;
+  font-weight:700;
 }
 
-.download-btn{
-  background:#17151d;
-  color:#fff;
+.voice-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
 }
 
-.new-btn{
+.voice-card{
+  border:1px solid #e3dfe9;
+  border-radius:12px;
+  padding:12px;
   background:#fff;
-  border:1px solid var(--border);
 }
 
-/* STATUS */
-
-.status{
-  display:none;
-  margin-top:14px;
-  padding:11px 13px;
-  border-radius:9px;
-  font-size:12px;
-  line-height:1.5;
+.voice-card-name{
+  font-weight:800;
+  font-size:13px;
 }
 
-.status.show{
-  display:block;
-}
-
-.status.error{
-  background:#fff0f0;
-  color:var(--danger);
-}
-
-.status.success{
-  background:#edfdf3;
-  color:var(--success);
-}
-
-/* NOTE */
-
-.note{
-  margin-top:16px;
-  padding:13px;
-  background:#f8f7ff;
-  color:#6f6b78;
-  border-radius:10px;
+.voice-card-meta{
   font-size:11px;
-  line-height:1.6;
+  color:#77717e;
+  margin:4px 0 8px;
 }
 
-/* FOOTER */
-
-footer{
-  background:#fff;
-  border-top:1px solid var(--border);
-  padding:28px 20px;
-  text-align:center;
-  color:#888;
-  font-size:12px;
+.voice-card button{
+  width:100%;
+  border:0;
+  background:#f0eafa;
+  color:#5f24ad;
+  padding:8px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:700;
 }
 
-/* RESPONSIVE */
+.loading{
+  color:#77717e;
+  font-size:13px;
+  padding:10px;
+}
 
-@media(max-width:950px){
-
+@media(max-width:850px){
   .nav-links{
-    gap:14px;
+    display:none;
   }
 
-  .workspace{
+  .mobile-menu{
+    display:block;
+  }
+
+  .layout{
     grid-template-columns:1fr;
   }
 
+  .hero h1{
+    font-size:38px;
+  }
 }
 
-@media(max-width:700px){
-
+@media(max-width:600px){
   .navbar{
+    height:64px;
     padding:0 18px;
   }
 
-  .nav-links{
+  .nav-actions .btn-light{
     display:none;
   }
 
-  .nav-actions .profile{
-    display:none;
+  .hero{
+    padding:42px 18px 30px;
   }
 
-  .page{
-    padding-top:38px;
+  .hero h1{
+    font-size:32px;
   }
 
-  .controls{
-    grid-template-columns:1fr;
-  }
-
-  .button-row{
-    grid-template-columns:1fr;
+  .workspace{
+    padding:0 15px;
   }
 
   .panel{
-    padding:18px;
+    padding:17px;
   }
 
   textarea{
     min-height:220px;
   }
 
-}
-
-@media(max-width:450px){
-
-  .hero h1{
-    font-size:34px;
+  .voice-list{
+    grid-template-columns:1fr;
   }
-
-  .panel-title{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .usage{
-    align-self:flex-start;
-  }
-
-  .download-row{
-    flex-direction:column;
-  }
-
-  .download-btn,
-  .new-btn{
-    width:100%;
-  }
-
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
+<nav class="navbar">
 
-<header class="navbar">
+  <a href="index.html" class="logo">
+    Voice<span>AI</span>
+  </a>
 
-<a href="index.html" class="logo">
-  ∿ <span>Voice</span>AI
-</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="tools.html">AI Tools</a>
+    <a href="voices.html">Voices</a>
+    <a href="studio.html">Studio</a>
+    <a href="pricing.html">Pricing</a>
+  </div>
 
-<nav class="nav-links">
-  <a href="index.html">Home</a>
-  <a href="tools.html" class="active">AI Tools</a>
-  <a href="voices.html">Voices</a>
-  <a href="studio.html">Studio</a>
-  <a href="pricing.html">Pricing</a>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-light">Login</a>
+    <a href="pricing.html" class="btn btn-primary">Upgrade</a>
+  </div>
+
+  <button
+    class="mobile-menu btn btn-light"
+    onclick="location.href='tools.html'">
+    Menu
+  </button>
+
 </nav>
-
-<div class="nav-actions">
-  <a href="profile.html" class="nav-btn profile">
-    Profile
-  </a>
-
-  <a href="pricing.html" class="nav-btn upgrade">
-    Upgrade
-  </a>
-</div>
-
-</header>
-
-
-<main class="page">
-
-<!-- HERO -->
 
 <section class="hero">
 
-<div class="badge">
-  AI TEXT TO SPEECH
-</div>
+  <span class="badge">AI TEXT TO SPEECH</span>
 
-<h1>
-  Turn your words into
-  <span>natural voice.</span>
-</h1>
+  <h1>Turn your words into natural voice.</h1>
 
-<p>
-  Create professional voiceovers for advertisements, videos,
-  podcasts, reels, presentations and more.
-</p>
+  <p>
+    Choose a real AI voice, customize delivery, generate your audio,
+    and download the finished result.
+  </p>
 
 </section>
 
+<main class="workspace">
 
-<section class="workspace">
+  <div class="layout">
 
+    <!-- SCRIPT -->
 
-<!-- LEFT -->
+    <section class="panel">
 
-<div>
+      <h2>Your Script</h2>
 
-<div class="panel">
+      <p class="panel-sub">
+        Write or paste the text you want to convert into speech.
+      </p>
 
-<div class="panel-title">
+      <textarea
+        id="script"
+        maxlength="5000"
+        placeholder="Type your script here..."></textarea>
 
-<h2>Your Script</h2>
+      <div class="counter">
+        <span id="charCount">0</span> / 5000
+      </div>
 
-<div class="usage">
-  Free usage: <span id="usageCount">1</span>/5 today
-</div>
+      <div class="library">
 
-</div>
+        <div class="library-head">
 
+          <h3>Quick Voice Library</h3>
 
-<div class="field">
+          <a
+            href="voices.html"
+            class="library-link">
+            View all voices →
+          </a>
 
-<label for="scriptInput">
-  SCRIPT
-</label>
+        </div>
 
-<textarea
-id="scriptInput"
-maxlength="5000"
-placeholder="Type or paste your script here..."></textarea>
+        <div
+          id="quickVoices"
+          class="voice-list">
 
-<div class="counter">
-<span>Maximum 5,000 characters</span>
-<span><b id="characterCount">0</b>/5000</span>
-</div>
+          <div class="loading">
+            Loading voices...
+          </div>
 
-</div>
+        </div>
 
+      </div>
 
-<div class="controls">
+    </section>
 
+    <!-- SETTINGS -->
 
-<div class="field">
+    <section class="panel">
 
-<label for="language">
-  LANGUAGE
-</label>
+      <h2>Voice Settings</h2>
 
-<select id="language">
+      <p class="panel-sub">
+        Configure your selected voice.
+      </p>
 
-<option value="en-US">
-  English — United States
-</option>
+      <div class="voice-box">
 
-<option value="en-GB">
-  English — United Kingdom
-</option>
+        <div class="voice-title">
 
-<option value="hi-IN">
-  Hindi — India
-</option>
+          <div>
+            <div
+              id="selectedVoiceName"
+              class="voice-name">
+              Loading voice...
+            </div>
 
-<option value="gu-IN">
-  Gujarati — India
-</option>
+            <div
+              id="selectedVoiceId"
+              class="voice-id">
+              —
+            </div>
+          </div>
 
-</select>
+          <span
+            id="voiceStatus"
+            class="voice-status">
+            Loading
+          </span>
 
-</div>
+        </div>
 
+        <audio
+          id="selectedPreview"
+          class="voice-preview"
+          controls
+          preload="none"
+          style="display:none">
+        </audio>
 
-<div class="field">
+      </div>
 
-<label for="voiceSelect">
-  VOICE
-</label>
+      <div class="field">
 
-<select id="voiceSelect">
+        <label for="language">
+          Language
+        </label>
 
-<option value="alloy">
-  David — Professional Male
-</option>
+        <select id="language">
 
-<option value="onyx">
-  Marcus — Deep & Confident
-</option>
+          <option value="en">
+            English
+          </option>
 
-<option value="nova">
-  Sarah — Warm Female
-</option>
+          <option value="hi">
+            Hindi
+          </option>
 
-<option value="shimmer">
-  Emma — Clear & Friendly
-</option>
+          <option value="gu">
+            Gujarati
+          </option>
 
-</select>
+          <option value="es">
+            Spanish
+          </option>
 
-</div>
+          <option value="fr">
+            French
+          </option>
 
+          <option value="de">
+            German
+          </option>
 
-<div class="field">
+          <option value="ja">
+            Japanese
+          </option>
 
-<label for="style">
-  DELIVERY STYLE
-</label>
+        </select>
 
-<select id="style">
+      </div>
 
-<option value="natural">
-  Natural
-</option>
+      <div class="field">
 
-<option value="professional">
-  Professional
-</option>
+        <label for="style">
+          Delivery Style
+        </label>
 
-<option value="advertisement">
-  Advertisement
-</option>
+        <select id="style">
 
-<option value="energetic">
-  Energetic
-</option>
+          <option value="natural">
+            Natural
+          </option>
 
-<option value="calm">
-  Calm
-</option>
+          <option value="professional">
+            Professional
+          </option>
 
-</select>
+          <option value="advertisement">
+            Advertisement
+          </option>
 
-</div>
+          <option value="energetic">
+            Energetic
+          </option>
 
+          <option value="calm">
+            Calm
+          </option>
 
-<div class="field">
+        </select>
 
-<label>
-  SPEED
-</label>
+      </div>
 
-<div class="range-wrap">
+      <div class="field">
 
-<div class="range-top">
-<span>Slow</span>
-<strong id="speedValue">1.0x</strong>
-<span>Fast</span>
-</div>
+        <label>
+          Speed
+        </label>
 
-<input
-id="speed"
-type="range"
-min="0.5"
-max="2"
-step="0.1"
-value="1">
+        <div class="range-row">
 
-</div>
+          <input
+            id="speed"
+            type="range"
+            min="0.5"
+            max="2"
+            step="0.05"
+            value="1">
 
-</div>
+          <span
+            id="speedValue"
+            class="range-value">
+            1.00x
+          </span>
 
-</div>
+        </div>
 
+      </div>
 
-<div class="button-row">
+      <button
+        id="generateBtn"
+        class="generate">
+        Generate Audio
+      </button>
 
-<button
-id="previewBtn"
-class="preview-btn"
-type="button">
+      <div class="usage">
+        Free plan: <strong>5 AI generations / 24h</strong>.
+        Premium plans may have higher limits.
+      </div>
 
-▶ Preview Voice
+      <div
+        id="message"
+        class="message">
+      </div>
 
-</button>
+      <div
+        id="output"
+        class="output">
 
-<button
-id="generateBtn"
-class="generate-btn"
-type="button">
+        <h3>Generated Audio</h3>
 
-Generate Audio
+        <audio
+          id="outputAudio"
+          controls>
+        </audio>
 
-</button>
+        <br>
 
-</div>
+        <a
+          id="downloadBtn"
+          class="download"
+          href="#"
+          download>
+          Download Audio
+        </a>
 
+      </div>
 
-<div id="status" class="status"></div>
+    </section>
 
-
-<div class="note">
-  Preview uses your device's available speech engine.
-  Generated AI audio requires the VoiceAI backend/provider.
-</div>
-
-
-<!-- RESULT -->
-
-<div id="result" class="result">
-
-<div class="result-box">
-
-<div class="result-title">
-
-<div class="result-icon">
-✓
-</div>
-
-<h3>Generated Audio</h3>
-
-</div>
-
-<audio
-id="audioPlayer"
-controls
-preload="metadata">
-</audio>
-
-<div class="download-row">
-
-<a
-id="downloadBtn"
-class="download-btn"
-href="#"
-download="voiceai-audio.mp3">
-
-Download Audio
-
-</a>
-
-<button
-id="newBtn"
-class="new-btn"
-type="button">
-
-Create New
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- RIGHT -->
-
-<aside class="panel">
-
-<div class="panel-title">
-
-<h2>Voice Library</h2>
-
-<a
-href="voices.html"
-style="
-font-size:11px;
-font-weight:800;
-color:#6c45f5;
-">
-
-View all
-
-</a>
-
-</div>
-
-
-<!-- DAVID -->
-
-<div
-class="voice-card selected"
-data-voice="alloy">
-
-<div class="voice-top">
-
-<div class="voice-avatar">
-D
-</div>
-
-<div class="voice-info">
-
-<h3>David</h3>
-
-<p>Professional Male</p>
-
-</div>
-
-<input
-class="radio"
-type="radio"
-name="voice"
-checked
-value="alloy">
-
-</div>
-
-<button
-class="preview-small"
-data-preview="David, professional and confident voice.">
-
-Preview voice
-
-</button>
-
-</div>
-
-
-<!-- MARCUS -->
-
-<div
-class="voice-card"
-data-voice="onyx">
-
-<div class="voice-top">
-
-<div class="voice-avatar">
-M
-</div>
-
-<div class="voice-info">
-
-<h3>Marcus</h3>
-
-<p>Deep & Confident</p>
-
-</div>
-
-<input
-class="radio"
-type="radio"
-name="voice"
-value="onyx">
-
-</div>
-
-<button
-class="preview-small"
-data-preview="Marcus, deep and confident voice.">
-
-Preview voice
-
-</button>
-
-</div>
-
-
-<!-- SARAH -->
-
-<div
-class="voice-card"
-data-voice="nova">
-
-<div class="voice-top">
-
-<div class="voice-avatar">
-S
-</div>
-
-<div class="voice-info">
-
-<h3>Sarah</h3>
-
-<p>Warm Female</p>
-
-</div>
-
-<input
-class="radio"
-type="radio"
-name="voice"
-value="nova">
-
-</div>
-
-<button
-class="preview-small"
-data-preview="Sarah, warm and friendly voice.">
-
-Preview voice
-
-</button>
-
-</div>
-
-
-<!-- EMMA -->
-
-<div
-class="voice-card"
-data-voice="shimmer">
-
-<div class="voice-top">
-
-<div class="voice-avatar">
-E
-</div>
-
-<div class="voice-info">
-
-<h3>Emma</h3>
-
-<p>Clear & Friendly</p>
-
-</div>
-
-<input
-class="radio"
-type="radio"
-name="voice"
-value="shimmer">
-
-</div>
-
-<button
-class="preview-small"
-data-preview="Emma, clear and friendly voice.">
-
-Preview voice
-
-</button>
-
-</div>
-
-
-</aside>
-
-</section>
+  </div>
 
 </main>
 
-
-<footer>
-© 2026 VoiceAI. All rights reserved.
-</footer>
-
-
 <script>
+const MAX_CHARS = 5000;
 
-/* ELEMENTS */
+let selectedVoiceId = "";
+let selectedVoice = null;
 
 const scriptInput =
-document.getElementById("scriptInput");
+  document.getElementById("script");
 
-const characterCount =
-document.getElementById("characterCount");
+const charCount =
+  document.getElementById("charCount");
 
-const speed =
-document.getElementById("speed");
+const speedInput =
+  document.getElementById("speed");
 
 const speedValue =
-document.getElementById("speedValue");
-
-const language =
-document.getElementById("language");
-
-const voiceSelect =
-document.getElementById("voiceSelect");
-
-const style =
-document.getElementById("style");
-
-const previewBtn =
-document.getElementById("previewBtn");
+  document.getElementById("speedValue");
 
 const generateBtn =
-document.getElementById("generateBtn");
+  document.getElementById("generateBtn");
 
-const statusBox =
-document.getElementById("status");
+const message =
+  document.getElementById("message");
 
-const result =
-document.getElementById("result");
+const output =
+  document.getElementById("output");
 
-const audioPlayer =
-document.getElementById("audioPlayer");
+const outputAudio =
+  document.getElementById("outputAudio");
 
 const downloadBtn =
-document.getElementById("downloadBtn");
+  document.getElementById("downloadBtn");
 
-const newBtn =
-document.getElementById("newBtn");
+const selectedPreview =
+  document.getElementById("selectedPreview");
 
-const usageCount =
-document.getElementById("usageCount");
+const selectedVoiceName =
+  document.getElementById("selectedVoiceName");
 
+const selectedVoiceIdElement =
+  document.getElementById("selectedVoiceId");
 
-/* CHARACTER COUNT */
+const voiceStatus =
+  document.getElementById("voiceStatus");
 
-scriptInput.addEventListener("input", () => {
+const quickVoices =
+  document.getElementById("quickVoices");
 
-characterCount.textContent =
-scriptInput.value.length;
-
-});
-
-
-/* SPEED */
-
-speed.addEventListener("input", () => {
-
-speedValue.textContent =
-Number(speed.value).toFixed(1) + "x";
-
-});
-
-
-/* STATUS */
-
-function showStatus(message,type){
-
-statusBox.textContent = message;
-
-statusBox.className =
-"status show " + type;
-
-}
-
-function clearStatus(){
-
-statusBox.className =
-"status";
-
-}
-
-
-/* SELECT VOICE CARDS */
-
-document.querySelectorAll(".voice-card")
-.forEach(card => {
-
-card.addEventListener("click", event => {
-
-if(event.target.tagName === "BUTTON"){
-return;
-}
-
-const selectedVoice =
-card.dataset.voice;
-
-voiceSelect.value =
-selectedVoice;
-
-document.querySelectorAll(".voice-card")
-.forEach(item => {
-item.classList.remove("selected");
-});
-
-card.classList.add("selected");
-
-const radio =
-card.querySelector(".radio");
-
-if(radio){
-radio.checked = true;
-}
-
-});
-
-});
-
-
-/* SELECT DROPDOWN -> CARD */
-
-voiceSelect.addEventListener("change", () => {
-
-document.querySelectorAll(".voice-card")
-.forEach(card => {
-
-card.classList.toggle(
-"selected",
-card.dataset.voice === voiceSelect.value
+scriptInput.addEventListener(
+  "input",
+  () => {
+    charCount.textContent =
+      scriptInput.value.length;
+  }
 );
 
-const radio =
-card.querySelector(".radio");
+speedInput.addEventListener(
+  "input",
+  () => {
+    speedValue.textContent =
+      Number(speedInput.value).toFixed(2) + "x";
+  }
+);
 
-if(radio){
-radio.checked =
-card.dataset.voice === voiceSelect.value;
+function showMessage(text, type) {
+
+  message.textContent = text;
+
+  message.className =
+    "message " + type;
 }
 
-});
+function getLabels(voice) {
 
-});
-
-
-/* BROWSER PREVIEW */
-
-function speakText(text){
-
-if(!("speechSynthesis" in window)){
-
-showStatus(
-"Your browser does not support voice preview.",
-"error"
-);
-
-return;
-
+  return voice.labels || {};
 }
 
-window.speechSynthesis.cancel();
+function getVoiceMeta(voice) {
 
-const utterance =
-new SpeechSynthesisUtterance(text);
+  const labels = getLabels(voice);
 
-utterance.lang =
-language.value;
-
-utterance.rate =
-Number(speed.value);
-
-utterance.pitch =
-1;
-
-window.speechSynthesis.speak(
-utterance
-);
-
+  return [
+    labels.gender,
+    labels.age,
+    labels.accent,
+    labels.language
+  ]
+  .filter(Boolean)
+  .slice(0, 2)
+  .join(" • ");
 }
 
+function selectVoice(voice) {
 
-/* MAIN PREVIEW */
+  if (!voice || !voice.voice_id) {
+    return;
+  }
 
-previewBtn.addEventListener("click", () => {
+  selectedVoice = voice;
+  selectedVoiceId = voice.voice_id;
 
-const text =
-scriptInput.value.trim();
+  selectedVoiceName.textContent =
+    voice.name || "Unnamed Voice";
 
-if(!text){
+  selectedVoiceIdElement.textContent =
+    voice.voice_id;
 
-showStatus(
-"Enter some text before previewing the voice.",
-"error"
-);
+  voiceStatus.textContent =
+    "Selected";
 
-scriptInput.focus();
+  if (voice.preview_url) {
 
-return;
+    selectedPreview.src =
+      voice.preview_url;
 
+    selectedPreview.style.display =
+      "block";
+
+  } else {
+
+    selectedPreview.removeAttribute(
+      "src"
+    );
+
+    selectedPreview.style.display =
+      "none";
+  }
+
+  /*
+   * Keep the selected voice in localStorage
+   * so it remains available when returning.
+   */
+  localStorage.setItem(
+    "voiceaiSelectedVoice",
+    JSON.stringify(voice)
+  );
 }
 
-clearStatus();
+function createQuickVoiceCard(voice) {
 
-speakText(text);
+  const card =
+    document.createElement("div");
 
-});
+  card.className = "voice-card";
 
+  const name =
+    document.createElement("div");
 
-/* SMALL VOICE PREVIEWS */
+  name.className =
+    "voice-card-name";
 
-document.querySelectorAll(".preview-small")
-.forEach(button => {
+  name.textContent =
+    voice.name || "Unnamed Voice";
 
-button.addEventListener("click", event => {
+  const meta =
+    document.createElement("div");
 
-event.stopPropagation();
+  meta.className =
+    "voice-card-meta";
 
-const text =
-button.dataset.preview;
+  meta.textContent =
+    getVoiceMeta(voice) ||
+    voice.category ||
+    "AI Voice";
 
-speakText(text);
+  const button =
+    document.createElement("button");
 
-});
+  button.textContent =
+    "Use this voice";
 
-});
+  button.addEventListener(
+    "click",
+    () => selectVoice(voice)
+  );
 
+  card.appendChild(name);
+  card.appendChild(meta);
+  card.appendChild(button);
 
-/* GENERATE */
-
-generateBtn.addEventListener("click", async () => {
-
-const text =
-scriptInput.value.trim();
-
-if(!text){
-
-showStatus(
-"Please enter your script first.",
-"error"
-);
-
-scriptInput.focus();
-
-return;
-
+  return card;
 }
 
+async function loadVoices() {
 
-if(text.length > 5000){
+  try {
 
-showStatus(
-"Your script exceeds the 5,000 character limit.",
-"error"
-);
+    const response =
+      await fetch(
+        "/api/voices?page_size=20",
+        {
+          method:"GET",
+          headers:{
+            "Accept":"application/json"
+          },
+          credentials:"same-origin"
+        }
+      );
 
-return;
+    const data =
+      await response.json();
 
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        "Unable to load voices"
+      );
+    }
+
+    const voices =
+      Array.isArray(data.voices)
+        ? data.voices
+        : [];
+
+    quickVoices.innerHTML = "";
+
+    if (!voices.length) {
+
+      quickVoices.innerHTML =
+        `<div class="loading">
+          No voices available.
+        </div>`;
+
+      return;
+    }
+
+    voices
+      .slice(0, 6)
+      .forEach(voice => {
+
+        quickVoices.appendChild(
+          createQuickVoiceCard(voice)
+        );
+
+      });
+
+    /*
+     * First restore voice from URL,
+     * then localStorage.
+     */
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const urlVoiceId =
+      params.get("voice");
+
+    let found = null;
+
+    if (urlVoiceId) {
+
+      found =
+        voices.find(
+          voice =>
+            voice.voice_id === urlVoiceId
+        );
+
+      /*
+       * If the requested voice wasn't
+       * in the first page, load it directly.
+       */
+      if (!found) {
+        await loadSpecificVoice(
+          urlVoiceId
+        );
+        return;
+      }
+    }
+
+    if (!found) {
+
+      try {
+
+        const saved =
+          JSON.parse(
+            localStorage.getItem(
+              "voiceaiSelectedVoice"
+            )
+          );
+
+        if (saved?.voice_id) {
+
+          found =
+            voices.find(
+              voice =>
+                voice.voice_id ===
+                saved.voice_id
+            ) || saved;
+        }
+
+      } catch (_) {}
+    }
+
+    if (!found) {
+      found = voices[0];
+    }
+
+    selectVoice(found);
+
+  } catch (error) {
+
+    console.error(error);
+
+    quickVoices.innerHTML =
+      `<div class="loading">
+        Voice library could not be loaded.
+      </div>`;
+
+    selectedVoiceName.textContent =
+      "Voice Library unavailable";
+
+    voiceStatus.textContent =
+      "Error";
+  }
 }
 
+async function loadSpecificVoice(voiceId) {
 
-clearStatus();
+  /*
+   * The list API may not contain a specific
+   * voice on its first page. We try to search
+   * for that voice through the backend.
+   */
+  try {
 
-generateBtn.disabled = true;
+    const response =
+      await fetch(
+        "/api/voices?search=" +
+        encodeURIComponent(voiceId) +
+        "&page_size=20",
+        {
+          headers:{
+            "Accept":"application/json"
+          },
+          credentials:"same-origin"
+        }
+      );
 
-generateBtn.textContent =
-"Generating...";
+    const data =
+      await response.json();
 
+    const voices =
+      Array.isArray(data.voices)
+        ? data.voices
+        : [];
 
-try{
+    const found =
+      voices.find(
+        voice =>
+          voice.voice_id === voiceId
+      );
 
-const response =
-await fetch("/api/tts", {
+    if (found) {
 
-method:"POST",
+      selectVoice(found);
 
-headers:{
-"Content-Type":"application/json"
-},
+      quickVoices.innerHTML = "";
 
-credentials:"include",
+      voices
+        .slice(0, 6)
+        .forEach(voice => {
 
-body:JSON.stringify({
+          quickVoices.appendChild(
+            createQuickVoiceCard(voice)
+          );
 
-text:text,
+        });
 
-voice:voiceSelect.value,
+      return;
+    }
 
-language:language.value,
+    /*
+     * Preserve the exact ID so the backend
+     * can still receive it.
+     */
+    selectedVoiceId = voiceId;
 
-speed:Number(speed.value),
+    selectedVoiceName.textContent =
+      "Selected Voice";
 
-style:style.value
+    selectedVoiceIdElement.textContent =
+      voiceId;
 
-})
+    voiceStatus.textContent =
+      "Selected";
 
-});
+  } catch (error) {
 
+    console.error(error);
 
-const data =
-await response.json()
-.catch(() => ({}));
+    selectedVoiceId = voiceId;
 
+    selectedVoiceName.textContent =
+      "Selected Voice";
 
-if(!response.ok){
+    selectedVoiceIdElement.textContent =
+      voiceId;
 
-throw new Error(
-data.message ||
-data.error ||
-"Audio generation failed."
-);
-
+    voiceStatus.textContent =
+      "Selected";
+  }
 }
 
+function validate() {
 
-const audioUrl =
-data.audioUrl ||
-data.outputUrl ||
-data.url;
+  const text =
+    scriptInput.value.trim();
 
+  if (!text) {
+    showMessage(
+      "Please enter some text.",
+      "error"
+    );
+    return false;
+  }
 
-if(!audioUrl){
+  if (text.length > MAX_CHARS) {
+    showMessage(
+      "Maximum 5000 characters allowed.",
+      "error"
+    );
+    return false;
+  }
 
-throw new Error(
-"No audio file was returned by the server."
-);
+  if (!selectedVoiceId) {
+    showMessage(
+      "Please select a voice.",
+      "error"
+    );
+    return false;
+  }
 
+  return true;
 }
 
+async function generateAudio() {
 
-/* SHOW AUDIO */
+  message.className = "message";
+  output.style.display = "none";
 
-audioPlayer.src =
-audioUrl;
+  if (!validate()) {
+    return;
+  }
 
-downloadBtn.href =
-audioUrl;
+  generateBtn.disabled = true;
+  generateBtn.textContent =
+    "Generating...";
 
-result.classList.add("show");
+  try {
 
+    const payload = {
+      text:
+        scriptInput.value.trim(),
 
-showStatus(
-"Audio generated successfully.",
-"success"
-);
+      voice:
+        selectedVoiceId,
 
+      voice_id:
+        selectedVoiceId,
 
-/* UPDATE LOCAL USAGE UI */
+      language:
+        document.getElementById(
+          "language"
+        ).value,
 
-let currentUsage =
-Number(localStorage.getItem("voiceaiTtsUsage") || "0");
+      speed:
+        Number(speedInput.value),
 
-currentUsage =
-Math.min(currentUsage + 1,5);
+      style:
+        document.getElementById(
+          "style"
+        ).value
+    };
 
-localStorage.setItem(
-"voiceaiTtsUsage",
-String(currentUsage)
-);
+    const response =
+      await fetch(
+        "/api/tts",
+        {
+          method:"POST",
 
-usageCount.textContent =
-currentUsage;
+          headers:{
+            "Content-Type":
+              "application/json",
+            "Accept":
+              "application/json"
+          },
 
+          credentials:"include",
 
-}catch(error){
+          body:
+            JSON.stringify(payload)
+        }
+      );
 
-showStatus(
-error.message ||
-"Unable to generate audio. Please connect the backend.",
-"error"
-);
+    const data =
+      await response.json();
 
-}finally{
+    if (!response.ok) {
 
-generateBtn.disabled = false;
+      throw new Error(
+        data.error ||
+        data.message ||
+        "Audio generation failed"
+      );
+    }
 
-generateBtn.textContent =
-"Generate Audio";
+    /*
+     * Support common backend response names.
+     */
+    const audioUrl =
+      data.audioUrl ||
+      data.audio_url ||
+      data.outputUrl ||
+      data.output_url ||
+      data.url;
 
+    if (!audioUrl) {
+
+      throw new Error(
+        "Backend did not return an audio URL."
+      );
+    }
+
+    outputAudio.src =
+      audioUrl;
+
+    downloadBtn.href =
+      audioUrl;
+
+    downloadBtn.download =
+      "voiceai-generated-audio.mp3";
+
+    output.style.display =
+      "block";
+
+    showMessage(
+      "Audio generated successfully.",
+      "success"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      error.message ||
+      "Something went wrong while generating audio.",
+      "error"
+    );
+
+  } finally {
+
+    generateBtn.disabled = false;
+
+    generateBtn.textContent =
+      "Generate Audio";
+  }
 }
 
-});
-
-
-/* NEW */
-
-newBtn.addEventListener("click", () => {
-
-result.classList.remove("show");
-
-audioPlayer.pause();
-
-audioPlayer.removeAttribute("src");
-
-audioPlayer.load();
-
-downloadBtn.removeAttribute("href");
-
-clearStatus();
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
-
-});
-
-
-/* INITIAL USAGE */
-
-const savedUsage =
-Number(
-localStorage.getItem("voiceaiTtsUsage") || "0"
+generateBtn.addEventListener(
+  "click",
+  generateAudio
 );
 
-usageCount.textContent =
-Math.min(savedUsage,5);
-
-
-/* URL VOICE PARAMETER */
-
-const params =
-new URLSearchParams(
-window.location.search
-);
-
-const requestedVoice =
-params.get("voice");
-
-if(requestedVoice){
-
-const allowedVoices =
-["alloy","onyx","nova","shimmer"];
-
-if(allowedVoices.includes(requestedVoice)){
-
-voiceSelect.value =
-requestedVoice;
-
-document.querySelectorAll(".voice-card")
-.forEach(card => {
-
-const active =
-card.dataset.voice === requestedVoice;
-
-card.classList.toggle(
-"selected",
-active
-);
-
-const radio =
-card.querySelector(".radio");
-
-if(radio){
-radio.checked = active;
-}
-
-});
-
-}
-
-}
-
+loadVoices();
 </script>
 
 </body>
