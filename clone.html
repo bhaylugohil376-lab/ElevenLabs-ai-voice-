@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Clone — VoiceAI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f7f8fc;
+  color:#172033;
+  overflow-x:hidden;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button,input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* NAVBAR */
+
+.navbar{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid #e5e7ee;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+
+.nav-inner{
+  width:min(1200px,calc(100% - 40px));
+  height:100%;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:21px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.logo-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:#5b4cf0;
+  color:#fff;
+  display:grid;
+  place-items:center;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:25px;
+}
+
+.nav-links a{
+  color:#606778;
+  font-size:14px;
+  font-weight:600;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  color:#5b4cf0;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.btn{
+  padding:10px 16px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.btn-outline{
+  border:1px solid #dfe2e9;
+  background:#fff;
+}
+
+.btn-primary{
+  background:#5b4cf0;
+  border:1px solid #5b4cf0;
+  color:#fff;
+}
+
+.menu{
+  display:none;
+  background:none;
+  border:0;
+}
+
+/* HERO */
+
+.hero{
+  padding:65px 20px 40px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(91,76,240,.12),transparent 35%),
+    radial-gradient(circle at 80% 20%,rgba(130,90,255,.09),transparent 35%);
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:#efedff;
+  color:#5141d8;
+  border-radius:30px;
+  padding:7px 13px;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:17px;
+}
+
+.hero h1{
+  font-size:clamp(36px,6vw,58px);
+  line-height:1.05;
+  letter-spacing:-2px;
+}
+
+.hero h1 span{
+  color:#5b4cf0;
+}
+
+.hero p{
+  max-width:670px;
+  margin:18px auto 0;
+  color:#707789;
+  line-height:1.7;
+}
+
+/* WORKSPACE */
+
+.workspace{
+  width:min(1000px,calc(100% - 30px));
+  margin:10px auto 70px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #e4e6ed;
+  border-radius:18px;
+  box-shadow:0 8px 30px rgba(25,30,50,.05);
+}
+
+/* STEPS */
+
+.steps{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  margin-bottom:20px;
+  overflow:hidden;
+}
+
+.step{
+  padding:18px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  border-right:1px solid #e5e7ee;
+}
+
+.step:last-child{
+  border-right:0;
+}
+
+.step-number{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  background:#eeeef5;
+  color:#777e8e;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  font-weight:800;
+  flex:none;
+}
+
+.step.active .step-number{
+  background:#5b4cf0;
+  color:#fff;
+}
+
+.step-text strong{
+  display:block;
+  font-size:12px;
+}
+
+.step-text span{
+  display:block;
+  margin-top:3px;
+  color:#8a91a0;
+  font-size:10px;
+}
+
+/* MAIN CARD */
+
+.clone-card{
+  padding:28px;
+}
+
+.title-row{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-bottom:24px;
+}
+
+.title-icon{
+  width:45px;
+  height:45px;
+  border-radius:12px;
+  background:#efedff;
+  color:#5b4cf0;
+  display:grid;
+  place-items:center;
+}
+
+.title-row h2{
+  font-size:20px;
+}
+
+.title-row p{
+  color:#858b9b;
+  font-size:12px;
+  margin-top:3px;
+}
+
+/* UPLOAD */
+
+.upload-area{
+  border:1.5px dashed #cfd2dc;
+  border-radius:15px;
+  padding:45px 20px;
+  text-align:center;
+  background:#fafbfe;
+  transition:.2s;
+}
+
+.upload-area:hover,
+.upload-area.dragging{
+  border-color:#6b5cf1;
+  background:#f7f6ff;
+}
+
+.upload-icon{
+  width:62px;
+  height:62px;
+  border-radius:16px;
+  background:#efedff;
+  color:#5b4cf0;
+  display:grid;
+  place-items:center;
+  margin:0 auto 15px;
+}
+
+.upload-area h3{
+  font-size:17px;
+  margin-bottom:7px;
+}
+
+.upload-area p{
+  color:#818898;
+  font-size:12px;
+  line-height:1.6;
+}
+
+.file-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-top:17px;
+  padding:11px 16px;
+  border-radius:9px;
+  background:#5b4cf0;
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+}
+
+.file-btn input{
+  display:none;
+}
+
+.file-info{
+  display:none;
+  margin-top:15px;
+  background:#fff;
+  border:1px solid #e0e3eb;
+  border-radius:10px;
+  padding:11px 13px;
+  text-align:left;
+}
+
+.file-info.show{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.file-name{
+  font-size:12px;
+  font-weight:700;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.file-size{
+  color:#8a91a0;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+/* REQUIREMENTS */
+
+.requirements{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.requirement{
+  border:1px solid #e7e8ee;
+  border-radius:11px;
+  padding:13px;
+}
+
+.req-icon{
+  color:#5b4cf0;
+  margin-bottom:7px;
+}
+
+.requirement strong{
+  display:block;
+  font-size:12px;
+}
+
+.requirement span{
+  display:block;
+  color:#828998;
+  font-size:10px;
+  margin-top:3px;
+}
+
+/* CONSENT */
+
+.consent{
+  margin-top:22px;
+  padding:15px;
+  border-radius:11px;
+  background:#fff8ed;
+  border:1px solid #f3dfbc;
+}
+
+.consent label{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  cursor:pointer;
+}
+
+.consent input{
+  margin-top:3px;
+  accent-color:#5b4cf0;
+}
+
+.consent strong{
+  font-size:12px;
+  color:#57451f;
+}
+
+.consent p{
+  margin-top:5px;
+  color:#7d6c47;
+  font-size:11px;
+  line-height:1.5;
+}
+
+/* BUTTON */
+
+.clone-btn{
+  width:100%;
+  height:48px;
+  border:0;
+  border-radius:11px;
+  margin-top:20px;
+  background:#5b4cf0;
+  color:#fff;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+}
+
+.clone-btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+.spinner{
+  width:17px;
+  height:17px;
+  border:2px solid rgba(255,255,255,.35);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+/* STATUS */
+
+.status{
+  display:none;
+  margin-top:15px;
+  padding:12px 14px;
+  border-radius:9px;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.status.show{
+  display:block;
+}
+
+.status.error{
+  background:#fff0f0;
+  color:#b42318;
+}
+
+.status.success{
+  background:#edfdf3;
+  color:#067647;
+}
+
+/* RESULT */
+
+.result{
+  display:none;
+  margin-top:20px;
+  border:1px solid #dfe2e9;
+  border-radius:14px;
+  padding:18px;
+  background:#fafbfe;
+}
+
+.result.show{
+  display:block;
+}
+
+.result-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:15px;
+}
+
+.result-icon{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background:#e9f9ef;
+  color:#16864c;
+  display:grid;
+  place-items:center;
+}
+
+.result-head h3{
+  font-size:15px;
+}
+
+.result-head p{
+  color:#858b9a;
+  font-size:11px;
+  margin-top:3px;
+}
+
+.audio-box{
+  background:#fff;
+  border:1px solid #e1e3e9;
+  border-radius:10px;
+  padding:12px;
+}
+
+.audio-box audio{
+  width:100%;
+}
+
+.result-actions{
+  display:flex;
+  gap:9px;
+  margin-top:12px;
+}
+
+.result-btn{
+  flex:1;
+  height:40px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.use-tts{
+  background:#5b4cf0;
+  color:#fff;
+}
+
+.download{
+  background:#fff;
+  border:1px solid #dfe2e9;
+  color:#343a4a;
+}
+
+/* INFO */
+
+.info-grid{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:17px;
+}
+
+.info-card{
+  padding:21px;
+}
+
+.info-icon{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background:#efedff;
+  color:#5b4cf0;
+  display:grid;
+  place-items:center;
+  margin-bottom:13px;
+}
+
+.info-card h3{
+  font-size:15px;
+  margin-bottom:6px;
+}
+
+.info-card p{
+  color:#767d8d;
+  font-size:12px;
+  line-height:1.6;
+}
+
+/* FOOTER */
+
+footer{
+  background:#fff;
+  border-top:1px solid #e5e7ee;
+  padding:30px 20px;
+}
+
+.footer{
+  width:min(1180px,100%);
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.footer-copy{
+  color:#969ca9;
+  font-size:12px;
+}
+
+.footer-links{
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+.footer-links a{
+  color:#73798a;
+  font-size:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .menu{
+    display:block;
+  }
+
+  .nav-actions .btn-outline{
+    display:none;
+  }
+
+  .requirements,
+  .info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .steps{
+    grid-template-columns:1fr;
+  }
+
+  .step{
+    border-right:0;
+    border-bottom:1px solid #e5e7ee;
+  }
+
+  .step:last-child{
+    border-bottom:0;
+  }
+}
+
+@media(max-width:600px){
+
+  .navbar{
+    height:64px;
+  }
+
+  .nav-inner{
+    width:calc(100% - 24px);
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
+  .nav-actions .btn-primary{
+    padding:9px 12px;
+  }
+
+  .hero{
+    padding:45px 16px 30px;
+  }
+
+  .hero h1{
+    letter-spacing:-1px;
+  }
+
+  .hero p{
+    font-size:14px;
+  }
+
+  .workspace{
+    width:calc(100% - 20px);
+  }
+
+  .clone-card{
+    padding:18px;
+  }
+
+  .upload-area{
+    padding:35px 15px;
+  }
+
+  .result-actions{
+    flex-direction:column;
+  }
+
+  .footer{
+    flex-direction:column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+  <div class="nav-inner">
+
+    <a href="index.html" class="logo">
+
+      <span class="logo-icon">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12h3l2-7 4 14 2-7h5"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </span>
+
+      VoiceAI
+
+    </a>
+
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="tools.html">AI Tools</a>
+      <a href="voices.html">Voices</a>
+      <a href="studio.html">Studio</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+
+
+    <div class="nav-actions">
+
+      <a href="profile.html" class="btn btn-outline">
+        Profile
+      </a>
+
+      <a href="pricing.html" class="btn btn-primary">
+        Upgrade
+      </a>
+
+      <button class="menu" aria-label="Menu">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M4 12h16M4 18h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"/>
+        </svg>
+      </button>
+
+    </div>
+
+  </div>
+
+</header>
+
+
+<section class="hero">
+
+  <div class="badge">
+
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M12 3v18M3 12h18"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"/>
+    </svg>
+
+    AI Voice Cloning
+
+  </div>
+
+
+  <h1>
+    Create your own
+    <span>AI voice.</span>
+  </h1>
+
+
+  <p>
+    Upload a clean voice recording and create a voice model
+    for authorized personal or professional use.
+  </p>
+
+</section>
+
+
+<main class="workspace">
+
+
+  <!-- STEPS -->
+
+  <div class="card steps">
+
+    <div class="step active">
+
+      <div class="step-number">1</div>
+
+      <div class="step-text">
+        <strong>Upload</strong>
+        <span>Add your recording</span>
+      </div>
+
+    </div>
+
+
+    <div class="step">
+
+      <div class="step-number">2</div>
+
+      <div class="step-text">
+        <strong>Clone</strong>
+        <span>Create voice model</span>
+      </div>
+
+    </div>
+
+
+    <div class="step">
+
+      <div class="step-number">3</div>
+
+      <div class="step-text">
+        <strong>Use</strong>
+        <span>Generate speech</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- CLONE CARD -->
+
+  <section class="card clone-card">
+
+    <div class="title-row">
+
+      <div class="title-icon">
+
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"
+                stroke="currentColor"
+                stroke-width="1.8"/>
+          <path d="M5 11a7 7 0 0 0 14 0M12 18v3"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+        </svg>
+
+      </div>
+
+      <div>
+        <h2>Upload voice recording</h2>
+        <p>Use a clean recording for the best result.</p>
+      </div>
+
+    </div>
+
+
+    <div
+      class="upload-area"
+      id="uploadArea"
+    >
+
+      <div class="upload-icon">
+
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+          <path d="M12 16V4"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+
+          <path d="m7 9 5-5 5 5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+
+          <path d="M5 20h14"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+        </svg>
+
+      </div>
+
+
+      <h3>Drop your audio here</h3>
+
+      <p>
+        Upload MP3, WAV, M4A or another supported audio file.
+        Use a clear recording with minimal background noise.
+      </p>
+
+
+      <label class="file-btn">
+
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <path d="M12 16V4"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+          <path d="m7 9 5-5 5 5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+
+        Choose Audio
+
+        <input
+          type="file"
+          id="audioInput"
+          accept="audio/*"
+        >
+
+      </label>
+
+
+      <div class="file-info" id="fileInfo">
+
+        <div style="display:flex;align-items:center;gap:9px;min-width:0">
+
+          <svg width="18" height="18"
+               viewBox="0 0 24 24"
+               fill="none"
+               style="color:#5b4cf0;flex:none">
+
+            <path d="M9 18V6l12-3v12"
+                  stroke="currentColor"
+                  stroke-width="1.8"/>
+
+            <circle cx="6" cy="18" r="3"
+                    stroke="currentColor"
+                    stroke-width="1.8"/>
+
+            <circle cx="18" cy="15" r="3"
+                    stroke="currentColor"
+                    stroke-width="1.8"/>
+
+          </svg>
+
+          <span class="file-name" id="fileName"></span>
+
+        </div>
+
+        <span class="file-size" id="fileSize"></span>
+
+      </div>
+
+    </div>
+
+
+    <!-- REQUIREMENTS -->
+
+    <div class="requirements">
+
+      <div class="requirement">
+
+        <div class="req-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3v18M3 12h18"
+                  stroke="currentColor"
+                  stroke-width="1.8"/>
+          </svg>
+        </div>
+
+        <strong>Clear audio</strong>
+        <span>Reduce background noise.</span>
+
+      </div>
+
+
+      <div class="requirement">
+
+        <div class="req-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="8"
+                    stroke="currentColor"
+                    stroke-width="1.8"/>
+            <path d="M12 8v5l3 2"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <strong>Consistent voice</strong>
+        <span>Keep one speaker throughout.</span>
+
+      </div>
+
+
+      <div class="requirement">
+
+        <div class="req-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M4 6h16v12H4z"
+                  stroke="currentColor"
+                  stroke-width="1.8"/>
+            <path d="M8 10h8M8 14h5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <strong>Supported format</strong>
+        <span>MP3, WAV, M4A and more.</span>
+
+      </div>
+
+    </div>
+
+
+    <!-- CONSENT -->
+
+    <div class="consent">
+
+      <label>
+
+        <input
+          type="checkbox"
+          id="consentCheckbox"
+        >
+
+        <span>
+
+          <strong>
+            I confirm I have permission to clone this voice.
+          </strong>
+
+          <p>
+            Only clone a voice that you own or have explicit
+            permission to use. Do not upload another person's
+            voice without their authorization.
+          </p>
+
+        </span>
+
+      </label>
+
+    </div>
+
+
+    <button
+      class="clone-btn"
+      id="cloneBtn"
+      disabled
+    >
+
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M12 3v18M3 12h18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"/>
+      </svg>
+
+      Create Voice Clone
+
+    </button>
+
+
+    <div class="status" id="status"></div>
+
+
+    <!-- RESULT -->
+
+    <div class="result" id="result">
+
+      <div class="result-head">
+
+        <div class="result-icon">
+
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="m5 12 4 4L19 6"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+
+        </div>
+
+        <div>
+          <h3>Voice clone created</h3>
+          <p>Your backend returned a cloned voice.</p>
+        </div>
+
+      </div>
+
+
+      <div class="audio-box">
+
+        <audio
+          id="resultAudio"
+          controls
+        ></audio>
+
+      </div>
+
+
+      <div class="result-actions">
+
+        <a
+          href="tts.html"
+          class="result-btn use-tts"
+        >
+
+          Use in TTS
+
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+
+        </a>
+
+
+        <a
+          id="downloadClone"
+          class="result-btn download"
+          href="#"
+          download="voiceai-cloned-voice.mp3"
+        >
+
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3v12"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"/>
+            <path d="m7 10 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+            <path d="M5 20h14"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"/>
+          </svg>
+
+          Download
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- INFO -->
+
+  <div class="info-grid">
+
+    <article class="card info-card">
+
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3v18M3 12h18"
+                stroke="currentColor"
+                stroke-width="1.8"/>
+        </svg>
+      </div>
+
+      <h3>Better recordings</h3>
+
+      <p>
+        A clean, consistent recording generally produces
+        better voice-cloning results.
+      </p>
+
+    </article>
+
+
+    <article class="card info-card">
+
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3 5 6v5c0 4.5 3 7.8 7 10 4-2.2 7-5.5 7-10V6l-7-3Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <h3>Permission first</h3>
+
+      <p>
+        Only use voices you own or have explicit authorization
+        to clone and use.
+      </p>
+
+    </article>
+
+
+    <article class="card info-card">
+
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18V6l12-3v12"
+                stroke="currentColor"
+                stroke-width="1.8"/>
+          <circle cx="6" cy="18" r="3"
+                  stroke="currentColor"
+                  stroke-width="1.8"/>
+          <circle cx="18" cy="15" r="3"
+                  stroke="currentColor"
+                  stroke-width="1.8"/>
+        </svg>
+      </div>
+
+      <h3>Use with TTS</h3>
+
+      <p>
+        After successful backend processing, the cloned voice
+        can be connected to your TTS workflow.
+      </p>
+
+    </article>
+
+  </div>
+
+</main>
+
+
+<footer>
+
+  <div class="footer">
+
+    <div class="footer-copy">
+      © 2026 VoiceAI. AI Voice & Creative Studio.
+    </div>
+
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="tools.html">AI Tools</a>
+      <a href="voices.html">Voices</a>
+      <a href="tts.html">Text to Speech</a>
+      <a href="pricing.html">Pricing</a>
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script>
+
+const audioInput =
+  document.getElementById("audioInput");
+
+const uploadArea =
+  document.getElementById("uploadArea");
+
+const fileInfo =
+  document.getElementById("fileInfo");
+
+const fileName =
+  document.getElementById("fileName");
+
+const fileSize =
+  document.getElementById("fileSize");
+
+const consentCheckbox =
+  document.getElementById("consentCheckbox");
+
+const cloneBtn =
+  document.getElementById("cloneBtn");
+
+const statusBox =
+  document.getElementById("status");
+
+const result =
+  document.getElementById("result");
+
+const resultAudio =
+  document.getElementById("resultAudio");
+
+const downloadClone =
+  document.getElementById("downloadClone");
+
+let selectedFile = null;
+
+
+/* FILE SIZE */
+
+function formatBytes(bytes){
+
+  if(bytes === 0) return "0 Bytes";
+
+  const units =
+    ["Bytes","KB","MB","GB"];
+
+  const index =
+    Math.floor(
+      Math.log(bytes) /
+      Math.log(1024)
+    );
+
+  return (
+    parseFloat(
+      (bytes / Math.pow(1024,index))
+      .toFixed(2)
+    )
+    + " "
+    + units[index]
+  );
+
+}
+
+
+/* FILE SELECT */
+
+audioInput.addEventListener("change",() => {
+
+  if(!audioInput.files.length){
+    return;
+  }
+
+  setFile(audioInput.files[0]);
+
+});
+
+
+function setFile(file){
+
+  if(!file.type.startsWith("audio/")){
+
+    showStatus(
+      "Please choose a valid audio file.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  selectedFile = file;
+
+  fileName.textContent = file.name;
+  fileSize.textContent = formatBytes(file.size);
+
+  fileInfo.classList.add("show");
+
+  updateButton();
+
+  clearStatus();
+
+}
+
+
+/* DRAG DROP */
+
+uploadArea.addEventListener("dragover",(event) => {
+
+  event.preventDefault();
+
+  uploadArea.classList.add("dragging");
+
+});
+
+
+uploadArea.addEventListener("dragleave",() => {
+
+  uploadArea.classList.remove("dragging");
+
+});
+
+
+uploadArea.addEventListener("drop",(event) => {
+
+  event.preventDefault();
+
+  uploadArea.classList.remove("dragging");
+
+  const file =
+    event.dataTransfer.files[0];
+
+  if(file){
+    setFile(file);
+  }
+
+});
+
+
+/* CONSENT */
+
+consentCheckbox.addEventListener(
+  "change",
+  updateButton
+);
+
+
+function updateButton(){
+
+  cloneBtn.disabled =
+    !selectedFile ||
+    !consentCheckbox.checked;
+
+}
+
+
+/* STATUS */
+
+function showStatus(message,type){
+
+  statusBox.textContent = message;
+
+  statusBox.className =
+    `status show ${type}`;
+
+}
+
+
+function clearStatus(){
+
+  statusBox.textContent = "";
+
+  statusBox.className =
+    "status";
+
+}
+
+
+/* CLONE */
+
+cloneBtn.addEventListener("click",async () => {
+
+  if(!selectedFile ||
+     !consentCheckbox.checked){
+
+    return;
+  }
+
+
+  clearStatus();
+
+  result.classList.remove("show");
+
+  cloneBtn.disabled = true;
+
+  cloneBtn.innerHTML = `
+    <span class="spinner"></span>
+    Creating voice clone...
+  `;
+
+
+  try{
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      "audio",
+      selectedFile
+    );
+
+    formData.append(
+      "consent",
+      "true"
+    );
+
+
+    const response =
+      await fetch(
+        "/api/voice-clone",
+        {
+          method:"POST",
+          body:formData
+        }
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "Voice cloning service is unavailable."
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const audioUrl =
+      data.audioUrl ||
+      data.voiceUrl ||
+      data.previewUrl;
+
+
+    if(!audioUrl){
+
+      throw new Error(
+        "The server did not return a cloned voice."
+      );
+
+    }
+
+
+    resultAudio.src =
+      audioUrl;
+
+    downloadClone.href =
+      audioUrl;
+
+    result.classList.add("show");
+
+    showStatus(
+      "Voice clone created successfully.",
+      "success"
+    );
+
+
+    document.querySelectorAll(".step")
+    .forEach((step,index) => {
+
+      if(index < 3){
+        step.classList.add("active");
+      }
+
+    });
+
+
+  }catch(error){
+
+    showStatus(
+      error.message +
+      " Connect your voice-cloning provider/backend to enable real cloning.",
+      "error"
+    );
+
+  }finally{
+
+    cloneBtn.disabled =
+      !selectedFile ||
+      !consentCheckbox.checked;
+
+    cloneBtn.innerHTML = `
+
+      <svg width="18" height="18"
+           viewBox="0 0 24 24"
+           fill="none">
+
+        <path d="M12 3v18M3 12h18"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"/>
+
+      </svg>
+
+      Create Voice Clone
+    `;
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
