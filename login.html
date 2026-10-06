@@ -1,331 +1,1302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login — VoiceAI</title>
+<title>Login — VoiceAI</title>
 
-    <link rel="stylesheet" href="style.css">
+<style>
+:root{
+    --bg:#fffdf7;
+    --white:#ffffff;
+    --text:#302019;
+    --muted:#8a7970;
+    --orange:#d96b27;
+    --orange-dark:#b95217;
+    --border:#eadfd7;
+    --light:#fff4eb;
+    --shadow:0 20px 60px rgba(48,32,25,.09);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    overflow-x:hidden;
+}
+
+body{
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:var(--bg);
+    color:var(--text);
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+    width:100%;
+    height:76px;
+
+    padding:0 clamp(18px,5vw,70px);
+
+    background:rgba(255,255,255,.96);
+    border-bottom:1px solid var(--border);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    position:relative;
+    z-index:10;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    font-size:23px;
+    font-weight:800;
+    letter-spacing:-.6px;
+}
+
+.logo-symbol{
+    color:var(--orange);
+    font-size:28px;
+    font-weight:900;
+}
+
+.logo span{
+    color:var(--orange);
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:28px;
+}
+
+.nav-links a{
+    color:#67564e;
+    font-size:14px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.nav-links a:hover{
+    color:var(--orange);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.nav-login{
+    font-size:14px;
+    font-weight:700;
+}
+
+.nav-cta{
+    background:var(--text);
+    color:#fff;
+
+    padding:12px 18px;
+    border-radius:10px;
+
+    font-size:13px;
+    font-weight:800;
+}
+
+.mobile-btn{
+    display:none;
+
+    border:0;
+    background:transparent;
+
+    font-size:25px;
+    cursor:pointer;
+}
+
+/* ================= MAIN ================= */
+
+.login-page{
+    min-height:calc(100vh - 76px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:60px 20px 75px;
+}
+
+.login-wrapper{
+    width:100%;
+    max-width:470px;
+}
+
+/* ================= LOGIN CARD ================= */
+
+.login-card{
+    width:100%;
+
+    background:var(--white);
+
+    border:1px solid var(--border);
+    border-radius:24px;
+
+    padding:38px 38px 34px;
+
+    box-shadow:var(--shadow);
+}
+
+/* ================= HEADER ================= */
+
+.login-header{
+    text-align:center;
+    margin-bottom:28px;
+}
+
+.account-label{
+    display:inline-flex;
+
+    padding:7px 12px;
+
+    border-radius:999px;
+
+    background:var(--light);
+    color:var(--orange-dark);
+
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.6px;
+
+    margin-bottom:14px;
+}
+
+.login-header h1{
+    font-size:34px;
+    line-height:1.1;
+
+    letter-spacing:-1.3px;
+
+    margin-bottom:10px;
+}
+
+.login-header p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* ================= GOOGLE ================= */
+
+.google-btn{
+    width:100%;
+    height:50px;
+
+    border:1px solid #d9d0ca;
+    border-radius:11px;
+
+    background:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:11px;
+
+    color:#302019;
+
+    font-size:14px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.google-btn:hover{
+    border-color:#b9aaa1;
+    background:#faf9f7;
+    transform:translateY(-1px);
+}
+
+.google-icon{
+    width:20px;
+    height:20px;
+
+    display:grid;
+    place-items:center;
+
+    font-weight:900;
+    font-size:18px;
+}
+
+/* ================= DIVIDER ================= */
+
+.divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin:22px 0;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+
+    height:1px;
+    background:var(--border);
+
+    flex:1;
+}
+
+.divider span{
+    color:#9a8980;
+    font-size:12px;
+    font-weight:600;
+}
+
+/* ================= FORM ================= */
+
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#4b382f;
+
+    font-size:13px;
+    font-weight:700;
+}
+
+.input-wrap{
+    position:relative;
+}
+
+.form-input{
+    width:100%;
+    height:50px;
+
+    border:1px solid #ddd1c9;
+    border-radius:11px;
+
+    padding:0 15px;
+
+    background:#fff;
+
+    color:var(--text);
+
+    outline:none;
+
+    font-size:14px;
+
+    transition:.2s;
+}
+
+.password-input{
+    padding-right:50px;
+}
+
+.form-input::placeholder{
+    color:#aaa09a;
+}
+
+.form-input:focus{
+    border-color:var(--orange);
+
+    box-shadow:
+        0 0 0 3px rgba(217,107,39,.10);
+}
+
+.password-toggle{
+    position:absolute;
+
+    right:12px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    border:0;
+    background:transparent;
+
+    color:#897970;
+
+    font-size:12px;
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+/* ================= OPTIONS ================= */
+
+.form-options{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin:4px 0 20px;
+}
+
+.remember{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    color:#786860;
+    font-size:12px;
+
+    cursor:pointer;
+}
+
+.remember input{
+    width:15px;
+    height:15px;
+
+    accent-color:var(--orange);
+}
+
+.forgot{
+    color:var(--orange);
+    font-size:12px;
+    font-weight:700;
+}
+
+.forgot:hover{
+    text-decoration:underline;
+}
+
+/* ================= LOGIN BUTTON ================= */
+
+.login-submit{
+    width:100%;
+    height:51px;
+
+    border:0;
+    border-radius:11px;
+
+    background:var(--orange);
+    color:white;
+
+    font-size:14px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 9px 20px rgba(217,107,39,.20);
+
+    transition:.2s;
+}
+
+.login-submit:hover{
+    background:var(--orange-dark);
+    transform:translateY(-1px);
+}
+
+.login-submit:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+    transform:none;
+}
+
+/* ================= SIGN UP ================= */
+
+.signup{
+    text-align:center;
+
+    margin-top:22px;
+
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+.signup a{
+    color:var(--orange);
+    font-weight:800;
+}
+
+.free-note{
+    text-align:center;
+
+    margin-top:16px;
+
+    color:#9a8c84;
+
+    font-size:11px;
+}
+
+/* ================= SECURITY ================= */
+
+.security-note{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+
+    margin-top:20px;
+
+    color:#9a8c84;
+
+    font-size:10px;
+}
+
+/* ================= MESSAGE ================= */
+
+.form-message{
+    display:none;
+
+    padding:11px 13px;
+
+    margin-bottom:17px;
+
+    border-radius:9px;
+
+    background:#fff3eb;
+    border:1px solid #f0d5c2;
+
+    color:#9a4c22;
+
+    font-size:12px;
+    line-height:1.5;
+}
+
+.form-message.show{
+    display:block;
+}
+
+/* ================= FOOTER ================= */
+
+.site-footer{
+    width:100%;
+
+    background:#fff;
+
+    border-top:1px solid var(--border);
+
+    padding:48px clamp(20px,6vw,80px) 22px;
+}
+
+.footer-grid{
+    max-width:1200px;
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+        2fr
+        1fr
+        1fr
+        1fr;
+
+    gap:40px;
+}
+
+.footer-brand p{
+    max-width:310px;
+
+    margin-top:12px;
+
+    color:var(--muted);
+
+    font-size:12px;
+    line-height:1.7;
+}
+
+.footer-title{
+    margin-bottom:14px;
+
+    font-size:13px;
+    font-weight:800;
+}
+
+.footer-links a{
+    display:block;
+
+    margin-bottom:10px;
+
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+.footer-links a:hover{
+    color:var(--orange);
+}
+
+.footer-bottom{
+    max-width:1200px;
+    margin:32px auto 0;
+
+    padding-top:18px;
+
+    border-top:1px solid var(--border);
+
+    color:#9a8c84;
+
+    font-size:11px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:850px){
+
+    .nav-links,
+    .nav-actions{
+        display:none;
+    }
+
+    .mobile-btn{
+        display:block;
+    }
+
+    .login-page{
+        padding:40px 16px 55px;
+    }
+
+    .footer-grid{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    .navbar{
+        height:68px;
+        padding:0 17px;
+    }
+
+    .logo{
+        font-size:21px;
+    }
+
+    .login-page{
+        min-height:auto;
+        padding:35px 15px 55px;
+    }
+
+    .login-card{
+        padding:28px 19px 25px;
+        border-radius:20px;
+    }
+
+    .login-header h1{
+        font-size:30px;
+    }
+
+    .form-options{
+        align-items:flex-start;
+    }
+
+    .footer-grid{
+        grid-template-columns:1fr;
+        gap:28px;
+    }
+}
+</style>
 </head>
+
 
 <body>
 
+
+<!-- ================= NAVBAR ================= -->
+
 <header class="navbar">
 
-    <div class="logo">
-        <a href="index.html">
-            <span>∿</span> VoiceAI
-        </a>
-    </div>
+    <a href="index.html" class="logo">
+        <span class="logo-symbol">∿</span>
+        Voice<span>AI</span>
+    </a>
+
 
     <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="tools.html">
+            AI Tools
+        </a>
+
+        <a href="voices.html">
+            Voices
+        </a>
+
+        <a href="studio.html">
+            Studio
+        </a>
+
+        <a href="pricing.html">
+            Pricing
+        </a>
+
     </nav>
 
+
     <div class="nav-actions">
-        <a href="login.html" class="login-btn">Login</a>
-        <a href="pricing.html" class="nav-button">Get Started</a>
+
+        <a
+            href="login.html"
+            class="nav-login">
+            Login
+        </a>
+
+        <a
+            href="pricing.html"
+            class="nav-cta">
+            Get Started
+        </a>
+
     </div>
+
+
+    <button
+        class="mobile-btn"
+        id="mobileBtn">
+        ☰
+    </button>
 
 </header>
 
 
-<main>
 
-<section class="login-section">
+<!-- ================= LOGIN ================= -->
 
-    <div class="login-card">
+<main class="login-page">
 
-        <span>ACCOUNT</span>
+    <div class="login-wrapper">
 
-        <h1>
-            Welcome back.
-        </h1>
-
-        <p class="login-subtitle">
-            Sign in to continue creating with VoiceAI.
-        </p>
+        <section class="login-card">
 
 
-        <!-- GOOGLE -->
+            <div class="login-header">
 
-        <button
-            type="button"
-            class="google-login-btn"
-            id="googleLogin"
-        >
+                <span class="account-label">
+                    ACCOUNT
+                </span>
 
-            <span class="google-icon">
-                G
-            </span>
+                <h1>
+                    Welcome back.
+                </h1>
 
-            Continue with Google
+                <p>
+                    Sign in to continue creating
+                    with VoiceAI.
+                </p>
 
-        </button>
-
-
-        <div class="login-divider">
-
-            <span>OR</span>
-
-        </div>
+            </div>
 
 
-        <!-- EMAIL -->
+            <!-- GOOGLE -->
 
-        <form id="loginForm">
+            <button
+                type="button"
+                class="google-btn"
+                id="googleBtn">
 
-            <label for="email">
-                Email address
-            </label>
+                <span class="google-icon">
+                    G
+                </span>
 
-            <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                autocomplete="email"
-                required
-            >
+                Continue with Google
 
-
-            <label for="password">
-                Password
-            </label>
-
-            <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-                required
-            >
+            </button>
 
 
-            <div class="login-options">
+            <div class="divider">
 
-                <label class="remember-option">
+                <span>
+                    OR
+                </span>
+
+            </div>
+
+
+            <div
+                class="form-message"
+                id="formMessage">
+            </div>
+
+
+            <form id="loginForm">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email address
+                    </label>
 
                     <input
-                        type="checkbox"
-                        id="rememberMe"
-                    >
+                        type="email"
+                        id="email"
+                        class="form-input"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required>
 
-                    <span>
-                        Remember me
-                    </span>
-
-                </label>
+                </div>
 
 
-                <a href="#" id="forgotPassword">
-                    Forgot password?
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-wrap">
+
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-input password-input"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle">
+
+                            Show
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="form-options">
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="remember">
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="forgot-password.html"
+                        class="forgot">
+
+                        Forgot password?
+
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <button
+                    type="submit"
+                    class="login-submit"
+                    id="loginSubmit">
+
+                    Login
+
+                </button>
+
+
+            </form>
+
+
+            <div class="signup">
+
+                Don't have an account?
+
+                <a href="pricing.html">
+                    Create one
                 </a>
 
             </div>
 
 
-            <button
-                type="submit"
-                class="primary-btn login-submit"
-            >
-                Login
-            </button>
+            <div class="free-note">
 
-        </form>
+                Free accounts include 5 AI uses per day.
+
+            </div>
 
 
-        <p class="create-account">
+            <div class="security-note">
 
-            Don't have an account?
+                🔒
+                Secure authentication
 
-            <a href="signup.html">
-                Create one
-            </a>
+            </div>
 
-        </p>
-
-
-        <p class="login-note">
-            Free accounts include 5 AI uses per day.
-        </p>
+        </section>
 
     </div>
-
-</section>
 
 </main>
 
 
-<footer>
 
-    <div class="footer-brand">
+<!-- ================= FOOTER ================= -->
 
-        <h2>∿ VoiceAI</h2>
+<footer class="site-footer">
 
-        <p>
-            AI voice and audio creation platform.
-        </p>
+    <div class="footer-grid">
+
+
+        <div class="footer-brand">
+
+            <a href="index.html" class="logo">
+
+                <span class="logo-symbol">∿</span>
+
+                Voice<span>AI</span>
+
+            </a>
+
+            <p>
+                AI voice and creative content platform
+                for creators, businesses and teams.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <div class="footer-title">
+                Platform
+            </div>
+
+            <div class="footer-links">
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="tools.html">
+                    AI Tools
+                </a>
+
+                <a href="voices.html">
+                    Voices
+                </a>
+
+                <a href="studio.html">
+                    Studio
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="footer-title">
+                Company
+            </div>
+
+            <div class="footer-links">
+
+                <a href="index.html#about">
+                    About
+                </a>
+
+                <a href="index.html#faq">
+                    FAQ
+                </a>
+
+                <a href="index.html#contact">
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="footer-title">
+                Plans
+            </div>
+
+            <div class="footer-links">
+
+                <a href="pricing.html">
+                    Free
+                </a>
+
+                <a href="pricing.html">
+                    Premium
+                </a>
+
+                <a href="forgot-password.html">
+                    Forgot Password
+                </a>
+
+            </div>
+
+        </div>
 
     </div>
 
 
-    <div>
+    <div class="footer-bottom">
 
-        <h4>Platform</h4>
-
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-
-    </div>
-
-
-    <div>
-
-        <h4>Company</h4>
-
-        <a href="about.html">About</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
-
-    </div>
-
-
-    <div>
-
-        <h4>Plans</h4>
-
-        <a href="pricing.html">Free</a>
-        <a href="pricing.html">Premium</a>
+        © 2026 VoiceAI. All rights reserved.
 
     </div>
 
 </footer>
 
 
-<script src="script.js"></script>
-
 
 <script>
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+/* ================= PASSWORD ================= */
+
+const password =
+    document.getElementById("password");
+
+const passwordToggle =
+    document.getElementById(
+        "passwordToggle"
+    );
 
 
-        /* =========================
-           GOOGLE LOGIN
-        ========================= */
+passwordToggle.addEventListener(
+    "click",
+    () => {
 
-        const googleLogin =
-            document.getElementById(
-                "googleLogin"
-            );
+        if(password.type === "password"){
 
+            password.type = "text";
 
-        if (googleLogin) {
+            passwordToggle.textContent =
+                "Hide";
 
-            googleLogin.addEventListener(
-                "click",
-                function () {
+        }else{
 
-                    alert(
-                        "Google Login is ready for OAuth integration."
-                    );
+            password.type = "password";
 
-                }
-            );
-
-        }
-
-
-        /* =========================
-           EMAIL LOGIN DEMO
-        ========================= */
-
-        const loginForm =
-            document.getElementById(
-                "loginForm"
-            );
-
-
-        if (loginForm) {
-
-            loginForm.addEventListener(
-                "submit",
-                function (event) {
-
-                    event.preventDefault();
-
-
-                    const email =
-                        document.getElementById(
-                            "email"
-                        ).value.trim();
-
-
-                    const password =
-                        document.getElementById(
-                            "password"
-                        ).value;
-
-
-                    if (!email || !password) {
-
-                        alert(
-                            "Please enter your email and password."
-                        );
-
-                        return;
-
-                    }
-
-
-                    alert(
-                        "Login UI is working. Connect your authentication backend to enable real login."
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* =========================
-           FORGOT PASSWORD
-        ========================= */
-
-        const forgotPassword =
-            document.getElementById(
-                "forgotPassword"
-            );
-
-
-        if (forgotPassword) {
-
-            forgotPassword.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-
-                    alert(
-                        "Password reset will be connected to the authentication backend."
-                    );
-
-                }
-            );
+            passwordToggle.textContent =
+                "Show";
 
         }
 
     }
+);
 
+
+/* ================= LOGIN ================= */
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginSubmit =
+    document.getElementById("loginSubmit");
+
+const formMessage =
+    document.getElementById("formMessage");
+
+
+loginForm.addEventListener(
+    "submit",
+    async (event) => {
+
+        event.preventDefault();
+
+
+        const email =
+            document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        const passwordValue =
+            password.value;
+
+
+        if(!email || !passwordValue){
+
+            showMessage(
+                "Please enter your email and password."
+            );
+
+            return;
+
+        }
+
+
+        loginSubmit.disabled = true;
+
+        loginSubmit.textContent =
+            "Signing in...";
+
+
+        try{
+
+            /*
+             * REAL BACKEND
+             *
+             * POST /api/auth/login
+             *
+             * Expected response:
+             *
+             * {
+             *   "success": true
+             * }
+             */
+
+            const response =
+                await fetch(
+                    "/api/auth/login",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:JSON.stringify({
+
+                            email:email,
+
+                            password:
+                                passwordValue,
+
+                            remember:
+                                document
+                                .getElementById(
+                                    "remember"
+                                ).checked
+
+                        })
+
+                    }
+                );
+
+
+            if(!response.ok){
+
+                throw new Error(
+                    "Login failed"
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if(data.success){
+
+                window.location.href =
+                    "profile.html";
+
+            }else{
+
+                showMessage(
+                    data.message ||
+                    "Invalid email or password."
+                );
+
+            }
+
+        }catch(error){
+
+            showMessage(
+                "Login service is not connected yet. Connect /api/auth/login to enable real account login."
+            );
+
+        }
+
+
+        loginSubmit.disabled = false;
+
+        loginSubmit.textContent =
+            "Login";
+
+    }
+);
+
+
+function showMessage(message){
+
+    formMessage.textContent =
+        message;
+
+    formMessage.classList.add(
+        "show"
+    );
+
+}
+
+
+/* ================= GOOGLE ================= */
+
+document
+.getElementById("googleBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        /*
+         * REAL GOOGLE AUTH
+         *
+         * Connect this button to
+         * your Google OAuth backend.
+         */
+
+        window.location.href =
+            "/api/auth/google";
+
+    }
+);
+
+
+/* ================= MOBILE MENU ================= */
+
+document
+.getElementById("mobileBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        const nav =
+            document.querySelector(
+                ".nav-links"
+            );
+
+        const actions =
+            document.querySelector(
+                ".nav-actions"
+            );
+
+
+        if(nav.style.display === "flex"){
+
+            nav.style.display =
+                "none";
+
+            actions.style.display =
+                "none";
+
+            return;
+
+        }
+
+
+        nav.style.display =
+            "flex";
+
+        nav.style.position =
+            "absolute";
+
+        nav.style.top =
+            "68px";
+
+        nav.style.left =
+            "0";
+
+        nav.style.right =
+            "0";
+
+        nav.style.padding =
+            "20px";
+
+        nav.style.background =
+            "#ffffff";
+
+        nav.style.borderBottom =
+            "1px solid #eadfd7";
+
+        nav.style.flexDirection =
+            "column";
+
+        nav.style.alignItems =
+            "flex-start";
+
+
+        actions.style.display =
+            "flex";
+
+        actions.style.position =
+            "absolute";
+
+        actions.style.top =
+            "250px";
+
+        actions.style.left =
+            "20px";
+
+        actions.style.right =
+            "20px";
+
+        actions.style.padding =
+            "15px";
+
+        actions.style.background =
+            "#ffffff";
+
+        actions.style.border =
+            "1px solid #eadfd7";
+
+        actions.style.borderRadius =
+            "12px";
+
+    }
 );
 
 </script>
