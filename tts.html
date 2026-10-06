@@ -4,1465 +4,1530 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Text to Speech — VoiceAI</title>
+<title>Text to Speech | VoiceAI</title>
 
 <style>
-:root{
-    --bg:#fffdf8;
-    --white:#fff;
-    --text:#302019;
-    --muted:#81736c;
-    --orange:#d96b27;
-    --orange-dark:#b95217;
-    --orange-soft:#fff1e6;
-    --border:#eadfd7;
-    --green:#31834a;
-    --shadow:0 18px 55px rgba(48,32,25,.08);
-}
-
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-html{
-    scroll-behavior:smooth;
+:root{
+  --primary:#6c45f5;
+  --primary-dark:#5935d8;
+  --text:#17151d;
+  --muted:#777481;
+  --border:#e6e4ed;
+  --bg:#f7f7fb;
+  --white:#fff;
+  --success:#087443;
+  --danger:#b42318;
 }
 
 body{
-    font-family:Inter,Arial,Helvetica,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    overflow-x:hidden;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
 }
 
 a{
-    color:inherit;
-    text-decoration:none;
+  text-decoration:none;
+  color:inherit;
 }
 
 button,
 input,
 textarea,
 select{
-    font:inherit;
+  font:inherit;
 }
-
 
 /* NAVBAR */
 
 .navbar{
-    height:76px;
-    width:100%;
-    background:rgba(255,255,255,.97);
-    border-bottom:1px solid var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 6%;
-    position:sticky;
-    top:0;
-    z-index:1000;
+  height:74px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:0 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
 .logo{
-    font-size:24px;
-    font-weight:850;
-    letter-spacing:-1px;
+  font-size:23px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
 .logo span{
-    color:var(--orange);
+  color:var(--primary);
 }
 
 .nav-links{
-    display:flex;
-    gap:27px;
-    align-items:center;
+  display:flex;
+  align-items:center;
+  gap:25px;
+  font-size:14px;
+  font-weight:700;
+  color:#5d5965;
 }
 
-.nav-links a{
-    color:#604d43;
-    font-size:14px;
-    font-weight:650;
-}
-
-.nav-links a:hover{
-    color:var(--orange);
+.nav-links a:hover,
+.nav-links .active{
+  color:var(--primary);
 }
 
 .nav-actions{
-    display:flex;
-    align-items:center;
-    gap:10px;
+  display:flex;
+  gap:9px;
+  align-items:center;
 }
 
-.login-btn{
-    padding:10px 16px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    font-size:14px;
-    font-weight:700;
+.nav-btn{
+  padding:10px 15px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  font-size:13px;
+  font-weight:800;
 }
 
-.nav-button{
-    padding:11px 18px;
-    background:var(--orange);
-    color:#fff;
-    border-radius:10px;
-    font-size:14px;
-    font-weight:750;
+.upgrade{
+  color:#fff;
+  background:var(--primary);
+  border-color:var(--primary);
 }
 
-.mobile-menu-btn{
-    display:none;
-    border:0;
-    background:none;
-    cursor:pointer;
-    color:var(--text);
+/* PAGE */
+
+.page{
+  width:min(1180px,92%);
+  margin:auto;
+  padding:55px 0 75px;
 }
 
-.mobile-menu{
-    display:none;
+.hero{
+  margin-bottom:30px;
 }
 
-
-/* PAGE HERO */
-
-.page-hero{
-    padding:65px 6% 35px;
+.badge{
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:20px;
+  background:#eeeaff;
+  color:var(--primary);
+  font-size:11px;
+  font-weight:850;
+  margin-bottom:14px;
 }
 
-.page-hero-inner{
-    max-width:1200px;
-    margin:auto;
+.hero h1{
+  font-size:clamp(34px,5vw,54px);
+  letter-spacing:-1.6px;
+  line-height:1.08;
+  margin-bottom:12px;
 }
 
-.eyebrow{
-    display:inline-block;
-    padding:7px 12px;
-    border-radius:30px;
-    background:var(--orange-soft);
-    color:var(--orange);
-    font-size:11px;
-    font-weight:850;
-    letter-spacing:.8px;
-    text-transform:uppercase;
-    margin-bottom:15px;
+.hero h1 span{
+  color:var(--primary);
 }
 
-.page-hero h1{
-    font-size:clamp(36px,5vw,56px);
-    letter-spacing:-2px;
-    line-height:1.05;
-    margin-bottom:15px;
+.hero p{
+  max-width:700px;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:15px;
 }
-
-.page-hero p{
-    max-width:700px;
-    color:var(--muted);
-    font-size:16px;
-    line-height:1.7;
-}
-
 
 /* WORKSPACE */
 
 .workspace{
-    padding:25px 6% 80px;
+  display:grid;
+  grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
+  gap:20px;
+  align-items:start;
 }
 
-.workspace-grid{
-    max-width:1200px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);
-    gap:22px;
+.panel{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:23px;
 }
 
-
-/* CARDS */
-
-.card{
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:20px;
-    box-shadow:var(--shadow);
+.panel-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:20px;
 }
 
-
-/* SCRIPT CARD */
-
-.script-card{
-    padding:25px;
+.panel-title h2{
+  font-size:18px;
 }
 
-.card-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-    margin-bottom:18px;
+.usage{
+  font-size:11px;
+  font-weight:800;
+  color:var(--primary);
+  background:#f0ecff;
+  padding:7px 10px;
+  border-radius:20px;
+  white-space:nowrap;
 }
 
-.card-title{
-    display:flex;
-    align-items:center;
-    gap:10px;
+/* SCRIPT */
+
+.field{
+  margin-bottom:18px;
 }
 
-.card-icon{
-    width:40px;
-    height:40px;
-    border-radius:11px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:var(--orange-soft);
-    color:var(--orange);
+.field label{
+  display:block;
+  margin-bottom:8px;
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.3px;
 }
 
-.card-icon svg{
-    width:20px;
-    height:20px;
+textarea,
+select,
+input[type="text"]{
+  width:100%;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:11px;
+  outline:none;
 }
 
-.card-title h2{
-    font-size:16px;
+textarea{
+  min-height:270px;
+  padding:15px;
+  resize:vertical;
+  line-height:1.65;
+  font-size:14px;
 }
 
-.card-title p{
-    font-size:11px;
-    color:var(--muted);
-    margin-top:3px;
+textarea:focus,
+select:focus,
+input:focus{
+  border-color:#a897ff;
 }
 
-.character-count{
-    color:var(--muted);
-    font-size:12px;
-    white-space:nowrap;
+.counter{
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  color:#8a8791;
+  font-size:11px;
 }
 
-.script-input{
-    width:100%;
-    min-height:360px;
-    resize:vertical;
-    border:1px solid var(--border);
-    border-radius:15px;
-    padding:17px;
-    outline:none;
-    color:var(--text);
-    background:#fff;
-    font-size:15px;
-    line-height:1.7;
+/* CONTROLS */
+
+.controls{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
 }
 
-.script-input:focus{
-    border-color:var(--orange);
-    box-shadow:0 0 0 4px rgba(217,107,39,.08);
+select{
+  padding:12px;
+  font-size:13px;
 }
 
-.script-bottom{
-    margin-top:14px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
+.range-wrap{
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:11px;
 }
 
-.script-hint{
-    color:var(--muted);
-    font-size:12px;
+.range-top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:9px;
+  font-size:12px;
+  font-weight:700;
 }
 
-
-/* SETTINGS */
-
-.settings-card{
-    padding:23px;
+input[type="range"]{
+  width:100%;
+  accent-color:var(--primary);
 }
-
-.setting{
-    margin-bottom:20px;
-}
-
-.setting:last-child{
-    margin-bottom:0;
-}
-
-.setting label{
-    display:block;
-    font-size:12px;
-    font-weight:800;
-    margin-bottom:8px;
-}
-
-.select-wrap{
-    position:relative;
-}
-
-.setting select{
-    width:100%;
-    height:48px;
-    border:1px solid var(--border);
-    border-radius:11px;
-    background:#fff;
-    color:var(--text);
-    padding:0 13px;
-    outline:none;
-}
-
-.setting select:focus{
-    border-color:var(--orange);
-}
-
-
-/* VOICE SELECT */
-
-.voice-option{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.voice-avatar{
-    width:30px;
-    height:30px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:var(--orange-soft);
-    color:var(--orange);
-    font-size:11px;
-    font-weight:800;
-}
-
-
-/* SLIDERS */
-
-.range-row{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.range-row input{
-    flex:1;
-    accent-color:var(--orange);
-}
-
-.range-value{
-    min-width:38px;
-    text-align:right;
-    font-size:12px;
-    color:var(--muted);
-}
-
-
-/* USAGE */
-
-.usage-box{
-    padding:14px;
-    border:1px solid var(--border);
-    border-radius:13px;
-    background:#fffaf5;
-    margin-bottom:20px;
-}
-
-.usage-top{
-    display:flex;
-    justify-content:space-between;
-    font-size:12px;
-    margin-bottom:9px;
-}
-
-.usage-top span:last-child{
-    color:var(--orange);
-    font-weight:800;
-}
-
-.usage-bar{
-    width:100%;
-    height:6px;
-    background:#eadfd7;
-    border-radius:20px;
-    overflow:hidden;
-}
-
-.usage-progress{
-    width:20%;
-    height:100%;
-    background:var(--orange);
-    border-radius:20px;
-}
-
 
 /* BUTTONS */
 
+.button-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:11px;
+  margin-top:20px;
+}
+
+button{
+  cursor:pointer;
+}
+
 .preview-btn,
 .generate-btn{
-    width:100%;
-    height:50px;
-    border-radius:11px;
-    font-weight:800;
-    cursor:pointer;
+  border-radius:11px;
+  padding:13px;
+  font-size:13px;
+  font-weight:850;
 }
 
 .preview-btn{
-    background:#fff;
-    border:1px solid var(--border);
-    color:var(--text);
-    margin-bottom:10px;
-}
-
-.preview-btn:hover{
-    border-color:var(--orange);
-    color:var(--orange);
+  background:#fff;
+  border:1px solid var(--border);
+  color:var(--text);
 }
 
 .generate-btn{
-    background:var(--orange);
-    border:0;
-    color:#fff;
+  background:var(--primary);
+  border:1px solid var(--primary);
+  color:#fff;
 }
 
 .generate-btn:hover{
-    background:var(--orange-dark);
+  background:var(--primary-dark);
 }
 
 .generate-btn:disabled{
-    opacity:.6;
-    cursor:not-allowed;
+  opacity:.6;
+  cursor:not-allowed;
 }
 
+/* RIGHT PANEL */
 
-/* OUTPUT */
-
-.output-section{
-    max-width:1200px;
-    margin:0 auto 80px;
-    padding:0 6%;
+.voice-card{
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:12px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.output-card{
-    padding:25px;
-    display:none;
+.voice-card:hover{
+  border-color:#bcb0ff;
 }
 
-.output-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-    margin-bottom:18px;
+.voice-card.selected{
+  border-color:var(--primary);
+  background:#f8f6ff;
 }
 
-.output-status{
-    display:flex;
-    align-items:center;
-    gap:7px;
-    color:var(--green);
-    font-size:12px;
-    font-weight:800;
+.voice-top{
+  display:flex;
+  align-items:center;
+  gap:11px;
 }
 
-.output-status-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:var(--green);
+.voice-avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eeeaff;
+  color:var(--primary);
+  font-weight:900;
 }
 
-.audio-box{
-    padding:18px;
-    border:1px solid var(--border);
-    border-radius:14px;
-    background:#fffaf5;
+.voice-info{
+  flex:1;
 }
 
-.audio-box audio{
-    width:100%;
+.voice-info h3{
+  font-size:13px;
+  margin-bottom:4px;
+}
+
+.voice-info p{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.radio{
+  width:18px;
+  height:18px;
+  accent-color:var(--primary);
+}
+
+.preview-small{
+  width:100%;
+  margin-top:11px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:9px;
+  padding:8px;
+  font-size:11px;
+  font-weight:800;
+}
+
+/* AUDIO RESULT */
+
+.result{
+  margin-top:20px;
+  display:none;
+}
+
+.result.show{
+  display:block;
+}
+
+.result-box{
+  border:1px solid var(--border);
+  background:#faf9ff;
+  border-radius:14px;
+  padding:17px;
+}
+
+.result-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:13px;
+}
+
+.result-title h3{
+  font-size:14px;
+}
+
+.result-icon{
+  width:32px;
+  height:32px;
+  border-radius:9px;
+  background:#e9f9f0;
+  color:var(--success);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+}
+
+audio{
+  width:100%;
+}
+
+.download-row{
+  display:flex;
+  gap:9px;
+  margin-top:12px;
+}
+
+.download-btn,
+.new-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:11px 14px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:850;
 }
 
 .download-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    min-height:45px;
-    padding:0 17px;
-    margin-top:14px;
-    border-radius:10px;
-    background:var(--orange);
-    color:#fff;
-    font-size:13px;
-    font-weight:800;
+  background:#17151d;
+  color:#fff;
 }
 
-.download-btn:hover{
-    background:var(--orange-dark);
+.new-btn{
+  background:#fff;
+  border:1px solid var(--border);
 }
 
+/* STATUS */
 
-/* ERROR / INFO */
-
-.message{
-    display:none;
-    margin-top:15px;
-    padding:12px 14px;
-    border-radius:10px;
-    font-size:12px;
-    line-height:1.5;
+.status{
+  display:none;
+  margin-top:14px;
+  padding:11px 13px;
+  border-radius:9px;
+  font-size:12px;
+  line-height:1.5;
 }
 
-.message.error{
-    display:block;
-    color:#a13c31;
-    background:#fff0ee;
-    border:1px solid #efccc7;
+.status.show{
+  display:block;
 }
 
-.message.success{
-    display:block;
-    color:#27743a;
-    background:#edf9f0;
-    border:1px solid #ccebd3;
+.status.error{
+  background:#fff0f0;
+  color:var(--danger);
 }
 
+.status.success{
+  background:#edfdf3;
+  color:var(--success);
+}
+
+/* NOTE */
+
+.note{
+  margin-top:16px;
+  padding:13px;
+  background:#f8f7ff;
+  color:#6f6b78;
+  border-radius:10px;
+  font-size:11px;
+  line-height:1.6;
+}
 
 /* FOOTER */
 
-.site-footer{
-    background:#2d1d16;
-    color:#fff;
-    padding:50px 6% 25px;
+footer{
+  background:#fff;
+  border-top:1px solid var(--border);
+  padding:28px 20px;
+  text-align:center;
+  color:#888;
+  font-size:12px;
 }
-
-.footer-main{
-    max-width:1200px;
-    margin:auto;
-    display:grid;
-    grid-template-columns:1.5fr 1fr 1fr 1fr;
-    gap:40px;
-}
-
-.footer-brand h3{
-    font-size:22px;
-    margin-bottom:10px;
-}
-
-.footer-brand h3 span{
-    color:#f18a45;
-}
-
-.footer-brand p,
-.footer-column a{
-    color:#c8b9b1;
-    font-size:13px;
-}
-
-.footer-brand p{
-    max-width:300px;
-    line-height:1.7;
-}
-
-.footer-column h4{
-    font-size:13px;
-    margin-bottom:15px;
-}
-
-.footer-column a{
-    display:block;
-    margin-bottom:10px;
-}
-
-.footer-column a:hover{
-    color:#fff;
-}
-
-.footer-bottom{
-    max-width:1200px;
-    margin:35px auto 0;
-    padding-top:20px;
-    border-top:1px solid rgba(255,255,255,.12);
-    text-align:center;
-    color:#9f9189;
-    font-size:12px;
-}
-
 
 /* RESPONSIVE */
 
 @media(max-width:950px){
 
-    .nav-links,
-    .nav-actions{
-        display:none;
-    }
+  .nav-links{
+    gap:14px;
+  }
 
-    .mobile-menu-btn{
-        display:block;
-    }
+  .workspace{
+    grid-template-columns:1fr;
+  }
 
-    .mobile-menu{
-        position:absolute;
-        top:76px;
-        left:0;
-        width:100%;
-        background:#fff;
-        border-bottom:1px solid var(--border);
-        padding:15px 20px;
-    }
-
-    .mobile-menu.active{
-        display:block;
-    }
-
-    .mobile-menu a{
-        display:block;
-        padding:13px 4px;
-        border-bottom:1px solid #f1e9e3;
-        font-size:14px;
-        font-weight:700;
-    }
-
-    .workspace-grid{
-        grid-template-columns:1fr;
-    }
-
-    .settings-card{
-        order:2;
-    }
-
-    .script-card{
-        order:1;
-    }
-
-    .footer-main{
-        grid-template-columns:1fr 1fr;
-    }
 }
 
-@media(max-width:600px){
+@media(max-width:700px){
 
-    .navbar{
-        padding:0 18px;
-    }
+  .navbar{
+    padding:0 18px;
+  }
 
-    .page-hero{
-        padding:45px 18px 25px;
-    }
+  .nav-links{
+    display:none;
+  }
 
-    .workspace{
-        padding:20px 14px 60px;
-    }
+  .nav-actions .profile{
+    display:none;
+  }
 
-    .script-card,
-    .settings-card,
-    .output-card{
-        padding:18px;
-        border-radius:17px;
-    }
+  .page{
+    padding-top:38px;
+  }
 
-    .script-input{
-        min-height:280px;
-    }
+  .controls{
+    grid-template-columns:1fr;
+  }
 
-    .script-bottom{
-        align-items:flex-start;
-        flex-direction:column;
-    }
+  .button-row{
+    grid-template-columns:1fr;
+  }
 
-    .output-section{
-        padding:0 14px;
-    }
+  .panel{
+    padding:18px;
+  }
 
-    .output-header{
-        align-items:flex-start;
-        flex-direction:column;
-    }
+  textarea{
+    min-height:220px;
+  }
 
-    .footer-main{
-        grid-template-columns:1fr;
-    }
+}
+
+@media(max-width:450px){
+
+  .hero h1{
+    font-size:34px;
+  }
+
+  .panel-title{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .usage{
+    align-self:flex-start;
+  }
+
+  .download-row{
+    flex-direction:column;
+  }
+
+  .download-btn,
+  .new-btn{
+    width:100%;
+  }
+
 }
 </style>
 </head>
 
 <body>
 
-
 <!-- NAVBAR -->
 
 <header class="navbar">
 
-    <a href="index.html" class="logo">
-        ∿ <span>VoiceAI</span>
-    </a>
+<a href="index.html" class="logo">
+  ∿ <span>Voice</span>AI
+</a>
 
-    <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
-    </nav>
+<nav class="nav-links">
+  <a href="index.html">Home</a>
+  <a href="tools.html" class="active">AI Tools</a>
+  <a href="voices.html">Voices</a>
+  <a href="studio.html">Studio</a>
+  <a href="pricing.html">Pricing</a>
+</nav>
 
-    <div class="nav-actions">
-        <a href="profile.html" class="login-btn">Profile</a>
-        <a href="pricing.html" class="nav-button">Upgrade</a>
-    </div>
+<div class="nav-actions">
+  <a href="profile.html" class="nav-btn profile">
+    Profile
+  </a>
 
-    <button
-        class="mobile-menu-btn"
-        id="mobileMenuBtn"
-        aria-label="Open menu"
-    >
-        <svg width="25" height="25" viewBox="0 0 24 24"
-             fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-    </button>
-
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="profile.html">Profile</a>
-    </div>
+  <a href="pricing.html" class="nav-btn upgrade">
+    Upgrade
+  </a>
+</div>
 
 </header>
 
 
-<!-- PAGE HEADER -->
+<main class="page">
 
-<section class="page-hero">
+<!-- HERO -->
 
-    <div class="page-hero-inner">
+<section class="hero">
 
-        <div class="eyebrow">
-            AI Voice Generator
-        </div>
+<div class="badge">
+  AI TEXT TO SPEECH
+</div>
 
-        <h1>
-            Text to Speech
-        </h1>
+<h1>
+  Turn your words into
+  <span>natural voice.</span>
+</h1>
 
-        <p>
-            Turn your script into natural-sounding speech.
-            Choose a voice, adjust delivery and generate
-            professional audio for your content.
-        </p>
-
-    </div>
+<p>
+  Create professional voiceovers for advertisements, videos,
+  podcasts, reels, presentations and more.
+</p>
 
 </section>
 
 
-<!-- WORKSPACE -->
+<section class="workspace">
 
-<main class="workspace">
 
-    <div class="workspace-grid">
+<!-- LEFT -->
 
+<div>
 
-        <!-- SCRIPT -->
+<div class="panel">
 
-        <section class="card script-card">
+<div class="panel-title">
 
-            <div class="card-top">
+<h2>Your Script</h2>
 
-                <div class="card-title">
+<div class="usage">
+  Free usage: <span id="usageCount">1</span>/5 today
+</div>
 
-                    <div class="card-icon">
+</div>
 
-                        <svg viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.8">
-                            <path d="M6 4h12"/>
-                            <path d="M6 8h12"/>
-                            <path d="M6 12h8"/>
-                            <path d="M6 16h10"/>
-                            <path d="M6 20h7"/>
-                        </svg>
 
-                    </div>
+<div class="field">
 
-                    <div>
-                        <h2>Your Script</h2>
-                        <p>Write or paste your content</p>
-                    </div>
+<label for="scriptInput">
+  SCRIPT
+</label>
 
-                </div>
+<textarea
+id="scriptInput"
+maxlength="5000"
+placeholder="Type or paste your script here..."></textarea>
 
-                <div
-                    class="character-count"
-                    id="characterCount"
-                >
-                    0 / 5000
-                </div>
+<div class="counter">
+<span>Maximum 5,000 characters</span>
+<span><b id="characterCount">0</b>/5000</span>
+</div>
 
-            </div>
+</div>
 
 
-            <textarea
-                id="scriptInput"
-                class="script-input"
-                maxlength="5000"
-                placeholder="Type or paste your script here...
+<div class="controls">
 
-Example:
-Welcome to VoiceAI. Create natural AI voiceovers for videos, ads, podcasts and more."
-            ></textarea>
 
+<div class="field">
 
-            <div class="script-bottom">
+<label for="language">
+  LANGUAGE
+</label>
 
-                <span class="script-hint">
-                    Recommended: short paragraphs for natural delivery.
-                </span>
+<select id="language">
 
-                <button
-                    type="button"
-                    class="preview-btn"
-                    id="previewBtn"
-                    style="width:auto;padding:0 16px;margin:0;"
-                >
-                    Preview Voice
-                </button>
+<option value="en-US">
+  English — United States
+</option>
 
-            </div>
+<option value="en-GB">
+  English — United Kingdom
+</option>
 
-        </section>
+<option value="hi-IN">
+  Hindi — India
+</option>
 
+<option value="gu-IN">
+  Gujarati — India
+</option>
 
-        <!-- SETTINGS -->
+</select>
 
-        <aside class="card settings-card">
+</div>
 
-            <div class="card-top">
 
-                <div class="card-title">
+<div class="field">
 
-                    <div class="card-icon">
+<label for="voiceSelect">
+  VOICE
+</label>
 
-                        <svg viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.8">
-                            <path d="M12 3v18"/>
-                            <path d="M3 12h18"/>
-                            <circle cx="12" cy="12" r="8"/>
-                        </svg>
+<select id="voiceSelect">
 
-                    </div>
+<option value="alloy">
+  David — Professional Male
+</option>
 
-                    <div>
-                        <h2>Voice Settings</h2>
-                        <p>Customize your output</p>
-                    </div>
+<option value="onyx">
+  Marcus — Deep & Confident
+</option>
 
-                </div>
+<option value="nova">
+  Sarah — Warm Female
+</option>
 
-            </div>
+<option value="shimmer">
+  Emma — Clear & Friendly
+</option>
 
+</select>
 
-            <!-- USAGE -->
+</div>
 
-            <div class="usage-box">
 
-                <div class="usage-top">
-                    <span>Free usage</span>
-                    <span id="usageText">1 / 5 today</span>
-                </div>
+<div class="field">
 
-                <div class="usage-bar">
-                    <div
-                        class="usage-progress"
-                        id="usageProgress"
-                    ></div>
-                </div>
+<label for="style">
+  DELIVERY STYLE
+</label>
 
-            </div>
+<select id="style">
 
+<option value="natural">
+  Natural
+</option>
 
-            <!-- VOICE -->
+<option value="professional">
+  Professional
+</option>
 
-            <div class="setting">
+<option value="advertisement">
+  Advertisement
+</option>
 
-                <label for="voiceSelect">
-                    Voice
-                </label>
+<option value="energetic">
+  Energetic
+</option>
 
-                <select id="voiceSelect">
+<option value="calm">
+  Calm
+</option>
 
-                    <option value="alloy">
-                        David — Professional Male
-                    </option>
+</select>
 
-                    <option value="onyx">
-                        Marcus — Deep & Confident
-                    </option>
+</div>
 
-                    <option value="nova">
-                        Sarah — Warm Female
-                    </option>
 
-                    <option value="shimmer">
-                        Emma — Clear & Friendly
-                    </option>
+<div class="field">
 
-                </select>
+<label>
+  SPEED
+</label>
 
-            </div>
+<div class="range-wrap">
 
+<div class="range-top">
+<span>Slow</span>
+<strong id="speedValue">1.0x</strong>
+<span>Fast</span>
+</div>
 
-            <!-- LANGUAGE -->
+<input
+id="speed"
+type="range"
+min="0.5"
+max="2"
+step="0.1"
+value="1">
 
-            <div class="setting">
+</div>
 
-                <label for="languageSelect">
-                    Language
-                </label>
+</div>
 
-                <select id="languageSelect">
+</div>
 
-                    <option value="en-US">
-                        English — US
-                    </option>
 
-                    <option value="en-GB">
-                        English — UK
-                    </option>
+<div class="button-row">
 
-                    <option value="hi-IN">
-                        Hindi — India
-                    </option>
+<button
+id="previewBtn"
+class="preview-btn"
+type="button">
 
-                    <option value="gu-IN">
-                        Gujarati — India
-                    </option>
+▶ Preview Voice
 
-                </select>
+</button>
 
-            </div>
+<button
+id="generateBtn"
+class="generate-btn"
+type="button">
 
+Generate Audio
 
-            <!-- SPEED -->
+</button>
 
-            <div class="setting">
+</div>
 
-                <label for="speedRange">
-                    Speed
-                </label>
 
-                <div class="range-row">
+<div id="status" class="status"></div>
 
-                    <input
-                        type="range"
-                        id="speedRange"
-                        min="0.5"
-                        max="2"
-                        step="0.1"
-                        value="1"
-                    >
 
-                    <span
-                        class="range-value"
-                        id="speedValue"
-                    >
-                        1.0x
-                    </span>
+<div class="note">
+  Preview uses your device's available speech engine.
+  Generated AI audio requires the VoiceAI backend/provider.
+</div>
 
-                </div>
 
-            </div>
+<!-- RESULT -->
 
+<div id="result" class="result">
 
-            <!-- STYLE -->
+<div class="result-box">
 
-            <div class="setting">
+<div class="result-title">
 
-                <label for="styleSelect">
-                    Delivery style
-                </label>
+<div class="result-icon">
+✓
+</div>
 
-                <select id="styleSelect">
+<h3>Generated Audio</h3>
 
-                    <option value="natural">
-                        Natural
-                    </option>
+</div>
 
-                    <option value="professional">
-                        Professional
-                    </option>
+<audio
+id="audioPlayer"
+controls
+preload="metadata">
+</audio>
 
-                    <option value="friendly">
-                        Friendly
-                    </option>
+<div class="download-row">
 
-                    <option value="energetic">
-                        Energetic
-                    </option>
+<a
+id="downloadBtn"
+class="download-btn"
+href="#"
+download="voiceai-audio.mp3">
 
-                </select>
+Download Audio
 
-            </div>
+</a>
 
+<button
+id="newBtn"
+class="new-btn"
+type="button">
 
-            <button
-                type="button"
-                class="preview-btn"
-                id="previewSettingsBtn"
-            >
-                Preview Voice
-            </button>
+Create New
 
+</button>
 
-            <button
-                type="button"
-                class="generate-btn"
-                id="generateBtn"
-            >
-                Generate Audio
-            </button>
+</div>
 
+</div>
 
-            <div
-                class="message"
-                id="message"
-                aria-live="polite"
-            ></div>
+</div>
 
-        </aside>
+</div>
 
-    </div>
+</div>
+
+
+<!-- RIGHT -->
+
+<aside class="panel">
+
+<div class="panel-title">
+
+<h2>Voice Library</h2>
+
+<a
+href="voices.html"
+style="
+font-size:11px;
+font-weight:800;
+color:#6c45f5;
+">
+
+View all
+
+</a>
+
+</div>
+
+
+<!-- DAVID -->
+
+<div
+class="voice-card selected"
+data-voice="alloy">
+
+<div class="voice-top">
+
+<div class="voice-avatar">
+D
+</div>
+
+<div class="voice-info">
+
+<h3>David</h3>
+
+<p>Professional Male</p>
+
+</div>
+
+<input
+class="radio"
+type="radio"
+name="voice"
+checked
+value="alloy">
+
+</div>
+
+<button
+class="preview-small"
+data-preview="David, professional and confident voice.">
+
+Preview voice
+
+</button>
+
+</div>
+
+
+<!-- MARCUS -->
+
+<div
+class="voice-card"
+data-voice="onyx">
+
+<div class="voice-top">
+
+<div class="voice-avatar">
+M
+</div>
+
+<div class="voice-info">
+
+<h3>Marcus</h3>
+
+<p>Deep & Confident</p>
+
+</div>
+
+<input
+class="radio"
+type="radio"
+name="voice"
+value="onyx">
+
+</div>
+
+<button
+class="preview-small"
+data-preview="Marcus, deep and confident voice.">
+
+Preview voice
+
+</button>
+
+</div>
+
+
+<!-- SARAH -->
+
+<div
+class="voice-card"
+data-voice="nova">
+
+<div class="voice-top">
+
+<div class="voice-avatar">
+S
+</div>
+
+<div class="voice-info">
+
+<h3>Sarah</h3>
+
+<p>Warm Female</p>
+
+</div>
+
+<input
+class="radio"
+type="radio"
+name="voice"
+value="nova">
+
+</div>
+
+<button
+class="preview-small"
+data-preview="Sarah, warm and friendly voice.">
+
+Preview voice
+
+</button>
+
+</div>
+
+
+<!-- EMMA -->
+
+<div
+class="voice-card"
+data-voice="shimmer">
+
+<div class="voice-top">
+
+<div class="voice-avatar">
+E
+</div>
+
+<div class="voice-info">
+
+<h3>Emma</h3>
+
+<p>Clear & Friendly</p>
+
+</div>
+
+<input
+class="radio"
+type="radio"
+name="voice"
+value="shimmer">
+
+</div>
+
+<button
+class="preview-small"
+data-preview="Emma, clear and friendly voice.">
+
+Preview voice
+
+</button>
+
+</div>
+
+
+</aside>
+
+</section>
 
 </main>
 
 
-<!-- OUTPUT -->
-
-<section class="output-section">
-
-    <div
-        class="card output-card"
-        id="outputCard"
-    >
-
-        <div class="output-header">
-
-            <div class="card-title">
-
-                <div class="card-icon">
-
-                    <svg viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="1.8">
-                        <path d="M4 9v6"/>
-                        <path d="M8 6v12"/>
-                        <path d="M12 4v16"/>
-                        <path d="M16 7v10"/>
-                        <path d="M20 9v6"/>
-                    </svg>
-
-                </div>
-
-                <div>
-                    <h2>Generated Audio</h2>
-                    <p>Your AI voice output</p>
-                </div>
-
-            </div>
-
-            <div class="output-status">
-                <span class="output-status-dot"></span>
-                Ready
-            </div>
-
-        </div>
-
-
-        <div class="audio-box">
-
-            <audio
-                id="audioPlayer"
-                controls
-            ></audio>
-
-            <a
-                href="#"
-                id="downloadAudio"
-                class="download-btn"
-                download="voiceai-generated-audio.mp3"
-            >
-
-                <svg width="17" height="17"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="2">
-                    <path d="M12 3v12"/>
-                    <path d="m7 10 5 5 5-5"/>
-                    <path d="M4 21h16"/>
-                </svg>
-
-                Download Audio
-
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- FOOTER -->
-
-<footer class="site-footer">
-
-    <div class="footer-main">
-
-        <div class="footer-brand">
-
-            <h3>
-                <span>∿ VoiceAI</span>
-            </h3>
-
-            <p>
-                AI-powered voice, audio and creative tools
-                for creators, businesses and professionals.
-            </p>
-
-        </div>
-
-
-        <div class="footer-column">
-
-            <h4>Platform</h4>
-
-            <a href="index.html">Home</a>
-            <a href="tools.html">AI Tools</a>
-            <a href="voices.html">Voices</a>
-            <a href="studio.html">Studio</a>
-
-        </div>
-
-
-        <div class="footer-column">
-
-            <h4>Tools</h4>
-
-            <a href="image.html">Text to Image</a>
-            <a href="clone.html">Voice Clone</a>
-            <a href="changer.html">Voice Changer</a>
-            <a href="stt.html">Speech to Text</a>
-
-        </div>
-
-
-        <div class="footer-column">
-
-            <h4>Account</h4>
-
-            <a href="profile.html">Profile</a>
-            <a href="pricing.html">Pricing</a>
-            <a href="login.html">Login</a>
-            <a href="forgot-password.html">Forgot Password</a>
-
-        </div>
-
-    </div>
-
-
-    <div class="footer-bottom">
-        © 2026 VoiceAI. All rights reserved.
-    </div>
-
+<footer>
+© 2026 VoiceAI. All rights reserved.
 </footer>
 
 
 <script>
 
-/* =========================
-   MOBILE MENU
-========================= */
-
-const mobileMenuBtn =
-    document.getElementById("mobileMenuBtn");
-
-const mobileMenu =
-    document.getElementById("mobileMenu");
-
-mobileMenuBtn.addEventListener("click", function(){
-    mobileMenu.classList.toggle("active");
-});
-
-
-/* =========================
-   CHARACTER COUNTER
-========================= */
+/* ELEMENTS */
 
 const scriptInput =
-    document.getElementById("scriptInput");
+document.getElementById("scriptInput");
 
 const characterCount =
-    document.getElementById("characterCount");
+document.getElementById("characterCount");
 
-scriptInput.addEventListener("input", function(){
-
-    characterCount.textContent =
-        `${this.value.length} / 5000`;
-
-});
-
-
-/* =========================
-   SPEED
-========================= */
-
-const speedRange =
-    document.getElementById("speedRange");
+const speed =
+document.getElementById("speed");
 
 const speedValue =
-    document.getElementById("speedValue");
+document.getElementById("speedValue");
 
-speedRange.addEventListener("input", function(){
+const language =
+document.getElementById("language");
 
-    speedValue.textContent =
-        `${Number(this.value).toFixed(1)}x`;
+const voiceSelect =
+document.getElementById("voiceSelect");
+
+const style =
+document.getElementById("style");
+
+const previewBtn =
+document.getElementById("previewBtn");
+
+const generateBtn =
+document.getElementById("generateBtn");
+
+const statusBox =
+document.getElementById("status");
+
+const result =
+document.getElementById("result");
+
+const audioPlayer =
+document.getElementById("audioPlayer");
+
+const downloadBtn =
+document.getElementById("downloadBtn");
+
+const newBtn =
+document.getElementById("newBtn");
+
+const usageCount =
+document.getElementById("usageCount");
+
+
+/* CHARACTER COUNT */
+
+scriptInput.addEventListener("input", () => {
+
+characterCount.textContent =
+scriptInput.value.length;
 
 });
 
 
-/* =========================
-   BROWSER VOICE PREVIEW
-========================= */
+/* SPEED */
 
-const previewBtn =
-    document.getElementById("previewBtn");
+speed.addEventListener("input", () => {
 
-const previewSettingsBtn =
-    document.getElementById("previewSettingsBtn");
+speedValue.textContent =
+Number(speed.value).toFixed(1) + "x";
 
-
-function previewVoice(){
-
-    const text =
-        scriptInput.value.trim();
-
-    if(!text){
-
-        showMessage(
-            "Enter some text before previewing the voice.",
-            "error"
-        );
-
-        return;
-    }
+});
 
 
-    if(!("speechSynthesis" in window)){
+/* STATUS */
 
-        showMessage(
-            "Voice preview is not supported in this browser.",
-            "error"
-        );
+function showStatus(message,type){
 
-        return;
-    }
+statusBox.textContent = message;
 
+statusBox.className =
+"status show " + type;
 
-    window.speechSynthesis.cancel();
+}
 
-    const speech =
-        new SpeechSynthesisUtterance(text);
+function clearStatus(){
 
-    speech.lang =
-        document.getElementById("languageSelect").value;
-
-    speech.rate =
-        Number(speedRange.value);
-
-    window.speechSynthesis.speak(speech);
+statusBox.className =
+"status";
 
 }
 
 
-previewBtn.addEventListener("click", previewVoice);
+/* SELECT VOICE CARDS */
 
-previewSettingsBtn.addEventListener(
-    "click",
-    previewVoice
+document.querySelectorAll(".voice-card")
+.forEach(card => {
+
+card.addEventListener("click", event => {
+
+if(event.target.tagName === "BUTTON"){
+return;
+}
+
+const selectedVoice =
+card.dataset.voice;
+
+voiceSelect.value =
+selectedVoice;
+
+document.querySelectorAll(".voice-card")
+.forEach(item => {
+item.classList.remove("selected");
+});
+
+card.classList.add("selected");
+
+const radio =
+card.querySelector(".radio");
+
+if(radio){
+radio.checked = true;
+}
+
+});
+
+});
+
+
+/* SELECT DROPDOWN -> CARD */
+
+voiceSelect.addEventListener("change", () => {
+
+document.querySelectorAll(".voice-card")
+.forEach(card => {
+
+card.classList.toggle(
+"selected",
+card.dataset.voice === voiceSelect.value
+);
+
+const radio =
+card.querySelector(".radio");
+
+if(radio){
+radio.checked =
+card.dataset.voice === voiceSelect.value;
+}
+
+});
+
+});
+
+
+/* BROWSER PREVIEW */
+
+function speakText(text){
+
+if(!("speechSynthesis" in window)){
+
+showStatus(
+"Your browser does not support voice preview.",
+"error"
+);
+
+return;
+
+}
+
+window.speechSynthesis.cancel();
+
+const utterance =
+new SpeechSynthesisUtterance(text);
+
+utterance.lang =
+language.value;
+
+utterance.rate =
+Number(speed.value);
+
+utterance.pitch =
+1;
+
+window.speechSynthesis.speak(
+utterance
+);
+
+}
+
+
+/* MAIN PREVIEW */
+
+previewBtn.addEventListener("click", () => {
+
+const text =
+scriptInput.value.trim();
+
+if(!text){
+
+showStatus(
+"Enter some text before previewing the voice.",
+"error"
+);
+
+scriptInput.focus();
+
+return;
+
+}
+
+clearStatus();
+
+speakText(text);
+
+});
+
+
+/* SMALL VOICE PREVIEWS */
+
+document.querySelectorAll(".preview-small")
+.forEach(button => {
+
+button.addEventListener("click", event => {
+
+event.stopPropagation();
+
+const text =
+button.dataset.preview;
+
+speakText(text);
+
+});
+
+});
+
+
+/* GENERATE */
+
+generateBtn.addEventListener("click", async () => {
+
+const text =
+scriptInput.value.trim();
+
+if(!text){
+
+showStatus(
+"Please enter your script first.",
+"error"
+);
+
+scriptInput.focus();
+
+return;
+
+}
+
+
+if(text.length > 5000){
+
+showStatus(
+"Your script exceeds the 5,000 character limit.",
+"error"
+);
+
+return;
+
+}
+
+
+clearStatus();
+
+generateBtn.disabled = true;
+
+generateBtn.textContent =
+"Generating...";
+
+
+try{
+
+const response =
+await fetch("/api/tts", {
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+credentials:"include",
+
+body:JSON.stringify({
+
+text:text,
+
+voice:voiceSelect.value,
+
+language:language.value,
+
+speed:Number(speed.value),
+
+style:style.value
+
+})
+
+});
+
+
+const data =
+await response.json()
+.catch(() => ({}));
+
+
+if(!response.ok){
+
+throw new Error(
+data.message ||
+data.error ||
+"Audio generation failed."
+);
+
+}
+
+
+const audioUrl =
+data.audioUrl ||
+data.outputUrl ||
+data.url;
+
+
+if(!audioUrl){
+
+throw new Error(
+"No audio file was returned by the server."
+);
+
+}
+
+
+/* SHOW AUDIO */
+
+audioPlayer.src =
+audioUrl;
+
+downloadBtn.href =
+audioUrl;
+
+result.classList.add("show");
+
+
+showStatus(
+"Audio generated successfully.",
+"success"
 );
 
 
-/* =========================
-   GENERATE AUDIO
-========================= */
+/* UPDATE LOCAL USAGE UI */
 
-const generateBtn =
-    document.getElementById("generateBtn");
+let currentUsage =
+Number(localStorage.getItem("voiceaiTtsUsage") || "0");
 
-const outputCard =
-    document.getElementById("outputCard");
+currentUsage =
+Math.min(currentUsage + 1,5);
 
-const audioPlayer =
-    document.getElementById("audioPlayer");
+localStorage.setItem(
+"voiceaiTtsUsage",
+String(currentUsage)
+);
 
-const downloadAudio =
-    document.getElementById("downloadAudio");
-
-
-generateBtn.addEventListener(
-    "click",
-    async function(){
-
-        const text =
-            scriptInput.value.trim();
-
-        const voice =
-            document.getElementById("voiceSelect").value;
-
-        const language =
-            document.getElementById("languageSelect").value;
-
-        const speed =
-            Number(speedRange.value);
-
-        const style =
-            document.getElementById("styleSelect").value;
+usageCount.textContent =
+currentUsage;
 
 
-        if(!text){
+}catch(error){
 
-            showMessage(
-                "Please enter your script first.",
-                "error"
-            );
+showStatus(
+error.message ||
+"Unable to generate audio. Please connect the backend.",
+"error"
+);
 
-            return;
-        }
+}finally{
 
+generateBtn.disabled = false;
 
-        generateBtn.disabled = true;
-        generateBtn.textContent = "Generating...";
+generateBtn.textContent =
+"Generate Audio";
 
-        hideMessage();
-
-
-        try{
-
-            const response = await fetch(
-                "/api/tts",
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-
-                    body:JSON.stringify({
-                        text:text,
-                        voice:voice,
-                        language:language,
-                        speed:speed,
-                        style:style
-                    })
-                }
-            );
-
-
-            if(!response.ok){
-
-                throw new Error(
-                    "TTS API request failed"
-                );
-
-            }
-
-
-            const data =
-                await response.json();
-
-
-            if(!data.audioUrl){
-
-                throw new Error(
-                    "No audio URL returned"
-                );
-
-            }
-
-
-            audioPlayer.src =
-                data.audioUrl;
-
-            downloadAudio.href =
-                data.audioUrl;
-
-            outputCard.style.display =
-                "block";
-
-
-            showMessage(
-                "Audio generated successfully.",
-                "success"
-            );
-
-
-            outputCard.scrollIntoView({
-                behavior:"smooth",
-                block:"center"
-            });
-
-
-        }catch(error){
-
-            showMessage(
-                "AI audio generation is not connected yet. Connect your /api/tts backend to generate downloadable audio.",
-                "error"
-            );
-
-        }finally{
-
-            generateBtn.disabled = false;
-            generateBtn.textContent =
-                "Generate Audio";
-
-        }
+}
 
 });
 
 
-/* =========================
-   MESSAGE
-========================= */
+/* NEW */
 
-const message =
-    document.getElementById("message");
+newBtn.addEventListener("click", () => {
+
+result.classList.remove("show");
+
+audioPlayer.pause();
+
+audioPlayer.removeAttribute("src");
+
+audioPlayer.load();
+
+downloadBtn.removeAttribute("href");
+
+clearStatus();
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+});
 
 
-function showMessage(text,type){
+/* INITIAL USAGE */
 
-    message.textContent = text;
-    message.className =
-        "message " + type;
+const savedUsage =
+Number(
+localStorage.getItem("voiceaiTtsUsage") || "0"
+);
 
+usageCount.textContent =
+Math.min(savedUsage,5);
+
+
+/* URL VOICE PARAMETER */
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const requestedVoice =
+params.get("voice");
+
+if(requestedVoice){
+
+const allowedVoices =
+["alloy","onyx","nova","shimmer"];
+
+if(allowedVoices.includes(requestedVoice)){
+
+voiceSelect.value =
+requestedVoice;
+
+document.querySelectorAll(".voice-card")
+.forEach(card => {
+
+const active =
+card.dataset.voice === requestedVoice;
+
+card.classList.toggle(
+"selected",
+active
+);
+
+const radio =
+card.querySelector(".radio");
+
+if(radio){
+radio.checked = active;
 }
 
+});
 
-function hideMessage(){
-
-    message.textContent = "";
-    message.className = "message";
+}
 
 }
 
