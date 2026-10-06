@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VoiceAI AI Dubbing Studio">
+  <title>AI Dubbing — VoiceAI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f6fa;
+      --card: #fff;
+      --text: #17181d;
+      --muted: #737681;
+      --border: #e4e5eb;
+      --primary: #6d4aff;
+      --primary-dark: #5635dc;
+      --soft: #efecff;
+      --green: #159866;
+      --red: #d53d3d;
+    }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      height: 68px;
+      background: rgba(255,255,255,.97);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-inner {
+      width: min(1180px, calc(100% - 30px));
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 650;
+      color: #5e616b;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 9px;
+      padding: 9px 13px;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .nav-btn.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    /* HERO */
+
+    .hero {
+      width: min(1000px, calc(100% - 30px));
+      margin: auto;
+      text-align: center;
+      padding: 58px 0 34px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--soft);
+      color: var(--primary);
+      padding: 8px 13px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 17px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: clamp(35px, 5vw, 55px);
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 15px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* MAIN */
+
+    .container {
+      width: min(1000px, calc(100% - 30px));
+      margin: 0 auto 75px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 9px 30px rgba(25,25,45,.045);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 20px;
+    }
+
+    .icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--soft);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .icon-box svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .card-title h2 {
+      font-size: 17px;
+    }
+
+    .card-title p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* UPLOAD */
+
+    .upload-box {
+      min-height: 255px;
+      border: 2px dashed #d8d6e5;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 25px;
+      cursor: pointer;
+      background: #fcfcff;
+      transition: .2s;
+    }
+
+    .upload-box:hover,
+    .upload-box.dragover {
+      border-color: var(--primary);
+      background: #f8f6ff;
+    }
+
+    .upload-icon {
+      width: 57px;
+      height: 57px;
+      margin: 0 auto 13px;
+      border-radius: 16px;
+      background: var(--soft);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+    }
+
+    .upload-icon svg {
+      width: 27px;
+      height: 27px;
+    }
+
+    .upload-box h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .upload-box p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .browse {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    #mediaFile {
+      display: none;
+    }
+
+    .file-info {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fafafd;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .file-info.show {
+      display: flex;
+    }
+
+    .file-name {
+      font-size: 11px;
+      font-weight: 800;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .file-meta {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
+    .remove-btn {
+      border: 0;
+      background: #fff0f0;
+      color: var(--red);
+      border-radius: 7px;
+      padding: 7px 9px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    /* FORM */
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 7px;
+      color: #4f525b;
+    }
+
+    select {
+      width: 100%;
+      height: 43px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: white;
+      padding: 0 11px;
+      outline: none;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    .language-row {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .swap {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+    }
+
+    .swap svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* OPTIONS */
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .option {
+      position: relative;
+    }
+
+    .option input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .option label {
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px;
+      cursor: pointer;
+      background: white;
+      margin: 0;
+    }
+
+    .option label strong {
+      display: block;
+      font-size: 11px;
+      color: #33353b;
+    }
+
+    .option label small {
+      display: block;
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 3px;
+    }
+
+    .option input:checked + label {
+      border-color: var(--primary);
+      background: var(--soft);
+    }
+
+    /* CHECKBOX */
+
+    .check-row {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fafafd;
+      margin-bottom: 16px;
+    }
+
+    .check-row input {
+      margin-top: 2px;
+      accent-color: var(--primary);
+    }
+
+    .check-row span {
+      color: #666974;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    /* GENERATE */
+
+    .generate-btn {
+      width: 100%;
+      height: 48px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 850;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .generate-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .generate-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: white;
+      border-radius: 50%;
+      display: none;
+      animation: spin .7s linear infinite;
+    }
+
+    .loading .spinner {
+      display: block;
+    }
+
+    .loading .btn-text {
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* USAGE */
+
+    .usage {
+      margin-top: 13px;
+      padding: 11px;
+      border: 1px solid #e7e3ff;
+      background: #faf9ff;
+      border-radius: 9px;
+    }
+
+    .usage-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .usage-top strong {
+      color: var(--primary);
+    }
+
+    .progress {
+      height: 5px;
+      background: #e5e3eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress div {
+      height: 100%;
+      width: 20%;
+      background: var(--primary);
+    }
+
+    /* MESSAGE */
+
+    .message {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 9px;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #fff0f0;
+      color: #a72b2b;
+      border: 1px solid #ffd8d8;
+    }
+
+    .message.info {
+      background: var(--soft);
+      color: #5337ca;
+      border: 1px solid #ddd7ff;
+    }
+
+    /* RESULT */
+
+    .result {
+      display: none;
+      margin-top: 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 21px;
+      box-shadow: 0 9px 30px rgba(25,25,45,.045);
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .result-status {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #eaf9f2;
+      color: var(--green);
+      display: grid;
+      place-items: center;
+    }
+
+    .result-status svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .result-head h2 {
+      font-size: 15px;
+    }
+
+    .result-head p {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 3px;
+    }
+
+    .result-player {
+      padding: 14px;
+      background: #fafafd;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+    }
+
+    audio {
+      width: 100%;
+      height: 40px;
+    }
+
+    .download-btn {
+      margin-top: 10px;
+      width: 100%;
+      height: 42px;
+      background: #18191d;
+      color: white;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .download-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* FEATURES */
+
+    .features {
+      margin-top: 45px;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 25px;
+      margin-bottom: 24px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .feature {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 19px;
+    }
+
+    .feature svg {
+      width: 22px;
+      height: 22px;
+      color: var(--primary);
+      margin-bottom: 11px;
+    }
+
+    .feature h3 {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: white;
+      padding: 27px 15px;
+    }
+
+    .footer-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .footer-copy {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 800px) {
+
+      .nav-links {
+        display: none;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+
+      .nav-inner {
+        width: calc(100% - 20px);
+      }
+
+      .nav-actions .nav-btn:first-child {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .hero h1 {
+        font-size: 37px;
+        letter-spacing: -1.3px;
+      }
+
+      .hero p {
+        font-size: 13px;
+      }
+
+      .container {
+        width: calc(100% - 20px);
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 13px;
+      }
+
+      .language-row {
+        grid-template-columns: 1fr;
+      }
+
+      .swap {
+        width: 100%;
+      }
+
+      .option-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <header class="navbar">
+
+    <div class="nav-inner">
+
+      <a href="index.html" class="logo">
+        ∿ <span>VoiceAI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="profile.html" class="nav-btn">
+          Profile
+        </a>
+
+        <a href="pricing.html" class="nav-btn primary">
+          Upgrade
+        </a>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="badge">
+      <span class="badge-dot"></span>
+      AI Dubbing Studio
+    </div>
+
+    <h1>
+      Speak globally with
+      <span>AI dubbing</span>
+    </h1>
+
+    <p>
+      Translate and dub your audio or video into another language
+      while preserving natural timing, expression and voice quality.
+    </p>
+
+  </section>
+
+
+  <!-- MAIN -->
+
+  <main class="container">
+
+    <section class="workspace">
+
+      <!-- UPLOAD CARD -->
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <div class="icon-box">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+              <path d="M12 16V4"/>
+              <path d="m7 9 5-5 5 5"/>
+              <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>
+            </svg>
+
+          </div>
+
+          <div>
+            <h2>Upload media</h2>
+            <p>Audio or video for dubbing</p>
+          </div>
+
+        </div>
+
+
+        <div class="upload-box" id="uploadBox">
+
+          <input
+            type="file"
+            id="mediaFile"
+            accept="audio/*,video/*"
+          >
+
+          <div>
+
+            <div class="upload-icon">
+
+              <svg viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="1.8">
+
+                <path d="M4 6h16v12H4z"/>
+                <path d="m10 10 5 2-5 2v-4Z"/>
+
+              </svg>
+
+            </div>
+
+            <h3>
+              Drop audio or video here
+            </h3>
+
+            <p>
+              or <span class="browse">browse files</span><br>
+              Recommended maximum size: 500 MB
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="file-info" id="fileInfo">
+
+          <div style="min-width:0">
+
+            <div class="file-name" id="fileName"></div>
+
+            <div class="file-meta" id="fileMeta"></div>
+
+          </div>
+
+          <button class="remove-btn" id="removeFile">
+            Remove
+          </button>
+
+        </div>
+
+
+        <div class="message" id="message"></div>
+
+      </div>
+
+
+      <!-- SETTINGS CARD -->
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <div class="icon-box">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+
+              <path d="M12 3v18"/>
+              <path d="M7 7v10"/>
+              <path d="M17 6v12"/>
+
+            </svg>
+
+          </div>
+
+          <div>
+            <h2>Dubbing settings</h2>
+            <p>Configure language and voice</p>
+          </div>
+
+        </div>
+
+
+        <!-- LANGUAGE -->
+
+        <div class="field">
+
+          <label>Language pair</label>
+
+          <div class="language-row">
+
+            <select id="sourceLanguage">
+
+              <option value="auto">
+                Auto detect
+              </option>
+
+              <option value="en">
+                English
+              </option>
+
+              <option value="hi">
+                Hindi
+              </option>
+
+              <option value="gu">
+                Gujarati
+              </option>
+
+              <option value="es">
+                Spanish
+              </option>
+
+              <option value="fr">
+                French
+              </option>
+
+              <option value="de">
+                German
+              </option>
+
+              <option value="ja">
+                Japanese
+              </option>
+
+            </select>
+
+
+            <button class="swap" id="swapLanguage">
+
+              <svg viewBox="0 0 24 24"
+                   fill="none"
+                   stroke="currentColor"
+                   stroke-width="1.8">
+
+                <path d="M7 7h12l-3-3"/>
+                <path d="M17 17H5l3 3"/>
+
+              </svg>
+
+            </button>
+
+
+            <select id="targetLanguage">
+
+              <option value="hi">
+                Hindi
+              </option>
+
+              <option value="en">
+                English
+              </option>
+
+              <option value="gu">
+                Gujarati
+              </option>
+
+              <option value="es">
+                Spanish
+              </option>
+
+              <option value="fr">
+                French
+              </option>
+
+              <option value="de">
+                German
