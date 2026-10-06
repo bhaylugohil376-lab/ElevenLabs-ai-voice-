@@ -48,15 +48,16 @@ select{
     font:inherit;
 }
 
+button{
+    cursor:pointer;
+}
 
-/* =========================
-   NAVBAR
-========================= */
+/* NAVBAR */
 
 .navbar{
-    height:76px;
+    min-height:76px;
     width:100%;
-    background:rgba(255,255,255,.97);
+    background:rgba(255,255,255,.98);
     border-bottom:1px solid var(--border);
     display:flex;
     align-items:center;
@@ -88,7 +89,6 @@ select{
     font-size:14px;
     font-weight:650;
     color:#604d43;
-    transition:.2s;
 }
 
 .nav-links a:hover{
@@ -126,18 +126,29 @@ select{
     display:none;
     border:0;
     background:transparent;
-    cursor:pointer;
     color:var(--text);
 }
 
 .mobile-menu{
     display:none;
+    width:100%;
+    background:#fff;
+    border-top:1px solid var(--border);
 }
 
+.mobile-menu.active{
+    display:block;
+}
 
-/* =========================
-   HERO
-========================= */
+.mobile-menu a{
+    display:block;
+    padding:14px 20px;
+    border-bottom:1px solid #f1e9e3;
+    font-size:14px;
+    font-weight:700;
+}
+
+/* HERO */
 
 .hero{
     width:100%;
@@ -244,10 +255,7 @@ select{
     gap:7px;
 }
 
-
-/* =========================
-   HERO GENERATOR
-========================= */
+/* GENERATOR */
 
 .hero-generator{
     width:100%;
@@ -310,6 +318,13 @@ select{
     box-shadow:0 0 0 4px rgba(217,107,39,.09);
 }
 
+.char-count{
+    text-align:right;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:5px;
+}
+
 .generator-row{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -337,11 +352,26 @@ select{
     background:var(--orange);
     color:#fff;
     font-weight:800;
-    cursor:pointer;
 }
 
 .generate-ai-btn:hover{
     background:var(--orange-dark);
+}
+
+.generate-ai-btn:disabled{
+    opacity:.65;
+    cursor:wait;
+}
+
+.voice-preview-btn{
+    width:100%;
+    height:42px;
+    margin-top:10px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#fff;
+    color:var(--text);
+    font-weight:750;
 }
 
 .audio-preview{
@@ -353,10 +383,21 @@ select{
     width:100%;
 }
 
+.download-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    min-height:43px;
+    margin-top:10px;
+    border-radius:10px;
+    background:#302019;
+    color:#fff;
+    font-size:13px;
+    font-weight:800;
+}
 
-/* =========================
-   SECTION COMMON
-========================= */
+/* COMMON */
 
 .section{
     padding:85px 6%;
@@ -394,10 +435,7 @@ select{
     font-size:15px;
 }
 
-
-/* =========================
-   TOOLS
-========================= */
+/* TOOLS */
 
 .tools-grid{
     display:grid;
@@ -458,10 +496,7 @@ select{
     font-weight:800;
 }
 
-
-/* =========================
-   VIDEO TESTING
-========================= */
+/* VIDEO */
 
 .video-testing{
     background:#fff8f2;
@@ -535,10 +570,7 @@ select{
     margin-bottom:12px;
 }
 
-
-/* =========================
-   ABOUT
-========================= */
+/* ABOUT */
 
 .about-grid{
     display:grid;
@@ -580,10 +612,7 @@ select{
     line-height:1.7;
 }
 
-
-/* =========================
-   FAQ
-========================= */
+/* FAQ */
 
 .faq-list{
     max-width:850px;
@@ -617,10 +646,7 @@ select{
     line-height:1.7;
 }
 
-
-/* =========================
-   CONTACT
-========================= */
+/* CONTACT */
 
 .contact-section{
     background:#fff8f2;
@@ -685,13 +711,15 @@ select{
     padding:13px 21px;
     border-radius:10px;
     font-weight:800;
-    cursor:pointer;
 }
 
+.contact-status{
+    margin-top:12px;
+    font-size:13px;
+    color:var(--muted);
+}
 
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 
 .site-footer{
     background:#2d1d16;
@@ -749,10 +777,7 @@ select{
     font-size:12px;
 }
 
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* RESPONSIVE */
 
 @media(max-width:1050px){
 
@@ -790,7 +815,6 @@ select{
     }
 }
 
-
 @media(max-width:800px){
 
     .nav-links,
@@ -802,35 +826,12 @@ select{
         display:block;
     }
 
-    .mobile-menu{
-        position:absolute;
-        top:76px;
-        left:0;
-        width:100%;
-        background:#fff;
-        border-bottom:1px solid var(--border);
-        padding:15px 20px;
-        box-shadow:0 15px 30px rgba(0,0,0,.07);
-    }
-
-    .mobile-menu.active{
-        display:block;
-    }
-
-    .mobile-menu a{
-        display:block;
-        padding:13px 4px;
-        border-bottom:1px solid #f1e9e3;
-        font-size:14px;
-        font-weight:700;
-    }
-
-    .mobile-menu a:last-child{
-        border-bottom:0;
-    }
-
     .navbar{
-        padding:0 20px;
+        flex-wrap:wrap;
+    }
+
+    .mobile-menu{
+        flex-basis:100%;
     }
 
     .about-grid{
@@ -841,7 +842,6 @@ select{
         grid-template-columns:1fr 1fr;
     }
 }
-
 
 @media(max-width:560px){
 
@@ -899,11 +899,6 @@ select{
 
 <body>
 
-
-<!-- =========================
-     NAVBAR
-========================= -->
-
 <header class="navbar">
 
     <a href="index.html" class="logo">
@@ -941,14 +936,12 @@ select{
         <a href="studio.html">Studio</a>
         <a href="pricing.html">Pricing</a>
         <a href="login.html">Login</a>
+        <a href="pricing.html">Get Started</a>
     </div>
 
 </header>
 
-
-<!-- =========================
-     HERO
-========================= -->
+<!-- HERO -->
 
 <section class="hero">
 
@@ -990,36 +983,24 @@ select{
             </div>
 
             <div class="hero-info">
+
                 <span>
-                    <svg width="15" height="15" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 6 9 17l-5-5"/>
-                    </svg>
-                    Free plan available
+                    ✓ Free plan available
                 </span>
 
                 <span>
-                    <svg width="15" height="15" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="5" width="18" height="14" rx="2"/>
-                        <path d="M8 12h8"/>
-                    </svg>
-                    5 AI uses / day
+                    ✓ 5 AI uses / day
                 </span>
 
                 <span>
-                    <svg width="15" height="15" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/>
-                    </svg>
-                    Secure workspace
+                    ✓ Secure workspace
                 </span>
+
             </div>
 
         </div>
 
-
-        <!-- HERO GENERATOR -->
+        <!-- GENERATOR -->
 
         <div class="hero-generator">
 
@@ -1043,61 +1024,91 @@ select{
             <textarea
                 id="heroText"
                 class="generator-text"
+                maxlength="5000"
                 placeholder="Type something you want your AI voice to say..."
             ></textarea>
 
+            <div class="char-count">
+                <span id="heroCharCount">0</span>/5000
+            </div>
 
             <div class="generator-row">
 
                 <select id="heroVoice" class="generator-select">
-
-                    <option value="alloy">
-                        Alloy — Professional
+                    <option value="">
+                        Loading voices...
                     </option>
-
-                    <option value="nova">
-                        Nova — Warm Female
-                    </option>
-
-                    <option value="onyx">
-                        Onyx — Deep Male
-                    </option>
-
-                    <option value="shimmer">
-                        Shimmer — Clear Female
-                    </option>
-
                 </select>
-
 
                 <select id="heroLanguage" class="generator-select">
 
-                    <option>English</option>
-                    <option>Hindi</option>
-                    <option>Gujarati</option>
-                    <option>Spanish</option>
+                    <option value="en">
+                        English
+                    </option>
+
+                    <option value="hi">
+                        Hindi
+                    </option>
+
+                    <option value="gu">
+                        Gujarati
+                    </option>
+
+                    <option value="es">
+                        Spanish
+                    </option>
+
+                    <option value="fr">
+                        French
+                    </option>
+
+                    <option value="de">
+                        German
+                    </option>
+
+                    <option value="ja">
+                        Japanese
+                    </option>
 
                 </select>
 
             </div>
 
+            <button
+                class="voice-preview-btn"
+                id="heroVoicePreviewBtn"
+                type="button"
+            >
+                ▶ Preview Selected Voice
+            </button>
 
             <button
                 class="generate-ai-btn"
                 id="heroGenerateBtn"
+                type="button"
             >
                 Generate Voice
             </button>
-
 
             <div
                 class="audio-preview"
                 id="heroAudioPreview"
             >
+
                 <audio
                     id="heroAudio"
                     controls
                 ></audio>
+
+                <a
+                    id="heroDownloadBtn"
+                    class="download-btn"
+                    href="#"
+                    download="voiceai-generated.mp3"
+                >
+                    Download Audio
+                </a>
+
             </div>
 
         </div>
@@ -1106,10 +1117,7 @@ select{
 
 </section>
 
-
-<!-- =========================
-     AI TOOLS
-========================= -->
+<!-- TOOLS -->
 
 <section class="section">
 
@@ -1132,14 +1140,9 @@ select{
 
         </div>
 
-
         <div class="tools-grid">
 
-
-            <!-- TTS -->
-
             <a href="tts.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1150,22 +1153,12 @@ select{
                         <path d="M20 9v6"/>
                     </svg>
                 </div>
-
                 <h3>Text to Speech</h3>
-
-                <p>
-                    Turn written scripts into natural AI voiceovers.
-                </p>
-
+                <p>Turn written scripts into natural AI voiceovers.</p>
                 <span class="tool-link">Open tool →</span>
-
             </a>
 
-
-            <!-- TEXT TO IMAGE -->
-
             <a href="image.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1174,22 +1167,12 @@ select{
                         <path d="m4 17 5-5 3 3 2-2 6 5"/>
                     </svg>
                 </div>
-
                 <h3>Text to Image</h3>
-
-                <p>
-                    Create visual content from simple text prompts.
-                </p>
-
+                <p>Create visual content from simple text prompts.</p>
                 <span class="tool-link">Open tool →</span>
-
             </a>
 
-
-            <!-- VOICES -->
-
             <a href="voices.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1199,22 +1182,12 @@ select{
                         <path d="M8 21h8"/>
                     </svg>
                 </div>
-
                 <h3>Voice Library</h3>
-
-                <p>
-                    Browse professional male and female AI voices.
-                </p>
-
+                <p>Browse professional male and female AI voices.</p>
                 <span class="tool-link">Open library →</span>
-
             </a>
 
-
-            <!-- CLONE -->
-
             <a href="clone.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1222,26 +1195,14 @@ select{
                         <path d="M3 20c0-3.3 2.7-6 6-6"/>
                         <path d="M16 5v6"/>
                         <path d="M13 8h6"/>
-                        <path d="m16 14 5 5"/>
-                        <path d="m21 14-5 5"/>
                     </svg>
                 </div>
-
                 <h3>Voice Clone</h3>
-
-                <p>
-                    Create a custom voice from permitted recordings.
-                </p>
-
+                <p>Create a custom voice from permitted recordings.</p>
                 <span class="tool-link">Open tool →</span>
-
             </a>
 
-
-            <!-- VOICE CHANGER -->
-
             <a href="changer.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1253,22 +1214,12 @@ select{
                         <circle cx="8" cy="17" r="2"/>
                     </svg>
                 </div>
-
                 <h3>Voice Changer</h3>
-
-                <p>
-                    Transform recordings into different voice styles.
-                </p>
-
+                <p>Transform recordings into different voice styles.</p>
                 <span class="tool-link">Open tool →</span>
-
             </a>
 
-
-            <!-- STUDIO -->
-
             <a href="studio.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1279,22 +1230,12 @@ select{
                         <path d="M20 17V7"/>
                     </svg>
                 </div>
-
                 <h3>AI Studio</h3>
-
-                <p>
-                    Edit voice, audio and timelines in one workspace.
-                </p>
-
+                <p>Edit voice, audio and timelines in one workspace.</p>
                 <span class="tool-link">Open studio →</span>
-
             </a>
 
-
-            <!-- DUBBING -->
-
             <a href="dubbing.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1303,22 +1244,12 @@ select{
                         <path d="M9 12h4"/>
                     </svg>
                 </div>
-
                 <h3>Dubbing</h3>
-
-                <p>
-                    Adapt spoken content into different languages.
-                </p>
-
+                <p>Adapt spoken content into different languages.</p>
                 <span class="tool-link">Open tool →</span>
-
             </a>
 
-
-            <!-- MUSIC -->
-
             <a href="music.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1327,22 +1258,12 @@ select{
                         <circle cx="16" cy="16" r="3"/>
                     </svg>
                 </div>
-
                 <h3>Music & SFX</h3>
-
-                <p>
-                    Create music beds and sound effects for content.
-                </p>
-
+                <p>Create music beds and sound effects for content.</p>
                 <span class="tool-link">Open tool →</span>
-
             </a>
 
-
-            <!-- STT -->
-
             <a href="stt.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1351,22 +1272,12 @@ select{
                         <path d="M12 18v3"/>
                     </svg>
                 </div>
-
                 <h3>Speech to Text</h3>
-
-                <p>
-                    Convert spoken audio into editable text.
-                </p>
-
+                <p>Convert spoken audio into editable text.</p>
                 <span class="tool-link">Open tool →</span>
-
             </a>
 
-
-            <!-- AGENTS -->
-
             <a href="agents.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1378,22 +1289,12 @@ select{
                         <path d="M15 5V3"/>
                     </svg>
                 </div>
-
                 <h3>AI Voice Agents</h3>
-
-                <p>
-                    Build conversational voice experiences.
-                </p>
-
+                <p>Build conversational voice experiences.</p>
                 <span class="tool-link">Open agents →</span>
-
             </a>
 
-
-            <!-- PRICING -->
-
             <a href="pricing.html" class="tool-card">
-
                 <div class="tool-icon">
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
@@ -1402,15 +1303,9 @@ select{
                         <path d="M7 15h4"/>
                     </svg>
                 </div>
-
                 <h3>Premium</h3>
-
-                <p>
-                    Unlock higher usage and premium capabilities.
-                </p>
-
+                <p>Unlock higher usage and premium capabilities.</p>
                 <span class="tool-link">View plans →</span>
-
             </a>
 
         </div>
@@ -1419,10 +1314,7 @@ select{
 
 </section>
 
-
-<!-- =========================
-     AI VIDEO TESTING
-========================= -->
+<!-- VIDEO -->
 
 <section class="section video-testing" id="video-testing">
 
@@ -1436,14 +1328,12 @@ select{
                     Video Testing
                 </div>
 
-                <h2>
-                    Test your video content
-                </h2>
+                <h2>Test your video content</h2>
 
                 <p>
                     Upload a video to preview it inside your VoiceAI
-                    workspace. This section is designed for future
-                    AI video analysis and processing features.
+                    workspace. This section is ready for future
+                    AI video processing.
                 </p>
 
                 <div class="video-upload">
@@ -1473,7 +1363,6 @@ select{
                 </div>
 
             </div>
-
 
             <div class="video-preview-box">
 
@@ -1509,10 +1398,7 @@ select{
 
 </section>
 
-
-<!-- =========================
-     ABOUT
-========================= -->
+<!-- ABOUT -->
 
 <section class="section" id="about">
 
@@ -1524,9 +1410,7 @@ select{
                 About VoiceAI
             </div>
 
-            <h2>
-                Built for modern creators
-            </h2>
+            <h2>Built for modern creators</h2>
 
             <p>
                 VoiceAI brings voice, audio and creative AI tools
@@ -1535,19 +1419,16 @@ select{
 
         </div>
 
-
         <div class="about-grid">
 
             <div class="about-card">
 
                 <div class="about-card-icon">
-
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
                         <path d="M12 3 5 6v6c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z"/>
                         <path d="m9 12 2 2 4-4"/>
                     </svg>
-
                 </div>
 
                 <h3>Professional quality</h3>
@@ -1559,18 +1440,14 @@ select{
 
             </div>
 
-
             <div class="about-card">
 
                 <div class="about-card-icon">
-
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
-                        <path d="M12 3v18"/>
-                        <path d="M3 12h18"/>
                         <circle cx="12" cy="12" r="8"/>
+                        <path d="M12 4v16M4 12h16"/>
                     </svg>
-
                 </div>
 
                 <h3>One workspace</h3>
@@ -1582,18 +1459,15 @@ select{
 
             </div>
 
-
             <div class="about-card">
 
                 <div class="about-card-icon">
-
                     <svg viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="1.8">
                         <path d="M4 12a8 8 0 0 1 16 0"/>
                         <path d="M4 12v5a2 2 0 0 0 2 2h2v-7H6a2 2 0 0 0-2 2Z"/>
                         <path d="M20 12v5a2 2 0 0 1-2 2h-2v-7h2a2 2 0 0 1 2 2Z"/>
                     </svg>
-
                 </div>
 
                 <h3>Simple to use</h3>
@@ -1611,10 +1485,7 @@ select{
 
 </section>
 
-
-<!-- =========================
-     FAQ
-========================= -->
+<!-- FAQ -->
 
 <section class="section" id="faq">
 
@@ -1626,84 +1497,51 @@ select{
                 FAQ
             </div>
 
-            <h2>
-                Frequently asked questions
-            </h2>
+            <h2>Frequently asked questions</h2>
 
         </div>
-
 
         <div class="faq-list">
 
             <details class="faq-item">
-
-                <summary>
-                    Can I use VoiceAI for free?
-                </summary>
-
+                <summary>Can I use VoiceAI for free?</summary>
                 <p>
-                    Yes. The planned Free plan includes limited AI
-                    usage, currently shown as 5 AI uses per 24 hours.
+                    Yes. The Free plan can provide limited AI usage,
+                    currently planned at 5 AI uses per 24 hours.
                 </p>
-
             </details>
 
-
             <details class="faq-item">
-
-                <summary>
-                    Are the voices real human voices?
-                </summary>
-
+                <summary>Are the voices real human voices?</summary>
                 <p>
-                    The voice library can contain natural AI voices.
-                    Actual generated audio depends on the connected
-                    AI voice provider and backend.
+                    VoiceAI uses natural AI-generated voices from the
+                    connected voice provider. The available library
+                    depends on your configured provider account.
                 </p>
-
             </details>
 
-
             <details class="faq-item">
-
-                <summary>
-                    Can I download generated audio?
-                </summary>
-
+                <summary>Can I download generated audio?</summary>
                 <p>
-                    Yes. Tool pages with generated audio will include
-                    a Download option when the backend returns an
-                    audio file.
+                    Yes. Successful audio generation provides an
+                    audio player and a Download Audio option.
                 </p>
-
             </details>
 
-
             <details class="faq-item">
-
-                <summary>
-                    Is VoiceAI available on mobile?
-                </summary>
-
+                <summary>Is VoiceAI available on mobile?</summary>
                 <p>
-                    The interface is designed to be responsive for
-                    both desktop and mobile devices.
+                    Yes. The interface is responsive for desktop,
+                    tablet and mobile screens.
                 </p>
-
             </details>
 
-
             <details class="faq-item">
-
-                <summary>
-                    Does Google login work automatically?
-                </summary>
-
+                <summary>Does Google login work automatically?</summary>
                 <p>
-                    Google login requires a connected authentication
-                    backend and Google OAuth configuration.
+                    Google login requires the Google OAuth backend
+                    configuration to be completed.
                 </p>
-
             </details>
 
         </div>
@@ -1712,10 +1550,7 @@ select{
 
 </section>
 
-
-<!-- =========================
-     CONTACT
-========================= -->
+<!-- CONTACT -->
 
 <section class="section contact-section" id="contact">
 
@@ -1727,17 +1562,14 @@ select{
                 Contact
             </div>
 
-            <h2>
-                Let's build something
-            </h2>
+            <h2>Let's build something</h2>
 
             <p>
-                Send us a message and our team can help with
-                VoiceAI, accounts and integrations.
+                Send us a message about VoiceAI, accounts,
+                integrations or support.
             </p>
 
         </div>
-
 
         <form
             class="contact-form"
@@ -1748,9 +1580,7 @@ select{
 
                 <div class="form-group">
 
-                    <label for="contactName">
-                        Name
-                    </label>
+                    <label for="contactName">Name</label>
 
                     <input
                         id="contactName"
@@ -1761,12 +1591,9 @@ select{
 
                 </div>
 
-
                 <div class="form-group">
 
-                    <label for="contactEmail">
-                        Email
-                    </label>
+                    <label for="contactEmail">Email</label>
 
                     <input
                         id="contactEmail"
@@ -1777,12 +1604,9 @@ select{
 
                 </div>
 
-
                 <div class="form-group full">
 
-                    <label for="contactMessage">
-                        Message
-                    </label>
+                    <label for="contactMessage">Message</label>
 
                     <textarea
                         id="contactMessage"
@@ -1794,7 +1618,6 @@ select{
 
             </div>
 
-
             <button
                 type="submit"
                 class="contact-submit"
@@ -1802,16 +1625,18 @@ select{
                 Send Message
             </button>
 
+            <div
+                class="contact-status"
+                id="contactStatus"
+            ></div>
+
         </form>
 
     </div>
 
 </section>
 
-
-<!-- =========================
-     FOOTER
-========================= -->
+<!-- FOOTER -->
 
 <footer class="site-footer">
 
@@ -1830,7 +1655,6 @@ select{
 
         </div>
 
-
         <div class="footer-column">
 
             <h4>Platform</h4>
@@ -1841,7 +1665,6 @@ select{
             <a href="pricing.html">Pricing</a>
 
         </div>
-
 
         <div class="footer-column">
 
@@ -1854,27 +1677,24 @@ select{
 
         </div>
 
-
         <div class="footer-column">
 
             <h4>Company</h4>
 
-            <a href="index.html#about">About</a>
-            <a href="index.html#faq">FAQ</a>
-            <a href="index.html#contact">Contact</a>
+            <a href="#about">About</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Contact</a>
             <a href="login.html">Login</a>
 
         </div>
 
     </div>
 
-
     <div class="footer-bottom">
         © 2026 VoiceAI. All rights reserved.
     </div>
 
 </footer>
-
 
 <script>
 
@@ -1888,9 +1708,421 @@ const mobileMenuBtn =
 const mobileMenu =
     document.getElementById("mobileMenu");
 
-mobileMenuBtn.addEventListener("click", () => {
+mobileMenuBtn.addEventListener("click", function(){
+
     mobileMenu.classList.toggle("active");
+
 });
+
+
+/* =========================
+   CHARACTER COUNTER
+========================= */
+
+const heroText =
+    document.getElementById("heroText");
+
+const heroCharCount =
+    document.getElementById("heroCharCount");
+
+heroText.addEventListener("input", function(){
+
+    heroCharCount.textContent =
+        this.value.length;
+
+});
+
+
+/* =========================
+   LOAD REAL VOICES
+========================= */
+
+const heroVoice =
+    document.getElementById("heroVoice");
+
+async function loadHeroVoices(){
+
+    heroVoice.innerHTML =
+        '<option value="">Loading voices...</option>';
+
+    try{
+
+        const response =
+            await fetch("/api/voices?page_size=100");
+
+        if(!response.ok){
+            throw new Error("Unable to load voices");
+        }
+
+        const data =
+            await response.json();
+
+        const voices =
+            Array.isArray(data.voices)
+                ? data.voices
+                : [];
+
+        heroVoice.innerHTML = "";
+
+        if(!voices.length){
+
+            heroVoice.innerHTML =
+                '<option value="">No voices available</option>';
+
+            return;
+        }
+
+        voices.forEach(function(voice){
+
+            const option =
+                document.createElement("option");
+
+            option.value =
+                voice.voice_id || "";
+
+            const labels =
+                voice.labels || {};
+
+            let extra = "";
+
+            if(labels.gender){
+                extra += " • " + labels.gender;
+            }
+
+            if(labels.accent){
+                extra += " • " + labels.accent;
+            }
+
+            option.textContent =
+                (voice.name || "Voice") + extra;
+
+            heroVoice.appendChild(option);
+
+        });
+
+    }catch(error){
+
+        console.error(
+            "Voice loading error:",
+            error
+        );
+
+        heroVoice.innerHTML =
+            '<option value="">Unable to load voices</option>';
+    }
+}
+
+loadHeroVoices();
+
+
+/* =========================
+   VOICE PREVIEW
+========================= */
+
+const heroVoicePreviewBtn =
+    document.getElementById(
+        "heroVoicePreviewBtn"
+    );
+
+heroVoicePreviewBtn.addEventListener(
+    "click",
+    async function(){
+
+        const voiceId =
+            heroVoice.value;
+
+        if(!voiceId){
+
+            alert("Please select a voice.");
+
+            return;
+        }
+
+        try{
+
+            const response =
+                await fetch(
+                    "/api/voices?voice_id=" +
+                    encodeURIComponent(voiceId)
+                );
+
+            if(!response.ok){
+                throw new Error(
+                    "Voice preview unavailable."
+                );
+            }
+
+            const data =
+                await response.json();
+
+            const voices =
+                Array.isArray(data.voices)
+                    ? data.voices
+                    : [];
+
+            const selected =
+                voices.find(
+                    voice =>
+                        voice.voice_id === voiceId
+                );
+
+            if(
+                selected &&
+                selected.preview_url
+            ){
+
+                const preview =
+                    new Audio(
+                        selected.preview_url
+                    );
+
+                await preview.play();
+
+                return;
+            }
+
+            alert(
+                "Preview audio is not available for this voice."
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+            alert(
+                "Voice preview is not available."
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   REAL ELEVENLABS TTS
+========================= */
+
+const heroGenerateBtn =
+    document.getElementById(
+        "heroGenerateBtn"
+    );
+
+const heroLanguage =
+    document.getElementById(
+        "heroLanguage"
+    );
+
+const heroAudioPreview =
+    document.getElementById(
+        "heroAudioPreview"
+    );
+
+const heroAudio =
+    document.getElementById(
+        "heroAudio"
+    );
+
+const heroDownloadBtn =
+    document.getElementById(
+        "heroDownloadBtn"
+    );
+
+
+let currentAudioUrl = null;
+
+
+heroGenerateBtn.addEventListener(
+    "click",
+    async function(){
+
+        const text =
+            heroText.value.trim();
+
+        const voiceId =
+            heroVoice.value;
+
+        const language =
+            heroLanguage.value;
+
+
+        if(!text){
+
+            alert(
+                "Please enter some text first."
+            );
+
+            return;
+        }
+
+
+        if(!voiceId){
+
+            alert(
+                "Please select a voice."
+            );
+
+            return;
+        }
+
+
+        if(text.length > 5000){
+
+            alert(
+                "Maximum 5000 characters allowed."
+            );
+
+            return;
+        }
+
+
+        heroGenerateBtn.disabled =
+            true;
+
+        heroGenerateBtn.textContent =
+            "Generating...";
+
+
+        try{
+
+            const response =
+                await fetch(
+                    "/api/generate",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "audio/mpeg"
+                        },
+
+                        credentials:"include",
+
+                        body:JSON.stringify({
+
+                            text:text,
+
+                            voice:voiceId,
+
+                            voice_id:voiceId,
+
+                            language:language,
+
+                            speed:1,
+
+                            style:"natural"
+
+                        })
+                    }
+                );
+
+
+            if(!response.ok){
+
+                let message =
+                    "Voice generation failed.";
+
+                try{
+
+                    const errorData =
+                        await response.json();
+
+                    message =
+                        errorData.error ||
+                        errorData.message ||
+                        message;
+
+                }catch(error){
+
+                    // Non-JSON error response.
+                }
+
+                throw new Error(message);
+            }
+
+
+            const audioBlob =
+                await response.blob();
+
+
+            if(!audioBlob.size){
+
+                throw new Error(
+                    "No audio was returned."
+                );
+            }
+
+
+            if(currentAudioUrl){
+
+                URL.revokeObjectURL(
+                    currentAudioUrl
+                );
+            }
+
+
+            currentAudioUrl =
+                URL.createObjectURL(
+                    audioBlob
+                );
+
+
+            heroAudio.src =
+                currentAudioUrl;
+
+
+            heroDownloadBtn.href =
+                currentAudioUrl;
+
+
+            heroDownloadBtn.download =
+                "voiceai-generated.mp3";
+
+
+            heroAudioPreview.style.display =
+                "block";
+
+
+            try{
+
+                await heroAudio.play();
+
+            }catch(error){
+
+                console.log(
+                    "Autoplay blocked."
+                );
+            }
+
+
+        }catch(error){
+
+            console.error(
+                "VoiceAI generation error:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "Voice generation failed."
+            );
+
+
+        }finally{
+
+            heroGenerateBtn.disabled =
+                false;
+
+            heroGenerateBtn.textContent =
+                "Generate Voice";
+
+        }
+
+    }
+);
 
 
 /* =========================
@@ -1898,88 +2130,60 @@ mobileMenuBtn.addEventListener("click", () => {
 ========================= */
 
 const videoInput =
-    document.getElementById("videoTestInput");
+    document.getElementById(
+        "videoTestInput"
+    );
 
 const videoPreview =
-    document.getElementById("videoPreview");
+    document.getElementById(
+        "videoPreview"
+    );
 
 const videoPlaceholder =
-    document.getElementById("videoPlaceholder");
+    document.getElementById(
+        "videoPlaceholder"
+    );
 
 
-videoInput.addEventListener("change", function(){
+videoInput.addEventListener(
+    "change",
+    function(){
 
-    const file = this.files[0];
+        const file =
+            this.files[0];
 
-    if(!file){
-        return;
-    }
-
-    const url = URL.createObjectURL(file);
-
-    videoPreview.src = url;
-    videoPreview.style.display = "block";
-    videoPlaceholder.style.display = "none";
-
-});
+        if(!file){
+            return;
+        }
 
 
-/* =========================
-   HERO VOICE PREVIEW
-========================= */
+        if(!file.type.startsWith("video/")){
 
-const heroGenerateBtn =
-    document.getElementById("heroGenerateBtn");
+            alert(
+                "Please select a video file."
+            );
 
-const heroText =
-    document.getElementById("heroText");
+            this.value = "";
 
-const heroAudioPreview =
-    document.getElementById("heroAudioPreview");
+            return;
+        }
 
 
-heroGenerateBtn.addEventListener("click", function(){
-
-    const text = heroText.value.trim();
-
-    if(!text){
-
-        alert("Please enter some text first.");
-
-        return;
-    }
+        const url =
+            URL.createObjectURL(file);
 
 
-    /*
-      Browser preview only.
+        videoPreview.src =
+            url;
 
-      Actual downloadable AI audio should come
-      from your /api/tts backend.
-    */
+        videoPreview.style.display =
+            "block";
 
-    if("speechSynthesis" in window){
-
-        window.speechSynthesis.cancel();
-
-        const speech =
-            new SpeechSynthesisUtterance(text);
-
-        speech.lang = "en-US";
-        speech.rate = 1;
-
-        window.speechSynthesis.speak(speech);
-
-        heroAudioPreview.style.display = "none";
-
-    }else{
-
-        alert(
-            "Voice preview is not supported in this browser."
-        );
+        videoPlaceholder.style.display =
+            "none";
 
     }
-
-});
+);
 
 
 /* =========================
@@ -1987,71 +2191,123 @@ heroGenerateBtn.addEventListener("click", function(){
 ========================= */
 
 const contactForm =
-    document.getElementById("contactForm");
+    document.getElementById(
+        "contactForm"
+    );
+
+const contactStatus =
+    document.getElementById(
+        "contactStatus"
+    );
 
 
-contactForm.addEventListener("submit", async function(e){
+contactForm.addEventListener(
+    "submit",
+    async function(event){
 
-    e.preventDefault();
-
-    const name =
-        document.getElementById("contactName").value.trim();
-
-    const email =
-        document.getElementById("contactEmail").value.trim();
-
-    const message =
-        document.getElementById("contactMessage").value.trim();
+        event.preventDefault();
 
 
-    if(!name || !email || !message){
+        const name =
+            document.getElementById(
+                "contactName"
+            ).value.trim();
 
-        alert("Please complete all fields.");
+        const email =
+            document.getElementById(
+                "contactEmail"
+            ).value.trim();
 
-        return;
-    }
-
-
-    try{
-
-        const response = await fetch(
-            "/api/contact",
-            {
-                method:"POST",
-
-                headers:{
-                    "Content-Type":"application/json"
-                },
-
-                body:JSON.stringify({
-                    name:name,
-                    email:email,
-                    message:message
-                })
-            }
-        );
+        const message =
+            document.getElementById(
+                "contactMessage"
+            ).value.trim();
 
 
-        if(!response.ok){
+        if(!name || !email || !message){
 
-            throw new Error("Request failed");
+            contactStatus.textContent =
+                "Please complete all fields.";
 
+            return;
         }
 
 
-        alert("Message sent successfully.");
+        contactStatus.textContent =
+            "Sending...";
 
-        contactForm.reset();
 
-    }catch(error){
+        try{
 
-        alert(
-            "Contact service is not connected yet. Please connect the backend API."
-        );
+            const response =
+                await fetch(
+                    "/api/contact",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:JSON.stringify({
+
+                            name:name,
+
+                            email:email,
+
+                            message:message
+
+                        })
+                    }
+                );
+
+
+            if(!response.ok){
+
+                throw new Error(
+                    "Contact API unavailable."
+                );
+            }
+
+
+            contactStatus.textContent =
+                "Message sent successfully.";
+
+            contactForm.reset();
+
+
+        }catch(error){
+
+            console.error(error);
+
+            contactStatus.textContent =
+                "Contact backend is not connected yet.";
+
+        }
 
     }
+);
 
-});
+
+/* =========================
+   CLEAN AUDIO URL
+========================= */
+
+window.addEventListener(
+    "beforeunload",
+    function(){
+
+        if(currentAudioUrl){
+
+            URL.revokeObjectURL(
+                currentAudioUrl
+            );
+
+        }
+
+    }
+);
 
 </script>
 
