@@ -1,635 +1,462 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voice Library — VoiceAI</title>
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f7f8fc;
-  color:#172033;
-  overflow-x:hidden;
-}
-
-a{text-decoration:none;color:inherit}
-button,input,select{font:inherit}
-
-.navbar{
-  height:72px;
-  background:#fff;
-  border-bottom:1px solid #e6e8ef;
-  position:sticky;
-  top:0;
-  z-index:50;
-}
-
-.nav-inner{
-  width:min(1200px,calc(100% - 40px));
-  height:100%;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  font-size:21px;
-  white-space:nowrap;
-}
-
-.logo-icon{
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  background:#5b4cf0;
-  color:#fff;
-  display:grid;
-  place-items:center;
-}
-
-.nav-links{
-  display:flex;
-  align-items:center;
-  gap:25px;
-}
-
-.nav-links a{
-  font-size:14px;
-  font-weight:600;
-  color:#606778;
-}
-
-.nav-links a:hover,
-.nav-links a.active{
-  color:#5b4cf0;
-}
-
-.nav-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.btn{
-  border-radius:10px;
-  padding:10px 16px;
-  font-weight:700;
-  font-size:13px;
-}
-
-.btn-outline{
-  border:1px solid #dfe2e9;
-  background:#fff;
-}
-
-.btn-primary{
-  background:#5b4cf0;
-  color:#fff;
-  border:1px solid #5b4cf0;
-}
-
-.menu{
-  display:none;
-  background:none;
-  border:0;
-}
-
-/* HERO */
-
-.hero{
-  padding:65px 20px 40px;
-  text-align:center;
-  background:
-    radial-gradient(circle at 20% 20%,rgba(91,76,240,.12),transparent 35%),
-    radial-gradient(circle at 80% 20%,rgba(130,90,255,.09),transparent 35%);
-}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  background:#efedff;
-  color:#5141d8;
-  border-radius:30px;
-  padding:7px 13px;
-  font-size:12px;
-  font-weight:800;
-  margin-bottom:17px;
-}
-
-.hero h1{
-  font-size:clamp(36px,6vw,58px);
-  letter-spacing:-2px;
-  line-height:1.05;
-}
-
-.hero h1 span{
-  color:#5b4cf0;
-}
-
-.hero p{
-  max-width:650px;
-  margin:18px auto 0;
-  color:#707789;
-  line-height:1.7;
-}
-
-/* LIBRARY */
-
-.library{
-  width:min(1180px,calc(100% - 30px));
-  margin:10px auto 70px;
-}
-
-/* TOOLBAR */
-
-.toolbar{
-  background:#fff;
-  border:1px solid #e5e7ee;
-  border-radius:16px;
-  padding:15px;
-  display:flex;
-  gap:12px;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.search{
-  flex:1;
-  height:45px;
-  position:relative;
-}
-
-.search svg{
-  position:absolute;
-  left:13px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#8a91a0;
-}
-
-.search input{
-  width:100%;
-  height:100%;
-  border:1px solid #dfe2e9;
-  border-radius:10px;
-  padding:0 13px 0 42px;
-  outline:none;
-  background:#fafbfe;
-}
-
-.search input:focus{
-  border-color:#7669f5;
-  box-shadow:0 0 0 3px rgba(91,76,240,.08);
-}
-
-.filter{
-  height:45px;
-  min-width:150px;
-  border:1px solid #dfe2e9;
-  border-radius:10px;
-  background:#fafbfe;
-  padding:0 12px;
-  outline:none;
-}
-
-/* CATEGORY */
-
-.categories{
-  display:flex;
-  gap:9px;
-  overflow-x:auto;
-  padding:2px 1px 14px;
-  scrollbar-width:none;
-}
-
-.categories::-webkit-scrollbar{
-  display:none;
-}
-
-.category{
-  flex:none;
-  border:1px solid #dedfe8;
-  background:#fff;
-  color:#62697a;
-  border-radius:30px;
-  padding:9px 15px;
-  font-size:12px;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.category.active,
-.category:hover{
-  background:#5b4cf0;
-  color:#fff;
-  border-color:#5b4cf0;
-}
-
-/* HEADER */
-
-.library-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  margin:18px 0;
-}
-
-.library-head h2{
-  font-size:21px;
-}
-
-.library-head p{
-  color:#858b9a;
-  font-size:12px;
-  margin-top:4px;
-}
-
-.result-count{
-  color:#777e8e;
-  font-size:12px;
-}
-
-/* VOICES */
-
-.voice-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:17px;
-}
-
-.voice-card{
-  background:#fff;
-  border:1px solid #e4e6ed;
-  border-radius:16px;
-  padding:18px;
-  transition:.2s;
-}
-
-.voice-card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 28px rgba(25,30,50,.07);
-}
-
-.voice-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-}
-
-.voice-info{
-  display:flex;
-  gap:13px;
-  min-width:0;
-}
-
-.avatar{
-  width:48px;
-  height:48px;
-  flex:none;
-  border-radius:14px;
-  display:grid;
-  place-items:center;
-  font-weight:800;
-  font-size:16px;
-}
-
-.avatar.male{
-  background:#e9f1ff;
-  color:#3265ba;
-}
-
-.avatar.female{
-  background:#fcebf5;
-  color:#c34482;
-}
-
-.voice-name{
-  font-size:15px;
-  font-weight:800;
-}
-
-.voice-description{
-  color:#747b8b;
-  font-size:12px;
-  margin-top:4px;
-  line-height:1.5;
-}
-
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:10px;
-}
-
-.tag{
-  background:#f2f3f7;
-  color:#687080;
-  padding:5px 8px;
-  border-radius:6px;
-  font-size:10px;
-  font-weight:700;
-}
-
-.gender{
-  font-size:10px;
-  font-weight:800;
-  padding:5px 8px;
-  border-radius:6px;
-  background:#f4f4f8;
-  color:#6d7382;
-}
-
-.wave{
-  height:35px;
-  display:flex;
-  align-items:center;
-  gap:3px;
-  margin:15px 0 13px;
-}
-
-.wave span{
-  width:3px;
-  border-radius:5px;
-  background:#b7b2f8;
-}
-
-.wave span:nth-child(1){height:8px}
-.wave span:nth-child(2){height:16px}
-.wave span:nth-child(3){height:25px}
-.wave span:nth-child(4){height:13px}
-.wave span:nth-child(5){height:30px}
-.wave span:nth-child(6){height:19px}
-.wave span:nth-child(7){height:27px}
-.wave span:nth-child(8){height:12px}
-.wave span:nth-child(9){height:22px}
-.wave span:nth-child(10){height:16px}
-.wave span:nth-child(11){height:29px}
-.wave span:nth-child(12){height:11px}
-.wave span:nth-child(13){height:20px}
-.wave span:nth-child(14){height:26px}
-.wave span:nth-child(15){height:14px}
-.wave span:nth-child(16){height:23px}
-.wave span:nth-child(17){height:10px}
-.wave span:nth-child(18){height:19px}
-.wave span:nth-child(19){height:27px}
-.wave span:nth-child(20){height:14px}
-
-.voice-actions{
-  display:flex;
-  gap:8px;
-}
-
-.preview-btn,
-.use-btn{
-  height:40px;
-  border-radius:9px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:12px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.preview-btn{
-  flex:1;
-  border:1px solid #dfe2e9;
-  background:#fff;
-  color:#3d4352;
-}
-
-.preview-btn:hover{
-  border-color:#5b4cf0;
-  color:#5b4cf0;
-}
-
-.use-btn{
-  flex:1.2;
-  border:1px solid #5b4cf0;
-  background:#5b4cf0;
-  color:#fff;
-}
-
-.use-btn:hover{
-  background:#4c3ed7;
-}
-
-.preview-btn.playing{
-  background:#f0efff;
-  color:#5b4cf0;
-  border-color:#d8d4ff;
-}
-
-/* EMPTY */
-
-.empty{
-  grid-column:1/-1;
-  background:#fff;
-  border:1px solid #e5e7ee;
-  border-radius:15px;
-  padding:60px 20px;
-  text-align:center;
-  color:#818897;
-}
-
-.empty h3{
-  color:#363d4c;
-  margin-bottom:7px;
-}
-
-.empty p{
-  font-size:13px;
-}
-
-/* INFO */
-
-.info{
-  width:min(1180px,calc(100% - 30px));
-  margin:0 auto 70px;
-}
-
-.info-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-}
-
-.info-card{
-  background:#fff;
-  border:1px solid #e5e7ee;
-  border-radius:15px;
-  padding:22px;
-}
-
-.info-icon{
-  width:40px;
-  height:40px;
-  border-radius:10px;
-  background:#efedff;
-  color:#5b4cf0;
-  display:grid;
-  place-items:center;
-  margin-bottom:14px;
-}
-
-.info-card h3{
-  font-size:16px;
-  margin-bottom:7px;
-}
-
-.info-card p{
-  color:#757c8c;
-  font-size:12px;
-  line-height:1.6;
-}
-
-/* FOOTER */
-
-footer{
-  background:#fff;
-  border-top:1px solid #e5e7ee;
-  padding:30px 20px;
-}
-
-.footer{
-  width:min(1180px,100%);
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-}
-
-.footer-copy{
-  color:#979dab;
-  font-size:12px;
-}
-
-.footer-links{
-  display:flex;
-  gap:18px;
-  flex-wrap:wrap;
-}
-
-.footer-links a{
-  color:#73798a;
-  font-size:12px;
-}
-
-/* MOBILE */
-
-@media(max-width:850px){
-
-  .nav-links{
-    display:none;
-  }
-
-  .menu{
-    display:block;
-  }
-
-  .nav-actions .btn-outline{
-    display:none;
-  }
-
-  .voice-grid{
-    grid-template-columns:1fr;
-  }
-
-  .info-grid{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:600px){
-
-  .navbar{
-    height:64px;
-  }
-
-  .nav-inner{
-    width:calc(100% - 24px);
-  }
-
-  .logo{
-    font-size:18px;
-  }
-
-  .nav-actions .btn-primary{
-    padding:9px 12px;
-  }
-
-  .hero{
-    padding:45px 16px 30px;
-  }
-
-  .hero h1{
-    letter-spacing:-1px;
-  }
-
-  .hero p{
-    font-size:14px;
-  }
-
-  .library,
-  .info{
-    width:calc(100% - 20px);
-  }
-
-  .toolbar{
-    flex-direction:column;
-  }
-
-  .search,
-  .filter{
-    width:100%;
-  }
-
-  .voice-card{
-    padding:15px;
-  }
-
-  .footer{
-    flex-direction:column;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voice Library — VoiceAI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f7f7fb;
+      color: #17151d;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      height: 72px;
+      background: #fff;
+      border-bottom: 1px solid #e8e6ee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: #6d28d9;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #65616f;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #6d28d9;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 17px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn-light {
+      background: #f1eef7;
+      color: #3b3445;
+    }
+
+    .btn-primary {
+      background: #6d28d9;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #5b21b6;
+    }
+
+    /* HERO */
+
+    .hero {
+      max-width: 1200px;
+      margin: auto;
+      padding: 70px 24px 40px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 7px 13px;
+      background: #eee7ff;
+      color: #6422c4;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 6vw, 64px);
+      line-height: 1;
+      letter-spacing: -3px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 span {
+      color: #6d28d9;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: auto;
+      color: #716c79;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    /* SEARCH */
+
+    .search-area {
+      max-width: 1200px;
+      margin: 10px auto 0;
+      padding: 0 24px 30px;
+    }
+
+    .search-box {
+      background: white;
+      border: 1px solid #e4e1e9;
+      border-radius: 16px;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(30, 20, 50, .05);
+    }
+
+    .search-box input {
+      flex: 1;
+      border: 0;
+      outline: 0;
+      padding: 14px;
+      min-width: 0;
+      color: #25212b;
+    }
+
+    .search-box button {
+      white-space: nowrap;
+    }
+
+    /* FILTERS */
+
+    .filters {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 24px 30px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .filters select {
+      width: 100%;
+      background: white;
+      border: 1px solid #e1dee7;
+      border-radius: 11px;
+      padding: 13px;
+      outline: none;
+      color: #46414d;
+    }
+
+    /* LIBRARY HEADER */
+
+    .library-head {
+      max-width: 1200px;
+      margin: auto;
+      padding: 10px 24px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .library-head h2 {
+      font-size: 24px;
+    }
+
+    .count {
+      color: #77717f;
+      font-size: 14px;
+    }
+
+    /* VOICES */
+
+    .voice-grid {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 24px 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .voice-card {
+      background: white;
+      border: 1px solid #e7e3eb;
+      border-radius: 18px;
+      padding: 20px;
+      transition: .2s ease;
+    }
+
+    .voice-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(25, 15, 45, .08);
+    }
+
+    .voice-top {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-bottom: 15px;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6d28d9, #a855f7);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .voice-name {
+      font-size: 17px;
+      font-weight: 800;
+      word-break: break-word;
+    }
+
+    .voice-meta {
+      color: #77717f;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .description {
+      color: #67616f;
+      line-height: 1.6;
+      font-size: 14px;
+      min-height: 67px;
+      margin-bottom: 15px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 17px;
+    }
+
+    .tag {
+      background: #f2eff7;
+      color: #5f5868;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .voice-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .preview-btn,
+    .use-btn {
+      border: 0;
+      padding: 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .preview-btn {
+      background: #f0edf5;
+      color: #3f3948;
+    }
+
+    .use-btn {
+      background: #6d28d9;
+      color: white;
+    }
+
+    .audio {
+      width: 100%;
+      margin: 5px 0 15px;
+      display: none;
+      height: 35px;
+    }
+
+    .audio.show {
+      display: block;
+    }
+
+    /* LOADING */
+
+    .loading {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px 24px 60px;
+      text-align: center;
+      color: #77717f;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #ddd6e8;
+      border-top-color: #6d28d9;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .error {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 16px 24px;
+      background: #fff0f0;
+      border: 1px solid #ffd2d2;
+      color: #b42318;
+      border-radius: 12px;
+      display: none;
+    }
+
+    /* LOAD MORE */
+
+    .load-more {
+      text-align: center;
+      padding: 5px 24px 70px;
+    }
+
+    .load-more button {
+      display: none;
+      min-width: 180px;
+    }
+
+    /* FOOTER */
+
+    footer {
+      background: #17131d;
+      color: #bdb7c5;
+      padding: 35px 5%;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    footer strong {
+      color: white;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .voice-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .navbar {
+        padding: 0 16px;
+      }
+
+      .nav-actions .btn-light {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 45px;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-box button {
+        width: 100%;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .voice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .library-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header class="navbar">
-
-  <div class="nav-inner">
+  <!-- NAVBAR -->
+  <header class="navbar">
 
     <a href="index.html" class="logo">
-
-      <span class="logo-icon">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-          <path d="M4 12h3l2-7 4 14 2-7h5"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-        </svg>
-      </span>
-
-      VoiceAI
-
+      Voice<span>AI</span>
     </a>
-
 
     <nav class="nav-links">
       <a href="index.html">Home</a>
@@ -639,1143 +466,778 @@ footer{
       <a href="pricing.html">Pricing</a>
     </nav>
 
-
     <div class="nav-actions">
+      <a href="login.html" class="btn btn-light">Login</a>
+      <a href="pricing.html" class="btn btn-primary">Get Started</a>
+    </div>
 
-      <a href="profile.html" class="btn btn-outline">
-        Profile
-      </a>
+  </header>
 
-      <a href="pricing.html" class="btn btn-primary">
-        Upgrade
-      </a>
 
-      <button class="menu" aria-label="Menu">
-        <svg width="25" height="25" viewBox="0 0 24 24" fill="none">
-          <path d="M4 6h16M4 12h16M4 18h16"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"/>
-        </svg>
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="badge">
+      🎙️ VoiceAI Voice Library
+    </div>
+
+    <h1>
+      Find the perfect <span>voice.</span>
+    </h1>
+
+    <p>
+      Explore the voices available to your VoiceAI account.
+      Search, preview and use a voice directly in Text to Speech.
+    </p>
+
+  </section>
+
+
+  <!-- SEARCH -->
+  <section class="search-area">
+
+    <div class="search-box">
+
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="Search voices, accents, languages, styles..."
+        autocomplete="off"
+      >
+
+      <button
+        id="searchButton"
+        class="btn btn-primary"
+        type="button"
+      >
+        Search
       </button>
 
     </div>
 
-  </div>
-
-</header>
+  </section>
 
 
-<section class="hero">
+  <!-- FILTERS -->
+  <section class="filters">
 
-  <div class="badge">
-
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-      <path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"
-            stroke="currentColor"
-            stroke-width="1.8"/>
-      <path d="M5 11a7 7 0 0 0 14 0M12 18v3"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"/>
-    </svg>
-
-    AI Voice Library
-
-  </div>
-
-  <h1>
-    Find the perfect
-    <span>voice.</span>
-  </h1>
-
-  <p>
-    Explore professional AI voices for ads, narration,
-    podcasts, videos, social media and conversational experiences.
-  </p>
-
-</section>
-
-
-<main class="library">
-
-
-  <div class="toolbar">
-
-    <div class="search">
-
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <circle cx="11" cy="11" r="6.5"
-                stroke="currentColor"
-                stroke-width="1.8"/>
-        <path d="m16 16 5 5"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"/>
-      </svg>
-
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search voices..."
-      >
-
-    </div>
-
-
-    <select class="filter" id="genderFilter">
-
-      <option value="all">All voices</option>
-      <option value="male">Male voices</option>
-      <option value="female">Female voices</option>
-
+    <select id="genderFilter">
+      <option value="">All genders</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="neutral">Neutral</option>
     </select>
 
+    <select id="languageFilter">
+      <option value="">All languages</option>
+      <option value="english">English</option>
+      <option value="hindi">Hindi</option>
+      <option value="gujarati">Gujarati</option>
+      <option value="spanish">Spanish</option>
+      <option value="french">French</option>
+      <option value="german">German</option>
+      <option value="japanese">Japanese</option>
+    </select>
 
-    <select class="filter" id="categoryFilter">
-
-      <option value="all">All categories</option>
-      <option value="ads">Advertising</option>
-      <option value="narration">Narration</option>
-      <option value="podcast">Podcast</option>
-      <option value="social">Social Media</option>
+    <select id="categoryFilter">
+      <option value="">All categories</option>
+      <option value="premade">Premade</option>
       <option value="professional">Professional</option>
-
+      <option value="cloned">Cloned</option>
+      <option value="generated">Generated</option>
     </select>
 
-  </div>
+    <select id="ageFilter">
+      <option value="">All ages</option>
+      <option value="young">Young</option>
+      <option value="middle_aged">Middle aged</option>
+      <option value="old">Old</option>
+    </select>
+
+    <select id="sortFilter">
+      <option value="">Recommended</option>
+      <option value="name">Name</option>
+      <option value="recent">Recently added</option>
+    </select>
+
+  </section>
 
 
-  <div class="categories">
-
-    <button class="category active" data-category="all">
-      All
-    </button>
-
-    <button class="category" data-category="ads">
-      Ads
-    </button>
-
-    <button class="category" data-category="narration">
-      Narration
-    </button>
-
-    <button class="category" data-category="podcast">
-      Podcast
-    </button>
-
-    <button class="category" data-category="social">
-      Social
-    </button>
-
-    <button class="category" data-category="professional">
-      Professional
-    </button>
-
-  </div>
-
-
-  <div class="library-head">
+  <!-- HEADER -->
+  <section class="library-head">
 
     <div>
-      <h2>Featured voices</h2>
-      <p>Choose a voice and send it directly to Text to Speech.</p>
+      <h2>All Voices</h2>
+      <div class="count" id="voiceCount">
+        Loading voices...
+      </div>
     </div>
 
-    <span class="result-count" id="resultCount">
-      8 voices
-    </span>
+  </section>
+
+
+  <div id="errorBox" class="error"></div>
+
+
+  <!-- LOADING -->
+  <div id="loading" class="loading">
+
+    <div class="spinner"></div>
+
+    <p>Loading Voice Library...</p>
 
   </div>
 
 
-  <div class="voice-grid" id="voiceGrid">
+  <!-- VOICE GRID -->
+  <main
+    id="voiceGrid"
+    class="voice-grid"
+  ></main>
 
 
-    <!-- DAVID -->
+  <!-- LOAD MORE -->
+  <div class="load-more">
 
-    <article
-      class="voice-card"
-      data-name="David Castlemore"
-      data-gender="male"
-      data-category="narration professional"
-      data-voice="David"
+    <button
+      id="loadMoreButton"
+      class="btn btn-primary"
+      type="button"
     >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar male">DC</div>
-
-          <div>
-            <div class="voice-name">
-              David Castlemore
-            </div>
-
-            <div class="voice-description">
-              Professional newsreader with a clear documentary tone.
-            </div>
-
-            <div class="tags">
-              <span class="tag">News</span>
-              <span class="tag">Documentary</span>
-              <span class="tag">Narration</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">MALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Welcome to VoiceAI. Create professional voice content with an AI voice made for your project."
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linejoin="round"/>
-          </svg>
-          Preview
-        </button>
-
-        <a
-          href="tts.html?voice=David"
-          class="use-btn"
-        >
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- BRYAN -->
-
-    <article
-      class="voice-card"
-      data-name="Bryan"
-      data-gender="male"
-      data-category="ads professional narration"
-      data-voice="Bryan"
-    >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar male">BR</div>
-
-          <div>
-            <div class="voice-name">Bryan</div>
-
-            <div class="voice-description">
-              Polished, measured and engaging for commercial content.
-            </div>
-
-            <div class="tags">
-              <span class="tag">Ads</span>
-              <span class="tag">Commercial</span>
-              <span class="tag">Video</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">MALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Make your message stand out with a polished and engaging voice."
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linejoin="round"/>
-          </svg>
-          Preview
-        </button>
-
-        <a href="tts.html?voice=Bryan" class="use-btn">
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- JUNIPER -->
-
-    <article
-      class="voice-card"
-      data-name="Juniper"
-      data-gender="female"
-      data-category="podcast professional"
-      data-voice="Juniper"
-    >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar female">JU</div>
-
-          <div>
-            <div class="voice-name">Juniper</div>
-
-            <div class="voice-description">
-              Grounded and professional for podcasts and conversation.
-            </div>
-
-            <div class="tags">
-              <span class="tag">Podcast</span>
-              <span class="tag">AI Agent</span>
-              <span class="tag">Calm</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">FEMALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Hello. Welcome to your next conversation with VoiceAI."
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-          Preview
-        </button>
-
-        <a href="tts.html?voice=Juniper" class="use-btn">
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- JESSICA -->
-
-    <article
-      class="voice-card"
-      data-name="Jessica Anne Bogart"
-      data-gender="female"
-      data-category="professional narration podcast"
-      data-voice="Jessica"
-    >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar female">JA</div>
-
-          <div>
-            <div class="voice-name">
-              Jessica Anne Bogart
-            </div>
-
-            <div class="voice-description">
-              Expressive professional voice for narration and conversation.
-            </div>
-
-            <div class="tags">
-              <span class="tag">Professional</span>
-              <span class="tag">Narration</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">FEMALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Your story deserves a natural, expressive and professional voice."
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-          Preview
-        </button>
-
-        <a href="tts.html?voice=Jessica" class="use-btn">
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- HALE -->
-
-    <article
-      class="voice-card"
-      data-name="Hale"
-      data-gender="male"
-      data-category="ads professional"
-      data-voice="Hale"
-    >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar male">HA</div>
-
-          <div>
-            <div class="voice-name">Hale</div>
-
-            <div class="voice-description">
-              Smooth, confident and persuasive for advertisements.
-            </div>
-
-            <div class="tags">
-              <span class="tag">Advertising</span>
-              <span class="tag">Premium</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">MALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Discover a smoother, more confident way to bring your brand to life."
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-          Preview
-        </button>
-
-        <a href="tts.html?voice=Hale" class="use-btn">
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- JERRY -->
-
-    <article
-      class="voice-card"
-      data-name="Jerry B"
-      data-gender="male"
-      data-category="ads social"
-      data-voice="Jerry"
-    >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar male">JB</div>
-
-          <div>
-            <div class="voice-name">Jerry B</div>
-
-            <div class="voice-description">
-              Upbeat, energetic and happy for promotions and reels.
-            </div>
-
-            <div class="tags">
-              <span class="tag">Reels</span>
-              <span class="tag">Promotion</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">MALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Let's make your next reel energetic, exciting and impossible to ignore!"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-          Preview
-        </button>
-
-        <a href="tts.html?voice=Jerry" class="use-btn">
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- ALLISON -->
-
-    <article
-      class="voice-card"
-      data-name="Allison"
-      data-gender="female"
-      data-category="ads social"
-      data-voice="Allison"
-    >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar female">AL</div>
-
-          <div>
-            <div class="voice-name">Allison</div>
-
-            <div class="voice-description">
-              Energetic, clear and bubbly for commercial content.
-            </div>
-
-            <div class="tags">
-              <span class="tag">Commercial</span>
-              <span class="tag">Social</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">FEMALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Bring your social content to life with a clear and energetic voice!"
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-          Preview
-        </button>
-
-        <a href="tts.html?voice=Allison" class="use-btn">
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
-
-
-    <!-- EMMA -->
-
-    <article
-      class="voice-card"
-      data-name="Emma"
-      data-gender="female"
-      data-category="professional social"
-      data-voice="Emma"
-    >
-
-      <div class="voice-top">
-
-        <div class="voice-info">
-
-          <div class="avatar female">EM</div>
-
-          <div>
-            <div class="voice-name">Emma</div>
-
-            <div class="voice-description">
-              Clear and friendly voice for everyday content.
-            </div>
-
-            <div class="tags">
-              <span class="tag">Friendly</span>
-              <span class="tag">Social</span>
-            </div>
-          </div>
-
-        </div>
-
-        <span class="gender">FEMALE</span>
-
-      </div>
-
-
-      <div class="wave">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-
-
-      <div class="voice-actions">
-
-        <button
-          class="preview-btn"
-          data-text="Hello! I'm ready to help make your content sound natural and engaging."
-        >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-          Preview
-        </button>
-
-        <a href="tts.html?voice=Emma" class="use-btn">
-          Use Voice
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          </svg>
-        </a>
-
-      </div>
-
-    </article>
+      Load More Voices
+    </button>
 
   </div>
 
-</main>
 
+  <footer>
+    <strong>VoiceAI</strong> — AI Voice Studio
+    <br>
+    Real voice previews require your configured VoiceAI backend.
+  </footer>
 
-<section class="info">
 
-  <div class="info-grid">
+  <script>
 
-    <article class="info-card">
+    /*
+      IMPORTANT
 
-      <div class="info-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="8" r="4"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          <path d="M4 21c.8-4 3.5-6 8-6s7.2 2 8 6"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"/>
-        </svg>
-      </div>
+      Never put your ElevenLabs API key here.
 
-      <h3>Professional voices</h3>
+      Frontend talks to:
 
-      <p>
-        Select voices designed for narration, advertising,
-        social content, podcasts and conversational AI.
-      </p>
+          GET /api/voices
 
-    </article>
+      Your backend securely talks to ElevenLabs.
+    */
 
 
-    <article class="info-card">
+    const API_URL = "/api/voices";
 
-      <div class="info-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M9 18V6l12-3v12"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linejoin="round"/>
-          <circle cx="6" cy="18" r="3"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-          <circle cx="18" cy="15" r="3"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-        </svg>
-      </div>
 
-      <h3>Quick preview</h3>
+    const state = {
+      voices: [],
+      nextPageToken: null,
+      loading: false
+    };
 
-      <p>
-        Preview voice samples directly in your browser
-        before selecting a voice for TTS.
-      </p>
 
-    </article>
+    const searchInput =
+      document.getElementById("searchInput");
 
+    const searchButton =
+      document.getElementById("searchButton");
 
-    <article class="info-card">
+    const genderFilter =
+      document.getElementById("genderFilter");
 
-      <div class="info-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M5 12h14M13 6l6 6-6 6"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-        </svg>
-      </div>
+    const languageFilter =
+      document.getElementById("languageFilter");
 
-      <h3>One-click TTS</h3>
+    const categoryFilter =
+      document.getElementById("categoryFilter");
 
-      <p>
-        Choose a voice and continue directly to the
-        Text to Speech workspace.
-      </p>
+    const ageFilter =
+      document.getElementById("ageFilter");
 
-    </article>
+    const sortFilter =
+      document.getElementById("sortFilter");
 
-  </div>
+    const voiceGrid =
+      document.getElementById("voiceGrid");
 
-</section>
+    const loading =
+      document.getElementById("loading");
 
+    const errorBox =
+      document.getElementById("errorBox");
 
-<footer>
+    const voiceCount =
+      document.getElementById("voiceCount");
 
-  <div class="footer">
+    const loadMoreButton =
+      document.getElementById("loadMoreButton");
 
-    <div class="footer-copy">
-      © 2026 VoiceAI. AI Voice & Creative Studio.
-    </div>
 
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="tools.html">AI Tools</a>
-      <a href="tts.html">Text to Speech</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="forgot-password.html">Forgot Password</a>
-    </div>
+    function getInitial(name) {
 
-  </div>
-
-</footer>
-
-
-<script>
-
-/* SEARCH + FILTER */
-
-const searchInput =
-  document.getElementById("searchInput");
-
-const genderFilter =
-  document.getElementById("genderFilter");
-
-const categoryFilter =
-  document.getElementById("categoryFilter");
-
-const cards =
-  [...document.querySelectorAll(".voice-card")];
-
-const resultCount =
-  document.getElementById("resultCount");
-
-
-function filterVoices(){
-
-  const search =
-    searchInput.value.trim().toLowerCase();
-
-  const gender =
-    genderFilter.value;
-
-  const category =
-    categoryFilter.value;
-
-  let visible = 0;
-
-  cards.forEach(card => {
-
-    const name =
-      card.dataset.name.toLowerCase();
-
-    const cardGender =
-      card.dataset.gender;
-
-    const cardCategory =
-      card.dataset.category;
-
-    const matchesSearch =
-      !search ||
-      name.includes(search) ||
-      cardCategory.includes(search);
-
-    const matchesGender =
-      gender === "all" ||
-      cardGender === gender;
-
-    const matchesCategory =
-      category === "all" ||
-      cardCategory.includes(category);
-
-    const show =
-      matchesSearch &&
-      matchesGender &&
-      matchesCategory;
-
-    card.style.display =
-      show ? "" : "none";
-
-    if(show) visible++;
-
-  });
-
-  resultCount.textContent =
-    `${visible} voice${visible !== 1 ? "s" : ""}`;
-
-}
-
-
-searchInput.addEventListener("input",filterVoices);
-genderFilter.addEventListener("change",filterVoices);
-categoryFilter.addEventListener("change",filterVoices);
-
-
-/* CATEGORY BUTTONS */
-
-document.querySelectorAll(".category")
-.forEach(button => {
-
-  button.addEventListener("click",() => {
-
-    document.querySelectorAll(".category")
-    .forEach(item =>
-      item.classList.remove("active")
-    );
-
-    button.classList.add("active");
-
-    const category =
-      button.dataset.category;
-
-    categoryFilter.value = category;
-
-    filterVoices();
-
-  });
-
-});
-
-
-/* BROWSER PREVIEW */
-
-let currentSpeech = null;
-let currentButton = null;
-
-
-document.querySelectorAll(".preview-btn")
-.forEach(button => {
-
-  button.addEventListener("click",() => {
-
-    if(!("speechSynthesis" in window)){
-
-      alert(
-        "Voice preview is not supported by this browser."
-      );
-
-      return;
-    }
-
-
-    if(currentSpeech){
-
-      speechSynthesis.cancel();
-
-      if(currentButton){
-
-        currentButton.classList.remove("playing");
-
-        currentButton.innerHTML = `
-          <svg width="15" height="15"
-               viewBox="0 0 24 24"
-               fill="none">
-
-            <path d="m9 6 9 6-9 6V6Z"
-                  stroke="currentColor"
-                  stroke-width="1.8"/>
-
-          </svg>
-
-          Preview
-        `;
-
+      if (!name) {
+        return "?";
       }
 
-      currentSpeech = null;
-      currentButton = null;
+      return name
+        .trim()
+        .charAt(0)
+        .toUpperCase();
 
     }
 
 
-    const text =
-      button.dataset.text;
+    function escapeHTML(value) {
 
-    const card =
-      button.closest(".voice-card");
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
-    const voiceName =
-      card.dataset.voice;
-
-
-    const utterance =
-      new SpeechSynthesisUtterance(text);
+    }
 
 
-    const voices =
-      speechSynthesis.getVoices();
+    function getLabels(voice) {
+
+      if (!voice.labels) {
+        return {};
+      }
+
+      return voice.labels;
+
+    }
 
 
-    const preferred =
-      voices.find(v =>
-        v.lang.startsWith("en") &&
-        (
-          v.name.toLowerCase()
-          .includes(voiceName.toLowerCase())
-        )
-      );
+    function getLabel(voice, key) {
+
+      const labels = getLabels(voice);
+
+      return labels[key] || "";
+
+    }
 
 
-    if(preferred){
+    function createVoiceCard(voice, index) {
 
-      utterance.voice = preferred;
+      const name =
+        voice.name ||
+        "Unnamed Voice";
 
-    }else{
+      const description =
+        voice.description ||
+        "AI voice available in your VoiceAI library.";
 
-      const english =
-        voices.find(v =>
-          v.lang.startsWith("en")
+      const gender =
+        getLabel(voice, "gender");
+
+      const age =
+        getLabel(voice, "age");
+
+      const accent =
+        getLabel(voice, "accent");
+
+      const language =
+        getLabel(voice, "language");
+
+      const category =
+        voice.category ||
+        getLabel(voice, "category");
+
+      const preview =
+        voice.preview_url ||
+        voice.previewUrl ||
+        "";
+
+
+      const card =
+        document.createElement("article");
+
+      card.className = "voice-card";
+
+
+      const safeName =
+        escapeHTML(name);
+
+      const safeDescription =
+        escapeHTML(description);
+
+
+      let tags = "";
+
+      [
+        gender,
+        age,
+        accent,
+        language,
+        category
+      ]
+        .filter(Boolean)
+        .slice(0, 5)
+        .forEach(tag => {
+
+          tags += `
+            <span class="tag">
+              ${escapeHTML(tag)}
+            </span>
+          `;
+
+        });
+
+
+      const voiceId =
+        encodeURIComponent(
+          voice.voice_id || ""
         );
 
-      if(english){
-        utterance.voice = english;
+
+      card.innerHTML = `
+
+        <div class="voice-top">
+
+          <div class="avatar">
+            ${getInitial(name)}
+          </div>
+
+          <div>
+
+            <div class="voice-name">
+              ${safeName}
+            </div>
+
+            <div class="voice-meta">
+              ${escapeHTML(category || "Voice")}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="description">
+          ${safeDescription}
+        </div>
+
+
+        <div class="tags">
+          ${tags || `
+            <span class="tag">
+              AI Voice
+            </span>
+          `}
+        </div>
+
+
+        ${
+          preview
+            ? `
+              <audio
+                class="audio"
+                controls
+                preload="none"
+                src="${escapeHTML(preview)}"
+              ></audio>
+            `
+            : ""
+        }
+
+
+        <div class="voice-actions">
+
+          ${
+            preview
+              ? `
+                <button
+                  class="preview-btn"
+                  type="button"
+                  data-preview="${index}"
+                >
+                  ▶ Preview
+                </button>
+              `
+              : `
+                <button
+                  class="preview-btn"
+                  type="button"
+                  disabled
+                >
+                  No Preview
+                </button>
+              `
+          }
+
+
+          <a
+            class="use-btn"
+            href="tts.html?voice=${voiceId}"
+          >
+            Use Voice
+          </a>
+
+        </div>
+
+      `;
+
+
+      const previewButton =
+        card.querySelector(
+          "[data-preview]"
+        );
+
+      const audio =
+        card.querySelector("audio");
+
+
+      if (
+        previewButton &&
+        audio
+      ) {
+
+        previewButton.addEventListener(
+          "click",
+          () => {
+
+            document
+              .querySelectorAll(".audio")
+              .forEach(player => {
+
+                if (player !== audio) {
+                  player.pause();
+                }
+
+              });
+
+
+            audio.classList.add("show");
+
+            if (audio.paused) {
+              audio.play().catch(() => {});
+            } else {
+              audio.pause();
+            }
+
+          }
+        );
+
+      }
+
+
+      return card;
+
+    }
+
+
+    function renderVoices() {
+
+      voiceGrid.innerHTML = "";
+
+      state.voices.forEach(
+        (voice, index) => {
+
+          voiceGrid.appendChild(
+            createVoiceCard(
+              voice,
+              index
+            )
+          );
+
+        }
+      );
+
+
+      voiceCount.textContent =
+        `${state.voices.length} voices loaded`;
+
+    }
+
+
+    function showError(message) {
+
+      errorBox.textContent =
+        message;
+
+      errorBox.style.display =
+        "block";
+
+    }
+
+
+    function hideError() {
+
+      errorBox.style.display =
+        "none";
+
+    }
+
+
+    function setLoading(value) {
+
+      state.loading =
+        value;
+
+      loading.style.display =
+        value ? "block" : "none";
+
+    }
+
+
+    function buildParams() {
+
+      const params =
+        new URLSearchParams();
+
+
+      const search =
+        searchInput.value.trim();
+
+
+      if (search) {
+        params.set("search", search);
+      }
+
+
+      if (genderFilter.value) {
+        params.set(
+          "gender",
+          genderFilter.value
+        );
+      }
+
+
+      if (languageFilter.value) {
+        params.set(
+          "language",
+          languageFilter.value
+        );
+      }
+
+
+      if (categoryFilter.value) {
+        params.set(
+          "category",
+          categoryFilter.value
+        );
+      }
+
+
+      if (ageFilter.value) {
+        params.set(
+          "age",
+          ageFilter.value
+        );
+      }
+
+
+      if (sortFilter.value) {
+        params.set(
+          "sort",
+          sortFilter.value
+        );
+      }
+
+
+      if (state.nextPageToken) {
+
+        params.set(
+          "page_token",
+          state.nextPageToken
+        );
+
+      }
+
+
+      return params;
+
+    }
+
+
+    async function loadVoices(
+      reset = false
+    ) {
+
+      if (state.loading) {
+        return;
+      }
+
+
+      if (reset) {
+
+        state.voices = [];
+
+        state.nextPageToken = null;
+
+        voiceGrid.innerHTML = "";
+
+      }
+
+
+      hideError();
+
+      setLoading(true);
+
+
+      try {
+
+        const params =
+          buildParams();
+
+
+        const response =
+          await fetch(
+            `${API_URL}?${params.toString()}`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: {
+                "Accept":
+                  "application/json"
+              }
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            `Voice API error: ${response.status}`
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        const voices =
+          Array.isArray(data)
+            ? data
+            : (
+              data.voices ||
+              data.items ||
+              []
+            );
+
+
+        if (reset) {
+          state.voices = voices;
+        } else {
+          state.voices.push(...voices);
+        }
+
+
+        state.nextPageToken =
+          data.next_page_token ||
+          data.nextPageToken ||
+          null;
+
+
+        renderVoices();
+
+
+        loadMoreButton.style.display =
+          state.nextPageToken
+            ? "inline-block"
+            : "none";
+
+
+        if (
+          state.voices.length === 0
+        ) {
+
+          voiceCount.textContent =
+            "No voices found.";
+
+        }
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        showError(
+          "Voice Library load nahi ho payi. Backend /api/voices check karo."
+        );
+
+      } finally {
+
+        setLoading(false);
+
       }
 
     }
 
 
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
+    function searchVoices() {
+
+      loadVoices(true);
+
+    }
 
 
-    utterance.onstart = () => {
-
-      button.classList.add("playing");
-
-      button.innerHTML = `
-        <svg width="15" height="15"
-             viewBox="0 0 24 24"
-             fill="none">
-
-          <rect x="6" y="5" width="4" height="14"
-                rx="1"
-                fill="currentColor"/>
-
-          <rect x="14" y="5" width="4" height="14"
-                rx="1"
-                fill="currentColor"/>
-
-        </svg>
-
-        Playing
-      `;
-
-    };
+    searchButton.addEventListener(
+      "click",
+      searchVoices
+    );
 
 
-    utterance.onend =
-    utterance.onerror = () => {
+    searchInput.addEventListener(
+      "keydown",
+      event => {
 
-      button.classList.remove("playing");
+        if (
+          event.key === "Enter"
+        ) {
 
-      button.innerHTML = `
-        <svg width="15" height="15"
-             viewBox="0 0 24 24"
-             fill="none">
+          searchVoices();
 
-          <path d="m9 6 9 6-9 6V6Z"
-                stroke="currentColor"
-                stroke-width="1.8"/>
+        }
 
-        </svg>
-
-        Preview
-      `;
-
-      currentSpeech = null;
-      currentButton = null;
-
-    };
+      }
+    );
 
 
-    currentSpeech = utterance;
-    currentButton = button;
+    [
+      genderFilter,
+      languageFilter,
+      categoryFilter,
+      ageFilter,
+      sortFilter
+    ]
+      .forEach(filter => {
 
-    speechSynthesis.speak(utterance);
+        filter.addEventListener(
+          "change",
+          () => {
 
-  });
+            loadVoices(true);
 
-});
+          }
+        );
+
+      });
 
 
-/* LOAD BROWSER VOICES */
+    loadMoreButton.addEventListener(
+      "click",
+      () => {
 
-if("speechSynthesis" in window){
+        loadVoices(false);
 
-  speechSynthesis.onvoiceschanged = () => {
-    speechSynthesis.getVoices();
-  };
+      }
+    );
 
-}
 
-</script>
+    loadVoices(true);
+
+  </script>
 
 </body>
 </html>
