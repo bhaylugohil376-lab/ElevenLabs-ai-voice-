@@ -2,646 +2,156 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Text to Image — VoiceAI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Text to Image | VoiceAI</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --primary:#6c45f5;
+ --dark:#17151d;
+ --muted:#777481;
+ --border:#e7e5ee;
+ --bg:#f7f7fb;
+ --card:#fff;
 }
-
-html{
-  scroll-behavior:smooth;
-}
-
 body{
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#f7f8fc;
-  color:#172033;
-  overflow-x:hidden;
+ font-family:Inter,Arial,sans-serif;
+ background:var(--bg);
+ color:var(--dark);
+ overflow-x:hidden;
 }
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-button,
-input,
-textarea,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-/* NAVBAR */
-
+a{text-decoration:none;color:inherit}
 .navbar{
-  height:72px;
-  background:#fff;
-  border-bottom:1px solid #e8eaf0;
-  display:flex;
-  align-items:center;
-  position:sticky;
-  top:0;
-  z-index:100;
+ height:74px;background:#fff;border-bottom:1px solid var(--border);
+ padding:0 5%;display:flex;align-items:center;justify-content:space-between;
+ position:sticky;top:0;z-index:10
 }
-
-.nav-inner{
-  width:min(1200px,calc(100% - 40px));
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:25px;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:21px;
-  font-weight:800;
-  white-space:nowrap;
-}
-
-.logo-icon{
-  width:34px;
-  height:34px;
-  border-radius:10px;
-  display:grid;
-  place-items:center;
-  background:#5b4cf0;
-  color:white;
-}
-
-.nav-links{
-  display:flex;
-  align-items:center;
-  gap:25px;
-}
-
-.nav-links a{
-  color:#5d6474;
-  font-size:14px;
-  font-weight:600;
-}
-
-.nav-links a:hover,
-.nav-links a.active{
-  color:#5b4cf0;
-}
-
-.nav-actions{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
+.logo{font-size:23px;font-weight:800}
+.logo span{color:var(--primary)}
+.navlinks{display:flex;gap:25px;font-size:14px;font-weight:700;color:#5d5a65}
+.navlinks a:hover,.navlinks .active{color:var(--primary)}
+.navactions{display:flex;gap:9px}
 .btn{
-  border:0;
-  border-radius:10px;
-  padding:11px 17px;
-  font-weight:700;
-  transition:.2s;
+ border:1px solid var(--border);background:#fff;border-radius:10px;
+ padding:10px 15px;font-weight:750;font-size:13px
 }
+.primary{background:var(--primary);border-color:var(--primary);color:white}
 
-.btn:hover{
-  transform:translateY(-1px);
+.page{
+ width:min(1180px,92%);margin:auto;padding:55px 0 75px
 }
-
-.btn-outline{
-  background:white;
-  border:1px solid #dfe2ea;
-  color:#333a4b;
-}
-
-.btn-primary{
-  background:#5b4cf0;
-  color:white;
-}
-
-.mobile-menu{
-  display:none;
-  border:0;
-  background:none;
-}
-
-/* HERO */
-
-.hero{
-  background:
-    radial-gradient(circle at 20% 10%,rgba(91,76,240,.12),transparent 35%),
-    radial-gradient(circle at 90% 30%,rgba(125,91,255,.08),transparent 35%);
-  padding:70px 20px 45px;
-  text-align:center;
-}
-
+.hero{margin-bottom:30px}
 .badge{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:7px 12px;
-  background:#efedff;
-  color:#5141d8;
-  border-radius:30px;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:18px;
+ display:inline-block;background:#eeeaff;color:var(--primary);
+ padding:7px 12px;border-radius:20px;font-size:11px;font-weight:800;
+ margin-bottom:14px
 }
-
-.hero h1{
-  font-size:clamp(36px,6vw,60px);
-  line-height:1.05;
-  letter-spacing:-2px;
-  max-width:800px;
-  margin:auto;
-}
-
-.hero h1 span{
-  color:#5b4cf0;
-}
-
-.hero p{
-  max-width:650px;
-  margin:20px auto 0;
-  color:#687083;
-  line-height:1.7;
-  font-size:16px;
-}
-
-/* WORKSPACE */
+h1{font-size:clamp(32px,5vw,52px);letter-spacing:-1.5px;margin-bottom:10px}
+.hero p{color:var(--muted);line-height:1.7;max-width:700px}
 
 .workspace{
-  width:min(1180px,calc(100% - 30px));
-  margin:15px auto 70px;
-  display:grid;
-  grid-template-columns:390px 1fr;
-  gap:20px;
-  align-items:start;
+ display:grid;grid-template-columns:390px 1fr;gap:20px;align-items:start
 }
-
 .panel{
-  background:white;
-  border:1px solid #e5e7ee;
-  border-radius:18px;
-  box-shadow:0 8px 30px rgba(25,30,50,.05);
+ background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px
 }
-
-.control-panel{
-  padding:24px;
+.panel h2{font-size:18px;margin-bottom:20px}
+.field{margin-bottom:17px}
+label{
+ display:block;font-size:12px;font-weight:800;margin-bottom:8px
 }
-
-.panel-title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:22px;
+textarea,input,select{
+ width:100%;border:1px solid var(--border);border-radius:11px;
+ padding:12px;font:inherit;font-size:13px;outline:none;background:#fff
 }
+textarea{height:180px;resize:vertical;line-height:1.6}
+textarea:focus,input:focus,select:focus{border-color:#a897ff}
+.counter{text-align:right;color:#888;font-size:11px;margin-top:5px}
 
-.panel-title-icon{
-  width:38px;
-  height:38px;
-  border-radius:10px;
-  background:#efedff;
-  color:#5b4cf0;
-  display:grid;
-  place-items:center;
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.range{
+ width:100%;accent-color:var(--primary)
 }
-
-.panel-title h2{
-  font-size:18px;
-}
-
-.panel-title p{
-  color:#858b9b;
-  font-size:12px;
-  margin-top:2px;
-}
-
-.field{
-  margin-bottom:18px;
-}
-
-.field label{
-  display:block;
-  margin-bottom:8px;
-  font-size:13px;
-  font-weight:700;
-  color:#353c4d;
-}
-
-textarea,
-select,
-input[type="text"]{
-  width:100%;
-  border:1px solid #dfe2e9;
-  border-radius:11px;
-  background:#fafbfe;
-  color:#252b39;
-  outline:none;
-  transition:.2s;
-}
-
-textarea{
-  min-height:180px;
-  resize:vertical;
-  padding:13px;
-  line-height:1.6;
-}
-
-select,
-input[type="text"]{
-  height:45px;
-  padding:0 12px;
-}
-
-textarea:focus,
-select:focus,
-input[type="text"]:focus{
-  border-color:#7669f5;
-  box-shadow:0 0 0 3px rgba(91,76,240,.1);
-  background:white;
-}
-
-.prompt-footer{
-  display:flex;
-  justify-content:space-between;
-  color:#9096a5;
-  font-size:11px;
-  margin-top:6px;
-}
-
-.grid-two{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.range-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-input[type="range"]{
-  width:100%;
-  accent-color:#5b4cf0;
-}
-
 .range-value{
-  min-width:48px;
-  text-align:right;
-  font-size:12px;
-  font-weight:700;
+ display:flex;justify-content:space-between;color:#777;font-size:12px
 }
 
-.generate-btn{
-  width:100%;
-  height:48px;
-  border:0;
-  border-radius:11px;
-  background:#5b4cf0;
-  color:white;
-  font-weight:800;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:9px;
-  margin-top:8px;
+.generate{
+ width:100%;border:0;border-radius:11px;padding:14px;
+ background:var(--primary);color:#fff;font-size:14px;font-weight:800;
+ cursor:pointer;margin-top:5px
 }
-
-.generate-btn:hover{
-  background:#4e40db;
-}
-
-.usage{
-  margin-top:13px;
-  padding:11px 13px;
-  background:#f5f4ff;
-  border-radius:10px;
-  color:#5d55a7;
-  font-size:12px;
-  text-align:center;
-}
-
-/* OUTPUT */
-
-.output-panel{
-  min-height:620px;
-  overflow:hidden;
-}
-
-.output-head{
-  padding:22px 24px;
-  border-bottom:1px solid #e8eaf0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-}
-
-.output-head h2{
-  font-size:18px;
-}
-
-.output-head p{
-  font-size:12px;
-  color:#858b99;
-  margin-top:3px;
-}
-
-.gallery{
-  padding:22px;
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:18px;
-}
-
-.empty-state{
-  min-height:500px;
-  grid-column:1/-1;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  color:#8b91a0;
-  padding:30px;
-}
-
-.empty-icon{
-  width:72px;
-  height:72px;
-  border-radius:18px;
-  background:#f0efff;
-  color:#6254e8;
-  display:grid;
-  place-items:center;
-  margin-bottom:18px;
-}
-
-.empty-state h3{
-  color:#343b4b;
-  margin-bottom:8px;
-  font-size:19px;
-}
-
-.empty-state p{
-  max-width:400px;
-  line-height:1.6;
-  font-size:13px;
-}
-
-.image-card{
-  border:1px solid #e5e7ee;
-  border-radius:14px;
-  overflow:hidden;
-  background:white;
-}
-
-.image-preview{
-  width:100%;
-  aspect-ratio:1/1;
-  background:#eef0f5;
-  object-fit:cover;
-  display:block;
-}
-
-.image-actions{
-  padding:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-
-.image-label{
-  color:#737a8a;
-  font-size:12px;
-}
-
-.download-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:8px 11px;
-  border-radius:8px;
-  border:1px solid #dddfe8;
-  background:white;
-  color:#343a4a;
-  font-size:12px;
-  font-weight:700;
-}
-
-.download-btn:hover{
-  border-color:#5b4cf0;
-  color:#5b4cf0;
-}
+.generate:hover{background:#5935d8}
+.generate:disabled{opacity:.6;cursor:not-allowed}
 
 .status{
-  display:none;
-  margin:15px 22px 0;
-  padding:11px 13px;
-  border-radius:9px;
-  font-size:12px;
+ display:none;margin-top:12px;padding:11px;border-radius:10px;
+ font-size:12px;line-height:1.5
+}
+.status.show{display:block}
+.status.error{background:#fff0f0;color:#b42318}
+.status.success{background:#edfdf3;color:#087443}
+
+.output{
+ min-height:500px;display:flex;flex-direction:column
+}
+.output-head{
+ display:flex;justify-content:space-between;align-items:center;
+ margin-bottom:18px
+}
+.output-head h2{font-size:18px}
+.output-head span{font-size:11px;color:#888}
+
+.empty{
+ flex:1;min-height:410px;border:1px dashed #d9d5e5;
+ border-radius:15px;display:flex;align-items:center;
+ justify-content:center;text-align:center;color:#888;padding:30px
+}
+.empty svg{width:45px;height:45px;color:#b3abc9;margin-bottom:12px}
+.empty h3{font-size:16px;color:#444;margin-bottom:5px}
+.empty p{font-size:12px}
+
+.result{display:none}
+.result img{
+ width:100%;max-height:560px;object-fit:contain;
+ border-radius:14px;background:#f2f1f6
+}
+.result-actions{
+ display:flex;gap:10px;margin-top:14px
+}
+.download{
+ display:inline-flex;align-items:center;justify-content:center;
+ background:#17151d;color:#fff;padding:12px 16px;
+ border-radius:10px;font-size:13px;font-weight:800
+}
+.new{
+ border:1px solid var(--border);padding:12px 16px;
+ border-radius:10px;font-size:13px;font-weight:800;background:#fff
 }
 
-.status.error{
-  display:block;
-  background:#fff0f0;
-  color:#b42318;
+.note{
+ margin-top:16px;padding:12px;background:#f8f7ff;
+ border-radius:10px;color:#6e6979;font-size:11px;line-height:1.6
 }
-
-.status.success{
-  display:block;
-  background:#edfdf3;
-  color:#067647;
-}
-
-.spinner{
-  width:17px;
-  height:17px;
-  border:2px solid rgba(255,255,255,.4);
-  border-top-color:white;
-  border-radius:50%;
-  animation:spin .7s linear infinite;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg);}
-}
-
-/* INFO */
-
-.info{
-  width:min(1180px,calc(100% - 30px));
-  margin:0 auto 70px;
-}
-
-.info-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-}
-
-.info-card{
-  background:white;
-  border:1px solid #e5e7ee;
-  border-radius:15px;
-  padding:23px;
-}
-
-.info-icon{
-  width:40px;
-  height:40px;
-  border-radius:10px;
-  background:#f0efff;
-  color:#5b4cf0;
-  display:grid;
-  place-items:center;
-  margin-bottom:15px;
-}
-
-.info-card h3{
-  font-size:16px;
-  margin-bottom:7px;
-}
-
-.info-card p{
-  color:#72798a;
-  font-size:13px;
-  line-height:1.6;
-}
-
-/* FOOTER */
 
 footer{
-  background:#fff;
-  border-top:1px solid #e7e9ef;
-  padding:30px 20px;
+ border-top:1px solid var(--border);background:#fff;
+ text-align:center;padding:28px;color:#888;font-size:12px
 }
-
-.footer-inner{
-  width:min(1180px,100%);
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-}
-
-.footer-links{
-  display:flex;
-  flex-wrap:wrap;
-  gap:18px;
-}
-
-.footer-links a{
-  color:#73798a;
-  font-size:12px;
-}
-
-.footer-copy{
-  color:#969baa;
-  font-size:12px;
-}
-
-/* RESPONSIVE */
 
 @media(max-width:900px){
-
-  .nav-links{
-    display:none;
-  }
-
-  .mobile-menu{
-    display:block;
-    color:#343a49;
-  }
-
-  .nav-actions .btn-outline{
-    display:none;
-  }
-
-  .workspace{
-    grid-template-columns:1fr;
-  }
-
-  .output-panel{
-    min-height:450px;
-  }
-
-  .info-grid{
-    grid-template-columns:1fr;
-  }
+ .workspace{grid-template-columns:1fr}
+ .output{min-height:420px}
 }
-
-@media(max-width:600px){
-
-  .navbar{
-    height:64px;
-  }
-
-  .nav-inner{
-    width:calc(100% - 24px);
-  }
-
-  .logo{
-    font-size:18px;
-  }
-
-  .logo-icon{
-    width:31px;
-    height:31px;
-  }
-
-  .nav-actions .btn-primary{
-    padding:9px 12px;
-    font-size:12px;
-  }
-
-  .hero{
-    padding:45px 16px 30px;
-  }
-
-  .hero h1{
-    letter-spacing:-1.2px;
-  }
-
-  .hero p{
-    font-size:14px;
-  }
-
-  .workspace,
-  .info{
-    width:calc(100% - 20px);
-  }
-
-  .control-panel{
-    padding:18px;
-  }
-
-  .grid-two{
-    grid-template-columns:1fr;
-  }
-
-  .gallery{
-    grid-template-columns:1fr;
-    padding:15px;
-  }
-
-  .output-head{
-    padding:18px;
-  }
-
-  .footer-inner{
-    flex-direction:column;
-  }
+@media(max-width:650px){
+ .navbar{padding:0 18px}
+ .navlinks{display:none}
+ .navactions .profile{display:none}
+ .page{padding-top:38px}
+ .row{grid-template-columns:1fr}
+ .panel{padding:18px}
 }
 </style>
 </head>
@@ -649,413 +159,221 @@ footer{
 <body>
 
 <header class="navbar">
-  <div class="nav-inner">
 
-    <a href="index.html" class="logo">
-      <span class="logo-icon">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-          <path d="M4 12h3l2-7 4 14 2-7h5"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-        </svg>
-      </span>
-      VoiceAI
-    </a>
+<a href="index.html" class="logo">∿ <span>Voice</span>AI</a>
 
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="tools.html" class="active">AI Tools</a>
-      <a href="voices.html">Voices</a>
-      <a href="studio.html">Studio</a>
-      <a href="pricing.html">Pricing</a>
-    </nav>
+<nav class="navlinks">
+<a href="index.html">Home</a>
+<a href="tools.html" class="active">AI Tools</a>
+<a href="voices.html">Voices</a>
+<a href="studio.html">Studio</a>
+<a href="pricing.html">Pricing</a>
+</nav>
 
-    <div class="nav-actions">
-      <a href="profile.html" class="btn btn-outline">Profile</a>
-      <a href="pricing.html" class="btn btn-primary">Upgrade</a>
+<div class="navactions">
+<a href="profile.html" class="btn profile">Profile</a>
+<a href="pricing.html" class="btn primary">Upgrade</a>
+</div>
 
-      <button class="mobile-menu" aria-label="Menu">
-        <svg width="25" height="25" viewBox="0 0 24 24" fill="none">
-          <path d="M4 6h16M4 12h16M4 18h16"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"/>
-        </svg>
-      </button>
-    </div>
-
-  </div>
 </header>
 
 
+<main class="page">
+
 <section class="hero">
-
-  <div class="badge">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-      <path d="M12 3v18M3 12h18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"/>
-    </svg>
-    AI Image Generator
-  </div>
-
-  <h1>
-    Turn words into
-    <span>beautiful images.</span>
-  </h1>
-
-  <p>
-    Describe your idea and create high-quality visuals for ads,
-    social media, videos, products and creative projects.
-  </p>
-
+<div class="badge">AI IMAGE GENERATOR</div>
+<h1>Turn words into images.</h1>
+<p>
+Describe your idea and generate professional visuals for ads,
+social media, thumbnails, stories and creative projects.
+</p>
 </section>
 
 
-<main class="workspace">
+<section class="workspace">
 
-  <!-- CONTROLS -->
+<!-- SETTINGS -->
 
-  <section class="panel control-panel">
+<div class="panel">
 
-    <div class="panel-title">
+<h2>Image Settings</h2>
 
-      <div class="panel-title-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M4 5h16v14H4z"
-                stroke="currentColor"
-                stroke-width="1.8"/>
-          <path d="m7 15 3-3 2 2 2-2 3 3"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-        </svg>
-      </div>
+<div class="field">
+<label for="prompt">PROMPT</label>
 
-      <div>
-        <h2>Image Generator</h2>
-        <p>Create your next visual</p>
-      </div>
+<textarea
+id="prompt"
+maxlength="2000"
+placeholder="Describe the image you want..."></textarea>
 
-    </div>
+<div class="counter">
+<span id="count">0</span>/2000
+</div>
+</div>
 
 
-    <div class="field">
+<div class="field">
+<label for="style">STYLE</label>
 
-      <label for="promptInput">Describe your image</label>
-
-      <textarea
-        id="promptInput"
-        maxlength="2000"
-        placeholder="Example: A cinematic luxury car driving through a futuristic city at night, realistic photography..."
-      ></textarea>
-
-      <div class="prompt-footer">
-        <span>Be specific for better results</span>
-        <span id="promptCount">0 / 2000</span>
-      </div>
-
-    </div>
+<select id="style">
+<option value="photorealistic">Photorealistic</option>
+<option value="cinematic">Cinematic</option>
+<option value="illustration">Illustration</option>
+<option value="anime">Anime</option>
+<option value="3d">3D</option>
+<option value="minimal">Minimal</option>
+<option value="watercolor">Watercolor</option>
+</select>
+</div>
 
 
-    <div class="grid-two">
+<div class="row">
 
-      <div class="field">
-        <label for="styleSelect">Style</label>
+<div class="field">
+<label for="ratio">ASPECT RATIO</label>
 
-        <select id="styleSelect">
-          <option value="photorealistic">Photorealistic</option>
-          <option value="cinematic">Cinematic</option>
-          <option value="digital-art">Digital Art</option>
-          <option value="illustration">Illustration</option>
-          <option value="3d">3D Render</option>
-          <option value="anime">Anime</option>
-          <option value="minimal">Minimal</option>
-        </select>
-      </div>
+<select id="ratio">
+<option value="1:1">1:1 Square</option>
+<option value="16:9">16:9 Landscape</option>
+<option value="9:16">9:16 Portrait</option>
+<option value="4:5">4:5 Social</option>
+</select>
+</div>
 
+<div class="field">
+<label for="quality">QUALITY</label>
 
-      <div class="field">
-        <label for="ratioSelect">Aspect Ratio</label>
+<select id="quality">
+<option value="standard">Standard</option>
+<option value="high">High</option>
+<option value="ultra">Ultra</option>
+</select>
+</div>
 
-        <select id="ratioSelect">
-          <option value="1:1">Square 1:1</option>
-          <option value="16:9">Landscape 16:9</option>
-          <option value="9:16">Portrait 9:16</option>
-          <option value="4:3">Classic 4:3</option>
-          <option value="3:4">Portrait 3:4</option>
-        </select>
-      </div>
-
-    </div>
+</div>
 
 
-    <div class="field">
+<div class="field">
 
-      <label for="qualitySelect">Quality</label>
+<label for="countImages">NUMBER OF IMAGES</label>
 
-      <select id="qualitySelect">
-        <option value="standard">Standard</option>
-        <option value="high">High Quality</option>
-        <option value="ultra">Ultra Quality</option>
-      </select>
+<select id="countImages">
+<option value="1">1 Image</option>
+<option value="2">2 Images</option>
+<option value="4">4 Images</option>
+</select>
 
-    </div>
-
-
-    <div class="field">
-
-      <label for="numberInput">Number of images</label>
-
-      <select id="numberInput">
-        <option value="1">1 image</option>
-        <option value="2">2 images</option>
-        <option value="4">4 images</option>
-      </select>
-
-    </div>
+</div>
 
 
-    <button class="generate-btn" id="generateBtn">
+<button id="generate" class="generate">
+Generate Image
+</button>
 
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-        <path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linejoin="round"/>
-      </svg>
+<div id="status" class="status"></div>
 
-      Generate Image
+<div class="note">
+AI generation requires your backend/provider API.
+This page does not create fake images locally.
+</div>
 
-    </button>
-
-
-    <div class="usage">
-      Free plan: <strong>1 / 5</strong> AI generations used today
-    </div>
-
-  </section>
+</div>
 
 
-  <!-- OUTPUT -->
+<!-- OUTPUT -->
 
-  <section class="panel output-panel">
+<div class="panel output">
 
-    <div class="output-head">
+<div class="output-head">
+<h2>Generated Images</h2>
+<span id="outputInfo">Ready</span>
+</div>
 
-      <div>
-        <h2>Your Images</h2>
-        <p>Generated images will appear here</p>
-      </div>
+<div id="empty" class="empty">
 
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M4 5h16v14H4z"
-              stroke="#777e8e"
-              stroke-width="1.8"/>
-      </svg>
+<div>
 
-    </div>
+<svg viewBox="0 0 24 24"
+fill="none"
+stroke="currentColor"
+stroke-width="1.7">
+<rect x="3" y="4" width="18" height="16" rx="2"></rect>
+<circle cx="8.5" cy="9" r="1.5"></circle>
+<path d="m21 15-5-5L5 20"></path>
+</svg>
 
-    <div id="status" class="status"></div>
+<h3>Your image will appear here</h3>
 
-    <div class="gallery" id="gallery">
+<p>Enter a prompt and click Generate Image.</p>
 
-      <div class="empty-state">
+</div>
 
-        <div class="empty-icon">
-          <svg width="35" height="35" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="4" width="18" height="16" rx="2"
-                  stroke="currentColor"
-                  stroke-width="1.7"/>
-            <circle cx="8" cy="9" r="1.5"
-                    stroke="currentColor"
-                    stroke-width="1.5"/>
-            <path d="m5 17 4-4 3 3 2-2 5 3"
-                  stroke="currentColor"
-                  stroke-width="1.7"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
-          </svg>
-        </div>
+</div>
 
-        <h3>No images yet</h3>
 
-        <p>
-          Write a prompt on the left and click Generate Image
-          to create your first visual.
-        </p>
+<div id="result" class="result">
 
-      </div>
+<div id="gallery"></div>
 
-    </div>
+<div class="result-actions">
 
-  </section>
+<a id="download" class="download" href="#" download>
+Download Image
+</a>
+
+<button id="newImage" class="new">
+Create New
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
 
 </main>
 
 
-<section class="info">
-
-  <div class="info-grid">
-
-    <article class="info-card">
-
-      <div class="info-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M12 3v18M3 12h18"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"/>
-        </svg>
-      </div>
-
-      <h3>Creative prompts</h3>
-
-      <p>
-        Describe scenes, products, characters, advertisements
-        and concepts using natural language.
-      </p>
-
-    </article>
-
-
-    <article class="info-card">
-
-      <div class="info-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M4 6h16v12H4z"
-                stroke="currentColor"
-                stroke-width="1.8"/>
-          <path d="M8 10h8M8 14h5"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"/>
-        </svg>
-      </div>
-
-      <h3>Multiple formats</h3>
-
-      <p>
-        Generate square, landscape and portrait visuals
-        for different platforms and projects.
-      </p>
-
-    </article>
-
-
-    <article class="info-card">
-
-      <div class="info-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M12 3v12"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"/>
-          <path d="m7 10 5 5 5-5"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-          <path d="M5 20h14"
-                stroke="currentColor"
-                stroke-width="1.8"
-                stroke-linecap="round"/>
-        </svg>
-      </div>
-
-      <h3>Download results</h3>
-
-      <p>
-        Generated images can be downloaded directly from
-        your gallery when the backend returns image files.
-      </p>
-
-    </article>
-
-  </div>
-
-</section>
-
-
 <footer>
-
-  <div class="footer-inner">
-
-    <div class="footer-copy">
-      © 2026 VoiceAI. AI Voice & Creative Studio.
-    </div>
-
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="tools.html">AI Tools</a>
-      <a href="voices.html">Voices</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="index.html#about">About</a>
-      <a href="index.html#faq">FAQ</a>
-    </div>
-
-  </div>
-
+© 2026 VoiceAI. All rights reserved.
 </footer>
 
 
 <script>
 
-const promptInput = document.getElementById("promptInput");
-const promptCount = document.getElementById("promptCount");
-const generateBtn = document.getElementById("generateBtn");
-const gallery = document.getElementById("gallery");
+const promptInput = document.getElementById("prompt");
+const counter = document.getElementById("count");
+const generate = document.getElementById("generate");
 const statusBox = document.getElementById("status");
+
+const empty = document.getElementById("empty");
+const result = document.getElementById("result");
+const gallery = document.getElementById("gallery");
+
+const download = document.getElementById("download");
+const newImage = document.getElementById("newImage");
+
+const outputInfo = document.getElementById("outputInfo");
 
 
 promptInput.addEventListener("input", () => {
-  promptCount.textContent =
-    `${promptInput.value.length} / 2000`;
+  counter.textContent = promptInput.value.length;
 });
 
 
 function showStatus(message, type){
 
   statusBox.textContent = message;
-  statusBox.className = `status ${type}`;
+  statusBox.className = "status show " + type;
 
 }
 
 
-function clearStatus(){
+function hideStatus(){
 
-  statusBox.textContent = "";
   statusBox.className = "status";
-
-}
-
-
-function showLoading(){
-
-  gallery.innerHTML = `
-    <div class="empty-state">
-
-      <div class="empty-icon">
-
-        <div class="spinner"
-             style="border-color:rgba(91,76,240,.2);
-                    border-top-color:#5b4cf0;">
-        </div>
-
-      </div>
-
-      <h3>Creating your images...</h3>
-
-      <p>
-        Your AI image generation request is being processed.
-      </p>
-
-    </div>
-  `;
 
 }
 
@@ -1064,250 +382,167 @@ function showImages(images){
 
   gallery.innerHTML = "";
 
+  if(!images || !images.length){
+    throw new Error("No image returned by server.");
+  }
+
   images.forEach((item,index) => {
 
     const url =
       typeof item === "string"
-        ? item
-        : item.url;
+      ? item
+      : item.url;
 
     if(!url) return;
 
-    const card = document.createElement("article");
+    const img = document.createElement("img");
 
-    card.className = "image-card";
+    img.src = url;
+    img.alt = "Generated VoiceAI image " + (index + 1);
 
-    card.innerHTML = `
+    gallery.appendChild(img);
 
-      <img
-        class="image-preview"
-        src="${url}"
-        alt="Generated AI image ${index + 1}"
-        loading="lazy"
-      >
-
-      <div class="image-actions">
-
-        <span class="image-label">
-          Image ${index + 1}
-        </span>
-
-        <a
-          class="download-btn"
-          href="${url}"
-          download="voiceai-image-${index + 1}.png"
-          target="_blank"
-          rel="noopener"
-        >
-
-          <svg width="14" height="14"
-               viewBox="0 0 24 24"
-               fill="none">
-
-            <path d="M12 3v12"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"/>
-
-            <path d="m7 10 5 5 5-5"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"/>
-
-            <path d="M5 20h14"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"/>
-
-          </svg>
-
-          Download
-
-        </a>
-
-      </div>
-    `;
-
-    gallery.appendChild(card);
+    if(index === 0){
+      download.href = url;
+    }
 
   });
+
+  empty.style.display = "none";
+  result.style.display = "block";
+
+  outputInfo.textContent =
+    images.length + (images.length === 1 ? " image" : " images");
 
 }
 
 
-generateBtn.addEventListener("click", async () => {
-
-  clearStatus();
+generate.addEventListener("click", async () => {
 
   const prompt = promptInput.value.trim();
 
   if(!prompt){
-
-    showStatus(
-      "Please describe the image you want to create.",
-      "error"
-    );
-
+    showStatus("Please enter an image prompt.", "error");
     promptInput.focus();
     return;
   }
 
+  hideStatus();
 
-  const style =
-    document.getElementById("styleSelect").value;
+  generate.disabled = true;
+  generate.textContent = "Generating...";
 
-  const aspectRatio =
-    document.getElementById("ratioSelect").value;
-
-  const quality =
-    document.getElementById("qualitySelect").value;
-
-  const count =
-    Number(document.getElementById("numberInput").value);
-
-
-  generateBtn.disabled = true;
-
-  generateBtn.innerHTML = `
-    <span class="spinner"></span>
-    Generating...
-  `;
-
-  showLoading();
-
+  outputInfo.textContent = "Generating";
 
   try{
 
-    const response = await fetch("/api/image/generate",{
+    const response = await fetch("/api/image/generate", {
 
-      method:"POST",
+      method: "POST",
 
       headers:{
         "Content-Type":"application/json"
       },
 
+      credentials:"include",
+
       body:JSON.stringify({
 
-        prompt,
-        style,
-        aspectRatio,
-        quality,
-        count
+        prompt: prompt,
+
+        style:
+          document.getElementById("style").value,
+
+        aspectRatio:
+          document.getElementById("ratio").value,
+
+        quality:
+          document.getElementById("quality").value,
+
+        count:
+          Number(document.getElementById("countImages").value)
 
       })
 
     });
 
 
+    const data = await response.json().catch(() => ({}));
+
+
     if(!response.ok){
 
       throw new Error(
-        "Image generation service is unavailable."
+        data.message ||
+        data.error ||
+        "Image generation failed."
       );
 
     }
-
-
-    const data = await response.json();
 
 
     let images = [];
 
     if(Array.isArray(data.images)){
-
       images = data.images;
-
-    }else if(data.imageUrl){
-
-      images = [data.imageUrl];
-
-    }else if(data.url){
-
-      images = [data.url];
-
     }
-
-
-    if(!images.length){
-
-      throw new Error(
-        "The server did not return any generated images."
-      );
-
+    else if(data.imageUrl){
+      images = [{url:data.imageUrl}];
+    }
+    else if(data.url){
+      images = [{url:data.url}];
     }
 
 
     showImages(images);
 
     showStatus(
-      `${images.length} image${images.length > 1 ? "s" : ""} generated successfully.`,
+      "Image generated successfully.",
       "success"
     );
 
-  }catch(error){
+  }
+  catch(error){
 
-    gallery.innerHTML = `
-      <div class="empty-state">
-
-        <div class="empty-icon">
-          <svg width="34" height="34"
-               viewBox="0 0 24 24"
-               fill="none">
-
-            <circle cx="12" cy="12" r="9"
-                    stroke="currentColor"
-                    stroke-width="1.8"/>
-
-            <path d="M12 8v5"
-                  stroke="currentColor"
-                  stroke-width="1.8"
-                  stroke-linecap="round"/>
-
-            <circle cx="12" cy="16.5" r="1"
-                    fill="currentColor"/>
-
-          </svg>
-        </div>
-
-        <h3>Generation unavailable</h3>
-
-        <p>
-          ${error.message}
-          Connect the VoiceAI image-generation backend
-          to enable real AI image creation.
-        </p>
-
-      </div>
-    `;
+    outputInfo.textContent = "Ready";
 
     showStatus(
-      "Image generation could not be completed.",
+      error.message ||
+      "Unable to generate image. Connect the backend first.",
       "error"
     );
 
-  }finally{
+  }
+  finally{
 
-    generateBtn.disabled = false;
-
-    generateBtn.innerHTML = `
-      <svg width="18" height="18"
-           viewBox="0 0 24 24"
-           fill="none">
-
-        <path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linejoin="round"/>
-
-      </svg>
-
-      Generate Image
-    `;
+    generate.disabled = false;
+    generate.textContent = "Generate Image";
 
   }
 
 });
+
+
+newImage.addEventListener("click", () => {
+
+  result.style.display = "none";
+  empty.style.display = "flex";
+
+  gallery.innerHTML = "";
+
+  outputInfo.textContent = "Ready";
+
+  download.removeAttribute("href");
+
+  hideStatus();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+});
+
 
 </script>
 
