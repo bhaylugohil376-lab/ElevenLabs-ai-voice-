@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VoiceAI Voice Changer">
+  <title>Voice Changer — VoiceAI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f7f8fc;
+      --card: #ffffff;
+      --text: #15161a;
+      --muted: #70737d;
+      --border: #e6e7ec;
+      --primary: #6d4aff;
+      --primary-dark: #5435dc;
+      --soft: #f0edff;
+      --success: #16834b;
+      --danger: #d33b3b;
+    }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      height: 72px;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+    }
+
+    .nav-links a {
+      color: #555863;
+      font-size: 14px;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile-btn,
+    .upgrade-btn {
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .profile-btn {
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    .upgrade-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* HERO */
+
+    .hero {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 62px 0 35px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--soft);
+      color: var(--primary);
+      border-radius: 30px;
+      padding: 8px 13px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* WORKSPACE */
+
+    .workspace {
+      width: min(1000px, calc(100% - 32px));
+      margin: 20px auto 80px;
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 30px rgba(20,20,40,.04);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 20px;
+    }
+
+    .icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--soft);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .icon-box svg {
+      width: 21px;
+      height: 21px;
+    }
+
+    .card-title h2 {
+      font-size: 18px;
+    }
+
+    .card-title p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    /* UPLOAD */
+
+    .upload-box {
+      border: 2px dashed #d9d8e8;
+      border-radius: 16px;
+      padding: 35px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: .2s;
+      background: #fcfcff;
+    }
+
+    .upload-box:hover,
+    .upload-box.dragover {
+      border-color: var(--primary);
+      background: #f8f6ff;
+    }
+
+    .upload-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 13px;
+      border-radius: 15px;
+      background: var(--soft);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+    }
+
+    .upload-icon svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    .upload-box h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .upload-box p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .browse-text {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    #audioFile {
+      display: none;
+    }
+
+    .file-info {
+      display: none;
+      margin-top: 14px;
+      padding: 13px;
+      background: #f7f7fa;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .file-info.show {
+      display: flex;
+    }
+
+    .file-name {
+      font-size: 13px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-size {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .remove-file {
+      border: 0;
+      background: #fff0f0;
+      color: var(--danger);
+      border-radius: 8px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* FORM */
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 750;
+      margin-bottom: 8px;
+    }
+
+    .field select {
+      width: 100%;
+      height: 46px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      padding: 0 13px;
+      outline: none;
+      color: var(--text);
+    }
+
+    .field select:focus {
+      border-color: var(--primary);
+    }
+
+    .voice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .voice-option {
+      position: relative;
+    }
+
+    .voice-option input {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .voice-label {
+      display: block;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .voice-label strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .voice-label small {
+      color: var(--muted);
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+    }
+
+    .voice-option input:checked + .voice-label {
+      border-color: var(--primary);
+      background: var(--soft);
+      box-shadow: 0 0 0 2px rgba(109,74,255,.08);
+    }
+
+    /* SLIDER */
+
+    .slider-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .slider-value {
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    /* BUTTON */
+
+    .generate-btn {
+      width: 100%;
+      height: 50px;
+      border: 0;
+      border-radius: 11px;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      font-weight: 800;
+      margin-top: 5px;
+      transition: .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+    }
+
+    .generate-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .generate-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .generate-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* USAGE */
+
+    .usage {
+      margin-top: 17px;
+      padding: 13px;
+      background: #faf9ff;
+      border: 1px solid #ebe8ff;
+      border-radius: 11px;
+    }
+
+    .usage-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .usage-top span:last-child {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 6px;
+      background: #e8e6ee;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress div {
+      width: 20%;
+      height: 100%;
+      background: var(--primary);
+      border-radius: inherit;
+    }
+
+    /* RESULT */
+
+    .result-card {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .result-card.show {
+      display: block;
+    }
+
+    .result-box {
+      background: #faf9ff;
+      border: 1px solid #e9e5ff;
+      border-radius: 14px;
+      padding: 17px;
+    }
+
+    .result-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 13px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+    }
+
+    audio {
+      width: 100%;
+      height: 42px;
+    }
+
+    .download-btn {
+      margin-top: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      height: 44px;
+      border-radius: 10px;
+      background: #17181c;
+      color: white;
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .download-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    /* MESSAGE */
+
+    .message {
+      display: none;
+      margin-top: 13px;
+      border-radius: 10px;
+      padding: 11px 13px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #fff1f1;
+      color: #a92727;
+      border: 1px solid #ffd8d8;
+    }
+
+    .message.info {
+      background: #f0edff;
+      color: #5335d0;
+      border: 1px solid #ddd6ff;
+    }
+
+    /* FEATURES */
+
+    .features {
+      width: min(1000px, calc(100% - 32px));
+      margin: 0 auto 80px;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 21px;
+    }
+
+    .feature svg {
+      width: 23px;
+      height: 23px;
+      color: var(--primary);
+      margin-bottom: 13px;
+    }
+
+    .feature h3 {
+      font-size: 15px;
+      margin-bottom: 7px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: white;
+      padding: 30px 16px;
+    }
+
+    .footer-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .footer-copy {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* LOADING */
+
+    .spinner {
+      width: 17px;
+      height: 17px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+
+    .loading .spinner {
+      display: block;
+    }
+
+    .loading .btn-text {
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 850px) {
+      .nav-links {
+        display: none;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .navbar {
+        height: 64px;
+      }
+
+      .nav-inner {
+        width: calc(100% - 22px);
+      }
+
+      .logo {
+        font-size: 19px;
+      }
+
+      .profile-btn {
+        display: none;
+      }
+
+      .upgrade-btn {
+        padding: 9px 11px;
+        font-size: 11px;
+      }
+
+      .hero {
+        padding: 42px 0 25px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+        letter-spacing: -1.5px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .workspace,
+      .features {
+        width: calc(100% - 22px);
+      }
+
+      .card {
+        padding: 17px;
+        border-radius: 14px;
+      }
+
+      .voice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+
+      <a href="index.html" class="logo">
+        ∿ <span>VoiceAI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html" class="active">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="profile.html" class="profile-btn">Profile</a>
+        <a href="pricing.html" class="upgrade-btn">Upgrade</a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="eyebrow">
+      <span class="eyebrow-dot"></span>
+      AI Voice Changer
+    </div>
+
+    <h1>Transform your <span>voice</span></h1>
+
+    <p>
+      Upload your audio and transform it into a different voice while
+      keeping the original words and delivery.
+    </p>
+
+  </section>
+
+
+  <!-- WORKSPACE -->
+  <main class="workspace">
+
+    <!-- LEFT -->
+    <section class="card">
+
+      <div class="card-title">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 3v18"/>
+            <path d="M8 7v10"/>
+            <path d="M16 6v12"/>
+            <path d="M4 10v4"/>
+            <path d="M20 9v6"/>
+          </svg>
+        </div>
+
+        <div>
+          <h2>Upload your voice</h2>
+          <p>MP3, WAV, M4A or other supported audio</p>
+        </div>
+      </div>
+
+
+      <div class="upload-box" id="uploadBox">
+
+        <input
+          type="file"
+          id="audioFile"
+          accept="audio/*"
+        >
+
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 16V4"/>
+            <path d="m7 9 5-5 5 5"/>
+            <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>
+          </svg>
+        </div>
+
+        <h3>Drop your audio here</h3>
+
+        <p>
+          or <span class="browse-text">browse files</span><br>
+          Maximum recommended file size: 25 MB
+        </p>
+
+      </div>
+
+
+      <div class="file-info" id="fileInfo">
+
+        <div style="min-width:0;">
+          <div class="file-name" id="fileName"></div>
+          <div class="file-size" id="fileSize"></div>
+        </div>
+
+        <button class="remove-file" id="removeFile">
+          Remove
+        </button>
+
+      </div>
+
+
+      <div class="message" id="message"></div>
+
+    </section>
+
+
+    <!-- RIGHT -->
+    <section class="card">
+
+      <div class="card-title">
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21c.8-4 3.4-6 8-6s7.2 2 8 6"/>
+          </svg>
+        </div>
+
+        <div>
+          <h2>Choose target voice</h2>
+          <p>Select how your transformed voice should sound</p>
+        </div>
+      </div>
+
+
+      <div class="field">
+
+        <label>Voice style</label>
+
+        <div class="voice-grid">
+
+          <div class="voice-option">
+            <input
+              type="radio"
+              name="voice"
+              id="voiceDavid"
+              value="david"
+              checked
+            >
+            <label class="voice-label" for="voiceDavid">
+              <strong>David</strong>
+              <small>Professional male</small>
+            </label>
+          </div>
+
+          <div class="voice-option">
+            <input
+              type="radio"
+              name="voice"
+              id="voiceMarcus"
+              value="marcus"
+            >
+            <label class="voice-label" for="voiceMarcus">
+              <strong>Marcus</strong>
+              <small>Deep & confident</small>
+            </label>
+          </div>
+
+          <div class="voice-option">
+            <input
+              type="radio"
+              name="voice"
+              id="voiceSarah"
+              value="sarah"
+            >
+            <label class="voice-label" for="voiceSarah">
+              <strong>Sarah</strong>
+              <small>Warm female</small>
+            </label>
+          </div>
+
+          <div class="voice-option">
+            <input
+              type="radio"
+              name="voice"
+              id="voiceEmma"
+              value="emma"
+            >
+            <label class="voice-label" for="voiceEmma">
+              <strong>Emma</strong>
+              <small>Clear & friendly</small>
+            </label>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="language">Language</label>
+
+        <select id="language">
+          <option value="en-US">English — US</option>
+          <option value="en-GB">English — UK</option>
+          <option value="hi-IN">Hindi — India</option>
+          <option value="gu-IN">Gujarati — India</option>
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <div class="slider-row">
+          <label style="margin:0;">Voice strength</label>
+          <span class="slider-value" id="strengthValue">70%</span>
+        </div>
+
+        <input
+          type="range"
+          id="strength"
+          min="0"
+          max="100"
+          value="70"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="style">Delivery style</label>
+
+        <select id="style">
+          <option value="natural">Natural</option>
+          <option value="professional">Professional</option>
+          <option value="energetic">Energetic</option>
+          <option value="calm">Calm</option>
+          <option value="dramatic">Dramatic</option>
+        </select>
+
+      </div>
+
+
+      <button class="generate-btn" id="generateBtn">
+
+        <span class="spinner"></span>
+
+        <span class="btn-text">
+          Generate Changed Voice
+        </span>
+
+      </button>
+
+
+      <div class="usage">
+
+        <div class="usage-top">
+          <span>Free usage</span>
+          <span>1 / 5 today</span>
+        </div>
+
+        <div class="progress">
+          <div></div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- RESULT -->
+  <section class="workspace" style="margin-top:-55px;">
+
+    <div class="card result-card" id="resultCard">
+
+      <div class="card-title">
+
+        <div class="icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 12h3l2-7 4 14 2-7h7"/>
+          </svg>
+        </div>
+
+        <div>
+          <h2>Your changed voice</h2>
+          <p>Preview and download your generated audio</p>
+        </div>
+
+      </div>
+
+      <div class="result-box">
+
+        <div class="result-status">
+          <span class="status-dot"></span>
+          Voice transformation completed
+        </div>
+
+        <audio id="resultAudio" controls></audio>
+
+        <a
+          id="downloadBtn"
+          class="download-btn"
+          href="#"
+          download="voiceai-changed-voice.mp3"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 3v12"/>
+            <path d="m7 10 5 5 5-5"/>
+            <path d="M4 20h16"/>
+          </svg>
+
+          Download Audio
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FEATURES -->
+  <section class="features">
+
+    <h2>Built for creators</h2>
+
+    <div class="feature-grid">
+
+      <div class="feature">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 3a5 5 0 0 0-5 5v4a5 5 0 0 0 10 0V8a5 5 0 0 0-5-5Z"/>
+          <path d="M19 11v1a7 7 0 0 1-14 0v-1"/>
+          <path d="M12 19v3"/>
+        </svg>
+
+        <h3>Natural results</h3>
+
+        <p>
+          Preserve the original speech while transforming the
+          voice characteristics.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 12a8 8 0 1 0 16 0"/>
+          <path d="M12 4v8l5 3"/>
+        </svg>
+
+        <h3>Fast processing</h3>
+
+        <p>
+          Built for quick voice transformations suitable for
+          videos, ads and social content.
+        </p>
+
+      </div>
+
+
+      <div class="feature">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 3 5 6v5c0 4.5 2.9 7.6 7 10 4.1-2.4 7-5.5 7-10V6l-7-3Z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+
+        <h3>Permission focused</h3>
+
+        <p>
+          Only transform voices you have permission to use.
+          Never clone or imitate someone without authorization.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-inner">
+
+      <div class="footer-copy">
+        © 2026 VoiceAI. All rights reserved.
+      </div>
+
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="forgot-password.html">Forgot Password</a>
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+    const uploadBox = document.getElementById("uploadBox");
+    const audioFile = document.getElementById("audioFile");
+
+    const fileInfo = document.getElementById("fileInfo");
+    const fileName = document.getElementById("fileName");
+    const fileSize = document.getElementById("fileSize");
+    const removeFile = document.getElementById("removeFile");
+
+    const generateBtn = document.getElementById("generateBtn");
+    const message = document.getElementById("message");
+
+    const strength = document.getElementById("strength");
+    const strengthValue = document.getElementById("strengthValue");
+
+    const resultCard = document.getElementById("resultCard");
+    const resultAudio = document.getElementById("resultAudio");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    let selectedFile = null;
+
+
+    /* UPLOAD */
+
+    uploadBox.addEventListener("click", () => {
+      audioFile.click();
+    });
+
+
+    audioFile.addEventListener("change", () => {
+
+      if (!audioFile.files.length) return;
+
+      handleFile(audioFile.files[0]);
+
+    });
+
+
+    function handleFile(file) {
+
+      if (!file.type.startsWith("audio/")) {
+
+        showMessage(
+          "Please select a valid audio file.",
+          "error"
+        );
+
+        return;
+      }
+
+      if (file.size > 25 * 1024 * 1024) {
+
+        showMessage(
+          "File is larger than 25 MB. Please choose a smaller audio file.",
+          "error"
+        );
+
+        return;
+      }
+
+      selectedFile = file;
+
+      fileName.textContent = file.name;
+
+      fileSize.textContent =
+        formatFileSize(file.size);
+
+      fileInfo.classList.add("show");
+
+      resultCard.classList.remove("show");
+
+      showMessage(
+        "Audio uploaded successfully. Choose a target voice and generate.",
+        "info"
+      );
+
+    }
+
+
+    function formatFileSize(bytes) {
+
+      if (bytes < 1024) {
+        return bytes + " B";
+      }
+
+      if (bytes < 1024 * 1024) {
+        return (bytes / 1024).toFixed(1) + " KB";
+      }
+
+      return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+
+    }
+
+
+    /* REMOVE */
+
+    removeFile.addEventListener("click", () => {
+
+      selectedFile = null;
+
+      audioFile.value = "";
+
+      fileInfo.classList.remove("show");
+
+      resultCard.classList.remove("show");
+
+      hideMessage();
+
+    });
+
+
+    /* DRAG & DROP */
+
+    uploadBox.addEventListener("dragover", (event) => {
+
+      event.preventDefault();
+
+      uploadBox.classList.add("dragover");
+
+    });
+
+
+    uploadBox.addEventListener("dragleave", () => {
+
+      uploadBox.classList.remove("dragover");
+
+    });
+
+
+    uploadBox.addEventListener("drop", (event) => {
+
+      event.preventDefault();
+
+      uploadBox.classList.remove("dragover");
+
+      const files = event.dataTransfer.files;
+
+      if (files.length) {
+        handleFile(files[0]);
+      }
+
+    });
+
+
+    /* SLIDER */
+
+    strength.addEventListener("input", () => {
+
+      strengthValue.textContent =
+        strength.value + "%";
+
+    });
+
+
+    /* MESSAGE */
+
+    function showMessage(text, type) {
+
+      message.textContent = text;
+
+      message.className =
+        "message show " + type;
+
+    }
+
+
+    function hideMessage() {
+
+      message.className = "message";
+
+      message.textContent = "";
+
+    }
+
+
+    /* GENERATE */
+
+    generateBtn.addEventListener("click", async () => {
+
+      hideMessage();
+
+      if (!selectedFile) {
+
+        showMessage(
+          "Please upload an audio file first.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const selectedVoice =
+        document.querySelector(
+          'input[name="voice"]:checked'
+        ).value;
+
+      const language =
+        document.getElementById("language").value;
+
+      const deliveryStyle =
+        document.getElementById("style").value;
+
+
+      const formData = new FormData();
+
+      formData.append("audio", selectedFile);
+      formData.append("voice", selectedVoice);
+      formData.append("language", language);
+      formData.append("strength", strength.value);
+      formData.append("style", deliveryStyle);
+
+
+      generateBtn.disabled = true;
+
+      generateBtn.classList.add("loading");
+
+
+      try {
+
+        const response = await fetch(
+          "/api/voice-changer",
+          {
+            method: "POST",
+            body: formData
+          }
+        );
+
+
+        if (!response.ok) {
+
+          let errorMessage =
+            "Voice changer service is not available.";
+
+          try {
+
+            const errorData =
+              await response.json();
+
+            if (errorData.message) {
+              errorMessage = errorData.message;
+            }
+
+          } catch (_) {}
+
+          throw new Error(errorMessage);
+
+        }
+
+
+        const data = await response.json();
+
+
+        const audioUrl =
+          data.audioUrl ||
+          data.outputUrl ||
+          data.url;
+
+
+        if (!audioUrl) {
+
+          throw new Error(
+            "The server did not return an audio file."
+          );
+
+        }
+
+
+        resultAudio.src = audioUrl;
+
+        downloadBtn.href = audioUrl;
+
+        resultCard.classList.add("show");
+
+
+        showMessage(
+          "Voice transformation completed successfully.",
+          "info"
+        );
+
+
+        resultCard.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+          error.message ||
+          "Unable to generate changed voice. Please try again.",
+          "error"
+        );
+
+      } finally {
+
+        generateBtn.disabled = false;
+
+        generateBtn.classList.remove("loading");
+
+      }
+
+    });
+  </script>
+
+</body>
+</html>
