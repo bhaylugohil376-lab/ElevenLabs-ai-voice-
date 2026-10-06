@@ -1,97 +1,648 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Voice Library — VoiceAI</title>
+<title>Voice Library — VoiceAI</title>
 
-    <link rel="stylesheet" href="style.css">
+<style>
+:root{
+    --bg:#fffdf7;
+    --card:#fff;
+    --text:#3b2117;
+    --muted:#806f66;
+    --orange:#d96b27;
+    --orange-dark:#b95418;
+    --orange-light:#fff0e5;
+    --border:#eadfd7;
+    --shadow:0 16px 45px rgba(59,33,23,.07);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    overflow-x:hidden;
+}
+
+body{
+    font-family:Inter,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+/* NAVBAR */
+
+.navbar{
+    min-height:76px;
+    padding:0 5%;
+    background:rgba(255,255,255,.97);
+    border-bottom:1px solid var(--border);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.logo span{
+    color:var(--orange);
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:28px;
+}
+
+.nav-links a{
+    font-size:14px;
+    font-weight:600;
+    color:#624e44;
+}
+
+.nav-links a:hover{
+    color:var(--orange);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.profile-nav{
+    color:var(--orange);
+    font-size:14px;
+    font-weight:700;
+}
+
+.login-btn{
+    padding:10px 15px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.nav-button{
+    background:var(--orange);
+    color:white;
+    padding:11px 18px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.mobile-menu-btn{
+    display:none;
+    border:0;
+    background:none;
+    font-size:25px;
+    cursor:pointer;
+}
+
+/* PAGE */
+
+.voices-page{
+    max-width:1250px;
+    margin:auto;
+    padding:60px 24px 90px;
+}
+
+.page-heading{
+    max-width:780px;
+    margin:0 auto 40px;
+    text-align:center;
+}
+
+.eyebrow{
+    display:inline-block;
+    padding:7px 13px;
+    background:var(--orange-light);
+    color:var(--orange-dark);
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:15px;
+}
+
+.page-heading h1{
+    font-size:clamp(38px,5vw,62px);
+    line-height:1.05;
+    letter-spacing:-2px;
+    margin-bottom:16px;
+}
+
+.page-heading p{
+    color:var(--muted);
+    line-height:1.7;
+}
+
+/* SEARCH */
+
+.library-toolbar{
+    max-width:1050px;
+    margin:0 auto 30px;
+
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.search-box{
+    flex:1;
+    position:relative;
+}
+
+.search-box input{
+    width:100%;
+    height:50px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:0 17px 0 45px;
+    outline:none;
+    background:white;
+    color:var(--text);
+}
+
+.search-box input:focus{
+    border-color:var(--orange);
+}
+
+.search-icon{
+    position:absolute;
+    left:16px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--muted);
+}
+
+.filter-select{
+    height:50px;
+    min-width:155px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:0 12px;
+    background:white;
+    color:var(--text);
+    outline:none;
+}
+
+/* CATEGORIES */
+
+.categories{
+    max-width:1050px;
+    margin:0 auto 28px;
+
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.category-btn{
+    border:1px solid var(--border);
+    background:white;
+    color:var(--muted);
+    padding:9px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:700;
+}
+
+.category-btn.active,
+.category-btn:hover{
+    background:var(--orange-light);
+    border-color:var(--orange);
+    color:var(--orange-dark);
+}
+
+/* LIBRARY */
+
+.library{
+    max-width:1050px;
+    margin:auto;
+}
+
+.library-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:17px;
+}
+
+.library-head h2{
+    font-size:20px;
+}
+
+.voice-count{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* GRID */
+
+.voice-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+/* VOICE CARD */
+
+.voice-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:19px;
+    box-shadow:var(--shadow);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.voice-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 20px 50px rgba(59,33,23,.11);
+}
+
+.voice-top{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.avatar{
+    width:54px;
+    height:54px;
+    border-radius:50%;
+
+    display:grid;
+    place-items:center;
+
+    color:white;
+    font-size:18px;
+    font-weight:800;
+
+    background:linear-gradient(
+        135deg,
+        #d96b27,
+        #f0a56f
+    );
+}
+
+.avatar.female{
+    background:linear-gradient(
+        135deg,
+        #9a5877,
+        #e2a5bb
+    );
+}
+
+.voice-main{
+    flex:1;
+    min-width:0;
+}
+
+.voice-name{
+    font-size:15px;
+    font-weight:800;
+}
+
+.voice-description{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
+}
+
+.voice-gender{
+    display:inline-block;
+    margin-top:6px;
+    padding:4px 7px;
+    background:#f7f2ee;
+    color:var(--muted);
+    border-radius:5px;
+    font-size:9px;
+    font-weight:800;
+}
+
+.voice-actions{
+    display:flex;
+    gap:8px;
+    margin-top:17px;
+}
+
+.preview-btn,
+.use-btn{
+    flex:1;
+    height:39px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:800;
+}
+
+.preview-btn{
+    border:1px solid var(--border);
+    background:white;
+    color:var(--text);
+}
+
+.preview-btn:hover{
+    border-color:var(--orange);
+    color:var(--orange);
+}
+
+.use-btn{
+    border:0;
+    background:var(--orange);
+    color:white;
+}
+
+.use-btn:hover{
+    background:var(--orange-dark);
+}
+
+.tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    margin-top:12px;
+}
+
+.tag{
+    padding:5px 7px;
+    border-radius:5px;
+    background:#fff8f2;
+    color:var(--orange-dark);
+    font-size:9px;
+    font-weight:700;
+}
+
+/* NO RESULT */
+
+.no-result{
+    display:none;
+    padding:50px 20px;
+    text-align:center;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:18px;
+    color:var(--muted);
+}
+
+/* INFO */
+
+.library-info{
+    max-width:1050px;
+    margin:30px auto 0;
+
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:#fff8f2;
+}
+
+.library-info strong{
+    font-size:13px;
+}
+
+.library-info p{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.6;
+    margin-top:6px;
+}
+
+/* FOOTER */
+
+.site-footer{
+    border-top:1px solid var(--border);
+    background:white;
+    padding:45px 6% 25px;
+}
+
+.footer-main{
+    max-width:1200px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:35px;
+}
+
+.footer-brand p{
+    max-width:350px;
+    margin-top:12px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+}
+
+.footer-column h4{
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.footer-column a{
+    display:block;
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.footer-column a:hover{
+    color:var(--orange);
+}
+
+.footer-bottom{
+    max-width:1200px;
+    margin:35px auto 0;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+
+    .nav-links,
+    .nav-actions{
+        display:none;
+    }
+
+    .mobile-menu-btn{
+        display:block;
+    }
+
+    .voice-grid{
+        grid-template-columns:1fr;
+    }
+
+    .footer-main{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    .navbar{
+        min-height:68px;
+        padding:0 18px;
+    }
+
+    .voices-page{
+        padding:38px 14px 60px;
+    }
+
+    .page-heading h1{
+        letter-spacing:-1px;
+    }
+
+    .library-toolbar{
+        flex-direction:column;
+    }
+
+    .search-box,
+    .filter-select{
+        width:100%;
+    }
+
+    .filter-select{
+        min-width:0;
+    }
+
+    .footer-main{
+        grid-template-columns:1fr;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header class="navbar">
 
-    <div class="logo">
-        <a href="index.html">
-            <span>∿</span> VoiceAI
-        </a>
-    </div>
+    <a href="index.html" class="logo">
+        ∿ <span>Voice</span>AI
+    </a>
 
     <nav class="nav-links">
+
         <a href="index.html">Home</a>
+
         <a href="tools.html">AI Tools</a>
+
         <a href="voices.html">Voices</a>
+
         <a href="studio.html">Studio</a>
+
         <a href="pricing.html">Pricing</a>
+
     </nav>
 
     <div class="nav-actions">
-        <a href="login.html" class="login-btn">Login</a>
-        <a href="pricing.html" class="nav-button">Get Started</a>
+
+        <a href="profile.html" class="profile-nav">
+            Profile
+        </a>
+
+        <a href="login.html" class="login-btn">
+            Login
+        </a>
+
+        <a href="pricing.html" class="nav-button">
+            Get Started
+        </a>
+
     </div>
+
+    <button
+        class="mobile-menu-btn"
+        id="mobileMenuBtn">
+        ☰
+    </button>
 
 </header>
 
 
-<main>
+<main class="voices-page">
 
-<section class="section voices-page">
+    <section class="page-heading">
 
-    <div class="section-heading">
-
-        <span>AI VOICE LIBRARY</span>
+        <span class="eyebrow">
+            VOICE LIBRARY
+        </span>
 
         <h1>
-            Find the perfect
-            <br>
-            voice for your project.
+            Find the perfect voice.
         </h1>
 
         <p>
-            Explore professional voices for narration,
-            advertisements, videos, podcasts and more.
+            Explore professional male and female voices
+            for ads, videos, podcasts, narration and AI agents.
         </p>
 
-    </div>
+    </section>
 
 
     <!-- SEARCH -->
 
-    <div class="voice-search">
+    <div class="library-toolbar">
 
-        <input
-            type="search"
-            id="voiceSearch"
-            placeholder="Search voices..."
-            autocomplete="off"
-        >
+        <div class="search-box">
 
-        <select id="voiceCategory">
+            <span class="search-icon">
+                🔎
+            </span>
+
+            <input
+                type="search"
+                id="voiceSearch"
+                placeholder="Search voices, style or use case..."
+            >
+
+        </div>
+
+
+        <select
+            class="filter-select"
+            id="genderFilter">
 
             <option value="all">
-                All Voices
+                All voices
             </option>
 
-            <option value="professional">
-                Professional
+            <option value="male">
+                Male voices
             </option>
 
-            <option value="news">
-                News
-            </option>
-
-            <option value="advertisement">
-                Advertisement
-            </option>
-
-            <option value="narration">
-                Narration
-            </option>
-
-            <option value="energetic">
-                Energetic
+            <option value="female">
+                Female voices
             </option>
 
         </select>
@@ -99,384 +650,935 @@
     </div>
 
 
-    <!-- VOICE PREVIEW TEXT -->
+    <!-- CATEGORY -->
 
-    <div class="voice-preview-box">
+    <div class="categories">
 
-        <label for="previewText">
-            Preview text
-        </label>
+        <button
+            class="category-btn active"
+            data-category="all">
+            All
+        </button>
 
-        <textarea
-            id="previewText"
-            rows="3"
-        >Welcome to VoiceAI. Create natural sounding audio for your next project.</textarea>
+        <button
+            class="category-btn"
+            data-category="ads">
+            Ads
+        </button>
+
+        <button
+            class="category-btn"
+            data-category="narration">
+            Narration
+        </button>
+
+        <button
+            class="category-btn"
+            data-category="podcast">
+            Podcast
+        </button>
+
+        <button
+            class="category-btn"
+            data-category="social">
+            Social
+        </button>
+
+        <button
+            class="category-btn"
+            data-category="agents">
+            AI Agents
+        </button>
 
     </div>
 
 
-    <!-- VOICE GRID -->
+    <!-- LIBRARY -->
 
-    <div class="voice-grid" id="voiceGrid">
+    <section class="library">
+
+        <div class="library-head">
+
+            <h2>
+                Popular voices
+            </h2>
+
+            <span
+                class="voice-count"
+                id="voiceCount">
+                8 voices
+            </span>
+
+        </div>
 
 
-        <!-- DAVID -->
+        <div
+            class="voice-grid"
+            id="voiceGrid">
 
-        <article
-            class="voice-card"
-            data-name="David Castlemore"
-            data-category="news professional narration"
-        >
 
-            <div class="voice-avatar">
-                D
-            </div>
+            <!-- DAVID -->
 
-            <div class="voice-card-content">
+            <article
+                class="voice-card"
+                data-gender="male"
+                data-category="narration ads"
+                data-search="David professional newsreader documentary narration">
 
-                <span class="voice-badge">
-                    PROFESSIONAL
-                </span>
+                <div class="voice-top">
 
-                <h3>
-                    David Castlemore
-                </h3>
+                    <div class="avatar">
+                        D
+                    </div>
 
-                <p>
-                    Newsreader · Documentary
-                </p>
+                    <div class="voice-main">
+
+                        <div class="voice-name">
+                            David Castlemore
+                        </div>
+
+                        <div class="voice-description">
+                            Professional, clear and authoritative
+                        </div>
+
+                        <span class="voice-gender">
+                            MALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">News</span>
+                    <span class="tag">Documentary</span>
+                    <span class="tag">Narration</span>
+                </div>
 
                 <div class="voice-actions">
 
                     <button
-                        class="preview-voice"
-                        data-voice="David Castlemore"
-                    >
+                        class="preview-btn"
+                        data-voice="David">
                         ▶ Preview
                     </button>
 
                     <button
-                        class="select-voice"
-                        data-voice="David Castlemore"
-                    >
-                        Use Voice
+                        class="use-btn"
+                        data-voice="David">
+                        Use Voice →
                     </button>
 
                 </div>
 
-            </div>
-
-        </article>
+            </article>
 
 
-        <!-- BRYAN -->
+            <!-- BRYAN -->
 
-        <article
-            class="voice-card"
-            data-name="Bryan"
-            data-category="professional advertisement narration"
-        >
+            <article
+                class="voice-card"
+                data-gender="male"
+                data-category="ads narration"
+                data-search="Bryan polished measured engaging advertisement">
 
-            <div class="voice-avatar">
-                B
-            </div>
+                <div class="voice-top">
 
-            <div class="voice-card-content">
+                    <div class="avatar">
+                        B
+                    </div>
 
-                <span class="voice-badge">
-                    PRO
-                </span>
+                    <div class="voice-main">
 
-                <h3>
-                    Bryan
-                </h3>
+                        <div class="voice-name">
+                            Bryan
+                        </div>
 
-                <p>
-                    Polished · Measured · Engaging
-                </p>
+                        <div class="voice-description">
+                            Polished, measured and engaging
+                        </div>
+
+                        <span class="voice-gender">
+                            MALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Ads</span>
+                    <span class="tag">Brand</span>
+                    <span class="tag">Video</span>
+                </div>
 
                 <div class="voice-actions">
 
                     <button
-                        class="preview-voice"
-                        data-voice="Bryan"
-                    >
+                        class="preview-btn"
+                        data-voice="Bryan">
                         ▶ Preview
                     </button>
 
                     <button
-                        class="select-voice"
-                        data-voice="Bryan"
-                    >
-                        Use Voice
+                        class="use-btn"
+                        data-voice="Bryan">
+                        Use Voice →
                     </button>
 
                 </div>
 
-            </div>
-
-        </article>
+            </article>
 
 
-        <!-- JUNIPER -->
+            <!-- HALE -->
 
-        <article
-            class="voice-card"
-            data-name="Juniper"
-            data-category="professional narration"
-        >
+            <article
+                class="voice-card"
+                data-gender="male"
+                data-category="ads social"
+                data-search="Hale smooth confident persuasive advertising">
 
-            <div class="voice-avatar">
-                J
-            </div>
+                <div class="voice-top">
 
-            <div class="voice-card-content">
+                    <div class="avatar">
+                        H
+                    </div>
 
-                <span class="voice-badge">
-                    PRO
-                </span>
+                    <div class="voice-main">
 
-                <h3>
-                    Juniper
-                </h3>
+                        <div class="voice-name">
+                            Hale
+                        </div>
 
-                <p>
-                    Grounded · Professional · Conversational
-                </p>
+                        <div class="voice-description">
+                            Smooth, confident and persuasive
+                        </div>
+
+                        <span class="voice-gender">
+                            MALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Advertising</span>
+                    <span class="tag">Social</span>
+                    <span class="tag">Promo</span>
+                </div>
 
                 <div class="voice-actions">
 
                     <button
-                        class="preview-voice"
-                        data-voice="Juniper"
-                    >
+                        class="preview-btn"
+                        data-voice="Hale">
                         ▶ Preview
                     </button>
 
                     <button
-                        class="select-voice"
-                        data-voice="Juniper"
-                    >
-                        Use Voice
+                        class="use-btn"
+                        data-voice="Hale">
+                        Use Voice →
                     </button>
 
                 </div>
 
-            </div>
-
-        </article>
+            </article>
 
 
-        <!-- HALE -->
+            <!-- JERRY -->
 
-        <article
-            class="voice-card"
-            data-name="Hale"
-            data-category="advertisement professional"
-        >
+            <article
+                class="voice-card"
+                data-gender="male"
+                data-category="ads social"
+                data-search="Jerry energetic happy upbeat promotions reels">
 
-            <div class="voice-avatar">
-                H
-            </div>
+                <div class="voice-top">
 
-            <div class="voice-card-content">
+                    <div class="avatar">
+                        J
+                    </div>
 
-                <span class="voice-badge">
-                    PREMIUM
-                </span>
+                    <div class="voice-main">
 
-                <h3>
-                    Hale
-                </h3>
+                        <div class="voice-name">
+                            Jerry B
+                        </div>
 
-                <p>
-                    Smooth · Confident · Persuasive
-                </p>
+                        <div class="voice-description">
+                            Upbeat, energetic and happy
+                        </div>
+
+                        <span class="voice-gender">
+                            MALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Reels</span>
+                    <span class="tag">Promos</span>
+                    <span class="tag">Social</span>
+                </div>
 
                 <div class="voice-actions">
 
                     <button
-                        class="preview-voice"
-                        data-voice="Hale"
-                    >
+                        class="preview-btn"
+                        data-voice="Jerry">
                         ▶ Preview
                     </button>
 
                     <button
-                        class="select-voice"
-                        data-voice="Hale"
-                    >
-                        Use Voice
+                        class="use-btn"
+                        data-voice="Jerry">
+                        Use Voice →
                     </button>
 
                 </div>
 
-            </div>
-
-        </article>
+            </article>
 
 
-        <!-- JERRY -->
+            <!-- JESSICA -->
 
-        <article
-            class="voice-card"
-            data-name="Jerry B"
-            data-category="energetic advertisement"
-        >
+            <article
+                class="voice-card"
+                data-gender="female"
+                data-category="narration podcast agents"
+                data-search="Jessica Anne Bogart professional conversational podcast">
 
-            <div class="voice-avatar">
-                J
-            </div>
+                <div class="voice-top">
 
-            <div class="voice-card-content">
+                    <div class="avatar female">
+                        J
+                    </div>
 
-                <span class="voice-badge">
-                    PREMIUM
-                </span>
+                    <div class="voice-main">
 
-                <h3>
-                    Jerry B
-                </h3>
+                        <div class="voice-name">
+                            Jessica Anne Bogart
+                        </div>
 
-                <p>
-                    Upbeat · Energetic · Happy
-                </p>
+                        <div class="voice-description">
+                            Professional and conversational
+                        </div>
+
+                        <span class="voice-gender">
+                            FEMALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Podcast</span>
+                    <span class="tag">Narration</span>
+                    <span class="tag">AI</span>
+                </div>
 
                 <div class="voice-actions">
 
                     <button
-                        class="preview-voice"
-                        data-voice="Jerry B"
-                    >
+                        class="preview-btn"
+                        data-voice="Jessica">
                         ▶ Preview
                     </button>
 
                     <button
-                        class="select-voice"
-                        data-voice="Jerry B"
-                    >
-                        Use Voice
+                        class="use-btn"
+                        data-voice="Jessica">
+                        Use Voice →
                     </button>
 
                 </div>
 
-            </div>
-
-        </article>
+            </article>
 
 
-        <!-- ALLISON -->
+            <!-- JUNIPER -->
 
-        <article
-            class="voice-card"
-            data-name="Allison"
-            data-category="energetic advertisement"
-        >
+            <article
+                class="voice-card"
+                data-gender="female"
+                data-category="podcast agents"
+                data-search="Juniper grounded professional conversational AI">
 
-            <div class="voice-avatar">
-                A
-            </div>
+                <div class="voice-top">
 
-            <div class="voice-card-content">
+                    <div class="avatar female">
+                        J
+                    </div>
 
-                <span class="voice-badge">
-                    PREMIUM
-                </span>
+                    <div class="voice-main">
 
-                <h3>
-                    Allison
-                </h3>
+                        <div class="voice-name">
+                            Juniper
+                        </div>
 
-                <p>
-                    Energetic · Clear · Bubbly
-                </p>
+                        <div class="voice-description">
+                            Grounded and professional
+                        </div>
+
+                        <span class="voice-gender">
+                            FEMALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Podcast</span>
+                    <span class="tag">Conversation</span>
+                    <span class="tag">Agents</span>
+                </div>
 
                 <div class="voice-actions">
 
                     <button
-                        class="preview-voice"
-                        data-voice="Allison"
-                    >
+                        class="preview-btn"
+                        data-voice="Juniper">
                         ▶ Preview
                     </button>
 
                     <button
-                        class="select-voice"
-                        data-voice="Allison"
-                    >
-                        Use Voice
+                        class="use-btn"
+                        data-voice="Juniper">
+                        Use Voice →
                     </button>
 
                 </div>
 
-            </div>
-
-        </article>
+            </article>
 
 
-    </div>
+            <!-- ALLISON -->
+
+            <article
+                class="voice-card"
+                data-gender="female"
+                data-category="ads social"
+                data-search="Allison energetic clear bubbly commercial social">
+
+                <div class="voice-top">
+
+                    <div class="avatar female">
+                        A
+                    </div>
+
+                    <div class="voice-main">
+
+                        <div class="voice-name">
+                            Allison
+                        </div>
+
+                        <div class="voice-description">
+                            Energetic, clear and bubbly
+                        </div>
+
+                        <span class="voice-gender">
+                            FEMALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Commercial</span>
+                    <span class="tag">Social</span>
+                    <span class="tag">Promo</span>
+                </div>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-btn"
+                        data-voice="Allison">
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="use-btn"
+                        data-voice="Allison">
+                        Use Voice →
+                    </button>
+
+                </div>
+
+            </article>
 
 
-    <div
-        id="noVoices"
-        class="empty-state"
-        hidden
-    >
-        <h3>No voices found</h3>
+            <!-- EMMA -->
 
-        <p>
-            Try another voice name or category.
-        </p>
-    </div>
+            <article
+                class="voice-card"
+                data-gender="female"
+                data-category="narration social"
+                data-search="Emma warm friendly natural storytelling">
 
-</section>
+                <div class="voice-top">
+
+                    <div class="avatar female">
+                        E
+                    </div>
+
+                    <div class="voice-main">
+
+                        <div class="voice-name">
+                            Emma
+                        </div>
+
+                        <div class="voice-description">
+                            Warm, friendly and natural
+                        </div>
+
+                        <span class="voice-gender">
+                            FEMALE
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="tags">
+                    <span class="tag">Storytelling</span>
+                    <span class="tag">Social</span>
+                    <span class="tag">Natural</span>
+                </div>
+
+                <div class="voice-actions">
+
+                    <button
+                        class="preview-btn"
+                        data-voice="Emma">
+                        ▶ Preview
+                    </button>
+
+                    <button
+                        class="use-btn"
+                        data-voice="Emma">
+                        Use Voice →
+                    </button>
+
+                </div>
+
+            </article>
+
+
+        </div>
+
+
+        <div
+            class="no-result"
+            id="noResult">
+
+            <strong>
+                No voices found.
+            </strong>
+
+            <p>
+                Try another name, category or gender.
+            </p>
+
+        </div>
+
+
+        <div class="library-info">
+
+            <strong>
+                🎙️ About VoiceAI voices
+            </strong>
+
+            <p>
+                These are voice-library profiles for the VoiceAI interface.
+                Preview uses your browser's available speech voices.
+                Real provider-generated AI voices can be connected through
+                the VoiceAI backend later.
+            </p>
+
+        </div>
+
+    </section>
 
 </main>
 
 
-<footer>
+<footer class="site-footer">
 
-    <div class="footer-brand">
+    <div class="footer-main">
 
-        <h2>∿ VoiceAI</h2>
+        <div class="footer-brand">
 
-        <p>
-            AI voice and audio creation platform.
-        </p>
+            <a href="index.html" class="logo">
+                ∿ <span>Voice</span>AI
+            </a>
+
+            <p>
+                Create natural AI voices, images and creative
+                content from one professional workspace.
+            </p>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>Platform</h4>
+
+            <a href="tools.html">AI Tools</a>
+            <a href="voices.html">Voice Library</a>
+            <a href="studio.html">Studio</a>
+            <a href="pricing.html">Pricing</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>Tools</h4>
+
+            <a href="tts.html">Text to Speech</a>
+            <a href="image.html">Text to Image</a>
+            <a href="clone.html">Voice Clone</a>
+            <a href="stt.html">Speech to Text</a>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h4>Account</h4>
+
+            <a href="profile.html">Profile</a>
+            <a href="login.html">Login</a>
+            <a href="forgot-password.html">
+                Forgot Password
+            </a>
+
+        </div>
 
     </div>
 
-    <div>
-        <h4>Platform</h4>
 
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-
-    </div>
-
-    <div>
-        <h4>Company</h4>
-
-        <a href="about.html">About</a>
-        <a href="faq.html">FAQ</a>
-        <a href="contact.html">Contact</a>
-
-    </div>
-
-    <div>
-        <h4>Plans</h4>
-
-        <a href="pricing.html">Free</a>
-        <a href="pricing.html">Premium</a>
-
+    <div class="footer-bottom">
+        © 2026 VoiceAI. All rights reserved.
     </div>
 
 </footer>
 
 
-<script src="script.js"></script>
+<script>
+
+/* SEARCH */
+
+const searchInput =
+    document.getElementById("voiceSearch");
+
+const genderFilter =
+    document.getElementById("genderFilter");
+
+const cards =
+    [...document.querySelectorAll(".voice-card")];
+
+const voiceCount =
+    document.getElementById("voiceCount");
+
+const noResult =
+    document.getElementById("noResult");
+
+let activeCategory = "all";
+
+
+function filterVoices(){
+
+    const query =
+        searchInput.value
+        .toLowerCase()
+        .trim();
+
+    const gender =
+        genderFilter.value;
+
+    let visible = 0;
+
+
+    cards.forEach(card => {
+
+        const cardGender =
+            card.dataset.gender;
+
+        const category =
+            card.dataset.category;
+
+        const search =
+            card.dataset.search
+            .toLowerCase();
+
+        const matchesSearch =
+            !query ||
+            search.includes(query);
+
+        const matchesGender =
+            gender === "all" ||
+            cardGender === gender;
+
+        const matchesCategory =
+            activeCategory === "all" ||
+            category.includes(activeCategory);
+
+
+        if(
+            matchesSearch &&
+            matchesGender &&
+            matchesCategory
+        ){
+
+            card.style.display = "";
+
+            visible++;
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+
+    voiceCount.textContent =
+        visible + " voices";
+
+    noResult.style.display =
+        visible === 0
+        ? "block"
+        : "none";
+
+}
+
+
+searchInput.addEventListener(
+    "input",
+    filterVoices
+);
+
+
+genderFilter.addEventListener(
+    "change",
+    filterVoices
+);
+
+
+/* CATEGORY */
+
+document
+.querySelectorAll(".category-btn")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            document
+            .querySelectorAll(
+                ".category-btn"
+            )
+            .forEach(btn =>
+                btn.classList.remove(
+                    "active"
+                )
+            );
+
+            button.classList.add(
+                "active"
+            );
+
+            activeCategory =
+                button.dataset.category;
+
+            filterVoices();
+
+        }
+    );
+
+});
+
+
+/* BROWSER VOICE PREVIEW */
+
+document
+.querySelectorAll(".preview-btn")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const voiceName =
+                button.dataset.voice;
+
+            const sample =
+                `Hello, this is ${voiceName} from VoiceAI. Create natural and professional audio for your next project.`;
+
+            if(
+                !("speechSynthesis" in window)
+            ){
+
+                alert(
+                    "Voice preview is not supported in this browser."
+                );
+
+                return;
+
+            }
+
+
+            speechSynthesis.cancel();
+
+
+            const utterance =
+                new SpeechSynthesisUtterance(
+                    sample
+                );
+
+            utterance.lang =
+                "en-US";
+
+            utterance.rate =
+                0.95;
+
+            utterance.pitch =
+                1;
+
+
+            const voices =
+                speechSynthesis.getVoices();
+
+
+            const preferred =
+                voices.find(
+                    voice =>
+                        voice.lang
+                        .toLowerCase()
+                        .startsWith("en")
+                );
+
+
+            if(preferred){
+
+                utterance.voice =
+                    preferred;
+
+            }
+
+
+            speechSynthesis.speak(
+                utterance
+            );
+
+        }
+    );
+
+});
+
+
+/* USE VOICE */
+
+document
+.querySelectorAll(".use-btn")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const voice =
+                button.dataset.voice;
+
+            window.location.href =
+                "tts.html?voice=" +
+                encodeURIComponent(
+                    voice
+                );
+
+        }
+    );
+
+});
+
+
+/* MOBILE MENU */
+
+const mobileMenuBtn =
+    document.getElementById(
+        "mobileMenuBtn"
+    );
+
+
+mobileMenuBtn.addEventListener(
+    "click",
+    () => {
+
+        const links =
+            document.querySelector(
+                ".nav-links"
+            );
+
+
+        if(
+            links.style.display ===
+            "flex"
+        ){
+
+            links.style.display =
+                "none";
+
+        }else{
+
+            links.style.display =
+                "flex";
+
+            links.style.position =
+                "absolute";
+
+            links.style.top =
+                "68px";
+
+            links.style.left =
+                "0";
+
+            links.style.right =
+                "0";
+
+            links.style.padding =
+                "20px";
+
+            links.style.background =
+                "white";
+
+            links.style.borderBottom =
+                "1px solid #eadfd7";
+
+            links.style.flexDirection =
+                "column";
+
+            links.style.alignItems =
+                "flex-start";
+
+        }
+
+    }
+);
+
+</script>
 
 </body>
 </html>
