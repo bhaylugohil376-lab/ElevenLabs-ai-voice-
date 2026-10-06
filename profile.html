@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="VoiceAI user dashboard">
-  <title>Profile — VoiceAI</title>
+
+  <title>Profile | VoiceAI</title>
 
   <style>
     * {
@@ -14,23 +14,22 @@
     }
 
     :root {
-      --bg: #f7f8fc;
-      --card: #fff;
-      --text: #171923;
-      --muted: #747987;
-      --border: #e4e6ed;
-      --primary: #6757e8;
-      --primary-dark: #5142cb;
-      --soft: #f0edff;
-      --green: #168653;
-      --red: #d64545;
-      --shadow: 0 12px 35px rgba(20, 24, 40, .07);
+      --primary: #6c45f5;
+      --primary-dark: #5935d8;
+      --text: #17151d;
+      --muted: #73727d;
+      --border: #e8e7ef;
+      --bg: #f7f7fb;
+      --card: #ffffff;
+      --success: #16845a;
+      --danger: #c93636;
     }
 
     body {
       font-family: Inter, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
+      min-height: 100vh;
       overflow-x: hidden;
     }
 
@@ -40,42 +39,29 @@
     }
 
     button,
-    input,
-    select {
+    input {
       font: inherit;
-    }
-
-    button {
-      cursor: pointer;
     }
 
     /* NAVBAR */
 
     .navbar {
-      height: 70px;
-      background: rgba(255,255,255,.97);
+      height: 74px;
+      background: #fff;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      padding: 0 30px;
+      justify-content: space-between;
+      padding: 0 5%;
       position: sticky;
       top: 0;
-      z-index: 30;
-    }
-
-    .nav-inner {
-      width: 100%;
-      max-width: 1400px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 25px;
+      z-index: 100;
     }
 
     .logo {
-      font-size: 22px;
-      font-weight: 850;
+      font-size: 23px;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
     .logo span {
@@ -84,88 +70,119 @@
 
     .nav-links {
       display: flex;
+      align-items: center;
       gap: 25px;
-    }
-
-    .nav-links a {
-      color: #555b69;
       font-size: 14px;
       font-weight: 650;
+      color: #55545f;
     }
 
     .nav-links a:hover,
-    .nav-links .active {
+    .nav-links a.active {
       color: var(--primary);
     }
 
-    .logout {
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
       border: 1px solid var(--border);
       background: #fff;
       border-radius: 10px;
-      padding: 10px 14px;
+      padding: 10px 15px;
       font-weight: 700;
+      cursor: pointer;
+    }
+
+    .upgrade-btn {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .upgrade-btn:hover {
+      background: var(--primary-dark);
     }
 
     /* PAGE */
 
-    .page {
-      width: min(1280px, calc(100% - 32px));
-      margin: auto;
-      padding: 38px 0 70px;
+    .container {
+      width: min(1180px, 92%);
+      margin: 0 auto;
+      padding: 38px 0 60px;
+    }
+
+    .page-heading {
+      margin-bottom: 26px;
+    }
+
+    .page-heading h1 {
+      font-size: 32px;
+      margin-bottom: 7px;
+    }
+
+    .page-heading p {
+      color: var(--muted);
+      font-size: 15px;
     }
 
     /* PROFILE HEADER */
 
-    .profile-header {
-      background: #fff;
+    .profile-card {
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 22px;
+      border-radius: 20px;
       padding: 27px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 25px;
-      box-shadow: var(--shadow);
+      gap: 20px;
       margin-bottom: 22px;
     }
 
-    .profile-main {
+    .profile-info {
       display: flex;
       align-items: center;
       gap: 18px;
+      min-width: 0;
     }
 
     .avatar {
-      width: 76px;
-      height: 76px;
+      width: 78px;
+      height: 78px;
+      flex: 0 0 78px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #7566ef, #a397ff);
-      display: grid;
-      place-items: center;
+      background: linear-gradient(135deg, #6c45f5, #9a7cff);
       color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 27px;
-      font-weight: 850;
-      flex-shrink: 0;
+      font-weight: 800;
     }
 
-    .profile-info h1 {
-      font-size: 25px;
+    .profile-text h2 {
+      font-size: 22px;
       margin-bottom: 5px;
     }
 
-    .profile-info p {
+    .profile-text p {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 14px;
+      word-break: break-word;
     }
 
     .plan-badge {
       display: inline-flex;
       margin-top: 9px;
-      background: var(--soft);
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #f0ebff;
       color: var(--primary);
-      padding: 6px 10px;
-      border-radius: 7px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 800;
     }
 
@@ -174,25 +191,19 @@
       gap: 9px;
     }
 
-    .btn {
-      border: 0;
+    .action-btn {
+      border: 1px solid var(--border);
+      background: #fff;
       border-radius: 10px;
-      padding: 11px 16px;
-      font-weight: 750;
+      padding: 10px 15px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    .btn-primary {
+    .action-btn.primary {
       background: var(--primary);
       color: #fff;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-secondary {
-      background: #f0f1f5;
-      color: #343844;
+      border-color: var(--primary);
     }
 
     /* STATS */
@@ -200,350 +211,342 @@
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+      gap: 16px;
       margin-bottom: 22px;
     }
 
-    .stat {
+    .stat-card {
       background: #fff;
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 19px;
-      box-shadow: var(--shadow);
+      border-radius: 17px;
+      padding: 21px;
     }
 
-    .stat-label {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 9px;
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      background: #f2efff;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .stat-icon svg {
+      width: 21px;
+      height: 21px;
     }
 
     .stat-value {
       font-size: 25px;
-      font-weight: 850;
+      font-weight: 800;
+      margin-bottom: 4px;
     }
 
-    .stat-note {
-      color: var(--green);
-      font-size: 11px;
-      margin-top: 6px;
-      font-weight: 700;
+    .stat-label {
+      font-size: 13px;
+      color: var(--muted);
     }
 
-    /* CONTENT */
+    /* MAIN GRID */
 
-    .content {
+    .dashboard-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(300px, .75fr);
-      gap: 20px;
+      grid-template-columns: 1.55fr .95fr;
+      gap: 22px;
     }
 
-    .panel {
+    .section-card {
       background: #fff;
       border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
+      border-radius: 19px;
+      padding: 23px;
+      margin-bottom: 22px;
     }
 
-    .panel-header {
-      padding: 19px 21px;
-      border-bottom: 1px solid var(--border);
+    .section-title {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
+      margin-bottom: 18px;
+      gap: 10px;
     }
 
-    .panel-header h2 {
-      font-size: 17px;
+    .section-title h2 {
+      font-size: 18px;
     }
 
-    .panel-header a {
+    .section-title a {
       color: var(--primary);
-      font-size: 12px;
-      font-weight: 750;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     /* QUICK TOOLS */
 
-    .tools {
-      padding: 18px;
+    .quick-tools {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 11px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
     }
 
     .tool {
       border: 1px solid var(--border);
       border-radius: 13px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding: 16px;
       transition: .2s;
     }
 
     .tool:hover {
-      border-color: var(--primary);
+      border-color: #c9bfff;
       transform: translateY(-2px);
     }
 
     .tool-icon {
-      width: 39px;
-      height: 39px;
+      width: 38px;
+      height: 38px;
       border-radius: 10px;
-      background: var(--soft);
+      background: #f2efff;
       color: var(--primary);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 11px;
+    }
+
+    .tool-icon svg {
+      width: 20px;
+      height: 20px;
     }
 
     .tool strong {
       display: block;
-      font-size: 13px;
+      font-size: 14px;
       margin-bottom: 4px;
     }
 
     .tool span {
       color: var(--muted);
-      font-size: 10px;
+      font-size: 11px;
     }
 
     /* PROJECTS */
 
-    .projects {
-      padding: 5px 20px 15px;
-    }
-
     .project {
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 15px;
+      gap: 13px;
+      padding: 14px 0;
+      border-bottom: 1px solid #eeeef3;
     }
 
     .project:last-child {
       border-bottom: 0;
-    }
-
-    .project-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
+      padding-bottom: 0;
     }
 
     .project-icon {
-      width: 38px;
-      height: 38px;
-      background: #f3f4f8;
-      border-radius: 9px;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #f4f1ff;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 42px;
     }
 
-    .project-info {
+    .project-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .project-content {
+      flex: 1;
       min-width: 0;
     }
 
-    .project-info strong {
+    .project-content strong {
       display: block;
-      font-size: 13px;
-      white-space: nowrap;
+      font-size: 14px;
+      margin-bottom: 4px;
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .project-info span {
+    .project-content span {
       color: var(--muted);
-      font-size: 10px;
+      font-size: 12px;
     }
 
     .project-status {
-      color: var(--green);
-      background: #eaf9f1;
-      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--success);
+      background: #ecfaf4;
       padding: 5px 8px;
-      font-size: 10px;
-      font-weight: 750;
-      flex-shrink: 0;
+      border-radius: 20px;
     }
 
-    /* RIGHT */
+    /* USAGE */
 
-    .side-panel {
+    .usage-box {
+      background: linear-gradient(135deg, #f7f4ff, #fbfaff);
+      border: 1px solid #e7e0ff;
+      border-radius: 15px;
+      padding: 18px;
+    }
+
+    .usage-top {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 13px;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .usage-panel {
-      padding: 21px;
-    }
-
-    .usage-title {
-      font-size: 14px;
-      font-weight: 800;
-      margin-bottom: 14px;
-    }
-
-    .usage-number {
-      font-size: 30px;
-      font-weight: 850;
-    }
-
-    .usage-number small {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .usage-bar {
-      height: 8px;
-      background: #ececf2;
+    .progress {
+      height: 9px;
+      background: #e4e0ef;
       border-radius: 20px;
       overflow: hidden;
-      margin: 13px 0 8px;
     }
 
-    .usage-fill {
+    .progress-bar {
       width: 20%;
       height: 100%;
       background: var(--primary);
       border-radius: inherit;
+      transition: width .3s;
     }
 
     .usage-note {
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
+      margin-top: 10px;
       line-height: 1.5;
     }
 
+    /* UPGRADE */
+
     .upgrade-card {
-      background: linear-gradient(135deg, #6757e8, #5143cb);
+      background: linear-gradient(135deg, #211943, #4e2fa8);
       color: #fff;
       border-radius: 18px;
-      padding: 22px;
-      box-shadow: var(--shadow);
+      padding: 23px;
     }
 
-    .upgrade-card h3 {
-      font-size: 18px;
+    .upgrade-card h2 {
+      font-size: 20px;
       margin-bottom: 8px;
     }
 
     .upgrade-card p {
-      color: rgba(255,255,255,.78);
-      font-size: 12px;
+      color: #ddd5ff;
+      font-size: 13px;
       line-height: 1.6;
-      margin-bottom: 17px;
+      margin-bottom: 18px;
     }
 
     .upgrade-card a {
       display: inline-block;
       background: #fff;
-      color: var(--primary);
-      padding: 10px 13px;
-      border-radius: 9px;
-      font-size: 12px;
+      color: #4d2fb0;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 13px;
       font-weight: 800;
     }
 
-    /* SETTINGS */
+    /* ACCOUNT */
 
-    .settings {
-      padding: 8px 20px 18px;
+    .account-list {
+      display: grid;
+      gap: 11px;
     }
 
-    .setting {
-      padding: 15px 0;
-      border-bottom: 1px solid var(--border);
+    .account-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 13px 14px;
       gap: 15px;
     }
 
-    .setting:last-child {
-      border-bottom: 0;
-    }
-
-    .setting strong {
-      display: block;
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
-    .setting span {
+    .account-row span {
       color: var(--muted);
-      font-size: 10px;
+      font-size: 13px;
     }
 
-    .setting-action {
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 8px;
-      padding: 7px 10px;
-      font-size: 10px;
-      font-weight: 700;
-      flex-shrink: 0;
+    .account-row strong {
+      font-size: 13px;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .logout {
+      width: 100%;
+      margin-top: 13px;
+      padding: 12px;
+      border: 1px solid #f0cccc;
+      background: #fff5f5;
+      color: var(--danger);
+      border-radius: 11px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     /* FOOTER */
 
     footer {
-      background: #fff;
       border-top: 1px solid var(--border);
-      padding: 25px 30px;
-      color: var(--muted);
-      font-size: 12px;
+      background: #fff;
+      padding: 25px;
+      text-align: center;
+      color: #888;
+      font-size: 13px;
     }
 
-    .footer-inner {
-      max-width: 1280px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-    }
-
-    .footer-links a:hover {
-      color: var(--primary);
-    }
-
-    /* MOBILE */
+    /* RESPONSIVE */
 
     @media (max-width: 1000px) {
-      .content {
-        grid-template-columns: 1fr;
-      }
-    }
 
-    @media (max-width: 800px) {
       .nav-links {
-        display: none;
-      }
-
-      .navbar {
-        padding: 0 17px;
+        gap: 15px;
       }
 
       .stats {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .profile-header {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+
+      .navbar {
+        padding: 0 18px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .container {
+        width: 94%;
+        padding-top: 28px;
+      }
+
+      .profile-card {
         align-items: flex-start;
         flex-direction: column;
       }
@@ -552,48 +555,70 @@
         width: 100%;
       }
 
-      .profile-actions .btn {
+      .profile-actions .action-btn {
         flex: 1;
+      }
+
+      .quick-tools {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 520px) {
-      .page {
-        width: calc(100% - 24px);
-        padding-top: 22px;
+    @media (max-width: 500px) {
+
+      .nav-right .nav-btn:first-child {
+        display: none;
       }
 
-      .profile-header {
-        padding: 20px;
-      }
-
-      .profile-main {
-        align-items: flex-start;
-      }
-
-      .avatar {
-        width: 62px;
-        height: 62px;
-        font-size: 22px;
-      }
-
-      .profile-info h1 {
-        font-size: 21px;
+      .page-heading h1 {
+        font-size: 27px;
       }
 
       .stats {
         grid-template-columns: 1fr 1fr;
+        gap: 10px;
       }
 
-      .tools {
+      .stat-card {
+        padding: 16px;
+      }
+
+      .stat-value {
+        font-size: 21px;
+      }
+
+      .profile-card,
+      .section-card {
+        padding: 18px;
+      }
+
+      .avatar {
+        width: 65px;
+        height: 65px;
+        flex-basis: 65px;
+        font-size: 22px;
+      }
+
+      .profile-text h2 {
+        font-size: 19px;
+      }
+
+      .quick-tools {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .tool {
+        padding: 13px;
+      }
+    }
+
+    @media (max-width: 370px) {
+
+      .quick-tools {
         grid-template-columns: 1fr;
       }
 
-      .project-status {
-        display: none;
-      }
-
-      .footer-inner {
+      .profile-actions {
         flex-direction: column;
       }
     }
@@ -605,73 +630,80 @@
   <!-- NAVBAR -->
 
   <header class="navbar">
-    <div class="nav-inner">
 
-      <a href="index.html" class="logo">
-        ∿ <span>Voice</span>AI
+    <a href="index.html" class="logo">
+      ∿ <span>Voice</span>AI
+    </a>
+
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="tools.html">AI Tools</a>
+      <a href="voices.html">Voices</a>
+      <a href="studio.html">Studio</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="agents.html">Agents</a>
+      <a href="profile.html" class="active">Profile</a>
+    </nav>
+
+    <div class="nav-right">
+      <a href="pricing.html" class="nav-btn upgrade-btn">
+        Upgrade
       </a>
-
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="agents.html">Agents</a>
-        <a href="profile.html" class="active">Profile</a>
-      </nav>
-
-      <button class="logout" id="logoutBtn">
-        Logout
-      </button>
-
     </div>
+
   </header>
 
 
-  <main class="page">
+  <!-- MAIN -->
+
+  <main class="container">
+
+    <div class="page-heading">
+      <h1>Your Profile</h1>
+      <p>Manage your VoiceAI account, projects and AI usage.</p>
+    </div>
+
 
     <!-- PROFILE HEADER -->
 
-    <section class="profile-header">
+    <section class="profile-card">
 
-      <div class="profile-main">
+      <div class="profile-info">
 
         <div class="avatar" id="avatar">
           U
         </div>
 
-        <div class="profile-info">
+        <div class="profile-text">
 
-          <h1 id="userName">
-            Your Profile
-          </h1>
+          <h2 id="userName">
+            Your Name
+          </h2>
 
           <p id="userEmail">
-            Sign in to load your account
+            Loading account...
           </p>
 
-          <div class="plan-badge" id="planBadge">
-            FREE PLAN
-          </div>
+          <span class="plan-badge" id="planBadge">
+            Free Plan
+          </span>
 
         </div>
 
       </div>
 
+
       <div class="profile-actions">
 
         <button
-          class="btn btn-secondary"
-          id="editProfileBtn"
-        >
+          class="action-btn"
+          id="editProfileBtn">
           Edit Profile
         </button>
 
         <a
           href="pricing.html"
-          class="btn btn-primary"
-        >
+          class="action-btn primary">
           Upgrade
         </a>
 
@@ -684,647 +716,785 @@
 
     <section class="stats">
 
-      <div class="stat">
-        <div class="stat-label">
-          AI generations
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <path d="M12 3v18"></path>
+            <path d="M17 7H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"></path>
+          </svg>
         </div>
+
         <div class="stat-value" id="generationCount">
           0
         </div>
-        <div class="stat-note">
-          This month
+
+        <div class="stat-label">
+          Generations
         </div>
+
       </div>
 
-      <div class="stat">
-        <div class="stat-label">
-          Projects
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            <path d="M7 8h10"></path>
+            <path d="M7 12h7"></path>
+          </svg>
         </div>
+
         <div class="stat-value" id="projectCount">
           0
         </div>
-        <div class="stat-note">
-          Workspace
+
+        <div class="stat-label">
+          Projects
         </div>
+
       </div>
 
-      <div class="stat">
-        <div class="stat-label">
-          Saved voices
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <path d="M12 3 4 7v5c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-4z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
         </div>
+
         <div class="stat-value" id="voiceCount">
           0
         </div>
-        <div class="stat-note">
-          Voice library
+
+        <div class="stat-label">
+          Saved Voices
         </div>
+
       </div>
 
-      <div class="stat">
-        <div class="stat-label">
-          Free usage
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          <svg viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v5l3 2"></path>
+          </svg>
         </div>
+
         <div class="stat-value">
-          1/5
+          <span id="usageUsed">1</span>/5
         </div>
-        <div class="stat-note">
-          Today
+
+        <div class="stat-label">
+          Daily AI Usage
         </div>
+
       </div>
 
     </section>
 
 
-    <!-- CONTENT -->
+    <div class="dashboard-grid">
 
-    <section class="content">
 
       <!-- LEFT -->
 
       <div>
 
+
         <!-- QUICK TOOLS -->
 
-        <div class="panel">
+        <section class="section-card">
 
-          <div class="panel-header">
-
-            <h2>Quick tools</h2>
-
-            <a href="tools.html">
-              View all
-            </a>
-
+          <div class="section-title">
+            <h2>Quick Tools</h2>
+            <a href="tools.html">View all</a>
           </div>
 
-          <div class="tools">
 
-            <a class="tool" href="tts.html">
+          <div class="quick-tools">
+
+            <a href="tts.html" class="tool">
 
               <div class="tool-icon">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M4 9v6M8 6v12M12 4v16M16 7v10M20 9v6"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M4 6h16"></path>
+                  <path d="M4 12h10"></path>
+                  <path d="M4 18h7"></path>
                 </svg>
               </div>
 
-              <div>
-                <strong>Text to Speech</strong>
-                <span>Create AI voice audio</span>
-              </div>
+              <strong>Text to Speech</strong>
+              <span>Create AI voice</span>
 
             </a>
 
 
-            <a class="tool" href="image.html">
+            <a href="image.html" class="tool">
 
               <div class="tool-icon">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-                  <rect
-                    x="3"
-                    y="4"
-                    width="18"
-                    height="16"
-                    rx="2"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
-                  <circle
-                    cx="8"
-                    cy="9"
-                    r="1.5"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M4 17l5-5 3 3 3-3 5 5"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                  <circle cx="8.5" cy="9" r="1.5"></circle>
+                  <path d="m21 15-5-5L5 20"></path>
                 </svg>
               </div>
 
-              <div>
-                <strong>Text to Image</strong>
-                <span>Generate visuals</span>
-              </div>
+              <strong>Text to Image</strong>
+              <span>Generate visuals</span>
 
             </a>
 
 
-            <a class="tool" href="voices.html">
+            <a href="voices.html" class="tool">
 
               <div class="tool-icon">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-                  <circle
-                    cx="12"
-                    cy="8"
-                    r="4"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
-                  <path
-                    d="M4 21c.8-4 3.3-6 8-6s7.2 2 8 6"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <circle cx="12" cy="12" r="8"></circle>
+                  <path d="M9 10v4"></path>
+                  <path d="M12 8v8"></path>
+                  <path d="M15 10v4"></path>
                 </svg>
               </div>
 
-              <div>
-                <strong>Voice Library</strong>
-                <span>Explore AI voices</span>
-              </div>
+              <strong>Voice Library</strong>
+              <span>Browse voices</span>
 
             </a>
 
 
-            <a class="tool" href="studio.html">
+            <a href="studio.html" class="tool">
 
               <div class="tool-icon">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 5h14v14H5z"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
-                  <path
-                    d="M9 8v8M12 10v4M15 7v10"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M4 6h16"></path>
+                  <path d="M4 12h16"></path>
+                  <path d="M4 18h16"></path>
+                  <circle cx="9" cy="6" r="2"></circle>
+                  <circle cx="15" cy="12" r="2"></circle>
+                  <circle cx="11" cy="18" r="2"></circle>
                 </svg>
               </div>
 
-              <div>
-                <strong>AI Studio</strong>
-                <span>Edit and export</span>
-              </div>
+              <strong>AI Studio</strong>
+              <span>Edit projects</span>
 
             </a>
 
 
-            <a class="tool" href="agents.html">
+            <a href="agents.html" class="tool">
 
               <div class="tool-icon">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="8"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                  />
-                  <path
-                    d="M9 10h.01M15 10h.01M8 15c1.2 1.2 2.7 1.8 4 1.8s2.8-.6 4-1.8"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <rect x="4" y="5" width="16" height="14" rx="3"></rect>
+                  <path d="M8 10h.01"></path>
+                  <path d="M12 10h.01"></path>
+                  <path d="M16 10h.01"></path>
+                  <path d="M8 15h8"></path>
                 </svg>
               </div>
 
-              <div>
-                <strong>AI Agents</strong>
-                <span>Build voice agents</span>
-              </div>
+              <strong>Voice Agents</strong>
+              <span>Build AI agents</span>
 
             </a>
 
 
-            <a class="tool" href="dubbing.html">
+            <a href="dubbing.html" class="tool">
 
               <div class="tool-icon">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M4 8h16M4 12h10M4 16h7"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                  />
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M4 5h16v14H4z"></path>
+                  <path d="M8 9h8"></path>
+                  <path d="M8 13h5"></path>
                 </svg>
               </div>
 
-              <div>
-                <strong>Dubbing</strong>
-                <span>Translate media</span>
-              </div>
+              <strong>Dubbing</strong>
+              <span>Translate audio</span>
 
             </a>
 
           </div>
 
-        </div>
+        </section>
 
 
-        <!-- PROJECTS -->
+        <!-- RECENT PROJECTS -->
 
-        <div class="panel" style="margin-top:20px;">
+        <section class="section-card">
 
-          <div class="panel-header">
-
-            <h2>Recent projects</h2>
-
-            <a href="studio.html">
-              Open Studio
-            </a>
-
+          <div class="section-title">
+            <h2>Recent Projects</h2>
+            <a href="studio.html">Open Studio</a>
           </div>
 
-          <div class="projects" id="projects">
+
+          <div id="projects">
 
             <div class="project">
 
-              <div class="project-left">
-
-                <div class="project-icon">
-                  ♪
-                </div>
-
-                <div class="project-info">
-
-                  <strong>
-                    No projects yet
-                  </strong>
-
-                  <span>
-                    Your generated projects will appear here.
-                  </span>
-
-                </div>
-
+              <div class="project-icon">
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M4 5h16v14H4z"></path>
+                  <path d="M8 9h8"></path>
+                  <path d="M8 13h5"></path>
+                </svg>
               </div>
 
-              <div class="project-status">
+              <div class="project-content">
+                <strong>Welcome to VoiceAI</strong>
+                <span>Start your first AI project</span>
+              </div>
+
+              <span class="project-status">
                 Ready
+              </span>
+
+            </div>
+
+
+            <div class="project">
+
+              <div class="project-icon">
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                  <path d="M12 3v18"></path>
+                  <path d="M6 12h12"></path>
+                </svg>
               </div>
+
+              <div class="project-content">
+                <strong>Create your first voice</strong>
+                <span>Use Text to Speech</span>
+              </div>
+
+              <span class="project-status">
+                Ready
+              </span>
 
             </div>
 
           </div>
 
-        </div>
+        </section>
 
       </div>
 
 
       <!-- RIGHT -->
 
-      <aside class="side-panel">
+      <aside>
+
 
         <!-- USAGE -->
 
-        <div class="panel">
+        <section class="section-card">
 
-          <div class="usage-panel">
+          <div class="section-title">
+            <h2>Daily Usage</h2>
+            <span style="font-size:12px;color:#777;">
+              Free Plan
+            </span>
+          </div>
 
-            <div class="usage-title">
-              Today's AI usage
+
+          <div class="usage-box">
+
+            <div class="usage-top">
+
+              <span>
+                AI generations
+              </span>
+
+              <span id="usageText">
+                1 / 5
+              </span>
+
             </div>
 
-            <div class="usage-number">
-              1
-              <small>/ 5 uses</small>
+            <div class="progress">
+              <div
+                class="progress-bar"
+                id="progressBar">
+              </div>
             </div>
 
-            <div class="usage-bar">
-              <div class="usage-fill"></div>
-            </div>
-
-            <div class="usage-note">
-              Free accounts receive 5 AI processing actions
-              every 24 hours.
-            </div>
+            <p class="usage-note">
+              Free accounts receive 5 AI uses per 24 hours.
+              Upgrade for higher usage limits and premium features.
+            </p>
 
           </div>
 
-        </div>
+        </section>
 
 
         <!-- UPGRADE -->
 
-        <div class="upgrade-card">
+        <section class="upgrade-card">
 
-          <h3>
-            Unlock more AI power
-          </h3>
+          <h2>Unlock Premium</h2>
 
           <p>
-            Upgrade to Premium for higher processing limits,
-            premium voices, cloning, dubbing, agents and more.
+            Get premium voices, higher limits, voice cloning,
+            dubbing, music, agents and advanced Studio features.
           </p>
 
           <a href="pricing.html">
-            View Premium
+            Upgrade for $20/month
           </a>
 
-        </div>
+        </section>
 
 
-        <!-- SETTINGS -->
+        <!-- ACCOUNT -->
 
-        <div class="panel">
+        <section class="section-card">
 
-          <div class="panel-header">
-
-            <h2>Account settings</h2>
-
+          <div class="section-title">
+            <h2>Account</h2>
           </div>
 
-          <div class="settings">
 
-            <div class="setting">
+          <div class="account-list">
 
-              <div>
-                <strong>Profile details</strong>
-                <span>Update your name and email</span>
-              </div>
-
-              <button
-                class="setting-action"
-                id="profileSettingBtn"
-              >
-                Edit
-              </button>
-
+            <div class="account-row">
+              <span>Name</span>
+              <strong id="accountName">
+                Your Name
+              </strong>
             </div>
 
-
-            <div class="setting">
-
-              <div>
-                <strong>Password</strong>
-                <span>Change your account password</span>
-              </div>
-
-              <a
-                href="forgot-password.html"
-                class="setting-action"
-              >
-                Reset
-              </a>
-
+            <div class="account-row">
+              <span>Email</span>
+              <strong id="accountEmail">
+                Loading...
+              </strong>
             </div>
 
-
-            <div class="setting">
-
-              <div>
-                <strong>Subscription</strong>
-                <span>Manage your VoiceAI plan</span>
-              </div>
-
-              <a
-                href="pricing.html"
-                class="setting-action"
-              >
-                Manage
-              </a>
-
-            </div>
-
-
-            <div class="setting">
-
-              <div>
-                <strong>Logout</strong>
-                <span>Sign out from this account</span>
-              </div>
-
-              <button
-                class="setting-action"
-                id="logoutSettingBtn"
-              >
-                Logout
-              </button>
-
+            <div class="account-row">
+              <span>Plan</span>
+              <strong id="accountPlan">
+                Free
+              </strong>
             </div>
 
           </div>
 
-        </div>
+
+          <button
+            class="logout"
+            id="logoutBtn">
+            Log Out
+          </button>
+
+        </section>
 
       </aside>
 
-    </section>
+    </div>
 
   </main>
 
 
-  <!-- FOOTER -->
-
   <footer>
-
-    <div class="footer-inner">
-
-      <div>
-        © 2026 VoiceAI. All rights reserved.
-      </div>
-
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="agents.html">Agents</a>
-        <a href="forgot-password.html">Forgot Password</a>
-      </div>
-
-    </div>
-
+    © 2026 VoiceAI. All rights reserved.
   </footer>
 
 
   <script>
 
-    /*
-      Profile data can be loaded from:
-      GET /api/auth/me
-    */
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+    const avatar = document.getElementById("avatar");
+    const planBadge = document.getElementById("planBadge");
+
+    const accountName = document.getElementById("accountName");
+    const accountEmail = document.getElementById("accountEmail");
+    const accountPlan = document.getElementById("accountPlan");
+
+    const usageUsed = document.getElementById("usageUsed");
+    const usageText = document.getElementById("usageText");
+    const progressBar = document.getElementById("progressBar");
+
+    const generationCount =
+      document.getElementById("generationCount");
+
+    const projectCount =
+      document.getElementById("projectCount");
+
+    const voiceCount =
+      document.getElementById("voiceCount");
+
+
+    function setProfile(user) {
+
+      if (!user) {
+        return;
+      }
+
+
+      const name =
+        user.name ||
+        user.fullName ||
+        "VoiceAI User";
+
+      const email =
+        user.email ||
+        "No email available";
+
+      const plan =
+        user.plan ||
+        "free";
+
+
+      userName.textContent = name;
+      accountName.textContent = name;
+
+      userEmail.textContent = email;
+      accountEmail.textContent = email;
+
+      const firstLetter =
+        name.trim().charAt(0).toUpperCase();
+
+      avatar.textContent =
+        firstLetter || "U";
+
+
+      const premium =
+        plan.toLowerCase() === "premium" ||
+        plan.toLowerCase() === "pro";
+
+
+      planBadge.textContent =
+        premium ? "Premium Plan" : "Free Plan";
+
+      accountPlan.textContent =
+        premium ? "Premium" : "Free";
+
+
+      if (premium) {
+
+        planBadge.style.background = "#eafaf3";
+        planBadge.style.color = "#16845a";
+
+      }
+
+    }
+
 
     async function loadProfile() {
 
       try {
 
-        const response =
-          await fetch("/api/auth/me", {
-            credentials: "include"
-          });
-
-        if (!response.ok) return;
-
-        const data =
-          await response.json();
-
-        const user =
-          data.user || data;
-
-        if (!user) return;
-
-        const name =
-          user.name ||
-          user.fullName ||
-          "Your Profile";
-
-        const email =
-          user.email ||
-          "Account";
-
-        document.getElementById(
-          "userName"
-        ).textContent = name;
-
-        document.getElementById(
-          "userEmail"
-        ).textContent = email;
-
-        document.getElementById(
-          "avatar"
-        ).textContent =
-          name.charAt(0).toUpperCase();
-
-        const plan =
-          String(
-            user.plan ||
-            user.subscription ||
-            "free"
-          ).toUpperCase();
-
-        document.getElementById(
-          "planBadge"
-        ).textContent =
-          plan + " PLAN";
-
-        if (user.generations !== undefined) {
-          document.getElementById(
-            "generationCount"
-          ).textContent =
-            user.generations;
-        }
-
-        if (user.projects !== undefined) {
-          document.getElementById(
-            "projectCount"
-          ).textContent =
-            user.projects;
-        }
-
-        if (user.voices !== undefined) {
-          document.getElementById(
-            "voiceCount"
-          ).textContent =
-            user.voices;
-        }
-
-      } catch (error) {
-
-        console.log(
-          "Profile API is not connected yet."
-        );
-
-      }
-
-    }
-
-
-    loadProfile();
-
-
-    /* LOGOUT */
-
-    async function logout() {
-
-      try {
-
-        await fetch(
-          "/api/auth/logout",
+        const response = await fetch(
+          "/api/auth/me",
           {
-            method: "POST",
+            method: "GET",
             credentials: "include"
           }
         );
 
+
+        if (!response.ok) {
+
+          throw new Error("Not authenticated");
+
+        }
+
+
+        const data = await response.json();
+
+
+        if (data.user) {
+
+          setProfile(data.user);
+
+          localStorage.setItem(
+            "voiceaiUser",
+            JSON.stringify(data.user)
+          );
+
+        }
+
+        if (data.stats) {
+
+          generationCount.textContent =
+            data.stats.generations ?? 0;
+
+          projectCount.textContent =
+            data.stats.projects ?? 0;
+
+          voiceCount.textContent =
+            data.stats.savedVoices ?? 0;
+
+        }
+
+        if (data.usage) {
+
+          updateUsage(
+            data.usage.used ?? 0,
+            data.usage.limit ?? 5
+          );
+
+        }
+
       } catch (error) {
 
-        console.log(
-          "Logout endpoint unavailable."
-        );
+        /*
+          Fallback to locally cached profile
+          when backend session is temporarily unavailable.
+        */
+
+        const cached =
+          localStorage.getItem("voiceaiUser");
+
+        if (cached) {
+
+          try {
+
+            setProfile(JSON.parse(cached));
+
+          } catch (_) {}
+
+        }
 
       }
-
-      localStorage.removeItem(
-        "voiceaiAgentId"
-      );
-
-      window.location.href =
-        "login.html";
 
     }
 
 
-    document
-      .getElementById("logoutBtn")
-      .addEventListener(
-        "click",
-        logout
-      );
+    function updateUsage(used, limit) {
 
+      const safeLimit =
+        Number(limit) > 0 ? Number(limit) : 5;
 
-    document
-      .getElementById("logoutSettingBtn")
-      .addEventListener(
-        "click",
-        logout
-      );
-
-
-    /* EDIT PROFILE */
-
-    function editProfile() {
-
-      const name =
-        prompt(
-          "Enter your display name:"
+      const safeUsed =
+        Math.max(
+          0,
+          Math.min(Number(used) || 0, safeLimit)
         );
 
-      if (!name || !name.trim()) {
-        return;
-      }
+      const percentage =
+        (safeUsed / safeLimit) * 100;
 
-      document.getElementById(
-        "userName"
-      ).textContent =
-        name.trim();
 
-      document.getElementById(
-        "avatar"
-      ).textContent =
-        name.trim()
-          .charAt(0)
-          .toUpperCase();
+      usageUsed.textContent = safeUsed;
+
+      usageText.textContent =
+        safeUsed + " / " + safeLimit;
+
+      progressBar.style.width =
+        percentage + "%";
 
     }
 
+
+    /*
+      Load cached data immediately
+    */
+
+    const cachedUser =
+      localStorage.getItem("voiceaiUser");
+
+
+    if (cachedUser) {
+
+      try {
+
+        setProfile(JSON.parse(cachedUser));
+
+      } catch (_) {}
+
+    }
+
+
+    /*
+      Then load fresh account data
+    */
+
+    loadProfile();
+
+
+    /*
+      Edit profile
+    */
 
     document
       .getElementById("editProfileBtn")
-      .addEventListener(
-        "click",
-        editProfile
-      );
+      .addEventListener("click", async function() {
 
+        const currentName =
+          userName.textContent.trim();
+
+        const newName =
+          prompt(
+            "Enter your new name:",
+            currentName
+          );
+
+
+        if (!newName || !newName.trim()) {
+          return;
+        }
+
+
+        const name =
+          newName.trim();
+
+
+        try {
+
+          const response = await fetch(
+            "/api/auth/profile",
+            {
+              method: "PATCH",
+
+              credentials: "include",
+
+              headers: {
+                "Content-Type": "application/json"
+              },
+
+              body: JSON.stringify({
+                name: name
+              })
+            }
+          );
+
+
+          if (!response.ok) {
+
+            throw new Error(
+              "Profile update failed"
+            );
+
+          }
+
+
+          const data =
+            await response.json();
+
+
+          if (data.user) {
+
+            setProfile(data.user);
+
+            localStorage.setItem(
+              "voiceaiUser",
+              JSON.stringify(data.user)
+            );
+
+          } else {
+
+            setProfile({
+              name: name,
+              email: userEmail.textContent,
+              plan: accountPlan.textContent
+            });
+
+          }
+
+
+          alert("Profile updated successfully.");
+
+        } catch (error) {
+
+          /*
+            Do not pretend that the server saved it.
+          */
+
+          alert(
+            "Profile could not be updated. Please connect the profile API."
+          );
+
+        }
+
+      });
+
+
+    /*
+      Logout
+    */
 
     document
-      .getElementById("profileSettingBtn")
-      .addEventListener(
-        "click",
-        editProfile
-      );
+      .getElementById("logoutBtn")
+      .addEventListener("click", async function() {
+
+        const confirmed =
+          confirm("Are you sure you want to log out?");
+
+
+        if (!confirmed) {
+          return;
+        }
+
+
+        try {
+
+          await fetch(
+            "/api/auth/logout",
+            {
+              method: "POST",
+              credentials: "include"
+            }
+          );
+
+        } catch (_) {
+
+          // Continue local cleanup even if network fails.
+
+        }
+
+
+        localStorage.removeItem("voiceaiUser");
+        localStorage.removeItem("voiceaiAgentId");
+
+        window.location.href =
+          "login.html";
+
+      });
 
   </script>
 
