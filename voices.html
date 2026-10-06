@@ -1,1243 +1,649 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Voice Library — VoiceAI</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Inter, Arial, sans-serif;
-      background: #f7f7fb;
-      color: #17151d;
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    /* NAVBAR */
-
-    .navbar {
-      height: 72px;
-      background: #fff;
-      border-bottom: 1px solid #e8e6ee;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 5%;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .logo span {
-      color: #6d28d9;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: #65616f;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: #6d28d9;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 17px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .btn-light {
-      background: #f1eef7;
-      color: #3b3445;
-    }
-
-    .btn-primary {
-      background: #6d28d9;
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: #5b21b6;
-    }
-
-    /* HERO */
-
-    .hero {
-      max-width: 1200px;
-      margin: auto;
-      padding: 70px 24px 40px;
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-flex;
-      padding: 7px 13px;
-      background: #eee7ff;
-      color: #6422c4;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 18px;
-    }
-
-    .hero h1 {
-      font-size: clamp(38px, 6vw, 64px);
-      line-height: 1;
-      letter-spacing: -3px;
-      margin-bottom: 18px;
-    }
-
-    .hero h1 span {
-      color: #6d28d9;
-    }
-
-    .hero p {
-      max-width: 680px;
-      margin: auto;
-      color: #716c79;
-      font-size: 17px;
-      line-height: 1.7;
-    }
-
-    /* SEARCH */
-
-    .search-area {
-      max-width: 1200px;
-      margin: 10px auto 0;
-      padding: 0 24px 30px;
-    }
-
-    .search-box {
-      background: white;
-      border: 1px solid #e4e1e9;
-      border-radius: 16px;
-      padding: 10px;
-      display: flex;
-      gap: 10px;
-      box-shadow: 0 10px 30px rgba(30, 20, 50, .05);
-    }
-
-    .search-box input {
-      flex: 1;
-      border: 0;
-      outline: 0;
-      padding: 14px;
-      min-width: 0;
-      color: #25212b;
-    }
-
-    .search-box button {
-      white-space: nowrap;
-    }
-
-    /* FILTERS */
-
-    .filters {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 24px 30px;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 12px;
-    }
-
-    .filters select {
-      width: 100%;
-      background: white;
-      border: 1px solid #e1dee7;
-      border-radius: 11px;
-      padding: 13px;
-      outline: none;
-      color: #46414d;
-    }
-
-    /* LIBRARY HEADER */
-
-    .library-head {
-      max-width: 1200px;
-      margin: auto;
-      padding: 10px 24px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .library-head h2 {
-      font-size: 24px;
-    }
-
-    .count {
-      color: #77717f;
-      font-size: 14px;
-    }
-
-    /* VOICES */
-
-    .voice-grid {
-      max-width: 1200px;
-      margin: auto;
-      padding: 0 24px 40px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .voice-card {
-      background: white;
-      border: 1px solid #e7e3eb;
-      border-radius: 18px;
-      padding: 20px;
-      transition: .2s ease;
-    }
-
-    .voice-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(25, 15, 45, .08);
-    }
-
-    .voice-top {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      margin-bottom: 15px;
-    }
-
-    .avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #6d28d9, #a855f7);
-      color: white;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-
-    .voice-name {
-      font-size: 17px;
-      font-weight: 800;
-      word-break: break-word;
-    }
-
-    .voice-meta {
-      color: #77717f;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    .description {
-      color: #67616f;
-      line-height: 1.6;
-      font-size: 14px;
-      min-height: 67px;
-      margin-bottom: 15px;
-    }
-
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 17px;
-    }
-
-    .tag {
-      background: #f2eff7;
-      color: #5f5868;
-      padding: 5px 9px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .voice-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-    }
-
-    .preview-btn,
-    .use-btn {
-      border: 0;
-      padding: 11px;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: 800;
-    }
-
-    .preview-btn {
-      background: #f0edf5;
-      color: #3f3948;
-    }
-
-    .use-btn {
-      background: #6d28d9;
-      color: white;
-    }
-
-    .audio {
-      width: 100%;
-      margin: 5px 0 15px;
-      display: none;
-      height: 35px;
-    }
-
-    .audio.show {
-      display: block;
-    }
-
-    /* LOADING */
-
-    .loading {
-      max-width: 1200px;
-      margin: auto;
-      padding: 20px 24px 60px;
-      text-align: center;
-      color: #77717f;
-    }
-
-    .spinner {
-      width: 32px;
-      height: 32px;
-      border: 3px solid #ddd6e8;
-      border-top-color: #6d28d9;
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
-      margin: 0 auto 15px;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .error {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 16px 24px;
-      background: #fff0f0;
-      border: 1px solid #ffd2d2;
-      color: #b42318;
-      border-radius: 12px;
-      display: none;
-    }
-
-    /* LOAD MORE */
-
-    .load-more {
-      text-align: center;
-      padding: 5px 24px 70px;
-    }
-
-    .load-more button {
-      display: none;
-      min-width: 180px;
-    }
-
-    /* FOOTER */
-
-    footer {
-      background: #17131d;
-      color: #bdb7c5;
-      padding: 35px 5%;
-      text-align: center;
-      font-size: 13px;
-    }
-
-    footer strong {
-      color: white;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 900px) {
-      .nav-links {
-        display: none;
-      }
-
-      .filters {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .voice-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 620px) {
-      .navbar {
-        padding: 0 16px;
-      }
-
-      .nav-actions .btn-light {
-        display: none;
-      }
-
-      .hero {
-        padding-top: 45px;
-      }
-
-      .hero h1 {
-        letter-spacing: -2px;
-      }
-
-      .search-box {
-        flex-direction: column;
-      }
-
-      .search-box button {
-        width: 100%;
-      }
-
-      .filters {
-        grid-template-columns: 1fr;
-      }
-
-      .voice-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .library-head {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Voice Library — VoiceAI</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Inter,Arial,sans-serif;
+  background:#f7f7fb;
+  color:#17151d;
+  overflow-x:hidden
+}
+a{text-decoration:none;color:inherit}
+button,input,select{font:inherit}
+
+.navbar{
+  height:72px;background:#fff;border-bottom:1px solid #e8e6ee;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 5%;position:sticky;top:0;z-index:100
+}
+.logo{font-size:24px;font-weight:800}
+.logo span{color:#6d28d9}
+.nav-links{display:flex;gap:25px;align-items:center}
+.nav-links a{font-size:14px;font-weight:600;color:#65616f}
+.nav-links a:hover,.nav-links a.active{color:#6d28d9}
+.nav-actions{display:flex;gap:9px}
+.btn{
+  border:0;border-radius:10px;padding:11px 17px;
+  cursor:pointer;font-weight:700
+}
+.btn-light{background:#f1eef7;color:#3b3445}
+.btn-primary{background:#6d28d9;color:#fff}
+.btn-primary:hover{background:#5b21b6}
+
+.hero{
+  max-width:1200px;margin:auto;padding:65px 24px 35px;text-align:center
+}
+.badge{
+  display:inline-block;padding:7px 13px;background:#eee7ff;
+  color:#6422c4;border-radius:30px;font-size:12px;
+  font-weight:800;margin-bottom:18px
+}
+.hero h1{
+  font-size:48px;line-height:1.08;letter-spacing:-2px;margin-bottom:15px
+}
+.hero p{
+  max-width:650px;margin:auto;color:#6b6874;line-height:1.7
+}
+
+.search-area{
+  max-width:1100px;margin:10px auto 35px;padding:0 24px
+}
+.search-box{
+  display:flex;background:#fff;border:1px solid #e4e1eb;
+  border-radius:15px;padding:7px;box-shadow:0 8px 30px #17151d0a
+}
+.search-box input{
+  flex:1;border:0;outline:0;padding:13px 15px;background:transparent
+}
+.search-box button{min-width:110px}
+
+.filters{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;margin-top:13px
+}
+.filters select{
+  border:1px solid #e2dfe9;background:#fff;
+  border-radius:10px;padding:12px;outline:0;color:#403b49
+}
+
+.status{
+  max-width:1100px;margin:0 auto 20px;padding:0 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  color:#6b6874;font-size:14px
+}
+
+.grid{
+  max-width:1100px;margin:auto;padding:0 24px 60px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px
+}
+
+.card{
+  background:#fff;border:1px solid #e6e3eb;border-radius:18px;
+  padding:20px;transition:.2s;min-width:0
+}
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 35px #17151d0c
+}
+
+.voice-top{
+  display:flex;align-items:center;gap:13px;margin-bottom:15px
+}
+.avatar{
+  width:52px;height:52px;border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,#6d28d9,#a855f7);
+  color:#fff;font-weight:800;font-size:18px;flex-shrink:0
+}
+.voice-name{
+  font-size:17px;font-weight:800;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.voice-meta{
+  color:#77727f;font-size:12px;margin-top:4px
+}
+.description{
+  color:#6b6874;font-size:13px;line-height:1.6;
+  min-height:42px;margin-bottom:15px
+}
+
+.tags{
+  display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px
+}
+.tag{
+  background:#f3f0f8;color:#655c70;
+  border-radius:20px;padding:5px 9px;font-size:11px
+}
+
+.audio-row{
+  background:#f7f5fa;border-radius:11px;padding:9px;margin-bottom:12px
+}
+audio{width:100%;height:36px}
+
+.actions{display:flex;gap:8px}
+.actions button{
+  flex:1;border:0;border-radius:9px;
+  padding:10px;cursor:pointer;font-weight:700
+}
+.preview-btn{background:#eeeafa;color:#5d27a7}
+.use-btn{background:#6d28d9;color:#fff}
+
+.empty{
+  grid-column:1/-1;text-align:center;
+  padding:70px 20px;background:#fff;border-radius:18px;
+  border:1px solid #e6e3eb;color:#6b6874
+}
+.spinner{
+  width:28px;height:28px;border:3px solid #ddd;
+  border-top-color:#6d28d9;border-radius:50%;
+  animation:spin .7s linear infinite;margin:25px auto
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.load-wrap{text-align:center;padding:0 24px 60px}
+.load-btn{
+  border:1px solid #ddd6e8;background:#fff;
+  padding:12px 24px;border-radius:10px;
+  cursor:pointer;font-weight:700
+}
+.load-btn:disabled{opacity:.5;cursor:not-allowed}
+
+.mobile-menu{display:none}
+
+@media(max-width:950px){
+  .nav-links{display:none}
+  .mobile-menu{display:block}
+  .filters{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:40px}
+}
+
+@media(max-width:620px){
+  .navbar{height:64px;padding:0 18px}
+  .nav-actions .btn-light{display:none}
+  .hero{padding:45px 18px 30px}
+  .hero h1{font-size:34px}
+  .hero p{font-size:14px}
+  .search-area{padding:0 15px}
+  .filters{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr;padding:0 15px 45px}
+  .status{padding:0 15px}
+}
+</style>
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
+<nav class="navbar">
+  <a href="index.html" class="logo">Voice<span>AI</span></a>
 
-    <a href="index.html" class="logo">
-      Voice<span>AI</span>
-    </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="tools.html">AI Tools</a>
+    <a href="voices.html" class="active">Voices</a>
+    <a href="studio.html">Studio</a>
+    <a href="pricing.html">Pricing</a>
+  </div>
 
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="tools.html">AI Tools</a>
-      <a href="voices.html" class="active">Voices</a>
-      <a href="studio.html">Studio</a>
-      <a href="pricing.html">Pricing</a>
-    </nav>
+  <div class="nav-actions">
+    <a href="login.html" class="btn btn-light">Login</a>
+    <a href="pricing.html" class="btn btn-primary">Get Started</a>
+  </div>
 
-    <div class="nav-actions">
-      <a href="login.html" class="btn btn-light">Login</a>
-      <a href="pricing.html" class="btn btn-primary">Get Started</a>
-    </div>
+  <button class="mobile-menu btn btn-light"
+          onclick="location.href='tools.html'">
+    Menu
+  </button>
+</nav>
 
-  </header>
+<section class="hero">
+  <span class="badge">REAL AI VOICE LIBRARY</span>
 
+  <h1>Find the perfect voice.</h1>
 
-  <!-- HERO -->
-  <section class="hero">
+  <p>
+    Explore your available ElevenLabs voices, preview them instantly,
+    and use any voice directly inside VoiceAI Text to Speech.
+  </p>
+</section>
 
-    <div class="badge">
-      🎙️ VoiceAI Voice Library
-    </div>
+<section class="search-area">
 
-    <h1>
-      Find the perfect <span>voice.</span>
-    </h1>
+  <div class="search-box">
+    <input
+      id="search"
+      type="search"
+      placeholder="Search voices, accents, styles..."
+      autocomplete="off"
+    >
 
-    <p>
-      Explore the voices available to your VoiceAI account.
-      Search, preview and use a voice directly in Text to Speech.
-    </p>
+    <button
+      class="btn btn-primary"
+      onclick="loadVoices(true)">
+      Search
+    </button>
+  </div>
 
-  </section>
+  <div class="filters">
 
-
-  <!-- SEARCH -->
-  <section class="search-area">
-
-    <div class="search-box">
-
-      <input
-        id="searchInput"
-        type="search"
-        placeholder="Search voices, accents, languages, styles..."
-        autocomplete="off"
-      >
-
-      <button
-        id="searchButton"
-        class="btn btn-primary"
-        type="button"
-      >
-        Search
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- FILTERS -->
-  <section class="filters">
-
-    <select id="genderFilter">
+    <select id="gender">
       <option value="">All genders</option>
-      <option value="male">Male</option>
       <option value="female">Female</option>
+      <option value="male">Male</option>
       <option value="neutral">Neutral</option>
     </select>
 
-    <select id="languageFilter">
+    <select id="language">
       <option value="">All languages</option>
-      <option value="english">English</option>
-      <option value="hindi">Hindi</option>
-      <option value="gujarati">Gujarati</option>
-      <option value="spanish">Spanish</option>
-      <option value="french">French</option>
-      <option value="german">German</option>
-      <option value="japanese">Japanese</option>
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+      <option value="gu">Gujarati</option>
+      <option value="es">Spanish</option>
+      <option value="fr">French</option>
+      <option value="de">German</option>
+      <option value="ja">Japanese</option>
     </select>
 
-    <select id="categoryFilter">
+    <select id="category">
       <option value="">All categories</option>
       <option value="premade">Premade</option>
       <option value="professional">Professional</option>
       <option value="cloned">Cloned</option>
       <option value="generated">Generated</option>
+      <option value="library">Library</option>
     </select>
 
-    <select id="ageFilter">
+    <select id="age">
       <option value="">All ages</option>
       <option value="young">Young</option>
       <option value="middle_aged">Middle aged</option>
       <option value="old">Old</option>
     </select>
 
-    <select id="sortFilter">
-      <option value="">Recommended</option>
+    <select id="sort">
       <option value="name">Name</option>
-      <option value="recent">Recently added</option>
+      <option value="newest">Newest</option>
+      <option value="popular">Popular</option>
     </select>
 
-  </section>
+  </div>
+</section>
 
+<div class="status">
+  <span id="statusText">Loading voices...</span>
+  <span id="countText"></span>
+</div>
 
-  <!-- HEADER -->
-  <section class="library-head">
-
-    <div>
-      <h2>All Voices</h2>
-      <div class="count" id="voiceCount">
-        Loading voices...
-      </div>
-    </div>
-
-  </section>
-
-
-  <div id="errorBox" class="error"></div>
-
-
-  <!-- LOADING -->
-  <div id="loading" class="loading">
-
+<main id="voiceGrid" class="grid">
+  <div class="empty">
     <div class="spinner"></div>
-
-    <p>Loading Voice Library...</p>
-
+    Loading Voice Library...
   </div>
-
-
-  <!-- VOICE GRID -->
-  <main
-    id="voiceGrid"
-    class="voice-grid"
-  ></main>
-
-
-  <!-- LOAD MORE -->
-  <div class="load-more">
-
-    <button
-      id="loadMoreButton"
-      class="btn btn-primary"
-      type="button"
-    >
-      Load More Voices
-    </button>
-
-  </div>
-
-
-  <footer>
-    <strong>VoiceAI</strong> — AI Voice Studio
-    <br>
-    Real voice previews require your configured VoiceAI backend.
-  </footer>
-
-
-  <script>
-
-    /*
-      IMPORTANT
-
-      Never put your ElevenLabs API key here.
-
-      Frontend talks to:
-
-          GET /api/voices
-
-      Your backend securely talks to ElevenLabs.
-    */
-
-
-    const API_URL = "/api/voices";
-
-
-    const state = {
-      voices: [],
-      nextPageToken: null,
-      loading: false
-    };
-
-
-    const searchInput =
-      document.getElementById("searchInput");
-
-    const searchButton =
-      document.getElementById("searchButton");
-
-    const genderFilter =
-      document.getElementById("genderFilter");
-
-    const languageFilter =
-      document.getElementById("languageFilter");
-
-    const categoryFilter =
-      document.getElementById("categoryFilter");
-
-    const ageFilter =
-      document.getElementById("ageFilter");
-
-    const sortFilter =
-      document.getElementById("sortFilter");
-
-    const voiceGrid =
-      document.getElementById("voiceGrid");
-
-    const loading =
-      document.getElementById("loading");
-
-    const errorBox =
-      document.getElementById("errorBox");
-
-    const voiceCount =
-      document.getElementById("voiceCount");
-
-    const loadMoreButton =
-      document.getElementById("loadMoreButton");
-
-
-    function getInitial(name) {
-
-      if (!name) {
-        return "?";
-      }
-
-      return name
-        .trim()
-        .charAt(0)
-        .toUpperCase();
-
-    }
-
-
-    function escapeHTML(value) {
-
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-    }
-
-
-    function getLabels(voice) {
-
-      if (!voice.labels) {
-        return {};
-      }
-
-      return voice.labels;
-
-    }
-
-
-    function getLabel(voice, key) {
-
-      const labels = getLabels(voice);
-
-      return labels[key] || "";
-
-    }
-
-
-    function createVoiceCard(voice, index) {
-
-      const name =
-        voice.name ||
-        "Unnamed Voice";
-
-      const description =
-        voice.description ||
-        "AI voice available in your VoiceAI library.";
-
-      const gender =
-        getLabel(voice, "gender");
-
-      const age =
-        getLabel(voice, "age");
-
-      const accent =
-        getLabel(voice, "accent");
-
-      const language =
-        getLabel(voice, "language");
-
-      const category =
-        voice.category ||
-        getLabel(voice, "category");
-
-      const preview =
-        voice.preview_url ||
-        voice.previewUrl ||
-        "";
-
-
-      const card =
-        document.createElement("article");
-
-      card.className = "voice-card";
-
-
-      const safeName =
-        escapeHTML(name);
-
-      const safeDescription =
-        escapeHTML(description);
-
-
-      let tags = "";
-
-      [
-        gender,
-        age,
-        accent,
-        language,
-        category
-      ]
-        .filter(Boolean)
-        .slice(0, 5)
-        .forEach(tag => {
-
-          tags += `
-            <span class="tag">
-              ${escapeHTML(tag)}
-            </span>
-          `;
-
-        });
-
-
-      const voiceId =
-        encodeURIComponent(
-          voice.voice_id || ""
-        );
-
-
-      card.innerHTML = `
-
-        <div class="voice-top">
-
-          <div class="avatar">
-            ${getInitial(name)}
+</main>
+
+<div class="load-wrap">
+  <button
+    id="loadMore"
+    class="load-btn"
+    onclick="loadMore()"
+    disabled>
+    Load More Voices
+  </button>
+</div>
+
+<script>
+const state = {
+  voices: [],
+  nextPageToken: null,
+  loading: false
+};
+
+const grid = document.getElementById("voiceGrid");
+const statusText = document.getElementById("statusText");
+const countText = document.getElementById("countText");
+const loadMoreBtn = document.getElementById("loadMore");
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function getLabel(voice, key) {
+  const labels = voice.labels || {};
+  return labels[key] || "";
+}
+
+function getInitial(name) {
+  const clean = String(name || "V").trim();
+  return clean.charAt(0).toUpperCase();
+}
+
+function voiceCard(voice) {
+
+  const name = voice.name || "Unnamed Voice";
+  const category = voice.category || "AI Voice";
+
+  const gender = getLabel(voice, "gender");
+  const age = getLabel(voice, "age");
+  const accent = getLabel(voice, "accent");
+  const language = getLabel(voice, "language");
+
+  const description =
+    voice.description ||
+    "Natural AI voice available in VoiceAI.";
+
+  const preview = voice.preview_url;
+
+  let tags = "";
+
+  [gender, age, accent, language, category]
+    .filter(Boolean)
+    .slice(0, 4)
+    .forEach(tag => {
+      tags += `<span class="tag">${escapeHTML(tag)}</span>`;
+    });
+
+  const audio = preview
+    ? `
+      <div class="audio-row">
+        <audio controls preload="none" src="${escapeHTML(preview)}"></audio>
+      </div>
+    `
+    : "";
+
+  return `
+    <article class="card">
+
+      <div class="voice-top">
+
+        <div class="avatar">
+          ${escapeHTML(getInitial(name))}
+        </div>
+
+        <div style="min-width:0">
+          <div class="voice-name">
+            ${escapeHTML(name)}
           </div>
 
-          <div>
-
-            <div class="voice-name">
-              ${safeName}
-            </div>
-
-            <div class="voice-meta">
-              ${escapeHTML(category || "Voice")}
-            </div>
-
+          <div class="voice-meta">
+            ${escapeHTML(category)}
           </div>
-
         </div>
 
+      </div>
 
-        <div class="description">
-          ${safeDescription}
-        </div>
+      <div class="description">
+        ${escapeHTML(description)}
+      </div>
 
+      <div class="tags">
+        ${tags}
+      </div>
 
-        <div class="tags">
-          ${tags || `
-            <span class="tag">
-              AI Voice
-            </span>
-          `}
-        </div>
+      ${audio}
 
+      <div class="actions">
 
         ${
           preview
-            ? `
-              <audio
-                class="audio"
-                controls
-                preload="none"
-                src="${escapeHTML(preview)}"
-              ></audio>
-            `
-            : ""
+          ? `
+            <button
+              class="preview-btn"
+              onclick="previewVoice('${escapeHTML(preview)}')">
+              ▶ Preview
+            </button>
+          `
+          : `
+            <button
+              class="preview-btn"
+              disabled>
+              No Preview
+            </button>
+          `
         }
 
+        <button
+          class="use-btn"
+          onclick="useVoice('${encodeURIComponent(voice.voice_id)}')">
+          Use Voice
+        </button>
 
-        <div class="voice-actions">
+      </div>
 
-          ${
-            preview
-              ? `
-                <button
-                  class="preview-btn"
-                  type="button"
-                  data-preview="${index}"
-                >
-                  ▶ Preview
-                </button>
-              `
-              : `
-                <button
-                  class="preview-btn"
-                  type="button"
-                  disabled
-                >
-                  No Preview
-                </button>
-              `
-          }
+    </article>
+  `;
+}
 
+function renderVoices() {
 
-          <a
-            class="use-btn"
-            href="tts.html?voice=${voiceId}"
-          >
-            Use Voice
-          </a>
+  if (!state.voices.length) {
+    grid.innerHTML = `
+      <div class="empty">
+        <h3>No voices found</h3>
+        <p style="margin-top:8px">
+          Try another search or filter.
+        </p>
+      </div>
+    `;
 
-        </div>
+    countText.textContent = "";
+    return;
+  }
 
-      `;
+  grid.innerHTML =
+    state.voices.map(voiceCard).join("");
 
+  countText.textContent =
+    `${state.voices.length} loaded`;
+}
 
-      const previewButton =
-        card.querySelector(
-          "[data-preview]"
-        );
+async function loadVoices(reset = false) {
 
-      const audio =
-        card.querySelector("audio");
+  if (state.loading) return;
 
+  state.loading = true;
 
-      if (
-        previewButton &&
-        audio
-      ) {
+  if (reset) {
+    state.voices = [];
+    state.nextPageToken = null;
 
-        previewButton.addEventListener(
-          "click",
-          () => {
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="spinner"></div>
+        Searching voices...
+      </div>
+    `;
+  }
 
-            document
-              .querySelectorAll(".audio")
-              .forEach(player => {
+  statusText.textContent = "Loading voices...";
+  loadMoreBtn.disabled = true;
 
-                if (player !== audio) {
-                  player.pause();
-                }
+  try {
 
-              });
+    const params = new URLSearchParams();
 
+    const search =
+      document.getElementById("search").value.trim();
 
-            audio.classList.add("show");
+    const gender =
+      document.getElementById("gender").value;
 
-            if (audio.paused) {
-              audio.play().catch(() => {});
-            } else {
-              audio.pause();
-            }
+    const language =
+      document.getElementById("language").value;
 
-          }
-        );
+    const category =
+      document.getElementById("category").value;
 
-      }
+    const age =
+      document.getElementById("age").value;
 
+    params.set("page_size", "100");
 
-      return card;
+    if (search)
+      params.set("search", search);
 
-    }
+    if (gender)
+      params.set("gender", gender);
 
+    if (language)
+      params.set("language", language);
 
-    function renderVoices() {
+    if (category)
+      params.set("category", category);
 
-      voiceGrid.innerHTML = "";
+    if (age)
+      params.set("age", age);
 
-      state.voices.forEach(
-        (voice, index) => {
-
-          voiceGrid.appendChild(
-            createVoiceCard(
-              voice,
-              index
-            )
-          );
-
-        }
+    if (!reset && state.nextPageToken) {
+      params.set(
+        "page_token",
+        state.nextPageToken
       );
-
-
-      voiceCount.textContent =
-        `${state.voices.length} voices loaded`;
-
     }
 
-
-    function showError(message) {
-
-      errorBox.textContent =
-        message;
-
-      errorBox.style.display =
-        "block";
-
-    }
-
-
-    function hideError() {
-
-      errorBox.style.display =
-        "none";
-
-    }
-
-
-    function setLoading(value) {
-
-      state.loading =
-        value;
-
-      loading.style.display =
-        value ? "block" : "none";
-
-    }
-
-
-    function buildParams() {
-
-      const params =
-        new URLSearchParams();
-
-
-      const search =
-        searchInput.value.trim();
-
-
-      if (search) {
-        params.set("search", search);
-      }
-
-
-      if (genderFilter.value) {
-        params.set(
-          "gender",
-          genderFilter.value
-        );
-      }
-
-
-      if (languageFilter.value) {
-        params.set(
-          "language",
-          languageFilter.value
-        );
-      }
-
-
-      if (categoryFilter.value) {
-        params.set(
-          "category",
-          categoryFilter.value
-        );
-      }
-
-
-      if (ageFilter.value) {
-        params.set(
-          "age",
-          ageFilter.value
-        );
-      }
-
-
-      if (sortFilter.value) {
-        params.set(
-          "sort",
-          sortFilter.value
-        );
-      }
-
-
-      if (state.nextPageToken) {
-
-        params.set(
-          "page_token",
-          state.nextPageToken
-        );
-
-      }
-
-
-      return params;
-
-    }
-
-
-    async function loadVoices(
-      reset = false
-    ) {
-
-      if (state.loading) {
-        return;
-      }
-
-
-      if (reset) {
-
-        state.voices = [];
-
-        state.nextPageToken = null;
-
-        voiceGrid.innerHTML = "";
-
-      }
-
-
-      hideError();
-
-      setLoading(true);
-
-
-      try {
-
-        const params =
-          buildParams();
-
-
-        const response =
-          await fetch(
-            `${API_URL}?${params.toString()}`,
-            {
-              method: "GET",
-              credentials: "include",
-              headers: {
-                "Accept":
-                  "application/json"
-              }
-            }
-          );
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            `Voice API error: ${response.status}`
-          );
-
+    const response = await fetch(
+      `/api/voices?${params.toString()}`,
+      {
+        method: "GET",
+        credentials: "same-origin",
+        headers: {
+          "Accept": "application/json"
         }
-
-
-        const data =
-          await response.json();
-
-
-        const voices =
-          Array.isArray(data)
-            ? data
-            : (
-              data.voices ||
-              data.items ||
-              []
-            );
-
-
-        if (reset) {
-          state.voices = voices;
-        } else {
-          state.voices.push(...voices);
-        }
-
-
-        state.nextPageToken =
-          data.next_page_token ||
-          data.nextPageToken ||
-          null;
-
-
-        renderVoices();
-
-
-        loadMoreButton.style.display =
-          state.nextPageToken
-            ? "inline-block"
-            : "none";
-
-
-        if (
-          state.voices.length === 0
-        ) {
-
-          voiceCount.textContent =
-            "No voices found.";
-
-        }
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        showError(
-          "Voice Library load nahi ho payi. Backend /api/voices check karo."
-        );
-
-      } finally {
-
-        setLoading(false);
-
       }
+    );
 
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        "Unable to load voices"
+      );
     }
 
+    const newVoices =
+      Array.isArray(data.voices)
+        ? data.voices
+        : [];
 
-    function searchVoices() {
+    state.voices = [
+      ...state.voices,
+      ...newVoices
+    ];
 
+    state.nextPageToken =
+      data.next_page_token || null;
+
+    renderVoices();
+
+    statusText.textContent =
+      state.voices.length
+        ? "Voice Library ready"
+        : "No voices found";
+
+    loadMoreBtn.disabled =
+      !state.nextPageToken;
+
+  } catch (error) {
+
+    console.error(error);
+
+    if (!state.voices.length) {
+      grid.innerHTML = `
+        <div class="empty">
+          <h3>Unable to load voices</h3>
+
+          <p style="margin-top:8px">
+            ${escapeHTML(error.message)}
+          </p>
+
+          <button
+            class="btn btn-primary"
+            style="margin-top:18px"
+            onclick="loadVoices(true)">
+            Try Again
+          </button>
+        </div>
+      `;
+    }
+
+    statusText.textContent =
+      "Voice loading failed";
+
+  } finally {
+
+    state.loading = false;
+
+    loadMoreBtn.disabled =
+      !state.nextPageToken ||
+      state.loading;
+  }
+}
+
+function loadMore() {
+  loadVoices(false);
+}
+
+function previewVoice(url) {
+
+  if (!url) return;
+
+  const audio = new Audio(url);
+
+  audio.play().catch(() => {
+    alert("Preview could not be played.");
+  });
+}
+
+function useVoice(voiceId) {
+
+  if (!voiceId) return;
+
+  const decoded =
+    decodeURIComponent(voiceId);
+
+  location.href =
+    `tts.html?voice=${encodeURIComponent(decoded)}`;
+}
+
+document
+  .getElementById("search")
+  .addEventListener("keydown", event => {
+
+    if (event.key === "Enter") {
       loadVoices(true);
-
     }
 
+  });
 
-    searchButton.addEventListener(
-      "click",
-      searchVoices
-    );
+[
+  "gender",
+  "language",
+  "category",
+  "age",
+  "sort"
+].forEach(id => {
 
+  document
+    .getElementById(id)
+    .addEventListener("change", () => {
+      loadVoices(true);
+    });
 
-    searchInput.addEventListener(
-      "keydown",
-      event => {
+});
 
-        if (
-          event.key === "Enter"
-        ) {
-
-          searchVoices();
-
-        }
-
-      }
-    );
-
-
-    [
-      genderFilter,
-      languageFilter,
-      categoryFilter,
-      ageFilter,
-      sortFilter
-    ]
-      .forEach(filter => {
-
-        filter.addEventListener(
-          "change",
-          () => {
-
-            loadVoices(true);
-
-          }
-        );
-
-      });
-
-
-    loadMoreButton.addEventListener(
-      "click",
-      () => {
-
-        loadVoices(false);
-
-      }
-    );
-
-
-    loadVoices(true);
-
-  </script>
+loadVoices(true);
+</script>
 
 </body>
 </html>
