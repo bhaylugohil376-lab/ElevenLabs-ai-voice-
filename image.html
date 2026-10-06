@@ -1,1461 +1,1313 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Text to Image — VoiceAI</title>
-
-    <style>
-        :root {
-            --bg: #fffdf7;
-            --card: #ffffff;
-            --text: #3b2117;
-            --muted: #806f66;
-            --orange: #d96b27;
-            --orange-dark: #b95418;
-            --orange-light: #fff0e5;
-            --border: #eadfd7;
-            --shadow: 0 18px 50px rgba(59,33,23,.08);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            overflow-x: hidden;
-        }
-
-        body {
-            font-family: Inter, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        button,
-        textarea,
-        select {
-            font: inherit;
-        }
-
-        /* NAVBAR */
-
-        .navbar {
-            min-height: 76px;
-            padding: 0 5%;
-            background: rgba(255,255,255,.97);
-            border-bottom: 1px solid var(--border);
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .logo span {
-            color: var(--orange);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 28px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            font-size: 14px;
-            font-weight: 600;
-            color: #624e44;
-        }
-
-        .nav-links a:hover {
-            color: var(--orange);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .login-btn {
-            font-size: 14px;
-            font-weight: 700;
-            padding: 10px 15px;
-        }
-
-        .profile-nav {
-            color: var(--orange);
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .nav-button {
-            background: var(--orange);
-            color: white;
-            padding: 11px 18px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            border: 0;
-            background: none;
-            font-size: 25px;
-            cursor: pointer;
-        }
-
-        /* MAIN */
-
-        .image-page {
-            max-width: 1250px;
-            margin: auto;
-            padding: 60px 24px 90px;
-        }
-
-        .page-heading {
-            max-width: 760px;
-            margin: 0 auto 42px;
-            text-align: center;
-        }
-
-        .eyebrow {
-            display: inline-block;
-            padding: 7px 13px;
-            background: var(--orange-light);
-            color: var(--orange-dark);
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 800;
-            margin-bottom: 15px;
-        }
-
-        .page-heading h1 {
-            font-size: clamp(38px, 5vw, 62px);
-            line-height: 1.05;
-            letter-spacing: -2px;
-            margin-bottom: 16px;
-        }
-
-        .page-heading p {
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        /* WORKSPACE */
-
-        .image-workspace {
-            max-width: 1050px;
-            margin: auto;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .workspace-head {
-            padding: 25px 28px;
-            border-bottom: 1px solid var(--border);
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .workspace-head h2 {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-
-        .workspace-head p {
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .free-badge {
-            padding: 7px 11px;
-            border-radius: 999px;
-            background: var(--orange-light);
-            color: var(--orange-dark);
-            font-size: 11px;
-            font-weight: 800;
-        }
-
-        .workspace-body {
-            display: grid;
-            grid-template-columns: 1.25fr .75fr;
-        }
-
-        /* PROMPT */
-
-        .prompt-panel {
-            padding: 28px;
-            border-right: 1px solid var(--border);
-        }
-
-        .field-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 9px;
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .prompt-count {
-            color: var(--muted);
-            font-weight: 500;
-        }
-
-        #imagePrompt {
-            width: 100%;
-            min-height: 250px;
-            resize: vertical;
-
-            border: 1px solid var(--border);
-            border-radius: 16px;
-
-            padding: 17px;
-
-            background: #fffefa;
-            color: var(--text);
-
-            outline: none;
-            line-height: 1.7;
-        }
-
-        #imagePrompt:focus {
-            border-color: var(--orange);
-            box-shadow: 0 0 0 3px rgba(217,107,39,.1);
-        }
-
-        .prompt-examples {
-            margin-top: 13px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .prompt-examples button {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 7px 11px;
-            color: var(--muted);
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        .prompt-examples button:hover {
-            color: var(--orange);
-            border-color: var(--orange);
-        }
-
-        /* SETTINGS */
-
-        .settings-panel {
-            padding: 28px;
-        }
-
-        .settings-panel h3 {
-            font-size: 17px;
-            margin-bottom: 20px;
-        }
-
-        .setting {
-            margin-bottom: 21px;
-        }
-
-        .setting label {
-            display: block;
-            font-size: 12px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .setting select {
-            width: 100%;
-            height: 45px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: white;
-            color: var(--text);
-            padding: 0 12px;
-            outline: none;
-        }
-
-        .setting select:focus {
-            border-color: var(--orange);
-        }
-
-        /* STYLE BUTTONS */
-
-        .style-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .style-btn {
-            min-height: 42px;
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            background: white;
-            color: var(--muted);
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .style-btn.active {
-            background: var(--orange-light);
-            border-color: var(--orange);
-            color: var(--orange-dark);
-        }
-
-        /* ACTION */
-
-        .workspace-footer {
-            padding: 20px 28px;
-            border-top: 1px solid var(--border);
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .footer-note {
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .generate-btn {
-            border: 0;
-            background: var(--orange);
-            color: white;
-
-            padding: 14px 25px;
-            border-radius: 11px;
-
-            font-weight: 800;
-            cursor: pointer;
-
-            box-shadow: 0 8px 20px rgba(217,107,39,.2);
-        }
-
-        .generate-btn:hover {
-            background: var(--orange-dark);
-        }
-
-        .generate-btn:disabled {
-            opacity: .6;
-            cursor: not-allowed;
-        }
-
-        /* OUTPUT */
-
-        .output-section {
-            max-width: 1050px;
-            margin: 30px auto 0;
-            display: none;
-        }
-
-        .output-section.show {
-            display: block;
-        }
-
-        .output-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .output-head h2 {
-            font-size: 20px;
-        }
-
-        .output-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-        }
-
-        .image-result {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .image-preview {
-            min-height: 280px;
-            background:
-                linear-gradient(
-                    135deg,
-                    #fff0e5,
-                    #f8ebe3,
-                    #fdf8ef
-                );
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            padding: 25px;
-            text-align: center;
-        }
-
-        .placeholder-icon {
-            font-size: 45px;
-            margin-bottom: 10px;
-        }
-
-        .image-preview p {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .result-bottom {
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .result-name {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .download-btn {
-            border: 1px solid var(--orange);
-            background: white;
-            color: var(--orange);
-
-            padding: 8px 12px;
-            border-radius: 8px;
-
-            font-size: 11px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-
-        .download-btn:hover {
-            background: var(--orange);
-            color: white;
-        }
-
-        .backend-message {
-            margin-top: 15px;
-            padding: 15px;
-            background: #fff8f2;
-            border: 1px solid #f1ded0;
-            border-radius: 12px;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        /* FOOTER */
-
-        .site-footer {
-            border-top: 1px solid var(--border);
-            background: white;
-            padding: 45px 6% 25px;
-        }
-
-        .footer-main {
-            max-width: 1200px;
-            margin: auto;
-
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 35px;
-        }
-
-        .footer-brand p {
-            margin-top: 12px;
-            max-width: 350px;
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .footer-column h4 {
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-
-        .footer-column a {
-            display: block;
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        .footer-column a:hover {
-            color: var(--orange);
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 35px auto 0;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 850px) {
-
-            .nav-links,
-            .nav-actions {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .workspace-body {
-                grid-template-columns: 1fr;
-            }
-
-            .prompt-panel {
-                border-right: 0;
-                border-bottom: 1px solid var(--border);
-            }
-
-            .footer-main {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
-
-            .navbar {
-                min-height: 68px;
-                padding: 0 18px;
-            }
-
-            .image-page {
-                padding: 38px 14px 60px;
-            }
-
-            .page-heading h1 {
-                letter-spacing: -1px;
-            }
-
-            .workspace-head {
-                padding: 20px;
-                align-items: flex-start;
-                gap: 12px;
-                flex-direction: column;
-            }
-
-            .prompt-panel,
-            .settings-panel {
-                padding: 20px;
-            }
-
-            #imagePrompt {
-                min-height: 220px;
-            }
-
-            .workspace-footer {
-                padding: 18px 20px;
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .generate-btn {
-                width: 100%;
-            }
-
-            .output-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .output-head {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .footer-main {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text to Image — VoiceAI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f7f8fc;
+  color:#172033;
+  overflow-x:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+textarea,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* NAVBAR */
+
+.navbar{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid #e8eaf0;
+  display:flex;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.nav-inner{
+  width:min(1200px,calc(100% - 40px));
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:21px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.logo-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:#5b4cf0;
+  color:white;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:25px;
+}
+
+.nav-links a{
+  color:#5d6474;
+  font-size:14px;
+  font-weight:600;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  color:#5b4cf0;
+}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:11px 17px;
+  font-weight:700;
+  transition:.2s;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn-outline{
+  background:white;
+  border:1px solid #dfe2ea;
+  color:#333a4b;
+}
+
+.btn-primary{
+  background:#5b4cf0;
+  color:white;
+}
+
+.mobile-menu{
+  display:none;
+  border:0;
+  background:none;
+}
+
+/* HERO */
+
+.hero{
+  background:
+    radial-gradient(circle at 20% 10%,rgba(91,76,240,.12),transparent 35%),
+    radial-gradient(circle at 90% 30%,rgba(125,91,255,.08),transparent 35%);
+  padding:70px 20px 45px;
+  text-align:center;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:7px 12px;
+  background:#efedff;
+  color:#5141d8;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:18px;
+}
+
+.hero h1{
+  font-size:clamp(36px,6vw,60px);
+  line-height:1.05;
+  letter-spacing:-2px;
+  max-width:800px;
+  margin:auto;
+}
+
+.hero h1 span{
+  color:#5b4cf0;
+}
+
+.hero p{
+  max-width:650px;
+  margin:20px auto 0;
+  color:#687083;
+  line-height:1.7;
+  font-size:16px;
+}
+
+/* WORKSPACE */
+
+.workspace{
+  width:min(1180px,calc(100% - 30px));
+  margin:15px auto 70px;
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:20px;
+  align-items:start;
+}
+
+.panel{
+  background:white;
+  border:1px solid #e5e7ee;
+  border-radius:18px;
+  box-shadow:0 8px 30px rgba(25,30,50,.05);
+}
+
+.control-panel{
+  padding:24px;
+}
+
+.panel-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+
+.panel-title-icon{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:#efedff;
+  color:#5b4cf0;
+  display:grid;
+  place-items:center;
+}
+
+.panel-title h2{
+  font-size:18px;
+}
+
+.panel-title p{
+  color:#858b9b;
+  font-size:12px;
+  margin-top:2px;
+}
+
+.field{
+  margin-bottom:18px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:8px;
+  font-size:13px;
+  font-weight:700;
+  color:#353c4d;
+}
+
+textarea,
+select,
+input[type="text"]{
+  width:100%;
+  border:1px solid #dfe2e9;
+  border-radius:11px;
+  background:#fafbfe;
+  color:#252b39;
+  outline:none;
+  transition:.2s;
+}
+
+textarea{
+  min-height:180px;
+  resize:vertical;
+  padding:13px;
+  line-height:1.6;
+}
+
+select,
+input[type="text"]{
+  height:45px;
+  padding:0 12px;
+}
+
+textarea:focus,
+select:focus,
+input[type="text"]:focus{
+  border-color:#7669f5;
+  box-shadow:0 0 0 3px rgba(91,76,240,.1);
+  background:white;
+}
+
+.prompt-footer{
+  display:flex;
+  justify-content:space-between;
+  color:#9096a5;
+  font-size:11px;
+  margin-top:6px;
+}
+
+.grid-two{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.range-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+input[type="range"]{
+  width:100%;
+  accent-color:#5b4cf0;
+}
+
+.range-value{
+  min-width:48px;
+  text-align:right;
+  font-size:12px;
+  font-weight:700;
+}
+
+.generate-btn{
+  width:100%;
+  height:48px;
+  border:0;
+  border-radius:11px;
+  background:#5b4cf0;
+  color:white;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  margin-top:8px;
+}
+
+.generate-btn:hover{
+  background:#4e40db;
+}
+
+.usage{
+  margin-top:13px;
+  padding:11px 13px;
+  background:#f5f4ff;
+  border-radius:10px;
+  color:#5d55a7;
+  font-size:12px;
+  text-align:center;
+}
+
+/* OUTPUT */
+
+.output-panel{
+  min-height:620px;
+  overflow:hidden;
+}
+
+.output-head{
+  padding:22px 24px;
+  border-bottom:1px solid #e8eaf0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.output-head h2{
+  font-size:18px;
+}
+
+.output-head p{
+  font-size:12px;
+  color:#858b99;
+  margin-top:3px;
+}
+
+.gallery{
+  padding:22px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+}
+
+.empty-state{
+  min-height:500px;
+  grid-column:1/-1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:#8b91a0;
+  padding:30px;
+}
+
+.empty-icon{
+  width:72px;
+  height:72px;
+  border-radius:18px;
+  background:#f0efff;
+  color:#6254e8;
+  display:grid;
+  place-items:center;
+  margin-bottom:18px;
+}
+
+.empty-state h3{
+  color:#343b4b;
+  margin-bottom:8px;
+  font-size:19px;
+}
+
+.empty-state p{
+  max-width:400px;
+  line-height:1.6;
+  font-size:13px;
+}
+
+.image-card{
+  border:1px solid #e5e7ee;
+  border-radius:14px;
+  overflow:hidden;
+  background:white;
+}
+
+.image-preview{
+  width:100%;
+  aspect-ratio:1/1;
+  background:#eef0f5;
+  object-fit:cover;
+  display:block;
+}
+
+.image-actions{
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.image-label{
+  color:#737a8a;
+  font-size:12px;
+}
+
+.download-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 11px;
+  border-radius:8px;
+  border:1px solid #dddfe8;
+  background:white;
+  color:#343a4a;
+  font-size:12px;
+  font-weight:700;
+}
+
+.download-btn:hover{
+  border-color:#5b4cf0;
+  color:#5b4cf0;
+}
+
+.status{
+  display:none;
+  margin:15px 22px 0;
+  padding:11px 13px;
+  border-radius:9px;
+  font-size:12px;
+}
+
+.status.error{
+  display:block;
+  background:#fff0f0;
+  color:#b42318;
+}
+
+.status.success{
+  display:block;
+  background:#edfdf3;
+  color:#067647;
+}
+
+.spinner{
+  width:17px;
+  height:17px;
+  border:2px solid rgba(255,255,255,.4);
+  border-top-color:white;
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* INFO */
+
+.info{
+  width:min(1180px,calc(100% - 30px));
+  margin:0 auto 70px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.info-card{
+  background:white;
+  border:1px solid #e5e7ee;
+  border-radius:15px;
+  padding:23px;
+}
+
+.info-icon{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background:#f0efff;
+  color:#5b4cf0;
+  display:grid;
+  place-items:center;
+  margin-bottom:15px;
+}
+
+.info-card h3{
+  font-size:16px;
+  margin-bottom:7px;
+}
+
+.info-card p{
+  color:#72798a;
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* FOOTER */
+
+footer{
+  background:#fff;
+  border-top:1px solid #e7e9ef;
+  padding:30px 20px;
+}
+
+.footer-inner{
+  width:min(1180px,100%);
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+}
+
+.footer-links a{
+  color:#73798a;
+  font-size:12px;
+}
+
+.footer-copy{
+  color:#969baa;
+  font-size:12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .mobile-menu{
+    display:block;
+    color:#343a49;
+  }
+
+  .nav-actions .btn-outline{
+    display:none;
+  }
+
+  .workspace{
+    grid-template-columns:1fr;
+  }
+
+  .output-panel{
+    min-height:450px;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:600px){
+
+  .navbar{
+    height:64px;
+  }
+
+  .nav-inner{
+    width:calc(100% - 24px);
+  }
+
+  .logo{
+    font-size:18px;
+  }
+
+  .logo-icon{
+    width:31px;
+    height:31px;
+  }
+
+  .nav-actions .btn-primary{
+    padding:9px 12px;
+    font-size:12px;
+  }
+
+  .hero{
+    padding:45px 16px 30px;
+  }
+
+  .hero h1{
+    letter-spacing:-1.2px;
+  }
+
+  .hero p{
+    font-size:14px;
+  }
+
+  .workspace,
+  .info{
+    width:calc(100% - 20px);
+  }
+
+  .control-panel{
+    padding:18px;
+  }
+
+  .grid-two{
+    grid-template-columns:1fr;
+  }
+
+  .gallery{
+    grid-template-columns:1fr;
+    padding:15px;
+  }
+
+  .output-head{
+    padding:18px;
+  }
+
+  .footer-inner{
+    flex-direction:column;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <header class="navbar">
+  <div class="nav-inner">
 
     <a href="index.html" class="logo">
-        ∿ <span>Voice</span>AI
+      <span class="logo-icon">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12h3l2-7 4 14 2-7h5"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </span>
+      VoiceAI
     </a>
 
     <nav class="nav-links">
-
-        <a href="index.html">Home</a>
-
-        <a href="tools.html">AI Tools</a>
-
-        <a href="voices.html">Voices</a>
-
-        <a href="studio.html">Studio</a>
-
-        <a href="pricing.html">Pricing</a>
-
+      <a href="index.html">Home</a>
+      <a href="tools.html" class="active">AI Tools</a>
+      <a href="voices.html">Voices</a>
+      <a href="studio.html">Studio</a>
+      <a href="pricing.html">Pricing</a>
     </nav>
 
     <div class="nav-actions">
+      <a href="profile.html" class="btn btn-outline">Profile</a>
+      <a href="pricing.html" class="btn btn-primary">Upgrade</a>
 
-        <a href="profile.html" class="profile-nav">
-            Profile
-        </a>
-
-        <a href="login.html" class="login-btn">
-            Login
-        </a>
-
-        <a href="pricing.html" class="nav-button">
-            Get Started
-        </a>
-
+      <button class="mobile-menu" aria-label="Menu">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16M4 12h16M4 18h16"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
 
-    <button
-        class="mobile-menu-btn"
-        id="mobileMenuBtn">
-        ☰
-    </button>
-
+  </div>
 </header>
 
 
-<main class="image-page">
+<section class="hero">
 
-    <section class="page-heading">
+  <div class="badge">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+      <path d="M12 3v18M3 12h18"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"/>
+    </svg>
+    AI Image Generator
+  </div>
 
-        <span class="eyebrow">
-            AI IMAGE STUDIO
-        </span>
+  <h1>
+    Turn words into
+    <span>beautiful images.</span>
+  </h1>
 
-        <h1>
-            Turn ideas into images.
-        </h1>
+  <p>
+    Describe your idea and create high-quality visuals for ads,
+    social media, videos, products and creative projects.
+  </p>
+
+</section>
+
+
+<main class="workspace">
+
+  <!-- CONTROLS -->
+
+  <section class="panel control-panel">
+
+    <div class="panel-title">
+
+      <div class="panel-title-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M4 5h16v14H4z"
+                stroke="currentColor"
+                stroke-width="1.8"/>
+          <path d="m7 15 3-3 2 2 2-2 3 3"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div>
+        <h2>Image Generator</h2>
+        <p>Create your next visual</p>
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="promptInput">Describe your image</label>
+
+      <textarea
+        id="promptInput"
+        maxlength="2000"
+        placeholder="Example: A cinematic luxury car driving through a futuristic city at night, realistic photography..."
+      ></textarea>
+
+      <div class="prompt-footer">
+        <span>Be specific for better results</span>
+        <span id="promptCount">0 / 2000</span>
+      </div>
+
+    </div>
+
+
+    <div class="grid-two">
+
+      <div class="field">
+        <label for="styleSelect">Style</label>
+
+        <select id="styleSelect">
+          <option value="photorealistic">Photorealistic</option>
+          <option value="cinematic">Cinematic</option>
+          <option value="digital-art">Digital Art</option>
+          <option value="illustration">Illustration</option>
+          <option value="3d">3D Render</option>
+          <option value="anime">Anime</option>
+          <option value="minimal">Minimal</option>
+        </select>
+      </div>
+
+
+      <div class="field">
+        <label for="ratioSelect">Aspect Ratio</label>
+
+        <select id="ratioSelect">
+          <option value="1:1">Square 1:1</option>
+          <option value="16:9">Landscape 16:9</option>
+          <option value="9:16">Portrait 9:16</option>
+          <option value="4:3">Classic 4:3</option>
+          <option value="3:4">Portrait 3:4</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="qualitySelect">Quality</label>
+
+      <select id="qualitySelect">
+        <option value="standard">Standard</option>
+        <option value="high">High Quality</option>
+        <option value="ultra">Ultra Quality</option>
+      </select>
+
+    </div>
+
+
+    <div class="field">
+
+      <label for="numberInput">Number of images</label>
+
+      <select id="numberInput">
+        <option value="1">1 image</option>
+        <option value="2">2 images</option>
+        <option value="4">4 images</option>
+      </select>
+
+    </div>
+
+
+    <button class="generate-btn" id="generateBtn">
+
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"/>
+      </svg>
+
+      Generate Image
+
+    </button>
+
+
+    <div class="usage">
+      Free plan: <strong>1 / 5</strong> AI generations used today
+    </div>
+
+  </section>
+
+
+  <!-- OUTPUT -->
+
+  <section class="panel output-panel">
+
+    <div class="output-head">
+
+      <div>
+        <h2>Your Images</h2>
+        <p>Generated images will appear here</p>
+      </div>
+
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M4 5h16v14H4z"
+              stroke="#777e8e"
+              stroke-width="1.8"/>
+      </svg>
+
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <div class="gallery" id="gallery">
+
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          <svg width="35" height="35" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="4" width="18" height="16" rx="2"
+                  stroke="currentColor"
+                  stroke-width="1.7"/>
+            <circle cx="8" cy="9" r="1.5"
+                    stroke="currentColor"
+                    stroke-width="1.5"/>
+            <path d="m5 17 4-4 3 3 2-2 5 3"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <h3>No images yet</h3>
 
         <p>
-            Describe your idea and create visuals for ads,
-            thumbnails, social media, products and creative projects.
+          Write a prompt on the left and click Generate Image
+          to create your first visual.
         </p>
 
-    </section>
+      </div>
 
+    </div>
 
-    <section class="image-workspace">
-
-        <div class="workspace-head">
-
-            <div>
-                <h2>
-                    Text to Image
-                </h2>
-
-                <p>
-                    Describe exactly what you want to create.
-                </p>
-            </div>
-
-            <span class="free-badge">
-                FREE • 5 DAILY
-            </span>
-
-        </div>
-
-
-        <div class="workspace-body">
-
-            <!-- PROMPT -->
-
-            <div class="prompt-panel">
-
-                <div class="field-label">
-
-                    <span>
-                        Image prompt
-                    </span>
-
-                    <span
-                        class="prompt-count">
-
-                        <span id="promptCount">
-                            0
-                        </span>
-                        / 2000
-
-                    </span>
-
-                </div>
-
-
-                <textarea
-                    id="imagePrompt"
-                    maxlength="2000"
-                    placeholder="Example:
-A premium cinematic advertisement for a futuristic AI voice studio, elegant dark background, glowing orange light, professional product photography, ultra detailed."
-                ></textarea>
-
-
-                <div class="prompt-examples">
-
-                    <button
-                        onclick="usePrompt('product')">
-                        Product Ad
-                    </button>
-
-                    <button
-                        onclick="usePrompt('cinematic')">
-                        Cinematic
-                    </button>
-
-                    <button
-                        onclick="usePrompt('social')">
-                        Social Media
-                    </button>
-
-                    <button
-                        onclick="usePrompt('portrait')">
-                        Portrait
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- SETTINGS -->
-
-            <div class="settings-panel">
-
-                <h3>
-                    Image settings
-                </h3>
-
-
-                <div class="setting">
-
-                    <label>
-                        Style
-                    </label>
-
-                    <div class="style-grid">
-
-                        <button
-                            class="style-btn active"
-                            data-style="Photographic">
-                            Photographic
-                        </button>
-
-                        <button
-                            class="style-btn"
-                            data-style="Illustrated">
-                            Illustrated
-                        </button>
-
-                        <button
-                            class="style-btn"
-                            data-style="Cinematic">
-                            Cinematic
-                        </button>
-
-                        <button
-                            class="style-btn"
-                            data-style="Minimal">
-                            Minimal
-                        </button>
-
-                        <button
-                            class="style-btn"
-                            data-style="3D">
-                            3D
-                        </button>
-
-                        <button
-                            class="style-btn"
-                            data-style="Anime">
-                            Anime
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div class="setting">
-
-                    <label for="aspectRatio">
-                        Aspect ratio
-                    </label>
-
-                    <select id="aspectRatio">
-
-                        <option value="1:1">
-                            1:1 — Square
-                        </option>
-
-                        <option value="16:9">
-                            16:9 — Landscape
-                        </option>
-
-                        <option value="9:16">
-                            9:16 — Portrait
-                        </option>
-
-                        <option value="4:5">
-                            4:5 — Social
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="setting">
-
-                    <label for="quality">
-                        Quality
-                    </label>
-
-                    <select id="quality">
-
-                        <option value="standard">
-                            Standard
-                        </option>
-
-                        <option value="high">
-                            High
-                        </option>
-
-                        <option value="ultra">
-                            Ultra
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="setting">
-
-                    <label for="images">
-                        Number of images
-                    </label>
-
-                    <select id="images">
-
-                        <option value="1">
-                            1 Image
-                        </option>
-
-                        <option value="2">
-                            2 Images
-                        </option>
-
-                        <option value="4">
-                            4 Images
-                        </option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="workspace-footer">
-
-            <span class="footer-note">
-                AI image generation requires your image-generation backend/API.
-            </span>
-
-            <button
-                class="generate-btn"
-                id="generateBtn">
-
-                Generate Image →
-
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- OUTPUT -->
-
-    <section
-        class="output-section"
-        id="outputSection">
-
-        <div class="output-head">
-
-            <h2>
-                Generated images
-            </h2>
-
-        </div>
-
-
-        <div
-            class="output-grid"
-            id="outputGrid">
-
-        </div>
-
-
-        <div
-            class="backend-message"
-            id="backendMessage">
-
-            Connect your <strong>/api/image/generate</strong>
-            endpoint to display real AI-generated images here.
-
-        </div>
-
-    </section>
+  </section>
 
 </main>
 
 
-<footer class="site-footer">
+<section class="info">
 
-    <div class="footer-main">
+  <div class="info-grid">
 
-        <div class="footer-brand">
+    <article class="info-card">
 
-            <a href="index.html" class="logo">
-                ∿ <span>Voice</span>AI
-            </a>
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3v18M3 12h18"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
 
-            <p>
-                Create AI voice, images and creative content
-                from one professional workspace.
-            </p>
+      <h3>Creative prompts</h3>
 
-        </div>
+      <p>
+        Describe scenes, products, characters, advertisements
+        and concepts using natural language.
+      </p>
 
-
-        <div class="footer-column">
-
-            <h4>
-                Platform
-            </h4>
-
-            <a href="tools.html">
-                AI Tools
-            </a>
-
-            <a href="voices.html">
-                Voice Library
-            </a>
-
-            <a href="studio.html">
-                Studio
-            </a>
-
-            <a href="pricing.html">
-                Pricing
-            </a>
-
-        </div>
+    </article>
 
 
-        <div class="footer-column">
+    <article class="info-card">
 
-            <h4>
-                AI Tools
-            </h4>
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M4 6h16v12H4z"
+                stroke="currentColor"
+                stroke-width="1.8"/>
+          <path d="M8 10h8M8 14h5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
 
-            <a href="tts.html">
-                Text to Speech
-            </a>
+      <h3>Multiple formats</h3>
 
-            <a href="image.html">
-                Text to Image
-            </a>
+      <p>
+        Generate square, landscape and portrait visuals
+        for different platforms and projects.
+      </p>
 
-            <a href="clone.html">
-                Voice Clone
-            </a>
-
-            <a href="stt.html">
-                Speech to Text
-            </a>
-
-        </div>
+    </article>
 
 
-        <div class="footer-column">
+    <article class="info-card">
 
-            <h4>
-                Account
-            </h4>
+      <div class="info-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3v12"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+          <path d="m7 10 5 5 5-5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+          <path d="M5 20h14"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"/>
+        </svg>
+      </div>
 
-            <a href="profile.html">
-                Profile
-            </a>
+      <h3>Download results</h3>
 
-            <a href="login.html">
-                Login
-            </a>
+      <p>
+        Generated images can be downloaded directly from
+        your gallery when the backend returns image files.
+      </p>
 
-            <a href="forgot-password.html">
-                Forgot Password
-            </a>
+    </article>
 
-        </div>
+  </div>
 
+</section>
+
+
+<footer>
+
+  <div class="footer-inner">
+
+    <div class="footer-copy">
+      © 2026 VoiceAI. AI Voice & Creative Studio.
     </div>
 
-
-    <div class="footer-bottom">
-        © 2026 VoiceAI. All rights reserved.
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="tools.html">AI Tools</a>
+      <a href="voices.html">Voices</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#faq">FAQ</a>
     </div>
+
+  </div>
 
 </footer>
 
 
 <script>
 
-    const imagePrompt =
-        document.getElementById("imagePrompt");
-
-    const promptCount =
-        document.getElementById("promptCount");
-
-    const generateBtn =
-        document.getElementById("generateBtn");
-
-    const outputSection =
-        document.getElementById("outputSection");
-
-    const outputGrid =
-        document.getElementById("outputGrid");
-
-    const backendMessage =
-        document.getElementById("backendMessage");
+const promptInput = document.getElementById("promptInput");
+const promptCount = document.getElementById("promptCount");
+const generateBtn = document.getElementById("generateBtn");
+const gallery = document.getElementById("gallery");
+const statusBox = document.getElementById("status");
 
 
-    /* PROMPT COUNTER */
+promptInput.addEventListener("input", () => {
+  promptCount.textContent =
+    `${promptInput.value.length} / 2000`;
+});
 
-    imagePrompt.addEventListener(
-        "input",
-        () => {
 
-            promptCount.textContent =
-                imagePrompt.value.length;
+function showStatus(message, type){
 
-        }
+  statusBox.textContent = message;
+  statusBox.className = `status ${type}`;
+
+}
+
+
+function clearStatus(){
+
+  statusBox.textContent = "";
+  statusBox.className = "status";
+
+}
+
+
+function showLoading(){
+
+  gallery.innerHTML = `
+    <div class="empty-state">
+
+      <div class="empty-icon">
+
+        <div class="spinner"
+             style="border-color:rgba(91,76,240,.2);
+                    border-top-color:#5b4cf0;">
+        </div>
+
+      </div>
+
+      <h3>Creating your images...</h3>
+
+      <p>
+        Your AI image generation request is being processed.
+      </p>
+
+    </div>
+  `;
+
+}
+
+
+function showImages(images){
+
+  gallery.innerHTML = "";
+
+  images.forEach((item,index) => {
+
+    const url =
+      typeof item === "string"
+        ? item
+        : item.url;
+
+    if(!url) return;
+
+    const card = document.createElement("article");
+
+    card.className = "image-card";
+
+    card.innerHTML = `
+
+      <img
+        class="image-preview"
+        src="${url}"
+        alt="Generated AI image ${index + 1}"
+        loading="lazy"
+      >
+
+      <div class="image-actions">
+
+        <span class="image-label">
+          Image ${index + 1}
+        </span>
+
+        <a
+          class="download-btn"
+          href="${url}"
+          download="voiceai-image-${index + 1}.png"
+          target="_blank"
+          rel="noopener"
+        >
+
+          <svg width="14" height="14"
+               viewBox="0 0 24 24"
+               fill="none">
+
+            <path d="M12 3v12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"/>
+
+            <path d="m7 10 5 5 5-5"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+
+            <path d="M5 20h14"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"/>
+
+          </svg>
+
+          Download
+
+        </a>
+
+      </div>
+    `;
+
+    gallery.appendChild(card);
+
+  });
+
+}
+
+
+generateBtn.addEventListener("click", async () => {
+
+  clearStatus();
+
+  const prompt = promptInput.value.trim();
+
+  if(!prompt){
+
+    showStatus(
+      "Please describe the image you want to create.",
+      "error"
     );
 
+    promptInput.focus();
+    return;
+  }
 
-    /* PROMPT EXAMPLES */
 
-    function usePrompt(type) {
+  const style =
+    document.getElementById("styleSelect").value;
 
-        const prompts = {
+  const aspectRatio =
+    document.getElementById("ratioSelect").value;
 
-            product:
-            "A premium product advertisement for a futuristic AI voice studio, elegant studio lighting, clean luxury composition, orange glowing accents, professional commercial photography, ultra detailed.",
+  const quality =
+    document.getElementById("qualitySelect").value;
 
-            cinematic:
-            "A cinematic futuristic city at night, dramatic lighting, atmospheric fog, glowing orange and gold lights, realistic environment, high-end movie still.",
+  const count =
+    Number(document.getElementById("numberInput").value);
 
-            social:
-            "A modern social media advertisement for an AI technology brand, premium design, clean composition, bold visual elements, professional commercial photography.",
 
-            portrait:
-            "A professional studio portrait of a confident creative professional, cinematic lighting, natural skin texture, premium editorial photography, detailed background."
+  generateBtn.disabled = true;
 
-        };
+  generateBtn.innerHTML = `
+    <span class="spinner"></span>
+    Generating...
+  `;
 
-        imagePrompt.value =
-            prompts[type] || "";
+  showLoading();
 
-        imagePrompt.dispatchEvent(
-            new Event("input")
-        );
+
+  try{
+
+    const response = await fetch("/api/image/generate",{
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+
+        prompt,
+        style,
+        aspectRatio,
+        quality,
+        count
+
+      })
+
+    });
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "Image generation service is unavailable."
+      );
 
     }
 
 
-    /* STYLE */
+    const data = await response.json();
 
-    let selectedStyle =
-        "Photographic";
 
-    document
-        .querySelectorAll(".style-btn")
-        .forEach(button => {
+    let images = [];
 
-            button.addEventListener(
-                "click",
-                () => {
+    if(Array.isArray(data.images)){
 
-                    document
-                        .querySelectorAll(
-                            ".style-btn"
-                        )
-                        .forEach(btn =>
-                            btn.classList.remove(
-                                "active"
-                            )
-                        );
+      images = data.images;
 
-                    button.classList.add(
-                        "active"
-                    );
+    }else if(data.imageUrl){
 
-                    selectedStyle =
-                        button.dataset.style;
+      images = [data.imageUrl];
 
-                }
-            );
+    }else if(data.url){
 
-        });
+      images = [data.url];
 
+    }
 
-    /* GENERATE */
 
-    generateBtn.addEventListener(
-        "click",
-        async () => {
+    if(!images.length){
 
-            const prompt =
-                imagePrompt.value.trim();
+      throw new Error(
+        "The server did not return any generated images."
+      );
 
-            if (!prompt) {
+    }
 
-                alert(
-                    "Please describe the image you want to create."
-                );
 
-                return;
+    showImages(images);
 
-            }
-
-
-            generateBtn.disabled = true;
-
-            generateBtn.textContent =
-                "Generating...";
-
-
-            outputSection.classList.add(
-                "show"
-            );
-
-            backendMessage.style.display =
-                "none";
-
-
-            try {
-
-                /*
-                 * REAL BACKEND
-                 *
-                 * POST /api/image/generate
-                 *
-                 * Expected:
-                 *
-                 * {
-                 *   "images": [
-                 *      {
-                 *        "url": "https://..."
-                 *      }
-                 *   ]
-                 * }
-                 */
-
-                const response =
-                    await fetch(
-                        "/api/image/generate",
-                        {
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-
-                                prompt: prompt,
-
-                                style:
-                                    selectedStyle,
-
-                                aspectRatio:
-                                    document
-                                    .getElementById(
-                                        "aspectRatio"
-                                    ).value,
-
-                                quality:
-                                    document
-                                    .getElementById(
-                                        "quality"
-                                    ).value,
-
-                                count:
-                                    Number(
-                                        document
-                                        .getElementById(
-                                            "images"
-                                        ).value
-                                    )
-
-                            })
-
-                        }
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Image API unavailable"
-                    );
-
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                if (
-                    !data.images ||
-                    !Array.isArray(data.images)
-                ) {
-
-                    throw new Error(
-                        "Invalid image response"
-                    );
-
-                }
-
-
-                outputGrid.innerHTML = "";
-
-
-                data.images.forEach(
-                    (image, index) => {
-
-                        const card =
-                            document.createElement(
-                                "div"
-                            );
-
-                        card.className =
-                            "image-result";
-
-
-                        card.innerHTML = `
-
-                            <div class="image-preview"
-                                 style="padding:0;background:#f5eee8;">
-
-                                <img
-                                    src="${image.url}"
-                                    alt="Generated AI image"
-                                    style="
-                                        width:100%;
-                                        height:100%;
-                                        min-height:280px;
-                                        object-fit:cover;
-                                        display:block;
-                                    "
-                                >
-
-                            </div>
-
-                            <div class="result-bottom">
-
-                                <span class="result-name">
-                                    AI Image ${index + 1}
-                                </span>
-
-                                <a
-                                    class="download-btn"
-                                    href="${image.url}"
-                                    download="voiceai-image-${index + 1}.png">
-
-                                    Download
-
-                                </a>
-
-                            </div>
-
-                        `;
-
-                        outputGrid.appendChild(
-                            card
-                        );
-
-                    }
-                );
-
-
-            } catch (error) {
-
-                /*
-                 * IMPORTANT:
-                 * No fake image is shown.
-                 */
-
-                outputGrid.innerHTML = `
-
-                    <div
-                        class="image-result"
-                        style="grid-column:1/-1;">
-
-                        <div class="image-preview">
-
-                            <div>
-
-                                <div class="placeholder-icon">
-                                    ✦
-                                </div>
-
-                                <p>
-                                    Image generation backend
-                                    is not connected yet.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                `;
-
-
-                backendMessage.style.display =
-                    "block";
-
-                backendMessage.innerHTML =
-                    "<strong>Backend required.</strong><br>" +
-                    "Connect <strong>/api/image/generate</strong> " +
-                    "to generate real AI images and enable downloads.";
-
-            }
-
-
-            generateBtn.disabled = false;
-
-            generateBtn.textContent =
-                "Generate Image →";
-
-        }
+    showStatus(
+      `${images.length} image${images.length > 1 ? "s" : ""} generated successfully.`,
+      "success"
     );
 
+  }catch(error){
 
-    /* MOBILE MENU */
+    gallery.innerHTML = `
+      <div class="empty-state">
 
-    const mobileMenuBtn =
-        document.getElementById(
-            "mobileMenuBtn"
-        );
+        <div class="empty-icon">
+          <svg width="34" height="34"
+               viewBox="0 0 24 24"
+               fill="none">
 
+            <circle cx="12" cy="12" r="9"
+                    stroke="currentColor"
+                    stroke-width="1.8"/>
 
-    mobileMenuBtn.addEventListener(
-        "click",
-        () => {
+            <path d="M12 8v5"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"/>
 
-            const links =
-                document.querySelector(
-                    ".nav-links"
-                );
+            <circle cx="12" cy="16.5" r="1"
+                    fill="currentColor"/>
 
+          </svg>
+        </div>
 
-            if (
-                links.style.display ===
-                "flex"
-            ) {
+        <h3>Generation unavailable</h3>
 
-                links.style.display =
-                    "none";
+        <p>
+          ${error.message}
+          Connect the VoiceAI image-generation backend
+          to enable real AI image creation.
+        </p>
 
-            } else {
+      </div>
+    `;
 
-                links.style.display =
-                    "flex";
-
-                links.style.position =
-                    "absolute";
-
-                links.style.top =
-                    "68px";
-
-                links.style.left =
-                    "0";
-
-                links.style.right =
-                    "0";
-
-                links.style.padding =
-                    "20px";
-
-                links.style.background =
-                    "white";
-
-                links.style.borderBottom =
-                    "1px solid #eadfd7";
-
-                links.style.flexDirection =
-                    "column";
-
-                links.style.alignItems =
-                    "flex-start";
-
-            }
-
-        }
+    showStatus(
+      "Image generation could not be completed.",
+      "error"
     );
+
+  }finally{
+
+    generateBtn.disabled = false;
+
+    generateBtn.innerHTML = `
+      <svg width="18" height="18"
+           viewBox="0 0 24 24"
+           fill="none">
+
+        <path d="m12 3 1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"/>
+
+      </svg>
+
+      Generate Image
+    `;
+
+  }
+
+});
 
 </script>
 
