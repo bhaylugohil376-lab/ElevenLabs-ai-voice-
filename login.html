@@ -4,532 +4,154 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Login — VoiceAI</title>
-  <meta
-    name="description"
-    content="Sign in to your VoiceAI account."
-  >
+  <title>Login | VoiceAI</title>
 
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --primary: #6d3df5;
-      --primary-dark: #5528d8;
-      --text: #17131f;
-      --muted: #777181;
-      --border: #e5e1eb;
-      --bg: #f7f5fa;
-      --white: #fff;
-      --danger: #c62828;
-      --success: #167544;
-    }
-
-    html {
-      scroll-behavior: smooth;
     }
 
     body {
+      margin: 0;
       min-height: 100vh;
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    /* NAVBAR */
-
-    .navbar {
-      height: 70px;
-      background: rgba(255,255,255,.96);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
-    }
-
-    .nav-inner {
-      width: min(1180px, 100%);
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 850;
-      letter-spacing: -1px;
-    }
-
-    .logo span {
-      color: var(--primary);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .nav-links a {
-      color: #5e5967;
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary);
-    }
-
-    .nav-btn {
-      padding: 10px 16px;
-      border-radius: 10px;
-      background: var(--primary);
-      color: #fff !important;
-    }
-
-    /* PAGE */
-
-    .page {
-      min-height: calc(100vh - 70px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 45px 18px 60px;
+      font-family: Arial, sans-serif;
+      background: #f5f2ff;
+      color: #211b35;
+      display: grid;
+      place-items: center;
+      padding: 20px;
     }
 
     .login-card {
-      width: min(1080px, 100%);
-      min-height: 650px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      overflow: hidden;
-      box-shadow: 0 25px 80px rgba(40,25,70,.11);
-    }
-
-    /* BRAND */
-
-    .brand-panel {
-      position: relative;
-      padding: 55px;
-      color: #fff;
-      overflow: hidden;
-
-      background:
-        radial-gradient(
-          circle at 15% 20%,
-          rgba(255,255,255,.18),
-          transparent 28%
-        ),
-        radial-gradient(
-          circle at 90% 80%,
-          rgba(255,255,255,.12),
-          transparent 30%
-        ),
-        linear-gradient(
-          145deg,
-          #28104f,
-          #6130bb 55%,
-          #8951dc
-        );
-    }
-
-    .brand-panel::before,
-    .brand-panel::after {
-      content: "";
-      position: absolute;
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 50%;
-    }
-
-    .brand-panel::before {
-      width: 330px;
-      height: 330px;
-      right: -170px;
-      top: -100px;
-    }
-
-    .brand-panel::after {
-      width: 250px;
-      height: 250px;
-      left: -130px;
-      bottom: -110px;
-    }
-
-    .brand-content {
-      position: relative;
-      z-index: 2;
-      max-width: 440px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .brand-logo {
-      font-size: 27px;
-      font-weight: 850;
-      letter-spacing: -1px;
-    }
-
-    .brand-logo span {
-      color: #dfcaff;
-    }
-
-    .brand-main {
-      margin: auto 0;
-      padding: 55px 0;
-    }
-
-    .brand-main h1 {
-      font-size: clamp(38px, 5vw, 62px);
-      line-height: 1;
-      letter-spacing: -2.5px;
-      margin-bottom: 22px;
-    }
-
-    .brand-main p {
-      color: rgba(255,255,255,.76);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    .feature-list {
-      margin-top: 30px;
-      display: grid;
-      gap: 13px;
-    }
-
-    .feature {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      color: rgba(255,255,255,.91);
-      font-size: 14px;
-    }
-
-    .check {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.15);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-
-    .brand-bottom {
-      color: rgba(255,255,255,.52);
-      font-size: 12px;
-    }
-
-    /* FORM */
-
-    .form-panel {
-      padding: 55px;
-      display: flex;
-      align-items: center;
-    }
-
-    .form-box {
       width: 100%;
       max-width: 430px;
-      margin: auto;
+      background: #fff;
+      padding: 34px;
+      border-radius: 22px;
+      box-shadow: 0 18px 55px rgba(50, 30, 100, .12);
     }
 
-    .form-header {
-      margin-bottom: 28px;
+    .logo {
+      text-align: center;
+      font-size: 29px;
+      font-weight: 800;
+      color: #7354e8;
+      margin-bottom: 12px;
     }
 
-    .form-header h2 {
-      font-size: 34px;
-      letter-spacing: -1.3px;
-      margin-bottom: 8px;
+    h1 {
+      text-align: center;
+      margin: 0 0 8px;
+      font-size: 28px;
     }
 
-    .form-header p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .message {
-      display: none;
-      padding: 12px 14px;
-      margin-bottom: 18px;
-      border-radius: 11px;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      background: #fff0f0;
-      border: 1px solid #f2c5c5;
-      color: var(--danger);
-    }
-
-    .message.success {
-      background: #ebf8f0;
-      border: 1px solid #bfe5cb;
-      color: var(--success);
-    }
-
-    .form-group {
-      margin-bottom: 17px;
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin: 0 0 28px;
     }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      color: #302b38;
-      font-size: 13px;
-      font-weight: 750;
-    }
-
-    .input-wrap {
-      position: relative;
+      margin: 16px 0 7px;
+      font-weight: 600;
+      font-size: 14px;
     }
 
     input {
       width: 100%;
-      height: 52px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff;
-      color: var(--text);
-      padding: 0 15px;
+      padding: 14px;
+      border: 1px solid #ddd8e9;
+      border-radius: 11px;
+      font-size: 15px;
       outline: none;
-      font-size: 14px;
-      transition: .2s;
     }
 
     input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(109,61,245,.09);
+      border-color: #7354e8;
+      box-shadow: 0 0 0 3px rgba(115,84,232,.1);
     }
 
-    .password-input {
-      padding-right: 52px;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 13px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      color: #77717f;
-      font-size: 18px;
-    }
-
-    .options {
+    .row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 15px;
-      margin: 4px 0 22px;
-      font-size: 12px;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      font-size: 14px;
     }
 
     .remember {
       display: flex;
       align-items: center;
       gap: 7px;
-      color: #77717f;
+      color: #666;
     }
 
     .remember input {
-      width: 15px;
-      height: 15px;
+      width: auto;
     }
 
-    .forgot {
-      color: var(--primary);
-      font-weight: 700;
+    a {
+      color: #7354e8;
+      text-decoration: none;
+      font-weight: 600;
     }
 
-    .login-btn {
+    button {
       width: 100%;
-      height: 53px;
       border: 0;
-      border-radius: 12px;
-      background: var(--primary);
-      color: #fff;
-      font-size: 15px;
-      font-weight: 800;
-      transition: .2s;
+      border-radius: 11px;
+      padding: 14px;
+      margin-top: 22px;
+      background: #7354e8;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
-    .login-btn:hover {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
     }
 
-    .login-btn:disabled {
-      opacity: .65;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 22px 0;
-      color: #aaa5b0;
-      font-size: 12px;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: "";
-      height: 1px;
-      flex: 1;
-      background: var(--border);
-    }
-
-    .google-btn {
-      width: 100%;
-      height: 52px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff;
-      color: #332e39;
+    .message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
       font-size: 14px;
-      font-weight: 750;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
     }
 
-    .google-btn:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-    }
-
-    .google-icon {
-      width: 19px;
-      height: 19px;
-    }
-
-    .signup-text {
+    .signup {
       text-align: center;
-      margin-top: 25px;
-      color: #77717f;
-      font-size: 13px;
+      margin-top: 24px;
+      color: #777;
+      font-size: 14px;
     }
 
-    .signup-text a {
-      color: var(--primary);
-      font-weight: 800;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 850px) {
-      .nav-links {
-        display: none;
-      }
-
-      .login-card {
-        grid-template-columns: 1fr;
-      }
-
-      .brand-panel {
-        min-height: 330px;
-        padding: 35px;
-      }
-
-      .brand-main {
-        padding: 45px 0 20px;
-      }
-
-      .brand-main h1 {
-        font-size: 42px;
-      }
-
-      .feature-list {
-        display: none;
-      }
-
-      .brand-bottom {
-        display: none;
-      }
-
-      .form-panel {
-        padding: 38px 25px 45px;
-      }
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: #777;
+      font-size: 14px;
     }
 
     @media (max-width: 480px) {
-      .navbar {
-        padding: 0 16px;
-      }
-
-      .page {
-        padding: 20px 12px 35px;
+      body {
+        padding: 12px;
       }
 
       .login-card {
-        border-radius: 20px;
-      }
-
-      .brand-panel {
-        min-height: 280px;
-        padding: 28px;
-      }
-
-      .brand-main {
-        padding: 35px 0 10px;
-      }
-
-      .brand-main h1 {
-        font-size: 36px;
-      }
-
-      .form-panel {
-        padding: 32px 20px 38px;
-      }
-
-      .form-header h2 {
-        font-size: 29px;
+        padding: 25px 20px;
       }
     }
   </style>
@@ -537,566 +159,194 @@
 
 <body>
 
-  <header class="navbar">
-    <div class="nav-inner">
+  <main class="login-card">
 
-      <a href="index.html" class="logo">
-        Voice<span>AI</span>
-      </a>
+    <div class="logo">∿ VoiceAI</div>
 
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="signup.html" class="nav-btn">Get Started</a>
-      </nav>
+    <h1>Welcome back</h1>
 
+    <p class="subtitle">
+      Login to continue to your VoiceAI account.
+    </p>
+
+    <form id="loginForm">
+
+      <label for="email">Email address</label>
+
+      <input
+        id="email"
+        type="email"
+        placeholder="you@example.com"
+        autocomplete="email"
+        required
+      >
+
+      <label for="password">Password</label>
+
+      <input
+        id="password"
+        type="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        required
+      >
+
+      <div class="row">
+
+        <label class="remember">
+          <input id="remember" type="checkbox">
+          Remember email
+        </label>
+
+        <a href="forgot-password.html">
+          Forgot password?
+        </a>
+
+      </div>
+
+      <button id="loginButton" type="submit">
+        Login
+      </button>
+
+      <div
+        id="message"
+        class="message"
+        role="status"
+        aria-live="polite">
+      </div>
+
+    </form>
+
+    <div class="signup">
+      Don't have an account?
+      <a href="signup.html">Create account</a>
     </div>
-  </header>
 
-
-  <main class="page">
-
-    <section class="login-card">
-
-      <!-- BRAND PANEL -->
-
-      <div class="brand-panel">
-
-        <div class="brand-content">
-
-          <div class="brand-logo">
-            Voice<span>AI</span>
-          </div>
-
-          <div class="brand-main">
-
-            <h1>
-              Create voices<br>
-              that sound real.
-            </h1>
-
-            <p>
-              Sign in to access your AI voice studio,
-              voice library, TTS tools, dubbing,
-              music and more.
-            </p>
-
-            <div class="feature-list">
-
-              <div class="feature">
-                <span class="check">✓</span>
-                AI Text to Speech
-              </div>
-
-              <div class="feature">
-                <span class="check">✓</span>
-                Professional Voice Library
-              </div>
-
-              <div class="feature">
-                <span class="check">✓</span>
-                Studio & Dubbing Tools
-              </div>
-
-              <div class="feature">
-                <span class="check">✓</span>
-                Free account available
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="brand-bottom">
-            © 2026 VoiceAI. All rights reserved.
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- FORM PANEL -->
-
-      <div class="form-panel">
-
-        <div class="form-box">
-
-          <div class="form-header">
-            <h2>Welcome back</h2>
-            <p>
-              Sign in to continue to your VoiceAI account.
-            </p>
-          </div>
-
-          <div id="message" class="message"></div>
-
-
-          <form id="loginForm">
-
-            <div class="form-group">
-
-              <label for="email">
-                Email address
-              </label>
-
-              <input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                autocomplete="email"
-                required
-              >
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="password">
-                Password
-              </label>
-
-              <div class="input-wrap">
-
-                <input
-                  id="password"
-                  class="password-input"
-                  type="password"
-                  placeholder="Enter your password"
-                  autocomplete="current-password"
-                  required
-                >
-
-                <button
-                  type="button"
-                  id="togglePassword"
-                  class="toggle-password"
-                  aria-label="Show password"
-                >
-                  ◉
-                </button>
-
-              </div>
-
-            </div>
-
-
-            <div class="options">
-
-              <label class="remember">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  checked
-                >
-                Remember me
-              </label>
-
-              <a
-                href="forgot-password.html"
-                class="forgot"
-              >
-                Forgot password?
-              </a>
-
-            </div>
-
-
-            <button
-              type="submit"
-              class="login-btn"
-              id="loginBtn"
-            >
-              Sign In
-            </button>
-
-          </form>
-
-
-          <div class="divider">
-            OR
-          </div>
-
-
-          <!-- Google deferred until OAuth is configured -->
-
-          <button
-            type="button"
-            class="google-btn"
-            id="googleBtn"
-            disabled
-            title="Google login will be enabled after OAuth setup"
-          >
-
-            <svg
-              class="google-icon"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill="#4285F4"
-                d="M21.35 12.27c0-.71-.06-1.39-.18-2.05H12v3.88h5.24a4.48 4.48 0 0 1-1.94 2.94v2.44h3.14c1.84-1.69 2.91-4.18 2.91-7.21z"
-              />
-              <path
-                fill="#34A853"
-                d="M12 21.75c2.63 0 4.84-.87 6.45-2.36l-3.14-2.44c-.87.58-1.98.92-3.31.92-2.54 0-4.69-1.72-5.46-4.03H3.3v2.52A9.74 9.74 0 0 0 12 21.75z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M6.54 13.84a5.86 5.86 0 0 1 0-3.68V7.64H3.3a9.75 9.75 0 0 0 0 8.72l3.24-2.52z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 6.13c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.84 3.18 14.63 2.25 12 2.25A9.74 9.74 0 0 0 3.3 7.64l3.24 2.52C7.31 7.85 9.46 6.13 12 6.13z"
-              />
-            </svg>
-
-            Continue with Google
-
-          </button>
-
-
-          <p class="signup-text">
-            Don't have an account?
-            <a href="signup.html">Create account</a>
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
+    <a class="back" href="index.html">
+      ← Back to VoiceAI
+    </a>
 
   </main>
 
-
   <script>
 
-    /* =========================================
-       SUPABASE CONFIG
-       ========================================= */
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+    const message = document.getElementById("message");
 
-    const SUPABASE_URL =
-      "YOUR_SUPABASE_PROJECT_URL";
+    const emailInput = document.getElementById("email");
+    const rememberInput = document.getElementById("remember");
 
-    const SUPABASE_PUBLISHABLE_KEY =
-      "YOUR_SUPABASE_PUBLISHABLE_KEY";
+    function showMessage(text, success = false) {
 
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
-
-
-    /* =========================================
-       ELEMENTS
-       ========================================= */
-
-    const loginForm =
-      document.getElementById("loginForm");
-
-    const emailInput =
-      document.getElementById("email");
-
-    const passwordInput =
-      document.getElementById("password");
-
-    const loginBtn =
-      document.getElementById("loginBtn");
-
-    const togglePassword =
-      document.getElementById("togglePassword");
-
-    const message =
-      document.getElementById("message");
-
-    const remember =
-      document.getElementById("remember");
-
-
-    /* =========================================
-       MESSAGE
-       ========================================= */
-
-    function showMessage(text, type = "error") {
-
+      message.style.display = "block";
       message.textContent = text;
 
-      message.className =
-        "message show " + type;
+      message.style.background =
+        success ? "#eaf8ef" : "#fff0f0";
 
+      message.style.color =
+        success ? "#176b38" : "#a32323";
     }
 
-
-    function hideMessage() {
-
-      message.textContent = "";
-
-      message.className =
-        "message";
-
-    }
-
-
-    /* =========================================
-       PASSWORD TOGGLE
-       ========================================= */
-
-    togglePassword.addEventListener(
-      "click",
-      () => {
-
-        const isPassword =
-          passwordInput.type === "password";
-
-        passwordInput.type =
-          isPassword
-            ? "text"
-            : "password";
-
-        togglePassword.textContent =
-          isPassword
-            ? "◉"
-            : "◉";
-
-      }
-    );
-
-
-    /* =========================================
-       REMEMBER ME
-       ========================================= */
-
-    const savedEmail =
-      localStorage.getItem(
-        "voiceaiRememberEmail"
-      );
+    // Restore saved email
+    const savedEmail = localStorage.getItem("voiceai_email");
 
     if (savedEmail) {
-
-      emailInput.value =
-        savedEmail;
-
-      remember.checked =
-        true;
-
+      emailInput.value = savedEmail;
+      rememberInput.checked = true;
     }
 
-
-    /* =========================================
-       CHECK EXISTING SESSION
-       ========================================= */
-
+    // Check existing session
     async function checkSession() {
 
-      const {
-        data
-      } = await supabaseClient.auth.getSession();
+      try {
 
-      if (data && data.session) {
+        const {
+          data,
+          error
+        } = await supabaseClient.auth.getSession();
 
-        window.location.href =
-          "profile.html";
+        if (error) {
+          console.error(error);
+          return;
+        }
 
+        if (data.session) {
+          window.location.href = "profile.html";
+        }
+
+      } catch (error) {
+        console.error(error);
       }
-
     }
 
     checkSession();
 
+    // Login
+    loginForm.addEventListener("submit", async function(event) {
 
-    /* =========================================
-       LOGIN
-       ========================================= */
+      event.preventDefault();
 
-    loginForm.addEventListener(
-      "submit",
-      async (event) => {
+      const email = emailInput.value.trim();
+      const password =
+        document.getElementById("password").value;
 
-        event.preventDefault();
-
-        hideMessage();
-
-        const email =
-          emailInput.value.trim();
-
-        const password =
-          passwordInput.value;
-
-
-        if (!email || !password) {
-
-          showMessage(
-            "Please enter your email and password."
-          );
-
-          return;
-
-        }
-
-
-        loginBtn.disabled = true;
-
-        loginBtn.textContent =
-          "Signing in...";
-
-
-        try {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth.signInWithPassword({
-              email,
-              password
-            });
-
-
-          if (error) {
-
-            throw error;
-
-          }
-
-
-          if (!data || !data.user) {
-
-            throw new Error(
-              "Login failed. Please try again."
-            );
-
-          }
-
-
-          /* Remember email only */
-
-          if (remember.checked) {
-
-            localStorage.setItem(
-              "voiceaiRememberEmail",
-              email
-            );
-
-          } else {
-
-            localStorage.removeItem(
-              "voiceaiRememberEmail"
-            );
-
-          }
-
-
-          /*
-            Store lightweight user info
-            for frontend UI only.
-            Supabase session remains authoritative.
-          */
-
-          localStorage.setItem(
-            "voiceaiUser",
-            JSON.stringify({
-              id: data.user.id,
-              email: data.user.email
-            })
-          );
-
-
-          showMessage(
-            "Login successful. Opening your dashboard...",
-            "success"
-          );
-
-
-          setTimeout(
-            () => {
-
-              window.location.href =
-                "profile.html";
-
-            },
-            700
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            "Login error:",
-            error
-          );
-
-
-          let errorMessage =
-            "Unable to sign in. Please try again.";
-
-
-          if (
-            error.message &&
-            error.message.toLowerCase()
-              .includes("invalid login")
-          ) {
-
-            errorMessage =
-              "Incorrect email or password.";
-
-          }
-
-
-          if (
-            error.message &&
-            error.message.toLowerCase()
-              .includes("email not confirmed")
-          ) {
-
-            errorMessage =
-              "Please confirm your email before signing in.";
-
-          }
-
-
-          showMessage(
-            errorMessage
-          );
-
-
-          loginBtn.disabled =
-            false;
-
-          loginBtn.textContent =
-            "Sign In";
-
-        }
-
+      if (!email || !password) {
+        showMessage("Please enter your email and password.");
+        return;
       }
-    );
 
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
 
-    /* =========================================
-       AUTH ERROR FROM OAUTH
-       ========================================= */
+      try {
 
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
+        const {
+          data,
+          error
+        } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
 
-    const authError =
-      params.get("error");
+        if (error) {
+          throw error;
+        }
 
+        // Remember email
+        if (rememberInput.checked) {
+          localStorage.setItem(
+            "voiceai_email",
+            email
+          );
+        } else {
+          localStorage.removeItem(
+            "voiceai_email"
+          );
+        }
 
-    if (authError) {
+        showMessage(
+          "Login successful. Redirecting...",
+          true
+        );
 
-      showMessage(
-        "Authentication failed. Please try again."
-      );
+        setTimeout(function() {
+          window.location.href = "profile.html";
+        }, 500);
 
-    }
+      } catch (error) {
+
+        showMessage(
+          error.message ||
+          "Login failed. Please try again."
+        );
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Login";
+      }
+
+    });
 
   </script>
 
