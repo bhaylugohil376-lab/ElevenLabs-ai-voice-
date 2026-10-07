@@ -2,78 +2,123 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <title>Login | VoiceAI</title>
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
+  <title>Login — VoiceAI</title>
 
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background: #f5f2ff;
-      color: #211b35;
-      display: grid;
-      place-items: center;
-      padding: 20px;
+      font-family: Inter, Arial, sans-serif;
+      background: #fffdf7;
+      color: #3b2117;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
     }
 
-    .login-card {
+    .login-page {
       width: 100%;
       max-width: 430px;
-      background: #fff;
-      padding: 34px;
-      border-radius: 22px;
-      box-shadow: 0 18px 55px rgba(50, 30, 100, .12);
     }
 
-    .logo {
+    .brand {
       text-align: center;
-      font-size: 29px;
+      margin-bottom: 28px;
+    }
+
+    .brand h1 {
+      font-size: 32px;
       font-weight: 800;
-      color: #7354e8;
-      margin-bottom: 12px;
+      letter-spacing: -1px;
     }
 
-    h1 {
-      text-align: center;
-      margin: 0 0 8px;
-      font-size: 28px;
+    .brand span {
+      color: #d96b27;
+    }
+
+    .brand p {
+      margin-top: 8px;
+      color: #806b61;
+      font-size: 14px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #eee5df;
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: 0 18px 50px rgba(59, 33, 23, 0.08);
+    }
+
+    .card h2 {
+      font-size: 24px;
+      margin-bottom: 7px;
     }
 
     .subtitle {
-      text-align: center;
-      color: #777;
-      margin: 0 0 28px;
+      color: #806b61;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 17px;
     }
 
     label {
       display: block;
-      margin: 16px 0 7px;
-      font-weight: 600;
-      font-size: 14px;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     input {
       width: 100%;
-      padding: 14px;
-      border: 1px solid #ddd8e9;
-      border-radius: 11px;
+      height: 50px;
+      border: 1px solid #ded4cd;
+      border-radius: 12px;
+      padding: 0 14px;
       font-size: 15px;
       outline: none;
+      color: #3b2117;
+      background: #fff;
     }
 
     input:focus {
-      border-color: #7354e8;
-      box-shadow: 0 0 0 3px rgba(115,84,232,.1);
+      border-color: #d96b27;
+      box-shadow: 0 0 0 3px rgba(217, 107, 39, 0.12);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 70px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: #d96b27;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px;
     }
 
     .row {
@@ -81,77 +126,122 @@
       justify-content: space-between;
       align-items: center;
       gap: 10px;
-      margin-top: 14px;
-      font-size: 14px;
+      margin: 4px 0 20px;
     }
 
     .remember {
       display: flex;
       align-items: center;
       gap: 7px;
-      color: #666;
+      font-size: 13px;
+      color: #66544c;
     }
 
     .remember input {
-      width: auto;
+      width: 15px;
+      height: 15px;
     }
 
     a {
-      color: #7354e8;
+      color: #d96b27;
       text-decoration: none;
-      font-weight: 600;
-    }
-
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 11px;
-      padding: 14px;
-      margin-top: 22px;
-      background: #7354e8;
-      color: white;
-      font-size: 16px;
       font-weight: 700;
-      cursor: pointer;
     }
 
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      width: 100%;
+      height: 52px;
+      border: 0;
+      border-radius: 13px;
+      background: #d96b27;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
 
     .message {
       display: none;
-      margin-top: 16px;
-      padding: 12px;
+      margin-bottom: 16px;
+      padding: 12px 14px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.5;
-      overflow-wrap: anywhere;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #fff0ed;
+      color: #a93226;
+      border: 1px solid #f4c7c0;
+    }
+
+    .message.success {
+      background: #edf9f0;
+      color: #28763b;
+      border: 1px solid #c6e8ce;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+      color: #a08f86;
+      font-size: 12px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #eee5df;
     }
 
     .signup {
       text-align: center;
-      margin-top: 24px;
-      color: #777;
+      color: #806b61;
       font-size: 14px;
     }
 
     .back {
-      display: block;
       text-align: center;
-      margin-top: 18px;
-      color: #777;
-      font-size: 14px;
+      margin-top: 22px;
+      font-size: 13px;
     }
 
     @media (max-width: 480px) {
       body {
-        padding: 12px;
+        padding: 16px;
       }
 
-      .login-card {
-        padding: 25px 20px;
+      .card {
+        padding: 22px 18px;
+        border-radius: 18px;
+      }
+
+      .brand h1 {
+        font-size: 28px;
       }
     }
   </style>
@@ -159,195 +249,258 @@
 
 <body>
 
-  <main class="login-card">
+  <main class="login-page">
 
-    <div class="logo">∿ VoiceAI</div>
-
-    <h1>Welcome back</h1>
-
-    <p class="subtitle">
-      Login to continue to your VoiceAI account.
-    </p>
-
-    <form id="loginForm">
-
-      <label for="email">Email address</label>
-
-      <input
-        id="email"
-        type="email"
-        placeholder="you@example.com"
-        autocomplete="email"
-        required
-      >
-
-      <label for="password">Password</label>
-
-      <input
-        id="password"
-        type="password"
-        placeholder="Enter your password"
-        autocomplete="current-password"
-        required
-      >
-
-      <div class="row">
-
-        <label class="remember">
-          <input id="remember" type="checkbox">
-          Remember email
-        </label>
-
-        <a href="forgot-password.html">
-          Forgot password?
-        </a>
-
-      </div>
-
-      <button id="loginButton" type="submit">
-        Login
-      </button>
-
-      <div
-        id="message"
-        class="message"
-        role="status"
-        aria-live="polite">
-      </div>
-
-    </form>
-
-    <div class="signup">
-      Don't have an account?
-      <a href="signup.html">Create account</a>
+    <div class="brand">
+      <h1>∿ Voice<span>AI</span></h1>
+      <p>AI voice creation made simple.</p>
     </div>
 
-    <a class="back" href="index.html">
-      ← Back to VoiceAI
-    </a>
+    <section class="card">
+
+      <h2>Welcome back</h2>
+      <p class="subtitle">
+        Sign in to continue to your VoiceAI account.
+      </p>
+
+      <div id="message" class="message"></div>
+
+      <form id="loginForm">
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <input
+            id="email"
+            type="email"
+            autocomplete="email"
+            placeholder="you@example.com"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+
+          <div class="password-wrap">
+            <input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Enter your password"
+              required
+            >
+
+            <button
+              type="button"
+              class="show-password"
+              id="showPassword"
+            >
+              Show
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <label class="remember">
+            <input
+              id="remember"
+              type="checkbox"
+            >
+            Remember email
+          </label>
+
+          <a href="forgot-password.html">
+            Forgot password?
+          </a>
+
+        </div>
+
+        <button
+          type="submit"
+          class="btn"
+          id="loginBtn"
+        >
+          Sign In
+        </button>
+
+      </form>
+
+      <div class="divider">
+        OR
+      </div>
+
+      <div class="signup">
+        Don't have an account?
+        <a href="signup.html">Create account</a>
+      </div>
+
+      <div class="back">
+        <a href="index.html">← Back to VoiceAI</a>
+      </div>
+
+    </section>
 
   </main>
 
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
   <script>
+    "use strict";
 
-    const loginForm = document.getElementById("loginForm");
-    const loginButton = document.getElementById("loginButton");
-    const message = document.getElementById("message");
+    const supabaseClient = window.supabaseClient;
 
+    const form = document.getElementById("loginForm");
     const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
     const rememberInput = document.getElementById("remember");
+    const loginBtn = document.getElementById("loginBtn");
+    const message = document.getElementById("message");
+    const showPassword = document.getElementById("showPassword");
 
-    function showMessage(text, success = false) {
-
-      message.style.display = "block";
+    function showMessage(text, type = "error") {
       message.textContent = text;
-
-      message.style.background =
-        success ? "#eaf8ef" : "#fff0f0";
-
-      message.style.color =
-        success ? "#176b38" : "#a32323";
+      message.className = "message show " + type;
     }
 
-    // Restore saved email
-    const savedEmail = localStorage.getItem("voiceai_email");
+    function clearMessage() {
+      message.textContent = "";
+      message.className = "message";
+    }
+
+    function setLoading(loading) {
+      loginBtn.disabled = loading;
+      loginBtn.textContent = loading
+        ? "Signing in..."
+        : "Sign In";
+    }
+
+    // Restore remembered email
+    const savedEmail = localStorage.getItem("voiceai_remember_email");
 
     if (savedEmail) {
       emailInput.value = savedEmail;
       rememberInput.checked = true;
     }
 
+    // Show / hide password
+    showPassword.addEventListener("click", () => {
+      const hidden = passwordInput.type === "password";
+
+      passwordInput.type = hidden
+        ? "text"
+        : "password";
+
+      showPassword.textContent = hidden
+        ? "Hide"
+        : "Show";
+    });
+
     // Check existing session
-    async function checkSession() {
+    async function checkExistingSession() {
+      if (!supabaseClient) {
+        showMessage(
+          "Supabase connection is not available. Check supabase-config.js."
+        );
+        return;
+      }
 
-      try {
+      const {
+        data: { session },
+        error
+      } = await supabaseClient.auth.getSession();
 
-        const {
-          data,
-          error
-        } = await supabaseClient.auth.getSession();
-
-        if (error) {
-          console.error(error);
-          return;
-        }
-
-        if (data.session) {
-          window.location.href = "profile.html";
-        }
-
-      } catch (error) {
+      if (error) {
         console.error(error);
+        return;
+      }
+
+      if (session) {
+        window.location.replace("profile.html");
       }
     }
 
-    checkSession();
+    checkExistingSession();
 
     // Login
-    loginForm.addEventListener("submit", async function(event) {
-
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      clearMessage();
+
       const email = emailInput.value.trim();
-      const password =
-        document.getElementById("password").value;
+      const password = passwordInput.value;
 
       if (!email || !password) {
         showMessage("Please enter your email and password.");
         return;
       }
 
-      loginButton.disabled = true;
-      loginButton.textContent = "Signing in...";
+      if (!supabaseClient) {
+        showMessage(
+          "Supabase is not connected. Check supabase-config.js."
+        );
+        return;
+      }
+
+      setLoading(true);
 
       try {
-
-        const {
-          data,
-          error
-        } = await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
+        const { data, error } =
+          await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
 
         if (error) {
           throw error;
         }
 
-        // Remember email
+        if (!data.session) {
+          throw new Error(
+            "Login succeeded but no session was created."
+          );
+        }
+
         if (rememberInput.checked) {
           localStorage.setItem(
-            "voiceai_email",
+            "voiceai_remember_email",
             email
           );
         } else {
           localStorage.removeItem(
-            "voiceai_email"
+            "voiceai_remember_email"
           );
         }
 
         showMessage(
-          "Login successful. Redirecting...",
-          true
+          "Login successful. Opening your profile...",
+          "success"
         );
 
-        setTimeout(function() {
-          window.location.href = "profile.html";
+        setTimeout(() => {
+          window.location.replace("profile.html");
         }, 500);
 
       } catch (error) {
+        console.error("Login error:", error);
 
-        showMessage(
-          error.message ||
-          "Login failed. Please try again."
-        );
+        let text = error.message ||
+          "Unable to sign in.";
 
-        loginButton.disabled = false;
-        loginButton.textContent = "Login";
+        if (
+          text.toLowerCase().includes("invalid login")
+        ) {
+          text =
+            "Email or password is incorrect.";
+        }
+
+        showMessage(text);
+        setLoading(false);
       }
-
     });
-
   </script>
 
 </body>
