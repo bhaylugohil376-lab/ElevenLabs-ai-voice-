@@ -1,6 +1,5 @@
-// supabase-config.js
+const SUPABASE_URL = "https://axeqcbavupmpijhaaite.supabase.co";
 
-const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
 const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
 const supabaseClient = window.supabase.createClient(
