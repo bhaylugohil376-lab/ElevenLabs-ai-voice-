@@ -4,68 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Profile | VoiceAI</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
+  <title>Profile — VoiceAI</title>
 
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f6f3ff;
-      color: #211b35;
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      background: #fffdf7;
+      color: #3b2117;
     }
 
-    header {
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .navbar {
       height: 70px;
       background: #fff;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid #eee5df;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 6%;
+      padding: 0 5%;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     .logo {
-      font-size: 25px;
+      font-size: 24px;
       font-weight: 800;
-      color: #7354e8;
     }
 
-    nav {
+    .logo span {
+      color: #d96b27;
+    }
+
+    .nav-links {
       display: flex;
       gap: 22px;
       align-items: center;
-    }
-
-    nav a {
-      color: #555;
-      text-decoration: none;
       font-size: 14px;
-    }
-
-    nav a:hover {
-      color: #7354e8;
-    }
-
-    .logout-small {
-      border: 0;
-      background: #7354e8;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 9px;
-      cursor: pointer;
       font-weight: 700;
+    }
+
+    .nav-links a:hover {
+      color: #d96b27;
+    }
+
+    .logout-btn {
+      border: 0;
+      background: #fff0e8;
+      color: #c4571c;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .container {
       width: min(1100px, 92%);
-      margin: 45px auto;
+      margin: 40px auto;
     }
 
     .welcome {
@@ -73,166 +79,208 @@
     }
 
     .welcome h1 {
-      margin: 0 0 8px;
-      font-size: 34px;
+      font-size: 32px;
+      margin-bottom: 7px;
     }
 
     .welcome p {
-      color: #777;
-      margin: 0;
+      color: #806b61;
+      font-size: 15px;
     }
 
-    .grid {
+    .profile-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.5fr;
       gap: 22px;
     }
 
     .card {
       background: #fff;
-      border-radius: 18px;
+      border: 1px solid #eee5df;
+      border-radius: 20px;
       padding: 25px;
-      box-shadow: 0 10px 35px rgba(40, 20, 80, .08);
+      box-shadow: 0 12px 35px rgba(59, 33, 23, .06);
     }
 
-    .card h2 {
-      margin-top: 0;
-      font-size: 20px;
-    }
-
-    .profile-row {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 25px;
+    .profile-card {
+      text-align: center;
     }
 
     .avatar {
-      width: 72px;
-      height: 72px;
+      width: 92px;
+      height: 92px;
       border-radius: 50%;
-      background: #7354e8;
-      color: white;
-      display: grid;
-      place-items: center;
-      font-size: 27px;
+      margin: 0 auto 15px;
+      background: #d96b27;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
       font-weight: 800;
     }
 
-    .profile-info h3 {
-      margin: 0 0 5px;
+    .profile-card h2 {
+      font-size: 21px;
+      margin-bottom: 5px;
     }
 
-    .profile-info p {
-      margin: 0;
-      color: #777;
+    .email {
+      color: #806b61;
+      font-size: 14px;
       word-break: break-word;
     }
 
     .plan {
-      padding: 20px;
-      border-radius: 14px;
-      background: #f5f1ff;
-    }
-
-    .plan-title {
-      font-size: 22px;
-      font-weight: 800;
-      color: #7354e8;
-    }
-
-    .plan p {
-      color: #666;
-      line-height: 1.6;
-    }
-
-    .usage {
-      margin-top: 18px;
-    }
-
-    .usage-bar {
-      width: 100%;
-      height: 10px;
-      background: #e9e5f0;
+      display: inline-block;
+      margin-top: 15px;
+      padding: 7px 13px;
       border-radius: 20px;
-      overflow: hidden;
+      background: #fff0e8;
+      color: #c4571c;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
     }
 
-    .usage-fill {
-      width: 0%;
-      height: 100%;
-      background: #7354e8;
-      transition: width .3s ease;
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 22px;
     }
 
-    .usage-text {
-      margin-top: 8px;
-      color: #666;
-      font-size: 14px;
+    .stat {
+      background: #fffaf5;
+      border: 1px solid #f0e5dd;
+      border-radius: 13px;
+      padding: 15px 10px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 21px;
+      margin-bottom: 5px;
+    }
+
+    .stat span {
+      font-size: 11px;
+      color: #806b61;
+    }
+
+    .section-title {
+      font-size: 19px;
+      margin-bottom: 18px;
     }
 
     .actions {
       display: grid;
-      gap: 12px;
-      margin-top: 18px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 13px;
     }
 
     .action {
+      border: 1px solid #eee5df;
+      background: #fffdfb;
+      border-radius: 14px;
+      padding: 17px;
+      transition: .2s;
+    }
+
+    .action:hover {
+      border-color: #d96b27;
+      transform: translateY(-2px);
+    }
+
+    .action strong {
       display: block;
-      text-align: center;
-      padding: 13px;
-      border-radius: 10px;
-      text-decoration: none;
-      background: #7354e8;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .action span {
+      color: #806b61;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .plan-box {
+      margin-top: 22px;
+      background: #3b2117;
       color: #fff;
-      font-weight: 700;
+      border-radius: 17px;
+      padding: 21px;
     }
 
-    .action.secondary {
-      background: #f0edf7;
-      color: #4d4560;
+    .plan-box h3 {
+      margin-bottom: 7px;
     }
 
-    .logout {
-      width: 100%;
-      padding: 14px;
-      border: 0;
+    .plan-box p {
+      color: #eadbd2;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .upgrade {
+      display: inline-block;
+      background: #d96b27;
+      color: #fff;
+      padding: 11px 16px;
       border-radius: 10px;
-      background: #fcecec;
-      color: #bd3030;
-      font-weight: 700;
-      cursor: pointer;
+      font-size: 13px;
+      font-weight: 800;
     }
 
-    #status {
-      display: none;
-      margin-bottom: 20px;
-      padding: 13px;
-      border-radius: 10px;
-      background: #fff0f0;
-      color: #a32323;
+    .loading {
+      text-align: center;
+      padding: 50px 20px;
+      color: #806b61;
     }
 
-    @media (max-width: 760px) {
+    .error {
+      max-width: 500px;
+      margin: 100px auto;
+      text-align: center;
+      padding: 30px;
+    }
 
-      header {
-        padding: 0 20px;
-      }
-
-      nav {
+    @media (max-width: 800px) {
+      .nav-links a {
         display: none;
       }
 
-      .container {
-        margin: 30px auto;
+      .profile-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .navbar {
+        padding: 0 18px;
       }
 
-      .grid {
-        grid-template-columns: 1fr;
+      .container {
+        width: 94%;
+        margin: 25px auto;
       }
 
       .welcome h1 {
-        font-size: 27px;
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 19px;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        gap: 8px;
       }
     }
   </style>
@@ -240,383 +288,445 @@
 
 <body>
 
-<header>
+  <nav class="navbar">
 
-  <div class="logo">∿ VoiceAI</div>
+    <a href="index.html" class="logo">
+      ∿ Voice<span>AI</span>
+    </a>
 
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="tools.html">AI Tools</a>
-    <a href="voices.html">Voices</a>
-    <a href="pricing.html">Pricing</a>
+    <div class="nav-links">
+      <a href="tools.html">AI Tools</a>
+      <a href="voices.html">Voices</a>
+      <a href="studio.html">Studio</a>
+      <a href="pricing.html">Pricing</a>
+    </div>
+
+    <button id="logoutBtn" class="logout-btn">
+      Logout
+    </button>
+
   </nav>
 
-  <button class="logout-small" id="topLogout">
-    Logout
-  </button>
+  <main class="container" id="app">
 
-</header>
-
-<main class="container">
-
-  <div id="status"></div>
-
-  <section class="welcome">
-    <h1>Welcome, <span id="userName">User</span> 👋</h1>
-    <p>Your VoiceAI account dashboard.</p>
-  </section>
-
-  <section class="grid">
-
-    <!-- PROFILE -->
-    <div class="card">
-
-      <h2>Profile</h2>
-
-      <div class="profile-row">
-
-        <div class="avatar" id="avatar">
-          U
-        </div>
-
-        <div class="profile-info">
-          <h3 id="fullName">Loading...</h3>
-          <p id="email">Loading...</p>
-        </div>
-
-      </div>
-
-      <div class="actions">
-
-        <a href="tools.html" class="action">
-          Open AI Tools
-        </a>
-
-        <a href="voices.html" class="action secondary">
-          Browse Voice Library
-        </a>
-
-        <a href="pricing.html" class="action secondary">
-          View Pricing
-        </a>
-
-      </div>
-
+    <div class="loading">
+      Loading your profile...
     </div>
 
+  </main>
 
-    <!-- PLAN -->
-    <div class="card">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
 
-      <h2>Your Plan</h2>
+  <script>
+    "use strict";
 
-      <div class="plan">
+    const supabaseClient = window.supabaseClient;
+    const app = document.getElementById("app");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-        <div class="plan-title" id="planName">
-          Free
-        </div>
-
-        <p id="planDescription">
-          Loading plan information...
-        </p>
-
-        <div class="usage">
-
-          <div class="usage-bar">
-            <div
-              class="usage-fill"
-              id="usageFill">
-            </div>
-          </div>
-
-          <div
-            class="usage-text"
-            id="usageText">
-            Loading usage...
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="actions">
-
-        <a href="pricing.html" class="action">
-          Upgrade to Premium
-        </a>
-
-      </div>
-
-    </div>
+    let currentUser = null;
+    let currentPlan = "free";
 
 
-    <!-- ACCOUNT -->
-    <div class="card">
-
-      <h2>Account</h2>
-
-      <p>
-        Manage your VoiceAI account and authentication.
-      </p>
-
-      <button class="logout" id="logoutButton">
-        Sign out
-      </button>
-
-    </div>
+    function escapeHTML(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
 
-    <!-- QUICK ACCESS -->
-    <div class="card">
+    function getInitials(name, email) {
+      const source =
+        name ||
+        email ||
+        "U";
 
-      <h2>Quick Access</h2>
+      const parts =
+        source.trim().split(/\s+/);
 
-      <div class="actions">
-
-        <a href="tts.html" class="action">
-          Text to Speech
-        </a>
-
-        <a href="clone.html" class="action secondary">
-          Voice Clone
-        </a>
-
-        <a href="studio.html" class="action secondary">
-          AI Studio
-        </a>
-
-        <a href="agents.html" class="action secondary">
-          Voice Agents
-        </a>
-
-      </div>
-
-    </div>
-
-  </section>
-
-</main>
-
-
-<script>
-
-  const userName = document.getElementById("userName");
-  const fullName = document.getElementById("fullName");
-  const emailElement = document.getElementById("email");
-  const avatar = document.getElementById("avatar");
-
-  const planName = document.getElementById("planName");
-  const planDescription =
-    document.getElementById("planDescription");
-
-  const usageFill =
-    document.getElementById("usageFill");
-
-  const usageText =
-    document.getElementById("usageText");
-
-  const status =
-    document.getElementById("status");
-
-
-  function showError(message) {
-
-    status.style.display = "block";
-    status.textContent = message;
-
-  }
-
-
-  function getInitial(name) {
-
-    if (!name) return "U";
-
-    return name
-      .trim()
-      .charAt(0)
-      .toUpperCase();
-
-  }
-
-
-  async function loadProfile() {
-
-    try {
-
-      const {
-        data: sessionData,
-        error: sessionError
-      } = await supabaseClient.auth.getSession();
-
-      if (sessionError) {
-        throw sessionError;
+      if (parts.length >= 2) {
+        return (
+          parts[0][0] +
+          parts[1][0]
+        ).toUpperCase();
       }
 
-      const session = sessionData.session;
-
-      if (!session) {
-
-        window.location.href = "login.html";
-        return;
-
-      }
-
-      const user = session.user;
-
-      const metadata =
-        user.user_metadata || {};
-
-      const name =
-        metadata.full_name ||
-        metadata.name ||
-        user.email?.split("@")[0] ||
-        "User";
-
-      userName.textContent = name;
-      fullName.textContent = name;
-      emailElement.textContent =
-        user.email || "";
-
-      avatar.textContent =
-        getInitial(name);
+      return source
+        .substring(0, 2)
+        .toUpperCase();
+    }
 
 
-      /*
-       * Get plan from profiles table.
-       *
-       * Expected columns:
-       * id
-       * full_name
-       * plan
-       */
+    async function loadProfile() {
 
-      const {
-        data: profile,
-        error: profileError
-      } = await supabaseClient
-        .from("profiles")
-        .select("full_name, plan")
-        .eq("id", user.id)
-        .maybeSingle();
-
-
-      if (profileError) {
-
-        console.warn(
-          "Profile query:",
-          profileError
+      if (!supabaseClient) {
+        showError(
+          "Supabase is not connected. Check supabase-config.js."
         );
-
+        return;
       }
 
+      try {
 
-      const plan =
-        profile?.plan || "free";
+        const {
+          data: { session },
+          error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError) {
+          throw sessionError;
+        }
+
+        if (!session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        currentUser = session.user;
 
 
-      if (plan === "premium") {
+        let fullName =
+          currentUser.user_metadata?.full_name ||
+          currentUser.user_metadata?.name ||
+          "VoiceAI User";
 
-        planName.textContent =
-          "Premium";
 
-        planDescription.textContent =
-          "Premium account with higher AI usage and advanced VoiceAI features.";
+        let plan = "free";
 
-        usageText.textContent =
-          "Premium plan";
-
-        usageFill.style.width =
-          "100%";
-
-      } else if (plan === "admin") {
-
-        planName.textContent =
-          "Admin";
-
-        planDescription.textContent =
-          "Administrator account with application-level unlimited access.";
-
-        usageText.textContent =
-          "Unlimited";
-
-        usageFill.style.width =
-          "100%";
-
-      } else {
-
-        planName.textContent =
-          "Free";
-
-        planDescription.textContent =
-          "Free plan includes up to 5 AI uses per day.";
 
         /*
-         * Daily usage can later be loaded from
-         * usage_daily / check_and_use_ai().
+         * Read the profile created by the
+         * Supabase database trigger.
          */
 
-        usageText.textContent =
-          "5 AI uses per day";
+        const {
+          data: profile,
+          error: profileError
+        } = await supabaseClient
+          .from("profiles")
+          .select("full_name, plan")
+          .eq("id", currentUser.id)
+          .maybeSingle();
 
-        usageFill.style.width =
-          "0%";
 
+        if (profileError) {
+          console.warn(
+            "Profile query warning:",
+            profileError
+          );
+        }
+
+
+        if (profile?.full_name) {
+          fullName = profile.full_name;
+        }
+
+
+        if (profile?.plan) {
+          plan = String(profile.plan).toLowerCase();
+        }
+
+
+        currentPlan = plan;
+
+
+        renderProfile(
+          fullName,
+          currentUser.email || "",
+          plan
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Profile error:",
+          error
+        );
+
+        showError(
+          error.message ||
+          "Unable to load your profile."
+        );
       }
+    }
 
-    } catch (error) {
 
-      console.error(error);
+    function renderProfile(name, email, plan) {
 
-      showError(
-        error.message ||
-        "Unable to load your profile."
+      const premium =
+        plan === "premium" ||
+        plan === "admin";
+
+
+      const initials =
+        getInitials(name, email);
+
+
+      const planLabel =
+        plan === "admin"
+          ? "Admin"
+          : plan === "premium"
+            ? "Premium"
+            : "Free";
+
+
+      const usageLimit =
+        premium
+          ? "∞"
+          : "5";
+
+
+      app.innerHTML = `
+
+        <section class="welcome">
+          <h1>
+            Welcome, ${escapeHTML(name)}
+          </h1>
+
+          <p>
+            Manage your VoiceAI account and AI workspace.
+          </p>
+        </section>
+
+
+        <section class="profile-grid">
+
+          <div class="card profile-card">
+
+            <div class="avatar">
+              ${escapeHTML(initials)}
+            </div>
+
+            <h2>
+              ${escapeHTML(name)}
+            </h2>
+
+            <div class="email">
+              ${escapeHTML(email)}
+            </div>
+
+            <div class="plan">
+              ${planLabel}
+            </div>
+
+            <div class="stats">
+
+              <div class="stat">
+                <strong>${usageLimit}</strong>
+                <span>Daily AI Uses</span>
+              </div>
+
+              <div class="stat">
+                <strong>24+</strong>
+                <span>AI Tools</span>
+              </div>
+
+              <div class="stat">
+                <strong>✓</strong>
+                <span>Account</span>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div>
+
+            <div class="card">
+
+              <h2 class="section-title">
+                Quick Access
+              </h2>
+
+              <div class="actions">
+
+                <a class="action" href="tts.html">
+                  <strong>Text to Speech</strong>
+                  <span>
+                    Convert text into natural AI voice.
+                  </span>
+                </a>
+
+                <a class="action" href="voices.html">
+                  <strong>Voice Library</strong>
+                  <span>
+                    Browse and preview available voices.
+                  </span>
+                </a>
+
+                <a class="action" href="clone.html">
+                  <strong>Voice Clone</strong>
+                  <span>
+                    Create your own AI voice.
+                  </span>
+                </a>
+
+                <a class="action" href="studio.html">
+                  <strong>AI Studio</strong>
+                  <span>
+                    Create and edit voice projects.
+                  </span>
+                </a>
+
+                <a class="action" href="dubbing.html">
+                  <strong>Dubbing</strong>
+                  <span>
+                    Localize your audio and video.
+                  </span>
+                </a>
+
+                <a class="action" href="agents.html">
+                  <strong>Voice Agents</strong>
+                  <span>
+                    Build conversational AI agents.
+                  </span>
+                </a>
+
+              </div>
+
+            </div>
+
+
+            ${
+              premium
+              ? `
+                <div class="plan-box">
+
+                  <h3>
+                    ${plan === "admin"
+                      ? "Admin Access"
+                      : "Premium Plan"}
+                  </h3>
+
+                  <p>
+                    ${
+                      plan === "admin"
+                      ? "Your account has administrator-level application access."
+                      : "Your Premium plan provides unlimited application-level AI usage, subject to provider/API limits."
+                    }
+                  </p>
+
+                </div>
+              `
+              : `
+                <div class="plan-box">
+
+                  <h3>
+                    Free Plan
+                  </h3>
+
+                  <p>
+                    You currently have 5 AI uses per day.
+                    Upgrade to Premium for higher application-level usage.
+                  </p>
+
+                  <a
+                    href="pricing.html"
+                    class="upgrade"
+                  >
+                    Upgrade — $20/month
+                  </a>
+
+                </div>
+              `
+            }
+
+          </div>
+
+        </section>
+      `;
+    }
+
+
+    function showError(text) {
+
+      app.innerHTML = `
+        <div class="card error">
+
+          <h2>
+            Unable to load profile
+          </h2>
+
+          <p style="
+            color:#806b61;
+            margin:12px 0 20px;
+            line-height:1.5;
+          ">
+            ${escapeHTML(text)}
+          </p>
+
+          <a
+            href="login.html"
+            class="upgrade"
+          >
+            Go to Login
+          </a>
+
+        </div>
+      `;
+    }
+
+
+    logoutBtn.addEventListener(
+      "click",
+      async () => {
+
+        logoutBtn.disabled = true;
+        logoutBtn.textContent = "Logging out...";
+
+        try {
+
+          if (supabaseClient) {
+            await supabaseClient.auth.signOut();
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Logout error:",
+            error
+          );
+
+        } finally {
+
+          window.location.replace("login.html");
+
+        }
+      }
+    );
+
+
+    /*
+     * Keep the UI synchronized if the
+     * Supabase auth state changes.
+     */
+
+    if (supabaseClient) {
+
+      supabaseClient.auth.onAuthStateChange(
+        (event, session) => {
+
+          if (
+            event === "SIGNED_OUT" ||
+            !session
+          ) {
+            window.location.replace("login.html");
+          }
+
+        }
       );
 
     }
 
-  }
 
-
-  async function logout() {
-
-    try {
-
-      const {
-        error
-      } = await supabaseClient.auth.signOut();
-
-      if (error) {
-        throw error;
-      }
-
-      window.location.href =
-        "login.html";
-
-    } catch (error) {
-
-      showError(
-        error.message ||
-        "Logout failed."
-      );
-
-    }
-
-  }
-
-
-  document
-    .getElementById("logoutButton")
-    .addEventListener("click", logout);
-
-
-  document
-    .getElementById("topLogout")
-    .addEventListener("click", logout);
-
-
-  loadProfile();
-
-</script>
+    loadProfile();
+  </script>
 
 </body>
 </html>
