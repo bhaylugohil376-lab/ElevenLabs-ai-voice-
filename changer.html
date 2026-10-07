@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Video Voice Transfer — VoiceAI</title>
 
   <style>
@@ -15,7 +14,7 @@
 
     body {
       font-family: Inter, Arial, sans-serif;
-      background: #f7f7fb;
+      background: #f7f8fc;
       color: #171717;
       min-height: 100vh;
     }
@@ -25,375 +24,257 @@
       color: inherit;
     }
 
-    .navbar {
-      height: 72px;
+    .topbar {
+      height: 70px;
       background: #fff;
-      border-bottom: 1px solid #e9e9ee;
+      border-bottom: 1px solid #e8e8ed;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 6%;
+      padding: 0 5%;
       position: sticky;
       top: 0;
       z-index: 20;
     }
 
     .logo {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 800;
-      color: #6d35d8;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 28px;
-      align-items: center;
+    .logo span {
+      color: #7357ff;
     }
 
-    .nav-links a {
-      font-size: 14px;
-      font-weight: 600;
+    .back {
       color: #555;
-    }
-
-    .nav-links a:hover {
-      color: #6d35d8;
-    }
-
-    .nav-btn {
-      background: #6d35d8;
-      color: white !important;
-      padding: 11px 18px;
-      border-radius: 10px;
+      font-weight: 600;
     }
 
     .container {
       width: min(1180px, 92%);
-      margin: auto;
+      margin: 40px auto 70px;
     }
 
     .hero {
       text-align: center;
-      padding: 65px 0 35px;
+      margin-bottom: 35px;
     }
 
     .badge {
       display: inline-block;
-      background: #eee7ff;
-      color: #6d35d8;
       padding: 8px 14px;
       border-radius: 30px;
+      background: #eeeaff;
+      color: #6046dc;
       font-size: 13px;
       font-weight: 700;
-      margin-bottom: 18px;
+      margin-bottom: 15px;
     }
 
     h1 {
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.05;
-      margin-bottom: 18px;
-      letter-spacing: -2px;
+      font-size: clamp(32px, 5vw, 52px);
+      margin-bottom: 12px;
     }
 
     .hero p {
       max-width: 680px;
       margin: auto;
       color: #666;
-      font-size: 17px;
       line-height: 1.7;
     }
 
-    .workspace {
+    .grid {
       display: grid;
-      grid-template-columns: 1.15fr .85fr;
+      grid-template-columns: 1.1fr .9fr;
       gap: 24px;
-      padding-bottom: 70px;
     }
 
     .card {
       background: #fff;
-      border: 1px solid #e7e7ed;
+      border: 1px solid #e5e5eb;
       border-radius: 20px;
       padding: 25px;
-      box-shadow: 0 12px 35px rgba(20, 20, 40, .05);
+      box-shadow: 0 8px 30px rgba(0,0,0,.04);
     }
 
     .card h2 {
       font-size: 20px;
-      margin-bottom: 7px;
-    }
-
-    .muted {
-      color: #777;
-      font-size: 14px;
-      line-height: 1.6;
+      margin-bottom: 18px;
     }
 
     .upload {
-      margin-top: 22px;
-      min-height: 280px;
-      border: 2px dashed #cfc7e8;
-      background: #faf8ff;
-      border-radius: 17px;
+      border: 2px dashed #cfcfd8;
+      border-radius: 16px;
+      min-height: 210px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       cursor: pointer;
       padding: 25px;
+      transition: .2s;
     }
 
     .upload:hover {
-      border-color: #6d35d8;
-    }
-
-    .upload-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-
-    .upload strong {
-      display: block;
-      font-size: 17px;
-      margin-bottom: 7px;
+      border-color: #7357ff;
+      background: #faf9ff;
     }
 
     .upload input {
       display: none;
     }
 
+    .upload-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .upload strong {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .upload small {
+      color: #777;
+    }
+
     video {
       width: 100%;
-      max-height: 420px;
+      max-height: 360px;
       border-radius: 14px;
-      margin-top: 18px;
       background: #111;
+      margin-top: 18px;
+      display: none;
     }
 
     .field {
-      margin-top: 20px;
+      margin-bottom: 18px;
     }
 
-    .field label {
+    label {
       display: block;
-      font-size: 13px;
       font-weight: 700;
       margin-bottom: 8px;
-    }
-
-    select,
-    input[type="text"],
-    input[type="range"] {
-      width: 100%;
+      font-size: 14px;
     }
 
     select,
     input[type="text"] {
+      width: 100%;
       height: 48px;
       border: 1px solid #dddde5;
-      border-radius: 11px;
+      border-radius: 10px;
       padding: 0 13px;
-      background: white;
-      font-size: 14px;
+      background: #fff;
+      font-size: 15px;
       outline: none;
     }
 
     select:focus,
     input[type="text"]:focus {
-      border-color: #6d35d8;
+      border-color: #7357ff;
     }
 
-    .voice-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .voice-option {
-      border: 1px solid #e1e1e7;
-      border-radius: 13px;
-      padding: 13px;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .voice-option:hover {
-      border-color: #6d35d8;
-      background: #faf8ff;
-    }
-
-    .voice-option input {
-      margin-right: 7px;
-    }
-
-    .voice-name {
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .voice-type {
-      color: #888;
-      font-size: 12px;
-      margin-top: 4px;
+    input[type="range"] {
+      width: 100%;
+      accent-color: #7357ff;
     }
 
     .range-row {
       display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .range-value {
-      min-width: 45px;
-      text-align: right;
+      justify-content: space-between;
       font-size: 13px;
-      font-weight: 700;
+      color: #666;
+      margin-top: 5px;
     }
 
-    .primary {
-      width: 100%;
-      border: 0;
-      background: #6d35d8;
-      color: white;
-      height: 52px;
+    .usage {
+      padding: 14px;
+      background: #f5f3ff;
       border-radius: 12px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      color: #5540b4;
+    }
+
+    .btn {
+      width: 100%;
+      height: 50px;
+      border: 0;
+      border-radius: 11px;
+      background: #7357ff;
+      color: #fff;
       font-size: 15px;
       font-weight: 800;
       cursor: pointer;
-      margin-top: 25px;
     }
 
-    .primary:hover {
-      background: #5b29bd;
+    .btn:hover {
+      background: #6248ed;
     }
 
-    .primary:disabled {
+    .btn:disabled {
       opacity: .55;
       cursor: not-allowed;
     }
 
     .secondary {
-      width: 100%;
-      border: 1px solid #dddde5;
-      background: white;
+      background: #f0eff5;
       color: #333;
-      height: 48px;
-      border-radius: 11px;
-      font-weight: 700;
-      cursor: pointer;
       margin-top: 10px;
     }
 
-    .result {
-      display: none;
-      margin-top: 25px;
-      padding-top: 22px;
-      border-top: 1px solid #eee;
-    }
-
-    .result h3 {
-      margin-bottom: 10px;
-    }
-
-    .download {
-      display: block;
-      text-align: center;
-      background: #111;
-      color: white;
-      padding: 14px;
-      border-radius: 11px;
-      font-weight: 700;
-      margin-top: 12px;
+    .secondary:hover {
+      background: #e6e5eb;
     }
 
     .status {
       margin-top: 15px;
       padding: 12px;
       border-radius: 10px;
-      background: #f3f3f7;
-      color: #555;
-      font-size: 13px;
       display: none;
+      font-size: 14px;
     }
 
-    .status.error {
-      background: #fff0f0;
-      color: #b42318;
+    .result {
+      display: none;
+      margin-top: 25px;
     }
 
-    .status.success {
-      background: #edfff4;
-      color: #087443;
+    .result video {
+      display: block;
     }
 
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 70px;
-    }
-
-    .feature {
-      background: white;
-      border: 1px solid #e7e7ed;
-      border-radius: 16px;
-      padding: 22px;
-    }
-
-    .feature-icon {
-      font-size: 28px;
-      margin-bottom: 12px;
-    }
-
-    .feature h3 {
-      font-size: 16px;
-      margin-bottom: 7px;
-    }
-
-    .feature p {
-      color: #777;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    footer {
-      border-top: 1px solid #e7e7ed;
-      background: white;
-      padding: 30px 6%;
+    .download {
+      display: block;
       text-align: center;
-      color: #777;
+      margin-top: 12px;
+      padding: 13px;
+      border-radius: 10px;
+      background: #171717;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .info {
+      margin-top: 25px;
+      color: #666;
       font-size: 13px;
+      line-height: 1.7;
     }
 
     @media (max-width: 850px) {
-      .nav-links {
-        display: none;
-      }
-
-      .workspace {
+      .grid {
         grid-template-columns: 1fr;
       }
 
-      .features {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 500px) {
-      .hero {
-        padding-top: 45px;
+      .container {
+        margin-top: 25px;
       }
 
-      .card {
-        padding: 18px;
-      }
-
-      .voice-grid {
-        grid-template-columns: 1fr;
-      }
-
-      h1 {
-        letter-spacing: -1px;
+      .topbar {
+        padding: 0 4%;
       }
     }
   </style>
@@ -401,772 +282,481 @@
 
 <body>
 
-<nav class="navbar">
-  <a href="index.html" class="logo">VoiceAI</a>
-
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="tools.html">AI Tools</a>
-    <a href="voices.html">Voices</a>
-    <a href="studio.html">Studio</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="profile.html" class="nav-btn">Profile</a>
-  </div>
-</nav>
-
+<header class="topbar">
+  <a href="tools.html" class="back">← AI Tools</a>
+  <div class="logo">∿ <span>VoiceAI</span></div>
+  <a href="profile.html" class="back">Profile</a>
+</header>
 
 <main class="container">
 
   <section class="hero">
-    <span class="badge">AI VIDEO VOICE TRANSFER</span>
-
-    <h1>
-      Replace your video voice<br>
-      with an AI voice.
-    </h1>
-
+    <div class="badge">AI Video Voice Transfer</div>
+    <h1>Change the Voice in Your Video</h1>
     <p>
-      Upload a video, choose an AI voice, and replace the original
-      speech while keeping the video timing and visuals.
+      Upload a video, choose an AI voice and generate a new voice track
+      while keeping your video content.
     </p>
   </section>
 
+  <div class="grid">
 
-  <section class="workspace">
-
-    <!-- VIDEO -->
-    <div class="card">
-
-      <h2>1. Upload your video</h2>
-
-      <p class="muted">
-        MP4, MOV, WebM and other supported video formats.
-      </p>
+    <!-- LEFT -->
+    <section class="card">
+      <h2>Upload Video</h2>
 
       <label class="upload" for="videoInput">
-
-        <div>
-          <div class="upload-icon">🎥</div>
-
-          <strong>Drop your video here</strong>
-
-          <span class="muted">
-            or click to browse
-          </span>
-
-          <input
-            id="videoInput"
-            type="file"
-            accept="video/*"
-          >
-        </div>
-
-      </label>
-
-      <video
-        id="sourceVideo"
-        controls
-        playsinline
-        style="display:none;">
-      </video>
-
-      <div id="fileInfo" class="status"></div>
-
-    </div>
-
-
-    <!-- SETTINGS -->
-    <div class="card">
-
-      <h2>2. Choose AI voice</h2>
-
-      <p class="muted">
-        Select the voice that should replace the original speaker.
-      </p>
-
-
-      <div class="field">
-
-        <label>AI Voice</label>
-
-        <div class="voice-grid">
-
-          <label class="voice-option">
-            <input
-              type="radio"
-              name="voice"
-              value="male"
-              checked
-            >
-
-            <span class="voice-name">
-              Marcus
-            </span>
-
-            <div class="voice-type">
-              Male · Professional
-            </div>
-          </label>
-
-
-          <label class="voice-option">
-            <input
-              type="radio"
-              name="voice"
-              value="female"
-            >
-
-            <span class="voice-name">
-              Sarah
-            </span>
-
-            <div class="voice-type">
-              Female · Natural
-            </div>
-          </label>
-
-
-          <label class="voice-option">
-            <input
-              type="radio"
-              name="voice"
-              value="energetic"
-            >
-
-            <span class="voice-name">
-              Jerry
-            </span>
-
-            <div class="voice-type">
-              Male · Energetic
-            </div>
-          </label>
-
-
-          <label class="voice-option">
-            <input
-              type="radio"
-              name="voice"
-              value="calm"
-            >
-
-            <span class="voice-name">
-              Allison
-            </span>
-
-            <div class="voice-type">
-              Female · Calm
-            </div>
-          </label>
-
-        </div>
-
-      </div>
-
-
-      <div class="field">
-
-        <label for="language">
-          Language
-        </label>
-
-        <select id="language">
-
-          <option value="en">
-            English
-          </option>
-
-          <option value="hi">
-            Hindi
-          </option>
-
-          <option value="gu">
-            Gujarati
-          </option>
-
-          <option value="es">
-            Spanish
-          </option>
-
-          <option value="fr">
-            French
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div class="field">
-
-        <label for="style">
-          Voice Style
-        </label>
-
-        <select id="style">
-
-          <option value="natural">
-            Natural
-          </option>
-
-          <option value="professional">
-            Professional
-          </option>
-
-          <option value="advertisement">
-            Advertisement
-          </option>
-
-          <option value="energetic">
-            Energetic
-          </option>
-
-          <option value="calm">
-            Calm
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div class="field">
-
-        <label>
-          Voice Strength
-        </label>
-
-        <div class="range-row">
-
-          <input
-            id="strength"
-            type="range"
-            min="0"
-            max="100"
-            value="80"
-          >
-
-          <span
-            id="strengthValue"
-            class="range-value">
-            80%
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <div class="field">
-
-        <label for="projectName">
-          Project name
-        </label>
-
         <input
-          id="projectName"
-          type="text"
-          placeholder="My AI Video"
+          type="file"
+          id="videoInput"
+          accept="video/mp4,video/webm,video/mov,video/quicktime"
         >
 
+        <div>
+          <div class="upload-icon">🎬</div>
+          <strong>Choose your video</strong>
+          <small>MP4, MOV or WebM</small>
+        </div>
+      </label>
+
+      <video id="sourceVideo" controls playsinline></video>
+
+      <div class="info">
+        Your uploaded video is processed by the VoiceAI backend.
+        Do not upload content you do not have permission to modify.
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <section class="card">
+
+      <h2>Voice Settings</h2>
+
+      <div class="usage">
+        <strong>Free plan:</strong>
+        <span id="usageText">5 AI uses/day</span>
       </div>
 
+      <div class="field">
+        <label for="voiceSelect">AI Voice</label>
 
-      <button
-        id="convertBtn"
-        class="primary"
-        disabled>
+        <select id="voiceSelect">
+          <option value="">Loading voices...</option>
+        </select>
+      </div>
 
-        Convert Video Voice
+      <div class="field">
+        <label for="languageSelect">Language</label>
 
+        <select id="languageSelect">
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="gu">Gujarati</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="ja">Japanese</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="styleSelect">Voice Style</label>
+
+        <select id="styleSelect">
+          <option value="natural">Natural</option>
+          <option value="professional">Professional</option>
+          <option value="advertisement">Advertisement</option>
+          <option value="energetic">Energetic</option>
+          <option value="calm">Calm</option>
+          <option value="documentary">Documentary</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="strength">Voice Strength</label>
+
+        <input
+          type="range"
+          id="strength"
+          min="0"
+          max="100"
+          value="80"
+        >
+
+        <div class="range-row">
+          <span>Soft</span>
+          <strong id="strengthValue">80%</strong>
+          <span>Strong</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="projectName">Project Name</label>
+
+        <input
+          type="text"
+          id="projectName"
+          placeholder="My voice transfer"
+          maxlength="100"
+        >
+      </div>
+
+      <button class="btn" id="generateBtn">
+        Generate New Voice
       </button>
 
-
-      <button
-        id="resetBtn"
-        class="secondary">
-
+      <button class="btn secondary" id="resetBtn">
         Reset
-
       </button>
 
+      <div class="status" id="status"></div>
 
-      <div
-        id="status"
-        class="status">
-      </div>
+      <div class="result" id="result">
+        <h2>Generated Video</h2>
 
-
-      <div
-        id="result"
-        class="result">
-
-        <h3>
-          Converted Video
-        </h3>
-
-        <p class="muted">
-          Your AI voice transfer is ready.
-        </p>
-
-        <video
-          id="resultVideo"
-          controls
-          playsinline>
-        </video>
+        <video id="resultVideo" controls playsinline></video>
 
         <a
           id="downloadBtn"
           class="download"
           href="#"
-          download="voiceai-video.mp4">
-
-          ⬇ Download Converted Video
-
+          download="voiceai-video.mp4"
+        >
+          Download Video
         </a>
-
       </div>
 
-    </div>
+    </section>
 
-  </section>
-
-
-  <section class="features">
-
-    <div class="feature">
-      <div class="feature-icon">🎙️</div>
-
-      <h3>
-        AI Voice Transfer
-      </h3>
-
-      <p>
-        Replace the original spoken voice with a selected AI voice.
-      </p>
-    </div>
-
-
-    <div class="feature">
-      <div class="feature-icon">⏱️</div>
-
-      <h3>
-        Timing Preservation
-      </h3>
-
-      <p>
-        The backend can align generated speech with the original timing.
-      </p>
-    </div>
-
-
-    <div class="feature">
-      <div class="feature-icon">⬇️</div>
-
-      <h3>
-        Download
-      </h3>
-
-      <p>
-        Preview the final video and download the converted result.
-      </p>
-    </div>
-
-  </section>
-
+  </div>
 </main>
 
-
-<footer>
-  © 2026 VoiceAI · AI Voice & Video Studio
-</footer>
-
-
 <script>
+"use strict";
 
-const videoInput =
-  document.getElementById("videoInput");
+const videoInput = document.getElementById("videoInput");
+const sourceVideo = document.getElementById("sourceVideo");
+const resultVideo = document.getElementById("resultVideo");
 
-const sourceVideo =
-  document.getElementById("sourceVideo");
+const voiceSelect = document.getElementById("voiceSelect");
+const languageSelect = document.getElementById("languageSelect");
+const styleSelect = document.getElementById("styleSelect");
 
-const fileInfo =
-  document.getElementById("fileInfo");
+const strength = document.getElementById("strength");
+const strengthValue = document.getElementById("strengthValue");
 
-const convertBtn =
-  document.getElementById("convertBtn");
+const projectName = document.getElementById("projectName");
+const generateBtn = document.getElementById("generateBtn");
+const resetBtn = document.getElementById("resetBtn");
 
-const resetBtn =
-  document.getElementById("resetBtn");
+const statusBox = document.getElementById("status");
+const resultBox = document.getElementById("result");
+const downloadBtn = document.getElementById("downloadBtn");
+const usageText = document.getElementById("usageText");
 
-const statusBox =
-  document.getElementById("status");
+let selectedVideo = null;
+let generatedUrl = null;
 
-const result =
-  document.getElementById("result");
-
-const resultVideo =
-  document.getElementById("resultVideo");
-
-const downloadBtn =
-  document.getElementById("downloadBtn");
-
-const strength =
-  document.getElementById("strength");
-
-const strengthValue =
-  document.getElementById("strengthValue");
-
-
-let selectedFile = null;
-let sourceObjectUrl = null;
-
-
-strength.addEventListener(
-  "input",
-  () => {
-
-    strengthValue.textContent =
-      strength.value + "%";
-
+const fallbackVoices = [
+  {
+    id: "default-male",
+    name: "Marcus — Professional Male",
+    gender: "Male"
+  },
+  {
+    id: "default-female",
+    name: "Sarah — Professional Female",
+    gender: "Female"
+  },
+  {
+    id: "default-energy",
+    name: "Jerry — Energetic",
+    gender: "Male"
+  },
+  {
+    id: "default-bubbly",
+    name: "Allison — Energetic Female",
+    gender: "Female"
   }
-);
+];
 
+function showStatus(message, type = "info") {
+  statusBox.textContent = message;
+  statusBox.style.display = "block";
 
-videoInput.addEventListener(
-  "change",
-  () => {
+  if (type === "error") {
+    statusBox.style.background = "#fff0f0";
+    statusBox.style.color = "#b42318";
+  } else if (type === "success") {
+    statusBox.style.background = "#ecfdf3";
+    statusBox.style.color = "#067647";
+  } else {
+    statusBox.style.background = "#f4f4f8";
+    statusBox.style.color = "#555";
+  }
+}
 
-    const file =
-      videoInput.files[0];
+function clearStatus() {
+  statusBox.style.display = "none";
+  statusBox.textContent = "";
+}
 
-    if (!file) return;
+function populateVoices(voices) {
+  voiceSelect.innerHTML = "";
 
-    selectedFile = file;
+  voices.forEach((voice) => {
+    const option = document.createElement("option");
 
-    if (sourceObjectUrl) {
-      URL.revokeObjectURL(sourceObjectUrl);
+    option.value = voice.voice_id || voice.id || "";
+    option.textContent =
+      voice.name ||
+      voice.display_name ||
+      "AI Voice";
+
+    if (voice.gender) {
+      option.textContent += " — " + voice.gender;
     }
 
-    sourceObjectUrl =
-      URL.createObjectURL(file);
+    voiceSelect.appendChild(option);
+  });
+}
 
-    sourceVideo.src =
-      sourceObjectUrl;
+async function loadVoices() {
+  try {
+    const response = await fetch("/api/voices?page_size=100");
 
-    sourceVideo.style.display =
-      "block";
+    if (!response.ok) {
+      throw new Error("Voice API failed");
+    }
 
-    fileInfo.style.display =
-      "block";
+    const data = await response.json();
 
-    fileInfo.className =
-      "status success";
+    const voices =
+      Array.isArray(data)
+        ? data
+        : Array.isArray(data.voices)
+          ? data.voices
+          : [];
 
-    fileInfo.textContent =
-      `${file.name} · ${(file.size / 1024 / 1024).toFixed(1)} MB`;
-
-    convertBtn.disabled =
-      false;
-
-    hideStatus();
-
-    result.style.display =
-      "none";
-
-  }
-);
-
-
-convertBtn.addEventListener(
-  "click",
-  async () => {
-
-    if (!selectedFile) {
-
-      showStatus(
-        "Please upload a video first.",
-        true
-      );
-
+    if (!voices.length) {
+      populateVoices(fallbackVoices);
       return;
-
     }
 
+    populateVoices(voices);
 
-    const voice =
-      document.querySelector(
-        'input[name="voice"]:checked'
-      )?.value || "male";
+  } catch (error) {
+    console.warn("Voice library unavailable:", error);
+    populateVoices(fallbackVoices);
+  }
+}
 
-    const language =
-      document.getElementById(
-        "language"
-      ).value;
+videoInput.addEventListener("change", () => {
+  clearStatus();
 
-    const style =
-      document.getElementById(
-        "style"
-      ).value;
+  const file = videoInput.files?.[0];
 
-    const projectName =
-      document.getElementById(
-        "projectName"
-      ).value.trim() ||
-      "My AI Video";
+  if (!file) {
+    selectedVideo = null;
+    sourceVideo.style.display = "none";
+    return;
+  }
 
+  if (!file.type.startsWith("video/")) {
+    showStatus("Please select a valid video file.", "error");
+    videoInput.value = "";
+    return;
+  }
 
-    const formData =
-      new FormData();
+  selectedVideo = file;
 
-    formData.append(
-      "video",
-      selectedFile
-    );
+  if (sourceVideo.src) {
+    URL.revokeObjectURL(sourceVideo.src);
+  }
 
-    formData.append(
-      "voice",
-      voice
-    );
+  sourceVideo.src = URL.createObjectURL(file);
+  sourceVideo.style.display = "block";
+});
 
-    formData.append(
-      "language",
-      language
-    );
+strength.addEventListener("input", () => {
+  strengthValue.textContent = strength.value + "%";
+});
 
-    formData.append(
-      "style",
-      style
-    );
+generateBtn.addEventListener("click", async () => {
 
-    formData.append(
-      "strength",
-      strength.value
-    );
+  clearStatus();
 
-    formData.append(
-      "projectName",
-      projectName
-    );
+  if (!selectedVideo) {
+    showStatus("Please upload a video first.", "error");
+    return;
+  }
 
+  if (!voiceSelect.value) {
+    showStatus("Please select an AI voice.", "error");
+    return;
+  }
 
-    convertBtn.disabled =
-      true;
+  generateBtn.disabled = true;
+  generateBtn.textContent = "Processing...";
 
-    convertBtn.textContent =
-      "Converting…";
+  const formData = new FormData();
+
+  formData.append("video", selectedVideo);
+  formData.append("file", selectedVideo);
+
+  formData.append("voiceId", voiceSelect.value);
+  formData.append("voice_id", voiceSelect.value);
+
+  formData.append("language", languageSelect.value);
+  formData.append("style", styleSelect.value);
+
+  formData.append("strength", strength.value);
+
+  formData.append(
+    "projectName",
+    projectName.value.trim() || "VoiceAI Video"
+  );
+
+  try {
 
     showStatus(
-      "Uploading video and processing AI voice…",
-      false
+      "Your video is being processed. Please wait..."
     );
 
-
-    try {
-
-      const response =
-        await fetch(
-          "/api/video-voice-transfer",
-          {
-            method: "POST",
-            body: formData,
-            credentials: "include"
-          }
-        );
-
-
-      const contentType =
-        response.headers.get(
-          "content-type"
-        ) || "";
-
-
-      if (!response.ok) {
-
-        let message =
-          "Video voice conversion failed.";
-
-        if (
-          contentType.includes(
-            "application/json"
-          )
-        ) {
-
-          const data =
-            await response.json();
-
-          message =
-            data.error ||
-            data.message ||
-            message;
-        }
-
-        throw new Error(message);
+    const response = await fetch(
+      "/api/video-voice-transfer",
+      {
+        method: "POST",
+        body: formData
       }
+    );
 
+    const contentType =
+      response.headers.get("content-type") || "";
 
-      let outputUrl = null;
+    if (!response.ok) {
 
+      let message = "Video processing failed.";
 
-      if (
-        contentType.includes(
-          "application/json"
-        )
-      ) {
+      if (contentType.includes("application/json")) {
+        const errorData = await response.json();
 
-        const data =
-          await response.json();
-
-        outputUrl =
-          data.videoUrl ||
-          data.outputUrl ||
-          data.url;
-
+        message =
+          errorData.error ||
+          errorData.message ||
+          message;
       } else {
+        const text = await response.text();
 
-        const blob =
-          await response.blob();
-
-        outputUrl =
-          URL.createObjectURL(blob);
+        if (text) {
+          message = text.slice(0, 300);
+        }
       }
 
-
-      if (!outputUrl) {
-
-        throw new Error(
-          "No converted video was returned."
-        );
-
-      }
-
-
-      resultVideo.src =
-        outputUrl;
-
-      downloadBtn.href =
-        outputUrl;
-
-      downloadBtn.download =
-        "voiceai-converted-video.mp4";
-
-
-      result.style.display =
-        "block";
-
-      showStatus(
-        "Video voice transfer completed successfully.",
-        false,
-        true
-      );
-
-      result.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-
-
-    } catch (error) {
-
-      console.error(error);
-
-      showStatus(
-        error.message ||
-        "Something went wrong.",
-        true
-      );
-
-    } finally {
-
-      convertBtn.disabled =
-        !selectedFile;
-
-      convertBtn.textContent =
-        "Convert Video Voice";
-
+      throw new Error(message);
     }
 
-  }
-);
+    let outputUrl = "";
 
+    if (contentType.includes("application/json")) {
 
-resetBtn.addEventListener(
-  "click",
-  () => {
+      const data = await response.json();
 
-    videoInput.value = "";
+      outputUrl =
+        data.videoUrl ||
+        data.outputUrl ||
+        data.url ||
+        data.downloadUrl ||
+        "";
 
-    selectedFile = null;
+    } else {
 
-    sourceVideo.removeAttribute(
-      "src"
-    );
+      const blob = await response.blob();
 
-    sourceVideo.load();
+      outputUrl = URL.createObjectURL(blob);
+      generatedUrl = outputUrl;
+    }
 
-    sourceVideo.style.display =
-      "none";
+    if (!outputUrl) {
+      throw new Error(
+        "The server did not return a generated video."
+      );
+    }
 
-    fileInfo.style.display =
-      "none";
+    resultVideo.src = outputUrl;
+    resultVideo.style.display = "block";
 
-    result.style.display =
-      "none";
+    downloadBtn.href = outputUrl;
 
-    hideStatus();
+    resultBox.style.display = "block";
 
-    convertBtn.disabled =
-      true;
-
-    document.getElementById(
-      "projectName"
-    ).value = "";
-
-  }
-);
-
-
-function showStatus(
-  message,
-  error = false,
-  success = false
-) {
-
-  statusBox.style.display =
-    "block";
-
-  statusBox.textContent =
-    message;
-
-  statusBox.className =
-    "status";
-
-  if (error) {
-    statusBox.classList.add(
-      "error"
-    );
-  }
-
-  if (success) {
-    statusBox.classList.add(
+    showStatus(
+      "Video voice transfer completed successfully.",
       "success"
     );
+
+    usageText.textContent =
+      "AI use completed • Free plan limit: 5/day";
+
+  } catch (error) {
+
+    console.error(error);
+
+    showStatus(
+      error.message ||
+      "Something went wrong while processing the video.",
+      "error"
+    );
+
+  } finally {
+
+    generateBtn.disabled = false;
+    generateBtn.textContent = "Generate New Voice";
+  }
+});
+
+resetBtn.addEventListener("click", () => {
+
+  videoInput.value = "";
+  selectedVideo = null;
+
+  if (sourceVideo.src) {
+    URL.revokeObjectURL(sourceVideo.src);
   }
 
-}
+  sourceVideo.removeAttribute("src");
+  sourceVideo.load();
+  sourceVideo.style.display = "none";
 
+  if (generatedUrl) {
+    URL.revokeObjectURL(generatedUrl);
+    generatedUrl = null;
+  }
 
-function hideStatus() {
+  resultVideo.removeAttribute("src");
+  resultVideo.load();
 
-  statusBox.style.display =
-    "none";
+  resultBox.style.display = "none";
 
-  statusBox.textContent =
-    "";
+  projectName.value = "";
 
-}
+  strength.value = 80;
+  strengthValue.textContent = "80%";
 
+  clearStatus();
 
+  usageText.textContent = "5 AI uses/day";
+});
+
+downloadBtn.addEventListener("click", () => {
+  if (!downloadBtn.href || downloadBtn.href.endsWith("#")) {
+    return;
+  }
+
+  downloadBtn.download = "voiceai-video.mp4";
+});
+
+loadVoices();
 </script>
 
 </body>
