@@ -1,912 +1,198 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Create Account — VoiceAI</title>
+  <title>Create Account | VoiceAI</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; }
 
     body {
+      margin: 0;
       min-height: 100vh;
-      font-family: Inter, Arial, sans-serif;
-      background: #f7f7fb;
-      color: #171717;
-    }
-
-    .page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 18px;
-    }
-
-    .signup-card {
-      width: 100%;
-      max-width: 1050px;
-      min-height: 650px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: #fff;
-      border-radius: 26px;
-      overflow: hidden;
-      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.10);
+      place-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      color: #211b35;
+      background: linear-gradient(135deg, #f1eaff, #f8f7ff);
     }
 
-    /* LEFT */
-
-    .brand-panel {
-      padding: 55px;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.16), transparent 30%),
-        linear-gradient(145deg, #24104f, #5d28a8 55%, #8a45d0);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+    .card {
+      width: 100%;
+      max-width: 430px;
+      padding: 32px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 16px 50px #35205a18;
     }
 
     .logo {
-      font-size: 27px;
+      color: #7354e8;
+      font-size: 28px;
       font-weight: 800;
-      letter-spacing: -1px;
+      text-align: center;
     }
 
-    .logo span {
-      color: #d9b7ff;
-    }
-
-    .brand-content {
-      max-width: 430px;
-    }
-
-    .brand-content h1 {
-      font-size: clamp(38px, 4vw, 58px);
-      line-height: 1.02;
-      margin-bottom: 22px;
-      letter-spacing: -2px;
-    }
-
-    .brand-content p {
-      color: rgba(255,255,255,.78);
-      line-height: 1.7;
-      font-size: 16px;
-    }
-
-    .features {
-      display: grid;
-      gap: 13px;
-      margin-top: 32px;
-    }
-
-    .feature {
-      display: flex;
-      gap: 11px;
-      align-items: center;
-      color: rgba(255,255,255,.9);
-      font-size: 14px;
-    }
-
-    .check {
-      width: 24px;
-      height: 24px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: rgba(255,255,255,.15);
-      color: #fff;
-      font-size: 13px;
-    }
-
-    .brand-footer {
-      color: rgba(255,255,255,.55);
-      font-size: 13px;
-    }
-
-    /* RIGHT */
-
-    .form-panel {
-      padding: 55px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .form-header {
-      margin-bottom: 28px;
-    }
-
-    .form-header h2 {
-      font-size: 32px;
-      margin-bottom: 9px;
-      letter-spacing: -1px;
-    }
-
-    .form-header p {
-      color: #737373;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .form-group {
-      margin-bottom: 17px;
-    }
+    h1 { text-align: center; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: #777; margin-bottom: 25px; }
 
     label {
       display: block;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #333;
-    }
-
-    .input-wrap {
-      position: relative;
+      margin: 15px 0 7px;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     input {
       width: 100%;
-      height: 51px;
-      border: 1px solid #dedee5;
-      border-radius: 12px;
-      padding: 0 15px;
-      outline: none;
-      background: #fff;
-      color: #161616;
-      font-size: 14px;
-      transition: .2s;
-    }
-
-    input:focus {
-      border-color: #7135bd;
-      box-shadow: 0 0 0 4px rgba(113,53,189,.08);
-    }
-
-    .password-input {
-      padding-right: 52px;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 13px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      cursor: pointer;
-      font-size: 18px;
-      color: #777;
-    }
-
-    .terms {
-      display: flex;
-      gap: 9px;
-      align-items: flex-start;
-      margin: 5px 0 20px;
-      font-size: 12px;
-      color: #6f6f6f;
-      line-height: 1.5;
-    }
-
-    .terms input {
-      width: 16px;
-      height: 16px;
-      margin-top: 1px;
-      flex-shrink: 0;
-    }
-
-    .terms a {
-      color: #6431a8;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .signup-btn {
-      width: 100%;
-      height: 52px;
-      border: 0;
-      border-radius: 12px;
-      background: #6d32b6;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .signup-btn:hover {
-      background: #572594;
-      transform: translateY(-1px);
-    }
-
-    .signup-btn:disabled {
-      opacity: .65;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .message {
-      display: none;
-      margin-bottom: 18px;
-      padding: 12px 14px;
+      padding: 13px;
+      border: 1px solid #dedbe8;
       border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.45;
+      font-size: 15px;
+      outline-color: #7354e8;
     }
 
-    .message.success {
-      display: block;
-      background: #eaf8ef;
-      color: #176b35;
-      border: 1px solid #bfe6cb;
-    }
-
-    .message.error {
-      display: block;
-      background: #fff0f0;
-      color: #a32121;
-      border: 1px solid #f1c0c0;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 24px 0;
-      color: #aaa;
-      font-size: 12px;
-    }
-
-    .divider::before,
-    .divider::after {
-      content: "";
-      height: 1px;
-      background: #e5e5e5;
-      flex: 1;
-    }
-
-    .google-btn {
+    button {
       width: 100%;
-      height: 50px;
-      border: 1px solid #dedee5;
-      border-radius: 12px;
-      background: #fff;
+      padding: 14px;
+      margin-top: 20px;
+      border: 0;
+      border-radius: 10px;
+      background: #7354e8;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
+    }
+
+    button:disabled { opacity: .6; cursor: wait; }
+
+    #message {
+      display: none;
+      padding: 12px;
+      border-radius: 9px;
+      margin-top: 15px;
       font-size: 14px;
-      font-weight: 700;
-      color: #333;
+      overflow-wrap: anywhere;
     }
 
-    .login-text {
-      text-align: center;
-      color: #777;
-      font-size: 13px;
-      margin-top: 23px;
-    }
-
-    .login-text a {
-      color: #6731aa;
-      text-decoration: none;
-      font-weight: 800;
-    }
-
-    .back-home {
-      text-align: center;
-      margin-top: 17px;
-      font-size: 12px;
-    }
-
-    .back-home a {
-      color: #777;
-      text-decoration: none;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 800px) {
-      .page {
-        padding: 15px;
-      }
-
-      .signup-card {
-        grid-template-columns: 1fr;
-        max-width: 520px;
-        min-height: auto;
-        border-radius: 20px;
-      }
-
-      .brand-panel {
-        display: none;
-      }
-
-      .form-panel {
-        padding: 35px 24px;
-      }
-
-      .form-header h2 {
-        font-size: 28px;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .form-panel {
-        padding: 28px 18px;
-      }
-    }
+    .signin { text-align: center; margin-top: 22px; color: #666; }
+    a { color: #7354e8; text-decoration: none; font-weight: 600; }
   </style>
 </head>
 
 <body>
-
-<div class="page">
-
-  <main class="signup-card">
-
-    <!-- BRAND PANEL -->
-
-    <section class="brand-panel">
-
-      <div class="logo">
-        ∿ Voice<span>AI</span>
-      </div>
-
-      <div class="brand-content">
-
-        <h1>Create your AI voice workspace.</h1>
-
-        <p>
-          Create natural voices, generate audio, build projects,
-          and explore powerful AI voice tools from one workspace.
-        </p>
-
-        <div class="features">
-
-          <div class="feature">
-            <span class="check">✓</span>
-            5 free AI uses every day
-          </div>
-
-          <div class="feature">
-            <span class="check">✓</span>
-            Professional AI voice tools
-          </div>
-
-          <div class="feature">
-            <span class="check">✓</span>
-            Save your projects and generations
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="brand-footer">
-        © 2026 VoiceAI
-      </div>
-
-    </section>
-
-
-    <!-- FORM PANEL -->
-
-    <section class="form-panel">
-
-      <div class="form-header">
-        <h2>Create account</h2>
-        <p>
-          Start with VoiceAI Free. Upgrade anytime when you need more.
-        </p>
-      </div>
-
-      <div id="message" class="message"></div>
-
-      <form id="signupForm">
-
-        <div class="form-group">
-
-          <label for="fullName">
-            Full name
-          </label>
-
-          <input
-            id="fullName"
-            type="text"
-            placeholder="Your name"
-            autocomplete="name"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="email">
-            Email address
-          </label>
-
-          <input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            required
-          >
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="password">
-            Password
-          </label>
-
-          <div class="input-wrap">
-
-            <input
-              id="password"
-              class="password-input"
-              type="password"
-              placeholder="Minimum 8 characters"
-              autocomplete="new-password"
-              minlength="8"
-              required
-            >
-
-            <button
-              type="button"
-              class="toggle-password"
-              data-target="password"
-              aria-label="Show password"
-            >
-              👁
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="form-group">
-
-          <label for="confirmPassword">
-            Confirm password
-          </label>
-
-          <div class="input-wrap">
-
-            <input
-              id="confirmPassword"
-              class="password-input"
-              type="password"
-              placeholder="Enter password again"
-              autocomplete="new-password"
-              minlength="8"
-              required
-            >
-
-            <button
-              type="button"
-              class="toggle-password"
-              data-target="confirmPassword"
-              aria-label="Show password"
-            >
-              👁
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <label class="terms">
-
-          <input
-            id="terms"
-            type="checkbox"
-            required
-          >
-
-          <span>
-            I agree to the
-            <a href="terms.html">Terms</a>
-            and
-            <a href="privacy.html">Privacy Policy</a>.
-          </span>
-
-        </label>
-
-
-        <button
-          id="signupBtn"
-          class="signup-btn"
-          type="submit"
-        >
-          Create account
-        </button>
-
-      </form>
-
-
-      <div class="divider">
-        OR
-      </div>
-
-
-      <button
-        id="googleBtn"
-        class="google-btn"
-        type="button"
-      >
-        Continue with Google
-      </button>
-
-
-      <p class="login-text">
-        Already have an account?
-        <a href="login.html">Log in</a>
-      </p>
-
-
-      <div class="back-home">
-        <a href="index.html">← Back to VoiceAI</a>
-      </div>
-
-    </section>
-
+  <main class="card">
+    <div class="logo">∿ VoiceAI</div>
+    <h1>Create your account</h1>
+    <p class="subtitle">Start creating with AI voices.</p>
+
+    <form id="signupForm">
+      <label for="fullName">Full name</label>
+      <input id="fullName" type="text" autocomplete="name"
+             placeholder="Your name" required>
+
+      <label for="email">Email address</label>
+      <input id="email" type="email" autocomplete="email"
+             placeholder="you@example.com" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="new-password"
+             placeholder="At least 8 characters" minlength="8" required>
+
+      <label for="confirmPassword">Confirm password</label>
+      <input id="confirmPassword" type="password" autocomplete="new-password"
+             placeholder="Enter password again" minlength="8" required>
+
+      <label>
+        <input id="terms" type="checkbox" required
+               style="width:auto; margin-right:8px;">
+        I agree to the Terms and Privacy Policy.
+      </label>
+
+      <button id="signupButton" type="submit">Create account</button>
+      <div id="message" role="status" aria-live="polite"></div>
+    </form>
+
+    <p class="signin">
+      Already have an account? <a href="login.html">Log in</a>
+    </p>
   </main>
 
-</div>
+  <script>
+    const form = document.getElementById("signupForm");
+    const button = document.getElementById("signupButton");
+    const message = document.getElementById("message");
 
+    function showMessage(text, success = false) {
+      message.style.display = "block";
+      message.textContent = text;
+      message.style.color = success ? "#176b38" : "#a32323";
+      message.style.background = success ? "#e9f8ee" : "#fff0f0";
+    }
 
-<script>
-
-  /* =====================================================
-     SUPABASE CONFIG
-     ===================================================== */
-
-  const SUPABASE_URL =
-    "YOUR_SUPABASE_PROJECT_URL";
-
-  const SUPABASE_ANON_KEY =
-    "YOUR_SUPABASE_ANON_KEY";
-
-
-  const supabaseClient =
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
-
-
-  /* =====================================================
-     ELEMENTS
-     ===================================================== */
-
-  const signupForm =
-    document.getElementById("signupForm");
-
-  const signupBtn =
-    document.getElementById("signupBtn");
-
-  const googleBtn =
-    document.getElementById("googleBtn");
-
-  const message =
-    document.getElementById("message");
-
-
-  /* =====================================================
-     MESSAGE
-     ===================================================== */
-
-  function showMessage(text, type) {
-
-    message.textContent = text;
-
-    message.className =
-      "message " + type;
-
-  }
-
-
-  function clearMessage() {
-
-    message.textContent = "";
-
-    message.className = "message";
-
-  }
-
-
-  /* =====================================================
-     PASSWORD TOGGLE
-     ===================================================== */
-
-  document
-    .querySelectorAll(".toggle-password")
-    .forEach(button => {
-
-      button.addEventListener("click", () => {
-
-        const target =
-          document.getElementById(
-            button.dataset.target
-          );
-
-        if (target.type === "password") {
-
-          target.type = "text";
-
-          button.textContent = "🙈";
-
-        } else {
-
-          target.type = "password";
-
-          button.textContent = "👁";
-
-        }
-
-      });
-
-    });
-
-
-  /* =====================================================
-     SIGNUP
-     ===================================================== */
-
-  signupForm.addEventListener(
-    "submit",
-    async event => {
-
+    form.addEventListener("submit", async function (event) {
       event.preventDefault();
 
-      clearMessage();
-
-      const fullName =
-        document
-          .getElementById("fullName")
-          .value
-          .trim();
-
-      const email =
-        document
-          .getElementById("email")
-          .value
-          .trim()
-          .toLowerCase();
-
-      const password =
-        document
-          .getElementById("password")
-          .value;
-
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
       const confirmPassword =
-        document
-          .getElementById("confirmPassword")
-          .value;
-
-
-      /* Basic validation */
-
-      if (fullName.length < 2) {
-
-        showMessage(
-          "Please enter your full name.",
-          "error"
-        );
-
-        return;
-      }
-
+        document.getElementById("confirmPassword").value;
 
       if (password.length < 8) {
-
-        showMessage(
-          "Password must contain at least 8 characters.",
-          "error"
-        );
-
+        showMessage("Password must be at least 8 characters.");
         return;
       }
-
 
       if (password !== confirmPassword) {
-
-        showMessage(
-          "Passwords do not match.",
-          "error"
-        );
-
+        showMessage("Passwords do not match.");
         return;
       }
 
-
-      signupBtn.disabled = true;
-
-      signupBtn.textContent =
-        "Creating account...";
-
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient.auth.signUp({
-
-            email: email,
-
-            password: password,
-
-            options: {
-
-              data: {
-                full_name: fullName
-              },
-
-              emailRedirectTo:
-                window.location.origin +
-                "/login.html"
-
-            }
-
-          });
-
-
-        if (error) {
-          throw error;
-        }
-
-
-        /*
-          The database trigger created earlier:
-
-          on_auth_user_created
-
-          automatically creates the
-          public.profiles row.
-        */
-
-
-        if (
-          data.user &&
-          data.session
-        ) {
-
-          showMessage(
-            "Account created successfully. Redirecting...",
-            "success"
-          );
-
-          setTimeout(() => {
-
-            window.location.href =
-              "index.html";
-
-          }, 1200);
-
-        } else {
-
-          showMessage(
-            "Account created. Please check your email and confirm your account before logging in.",
-            "success"
-          );
-
-          signupForm.reset();
-
-          signupBtn.disabled = false;
-
-          signupBtn.textContent =
-            "Create account";
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Signup error:",
-          error
-        );
-
-        showMessage(
-          error.message ||
-          "Unable to create account. Please try again.",
-          "error"
-        );
-
-        signupBtn.disabled = false;
-
-        signupBtn.textContent =
-          "Create account";
-
+      if (!window.supabase || typeof supabaseClient === "undefined") {
+        showMessage("Supabase config load nahi hua. supabase-config.js check karo.");
+        return;
       }
 
-    }
-  );
-
-
-  /* =====================================================
-     GOOGLE LOGIN
-     ===================================================== */
-
-  googleBtn.addEventListener(
-    "click",
-    async () => {
-
-      clearMessage();
+      button.disabled = true;
+      button.textContent = "Creating account...";
 
       try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: fullName },
+            emailRedirectTo: window.location.origin + "/login.html"
+          }
+        });
 
-        const {
-          error
-        } =
-          await supabaseClient.auth.signInWithOAuth({
+        if (error) throw error;
 
-            provider: "google",
-
-            options: {
-
-              redirectTo:
-                window.location.origin +
-                "/index.html"
-
-            }
-
-          });
-
-
-        if (error) {
-          throw error;
+        if (data.session) {
+          window.location.href = "profile.html";
+          return;
         }
 
-      } catch (error) {
-
-        console.error(
-          "Google login error:",
-          error
-        );
-
         showMessage(
-          "Google Sign-In is not configured yet in Supabase.",
-          "error"
+          "Account request successful! If email confirmation is enabled, check your inbox to verify your account.",
+          true
         );
-
+        form.reset();
+      } catch (error) {
+        showMessage(error.message || "Signup failed. Please try again.");
+      } finally {
+        button.disabled = false;
+        button.textContent = "Create account";
       }
-
-    }
-  );
-
-
-  /* =====================================================
-     CHECK SUPABASE CONFIG
-     ===================================================== */
-
-  if (
-    SUPABASE_URL.includes("YOUR_") ||
-    SUPABASE_ANON_KEY.includes("YOUR_")
-  ) {
-
-    console.warn(
-      "Add your Supabase Project URL and Anon Key in signup.html."
-    );
-
-  }
-
-</script>
-
+    });
+  </script>
 </body>
 </html>
