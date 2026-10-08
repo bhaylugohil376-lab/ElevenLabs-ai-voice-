@@ -1,9 +1,9 @@
-// api/billing/webhook.js
+import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
 
-const Stripe = require("stripe");
-const { createClient } = require("@supabase/supabase-js");
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY
+);
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
@@ -16,62 +16,84 @@ const supabaseAdmin = createClient(
   }
 );
 
-module.exports = async function handler(req, res) {
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
+
+async function getRawBody(req) {
+  const chunks = [];
+
+  for await (const chunk of req) {
+    chunks.push(
+      Buffer.isBuffer(chunk)
+        ? chunk
+        : Buffer.from(chunk)
+    );
+  }
+
+  return Buffer.concat(chunks);
+}
+
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
+      success: false,
       error: "Method not allowed"
     });
   }
 
-  const signature = req.headers["stripe-signature"];
-
-  if (!signature) {
-    return res.status(400).json({
-      error: "Missing Stripe signature"
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    return res.status(500).json({
+      success: false,
+      error: "Stripe webhook secret is not configured"
     });
   }
 
-  let event;
-
   try {
-    /*
-     * IMPORTANT:
-     * req.body must be the RAW Stripe request body.
-     * Do not JSON.parse() it before signature verification.
-     */
-    const rawBody = req.body;
+    const rawBody = await getRawBody(req);
 
-    event = stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (error) {
-    console.error(
-      "Stripe webhook signature error:",
-      error.message
-    );
+    const signature =
+      req.headers["stripe-signature"];
 
-    return res.status(400).send(
-      `Webhook Error: ${error.message}`
-    );
-  }
+    if (!signature) {
+      return res.status(400).json({
+        success: false,
+        error: "Missing Stripe signature"
+      });
+    }
 
-  try {
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        rawBody,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (error) {
+      console.error(
+        "Stripe signature verification failed:",
+        error.message
+      );
+
+      return res.status(400).json({
+        success: false,
+        error: "Invalid Stripe webhook signature"
+      });
+    }
+
     switch (event.type) {
-      /*
-       * Checkout completed successfully.
-       */
       case "checkout.session.completed": {
         const session = event.data.object;
 
         const userId =
-          session.metadata?.supabase_user_id ||
-          session.client_reference_id;
+          session.metadata?.user_id;
 
         if (!userId) {
-          console.error(
-            "No Supabase user ID in checkout session."
+          console.warn(
+            "Webhook: user_id missing from checkout metadata"
           );
           break;
         }
@@ -81,65 +103,50 @@ module.exports = async function handler(req, res) {
             ? session.subscription
             : session.subscription?.id || null;
 
-        let subscriptionData = null;
+        let subscription = null;
 
         if (subscriptionId) {
-          subscriptionData =
+          subscription =
             await stripe.subscriptions.retrieve(
               subscriptionId
             );
         }
 
-        const interval =
-          session.metadata?.billing_interval ||
-          subscriptionData?.items?.data?.[0]?.price?.recurring
-            ?.interval ||
-          "month";
+        await supabaseAdmin
+          .from("subscriptions")
+          .upsert(
+            {
+              user_id: userId,
+              plan: "premium",
+              status: subscription?.status || "active",
+              stripe_customer_id:
+                typeof session.customer === "string"
+                  ? session.customer
+                  : session.customer?.id || null,
+              stripe_subscription_id:
+                subscriptionId,
+              current_period_start:
+                subscription?.current_period_start
+                  ? new Date(
+                      subscription.current_period_start * 1000
+                    ).toISOString()
+                  : null,
+              current_period_end:
+                subscription?.current_period_end
+                  ? new Date(
+                      subscription.current_period_end * 1000
+                    ).toISOString()
+                  : null
+            },
+            {
+              onConflict: "user_id"
+            }
+          );
 
-        const amount =
-          session.amount_total ||
-          0;
-
-        /*
-         * Activate Premium.
-         */
-        const { error: subscriptionError } =
-          await supabaseAdmin
-            .from("subscriptions")
-            .upsert(
-              {
-                user_id: userId,
-                plan: "premium",
-                status:
-                  subscriptionData?.status ||
-                  "active",
-                stripe_customer_id:
-                  typeof session.customer === "string"
-                    ? session.customer
-                    : session.customer?.id || null,
-                stripe_subscription_id:
-                  subscriptionId,
-                amount,
-                currency:
-                  session.currency || "usd",
-                interval
-              },
-              {
-                onConflict: "user_id"
-              }
-            );
-
-        if (subscriptionError) {
-          throw subscriptionError;
-        }
-
-        /*
-         * Mark payment successful.
-         */
         await supabaseAdmin
           .from("payments")
           .update({
-            status: "paid",
+            status: "completed",
             stripe_subscription_id:
               subscriptionId
           })
@@ -148,57 +155,50 @@ module.exports = async function handler(req, res) {
             session.id
           );
 
-        console.log(
-          `Premium activated for user ${userId}`
-        );
-
         break;
       }
 
-      /*
-       * Subscription becomes active.
-       */
-      case "customer.subscription.created":
-      case "customer.subscription.updated": {
-        const subscription = event.data.object;
+      case "customer.subscription.updated":
+      case "customer.subscription.created": {
+        const subscription =
+          event.data.object;
 
         const userId =
-          subscription.metadata?.supabase_user_id;
+          subscription.metadata?.user_id;
 
-        if (!userId) break;
-
-        const status = subscription.status;
-
-        const activeStatuses = [
-          "active",
-          "trialing"
-        ];
-
-        const isPremium =
-          activeStatuses.includes(status);
+        if (!userId) {
+          break;
+        }
 
         await supabaseAdmin
           .from("subscriptions")
           .upsert(
             {
               user_id: userId,
-              plan: isPremium ? "premium" : "free",
-              status,
+              plan:
+                subscription.status === "active" ||
+                subscription.status === "trialing"
+                  ? "premium"
+                  : "free",
+              status: subscription.status,
               stripe_customer_id:
                 typeof subscription.customer === "string"
                   ? subscription.customer
                   : subscription.customer?.id || null,
               stripe_subscription_id:
                 subscription.id,
-              amount:
-                subscription.items?.data?.[0]?.price
-                  ?.unit_amount || 0,
-              currency:
-                subscription.items?.data?.[0]?.price
-                  ?.currency || "usd",
-              interval:
-                subscription.items?.data?.[0]?.price
-                  ?.recurring?.interval || "month"
+              current_period_start:
+                subscription.current_period_start
+                  ? new Date(
+                      subscription.current_period_start * 1000
+                    ).toISOString()
+                  : null,
+              current_period_end:
+                subscription.current_period_end
+                  ? new Date(
+                      subscription.current_period_end * 1000
+                    ).toISOString()
+                  : null
             },
             {
               onConflict: "user_id"
@@ -208,35 +208,28 @@ module.exports = async function handler(req, res) {
         break;
       }
 
-      /*
-       * Subscription cancelled.
-       */
       case "customer.subscription.deleted": {
-        const subscription = event.data.object;
+        const subscription =
+          event.data.object;
 
         const userId =
-          subscription.metadata?.supabase_user_id;
+          subscription.metadata?.user_id;
 
-        if (!userId) break;
+        if (!userId) {
+          break;
+        }
 
         await supabaseAdmin
           .from("subscriptions")
           .update({
             plan: "free",
-            status: "cancelled"
+            status: "canceled"
           })
           .eq("user_id", userId);
-
-        console.log(
-          `Premium cancelled for user ${userId}`
-        );
 
         break;
       }
 
-      /*
-       * Invoice successfully paid.
-       */
       case "invoice.paid": {
         const invoice = event.data.object;
 
@@ -245,24 +238,21 @@ module.exports = async function handler(req, res) {
             ? invoice.subscription
             : invoice.subscription?.id || null;
 
-        if (!subscriptionId) break;
-
-        await supabaseAdmin
-          .from("payments")
-          .update({
-            status: "paid"
-          })
-          .eq(
-            "stripe_subscription_id",
-            subscriptionId
-          );
+        if (subscriptionId) {
+          await supabaseAdmin
+            .from("payments")
+            .update({
+              status: "paid"
+            })
+            .eq(
+              "stripe_subscription_id",
+              subscriptionId
+            );
+        }
 
         break;
       }
 
-      /*
-       * Failed subscription payment.
-       */
       case "invoice.payment_failed": {
         const invoice = event.data.object;
 
@@ -271,17 +261,17 @@ module.exports = async function handler(req, res) {
             ? invoice.subscription
             : invoice.subscription?.id || null;
 
-        if (!subscriptionId) break;
-
-        await supabaseAdmin
-          .from("payments")
-          .update({
-            status: "failed"
-          })
-          .eq(
-            "stripe_subscription_id",
-            subscriptionId
-          );
+        if (subscriptionId) {
+          await supabaseAdmin
+            .from("payments")
+            .update({
+              status: "failed"
+            })
+            .eq(
+              "stripe_subscription_id",
+              subscriptionId
+            );
+        }
 
         break;
       }
@@ -293,16 +283,18 @@ module.exports = async function handler(req, res) {
     }
 
     return res.status(200).json({
+      success: true,
       received: true
     });
   } catch (error) {
     console.error(
-      "Stripe webhook processing error:",
+      "Stripe webhook error:",
       error
     );
 
     return res.status(500).json({
+      success: false,
       error: "Webhook processing failed"
     });
   }
-};
+}
