@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AI Tools — VoiceAI</title>
+  <meta
+    name="description"
+    content="Explore all VoiceAI AI voice, audio, video and creative tools."
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./style.css">
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="container nav-container">
+
+      <a href="index.html" class="brand">
+        <span class="brand-mark">
+          <i data-lucide="audio-lines"></i>
+        </span>
+        <span>VoiceAI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html" class="active">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="nav-login">Login</a>
+        <a href="signup.html" class="btn btn-primary">
+          Get Started
+          <i data-lucide="arrow-right"></i>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ================= MAIN ================= -->
+  <main>
+
+    <!-- Hero -->
+    <section class="page-hero">
+      <div class="container">
+
+        <div class="eyebrow">
+          <i data-lucide="sparkles"></i>
+          AI CREATIVE SUITE
+        </div>
+
+        <h1>
+          Powerful AI tools for
+          <span>voice & content.</span>
+        </h1>
+
+        <p>
+          Create natural voices, transform audio, generate music,
+          build AI agents and produce professional content from one studio.
+        </p>
+
+        <!-- Search -->
+        <div class="tools-search-wrap">
+          <i data-lucide="search"></i>
+          <input
+            type="search"
+            id="toolsSearch"
+            placeholder="Search AI tools..."
+            autocomplete="off"
+          >
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- Tools -->
+    <section class="tools-section">
+      <div class="container">
+
+        <div class="section-heading">
+          <div>
+            <span class="section-kicker">EXPLORE</span>
+            <h2>All AI Tools</h2>
+          </div>
+
+          <span id="toolCount" class="tool-count">
+            24 tools
+          </span>
+        </div>
+
+
+        <div class="tools-grid" id="toolsGrid">
+
+          <!-- 1 -->
+          <a
+            href="tts.html"
+            class="tool-card"
+            data-tool="text to speech tts voice generator"
+          >
+            <div class="tool-icon">
+              <i data-lucide="volume-2"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <div class="tool-card-top">
+                <h3>Text to Speech</h3>
+                <span class="tool-badge">Popular</span>
+              </div>
+
+              <p>
+                Turn written text into natural, expressive AI speech.
+              </p>
+
+              <span class="tool-link">
+                Open tool
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 2 -->
+          <a
+            href="voices.html"
+            class="tool-card"
+            data-tool="voice library voices"
+          >
+            <div class="tool-icon">
+              <i data-lucide="mic-2"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Voice Library</h3>
+
+              <p>
+                Discover professional male and female AI voices.
+              </p>
+
+              <span class="tool-link">
+                Browse voices
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 3 -->
+          <a
+            href="clone.html"
+            class="tool-card"
+            data-tool="voice cloning clone voice"
+          >
+            <div class="tool-icon">
+              <i data-lucide="copy"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Voice Cloning</h3>
+
+              <p>
+                Create an AI voice from a compatible voice recording.
+              </p>
+
+              <span class="tool-link">
+                Clone voice
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 4 -->
+          <a
+            href="voice-design.html"
+            class="tool-card"
+            data-tool="voice design create voice"
+          >
+            <div class="tool-icon">
+              <i data-lucide="wand-sparkles"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Voice Design</h3>
+
+              <p>
+                Design a unique synthetic voice using AI.
+              </p>
+
+              <span class="tool-link">
+                Design voice
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 5 -->
+          <a
+            href="changer.html"
+            class="tool-card"
+            data-tool="voice changer change voice"
+          >
+            <div class="tool-icon">
+              <i data-lucide="repeat-2"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Voice Changer</h3>
+
+              <p>
+                Transform recorded speech into another voice.
+              </p>
+
+              <span class="tool-link">
+                Change voice
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 6 -->
+          <a
+            href="dialogue.html"
+            class="tool-card"
+            data-tool="text to dialogue dialogue conversation"
+          >
+            <div class="tool-icon">
+              <i data-lucide="messages-square"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Text to Dialogue</h3>
+
+              <p>
+                Turn scripts into multi-speaker AI conversations.
+              </p>
+
+              <span class="tool-link">
+                Create dialogue
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 7 -->
+          <a
+            href="stt.html"
+            class="tool-card"
+            data-tool="speech to text transcription stt"
+          >
+            <div class="tool-icon">
+              <i data-lucide="file-audio"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Speech to Text</h3>
+
+              <p>
+                Convert spoken audio into accurate text.
+              </p>
+
+              <span class="tool-link">
+                Transcribe audio
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 8 -->
+          <a
+            href="voice-isolator.html"
+            class="tool-card"
+            data-tool="voice isolator audio isolation remove noise"
+          >
+            <div class="tool-icon">
+              <i data-lucide="audio-waveform"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Voice Isolator</h3>
+
+              <p>
+                Isolate speech and reduce unwanted background noise.
+              </p>
+
+              <span class="tool-link">
+                Isolate voice
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 9 -->
+          <a
+            href="studio.html"
+            class="tool-card"
+            data-tool="studio editor audio editor timeline"
+          >
+            <div class="tool-icon">
+              <i data-lucide="panels-top-left"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <div class="tool-card-top">
+                <h3>Studio Editor</h3>
+                <span class="tool-badge">Pro</span>
+              </div>
+
+              <p>
+                Edit voice, audio and content on a professional timeline.
+              </p>
+
+              <span class="tool-link">
+                Open studio
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 10 -->
+          <a
+            href="music.html"
+            class="tool-card"
+            data-tool="ai music music generator"
+          >
+            <div class="tool-icon">
+              <i data-lucide="music-2"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>AI Music</h3>
+
+              <p>
+                Generate original music ideas and tracks with AI.
+              </p>
+
+              <span class="tool-link">
+                Create music
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 11 -->
+          <a
+            href="sound-effects.html"
+            class="tool-card"
+            data-tool="sound effects sfx audio effects"
+          >
+            <div class="tool-icon">
+              <i data-lucide="audio-lines"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Sound Effects</h3>
+
+              <p>
+                Generate custom sound effects for your projects.
+              </p>
+
+              <span class="tool-link">
+                Generate SFX
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 12 -->
+          <a
+            href="dubbing.html"
+            class="tool-card"
+            data-tool="dubbing translation voice translation"
+          >
+            <div class="tool-icon">
+              <i data-lucide="languages"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>AI Dubbing</h3>
+
+              <p>
+                Adapt voice content into different languages.
+              </p>
+
+              <span class="tool-link">
+                Start dubbing
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 13 -->
+          <a
+            href="captions.html"
+            class="tool-card"
+            data-tool="captions subtitles subtitles generator"
+          >
+            <div class="tool-icon">
+              <i data-lucide="captions"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Captions</h3>
+
+              <p>
+                Generate captions and subtitles from speech.
+              </p>
+
+              <span class="tool-link">
+                Create captions
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 14 -->
+          <a
+            href="video-voice-transfer.html"
+            class="tool-card"
+            data-tool="video voice transfer video voice"
+          >
+            <div class="tool-icon">
+              <i data-lucide="video"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Video Voice Transfer</h3>
+
+              <p>
+                Transform the voice in video content using AI.
+              </p>
+
+              <span class="tool-link">
+                Transfer voice
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 15 -->
+          <a
+            href="agents.html"
+            class="tool-card"
+            data-tool="ai agents conversational agents voice agents"
+          >
+            <div class="tool-icon">
+              <i data-lucide="bot"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <div class="tool-card-top">
+                <h3>AI Voice Agents</h3>
+                <span class="tool-badge">Pro</span>
+              </div>
+
+              <p>
+                Build conversational AI agents for voice interactions.
+              </p>
+
+              <span class="tool-link">
+                Build agent
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 16 -->
+          <a
+            href="assistant.html"
+            class="tool-card"
+            data-tool="gemini ai assistant writing assistant"
+          >
+            <div class="tool-icon">
+              <i data-lucide="brain"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Gemini Assistant</h3>
+
+              <p>
+                Ask AI to help write, plan, explain and create.
+              </p>
+
+              <span class="tool-link">
+                Open assistant
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 17 -->
+          <a
+            href="image.html"
+            class="tool-card"
+            data-tool="gemini image generator ai image generation"
+          >
+            <div class="tool-icon">
+              <i data-lucide="image"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <div class="tool-card-top">
+                <h3>AI Image Generator</h3>
+                <span class="tool-badge">New</span>
+              </div>
+
+              <p>
+                Create images from natural-language prompts using AI.
+              </p>
+
+              <span class="tool-link">
+                Generate image
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 18 -->
+          <a
+            href="projects.html"
+            class="tool-card"
+            data-tool="projects generations files history"
+          >
+            <div class="tool-icon">
+              <i data-lucide="folder-kanban"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Projects</h3>
+
+              <p>
+                Manage your generated audio, video and AI projects.
+              </p>
+
+              <span class="tool-link">
+                View projects
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 19 -->
+          <a
+            href="tts.html"
+            class="tool-card"
+            data-tool="podcast narration voice narration"
+          >
+            <div class="tool-icon">
+              <i data-lucide="radio"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>AI Narration</h3>
+
+              <p>
+                Create polished narration for videos, podcasts and ads.
+              </p>
+
+              <span class="tool-link">
+                Start narration
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 20 -->
+          <a
+            href="tts.html"
+            class="tool-card"
+            data-tool="advertisement ads commercial voice"
+          >
+            <div class="tool-icon">
+              <i data-lucide="megaphone"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Ad Voice Generator</h3>
+
+              <p>
+                Create engaging AI voiceovers for advertisements.
+              </p>
+
+              <span class="tool-link">
+                Create ad voice
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 21 -->
+          <a
+            href="tts.html"
+            class="tool-card"
+            data-tool="social media reels shorts voice"
+          >
+            <div class="tool-icon">
+              <i data-lucide="smartphone"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Social Voice</h3>
+
+              <p>
+                Make voiceovers for Reels, Shorts and social content.
+              </p>
+
+              <span class="tool-link">
+                Create social voice
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 22 -->
+          <a
+            href="tts.html"
+            class="tool-card"
+            data-tool="podcast voice podcast generator"
+          >
+            <div class="tool-icon">
+              <i data-lucide="headphones"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Podcast Voice</h3>
+
+              <p>
+                Generate consistent AI voices for podcast production.
+              </p>
+
+              <span class="tool-link">
+                Create podcast
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 23 -->
+          <a
+            href="studio.html"
+            class="tool-card"
+            data-tool="audio cleanup audio editing production"
+          >
+            <div class="tool-icon">
+              <i data-lucide="sliders-horizontal"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>Audio Production</h3>
+
+              <p>
+                Prepare and refine voice content for final production.
+              </p>
+
+              <span class="tool-link">
+                Open production
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+
+          <!-- 24 -->
+          <a
+            href="agents.html"
+            class="tool-card"
+            data-tool="customer support ai customer service voice bot"
+          >
+            <div class="tool-icon">
+              <i data-lucide="headset"></i>
+            </div>
+
+            <div class="tool-card-content">
+              <h3>AI Customer Support</h3>
+
+              <p>
+                Build voice-powered AI assistants for customer support.
+              </p>
+
+              <span class="tool-link">
+                Build support agent
+                <i data-lucide="arrow-up-right"></i>
+              </span>
+            </div>
+          </a>
+
+        </div>
+
+
+        <!-- Empty State -->
+        <div id="toolsEmpty" class="tools-empty" hidden>
+          <div class="tool-icon">
+            <i data-lucide="search-x"></i>
+          </div>
+
+          <h3>No tools found</h3>
+
+          <p>
+            Try another search term.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="container">
+
+        <div class="cta-card">
+
+          <div>
+            <span class="section-kicker">READY TO CREATE?</span>
+
+            <h2>
+              Build your next voice project with AI.
+            </h2>
+
+            <p>
+              Start free and explore the VoiceAI creative suite.
+            </p>
+          </div>
+
+          <a href="signup.html" class="btn btn-primary">
+            Get Started
+            <i data-lucide="arrow-right"></i>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="container">
+
+      <div class="footer-main">
+
+        <div class="footer-brand">
+          <a href="index.html" class="brand">
+            <span class="brand-mark">
+              <i data-lucide="audio-lines"></i>
+            </span>
+            <span>VoiceAI</span>
+          </a>
+
+          <p>
+            AI-powered voice and creative tools for modern content creators.
+          </p>
+        </div>
+
+
+        <div class="footer-links">
+
+          <div>
+            <h4>Product</h4>
+            <a href="tools.html">AI Tools</a>
+            <a href="voices.html">Voices</a>
+            <a href="studio.html">Studio</a>
+            <a href="pricing.html">Pricing</a>
+          </div>
+
+          <div>
+            <h4>Company</h4>
+            <a href="about.html">About</a>
+            <a href="faq.html">FAQ</a>
+            <a href="contact.html">Contact</a>
+          </div>
+
+          <div>
+            <h4>Account</h4>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="profile.html">Profile</a>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="footer-bottom">
+        <span>
+          © 2026 VoiceAI. All rights reserved.
+        </span>
+
+        <div>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <!-- ================= PAGE SCRIPT ================= -->
+  <script src="./supabase-config.js"></script>
+  <script src="./script.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+      const searchInput = document.getElementById("toolsSearch");
+      const toolsGrid = document.getElementById("toolsGrid");
+      const emptyState = document.getElementById("toolsEmpty");
+      const count = document.getElementById("toolCount");
+
+      if (!searchInput || !toolsGrid) return;
+
+      const cards = Array.from(
+        toolsGrid.querySelectorAll(".tool-card")
+      );
+
+      function filterTools() {
+        const query = searchInput.value
+          .trim()
+          .toLowerCase();
+
+        let visible = 0;
+
+        cards.forEach((card) => {
+
+          const searchableText = (
+            card.dataset.tool ||
+            card.textContent ||
+            ""
+          ).toLowerCase();
+
+          const matched =
+            !query ||
+            searchableText.includes(query);
+
+          card.style.display = matched ? "" : "none";
+
+          if (matched) {
+            visible++;
+          }
+        });
+
+        count.textContent =
+          `${visible} ${visible === 1 ? "tool" : "tools"}`;
+
+        if (emptyState) {
+          emptyState.hidden = visible !== 0;
+        }
+      }
+
+      searchInput.addEventListener(
+        "input",
+        filterTools
+      );
+
+      filterTools();
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    });
+  </script>
+
+</body>
+</html>
