@@ -1,0 +1,248 @@
+import { createClient } from "@supabase/supabase-js";
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+const ELEVENLABS_API_KEY =
+  process.env.ELEVENLABS_API_KEY;
+
+const supabaseAdmin = createClient(
+  SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
+
+function send(res, status, data) {
+  return res.status(status).json(data);
+}
+
+async function getUser(req) {
+  const authorization =
+    req.headers.authorization || "";
+
+  if (!authorization.startsWith("Bearer ")) {
+    return null;
+  }
+
+  const token =
+    authorization.substring(7).trim();
+
+  if (!token) {
+    return null;
+  }
+
+  const {
+    data: { user },
+    error
+  } = await supabaseAdmin.auth.getUser(token);
+
+  if (error || !user) {
+    return null;
+  }
+
+  return user;
+}
+
+async function checkUsage() {
+  const { data, error } =
+    await supabaseAdmin.rpc(
+      "check_and_use_ai"
+    );
+
+  if (error) {
+    throw new Error(
+      `Usage check failed: ${error.message}`
+    );
+  }
+
+  return data;
+}
+
+export default async function handler(req, res) {
+  try {
+    if (req.method !== "POST") {
+      res.setHeader("Allow", "POST");
+
+      return send(res, 405, {
+        error: "Method not allowed."
+      });
+    }
+
+    if (!ELEVENLABS_API_KEY) {
+      return send(res, 500, {
+        error:
+          "ELEVENLABS_API_KEY is not configured."
+      });
+    }
+
+    const user = await getUser(req);
+
+    if (!user) {
+      return send(res, 401, {
+        error: "Authentication required."
+      });
+    }
+
+    const body = req.body || {};
+
+    const agentId = String(
+      body.agent_id ||
+      body.agentId ||
+      ""
+    ).trim();
+
+    if (!agentId) {
+      return send(res, 400, {
+        error: "Agent ID is required."
+      });
+    }
+
+    /*
+     * Verify that this agent belongs
+     * to the logged-in VoiceAI user.
+     */
+    const { data: agent, error: agentError } =
+      await supabaseAdmin
+        .from("agents")
+        .select(`
+          id,
+          name,
+          voice_id,
+          language,
+          status
+        `)
+        .eq("id", agentId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+    if (agentError) {
+      return send(res, 500, {
+        error: agentError.message
+      });
+    }
+
+    if (!agent) {
+      return send(res, 404, {
+        error:
+          "Agent not found or access denied."
+      });
+    }
+
+    if (agent.status === "disabled") {
+      return send(res, 403, {
+        error: "This agent is disabled."
+      });
+    }
+
+    /*
+     * One AI test session consumes one
+     * server-side AI usage unit.
+     *
+     * Free = 5/day
+     * Premium/Admin = app-level unlimited
+     */
+    const usage = await checkUsage();
+
+    if (!usage?.allowed) {
+      return send(res, 429, {
+        error:
+          usage?.reason ||
+          "Daily AI usage limit reached.",
+        usage
+      });
+    }
+
+    /*
+     * Generate a signed ElevenLabs
+     * Conversational AI URL.
+     *
+     * The API key stays on the server.
+     */
+    const elevenResponse = await fetch(
+      "https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=" +
+        encodeURIComponent(agentId),
+      {
+        method: "GET",
+        headers: {
+          "xi-api-key": ELEVENLABS_API_KEY
+        }
+      }
+    );
+
+    const contentType =
+      elevenResponse.headers.get(
+        "content-type"
+      ) || "";
+
+    let elevenData;
+
+    if (contentType.includes("application/json")) {
+      elevenData =
+        await elevenResponse.json();
+    } else {
+      elevenData = {
+        raw: await elevenResponse.text()
+      };
+    }
+
+    if (!elevenResponse.ok) {
+      console.error(
+        "ElevenLabs signed URL error:",
+        elevenData
+      );
+
+      return send(
+        res,
+        elevenResponse.status,
+        {
+          error:
+            elevenData?.detail ||
+            elevenData?.message ||
+            "Unable to create signed agent URL.",
+          provider: "elevenlabs"
+        }
+      );
+    }
+
+    if (!elevenData?.signed_url) {
+      return send(res, 502, {
+        error:
+          "ElevenLabs did not return a signed URL."
+      });
+    }
+
+    /*
+     * Return only the temporary signed URL.
+     * Never return ELEVENLABS_API_KEY.
+     */
+    return send(res, 200, {
+      success: true,
+      agent: {
+        id: agent.id,
+        name: agent.name,
+        language: agent.language
+      },
+      signedUrl:
+        elevenData.signed_url,
+      usage
+    });
+
+  } catch (error) {
+    console.error(
+      "Agent test API error:",
+      error
+    );
+
+    return send(res, 500, {
+      error:
+        error?.message ||
+        "Internal server error."
+    });
+  }
+}
