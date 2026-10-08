@@ -1,7 +1,5 @@
-// api/billing/create-checkout.js
-
-const Stripe = require("stripe");
-const { createClient } = require("@supabase/supabase-js");
+import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -26,22 +24,7 @@ function getBearerToken(req) {
   return header.substring(7).trim();
 }
 
-async function getUser(req) {
-  const token = getBearerToken(req);
-
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !user) return null;
-
-  return user;
-}
-
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -58,55 +41,76 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== "POST") {
     return res.status(405).json({
+      success: false,
       error: "Method not allowed"
     });
   }
 
   try {
-    const user = await getUser(req);
+    const token = getBearerToken(req);
 
-    if (!user) {
+    if (!token) {
       return res.status(401).json({
-        error: "Please login before upgrading."
+        success: false,
+        error: "Authentication required"
       });
     }
 
-    const body =
-      typeof req.body === "string"
-        ? JSON.parse(req.body || "{}")
-        : req.body || {};
+    const {
+      data: { user },
+      error: authError
+    } = await supabaseAdmin.auth.getUser(token);
 
-    const plan = String(body.plan || "premium").toLowerCase();
+    if (authError || !user) {
+      return res.status(401).json({
+        success: false,
+        error: "Invalid or expired session"
+      });
+    }
+
+    let body = req.body || {};
+
+    if (typeof body === "string") {
+      body = JSON.parse(body || "{}");
+    }
+
     const interval =
-      String(body.interval || "month").toLowerCase();
+      body.interval === "year"
+        ? "year"
+        : "month";
 
-    if (plan !== "premium") {
-      return res.status(400).json({
-        error: "Invalid plan."
+    if (!process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID) {
+      return res.status(500).json({
+        success: false,
+        error:
+          "Stripe monthly price is not configured"
       });
     }
 
-    if (!["month", "year"].includes(interval)) {
-      return res.status(400).json({
-        error: "Invalid billing interval."
+    if (
+      interval === "year" &&
+      !process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID
+    ) {
+      return res.status(500).json({
+        success: false,
+        error:
+          "Stripe yearly price is not configured"
       });
     }
 
-    /*
-     * Price is controlled by the server.
-     * Never trust the amount sent by the browser.
-     */
-    const amount =
+    const priceId =
       interval === "year"
-        ? 19200
-        : 2000;
+        ? process.env.STRIPE_PREMIUM_YEARLY_PRICE_ID
+        : process.env.STRIPE_PREMIUM_MONTHLY_PRICE_ID;
 
-    const currency = "usd";
+    const { data: profile } =
+      await supabaseAdmin
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    /*
-     * Reuse an existing Stripe customer if available.
-     */
-    let customerId = null;
+    let customer;
 
     const { data: existingSubscription } =
       await supabaseAdmin
@@ -116,30 +120,26 @@ module.exports = async function handler(req, res) {
         .maybeSingle();
 
     if (existingSubscription?.stripe_customer_id) {
-      customerId = existingSubscription.stripe_customer_id;
+      customer = await stripe.customers.retrieve(
+        existingSubscription.stripe_customer_id
+      );
     }
 
-    /*
-     * Create Stripe customer when needed.
-     */
-    if (!customerId) {
-      const customer = await stripe.customers.create({
+    if (!customer || customer.deleted) {
+      customer = await stripe.customers.create({
         email: user.email,
+        name: profile?.full_name || undefined,
         metadata: {
-          supabase_user_id: user.id
+          user_id: user.id
         }
       });
-
-      customerId = customer.id;
 
       await supabaseAdmin
         .from("subscriptions")
         .upsert(
           {
             user_id: user.id,
-            stripe_customer_id: customerId,
-            plan: "free",
-            status: "inactive"
+            stripe_customer_id: customer.id
           },
           {
             onConflict: "user_id"
@@ -148,69 +148,54 @@ module.exports = async function handler(req, res) {
     }
 
     const origin =
-      process.env.PUBLIC_APP_URL ||
-      `${req.headers["x-forwarded-proto"] || "http"}://${req.headers.host}`;
+      req.headers.origin ||
+      process.env.APP_URL ||
+      "https://your-domain.com";
 
-    const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
-
-      customer: customerId,
-
-      line_items: [
-        {
-          price_data: {
-            currency,
-            product_data: {
-              name: "VoiceAI Premium",
-              description:
-                "Premium AI voice creation and advanced VoiceAI tools"
-            },
-            unit_amount: amount,
-            recurring: {
-              interval
-            }
-          },
-          quantity: 1
-        }
-      ],
-
-      success_url:
-        `${origin}/profile.html?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-
-      cancel_url:
-        `${origin}/pricing.html?payment=cancelled`,
-
-      client_reference_id: user.id,
-
-      metadata: {
-        supabase_user_id: user.id,
-        plan: "premium",
-        billing_interval: interval
-      },
-
-      subscription_data: {
+    const session =
+      await stripe.checkout.sessions.create({
+        mode: "subscription",
+        customer: customer.id,
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1
+          }
+        ],
+        success_url:
+          `${origin}/pricing.html?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url:
+          `${origin}/pricing.html?canceled=true`,
+        customer_email:
+          customer.email || user.email,
+        allow_promotion_codes: true,
         metadata: {
-          supabase_user_id: user.id,
+          user_id: user.id,
           plan: "premium",
-          billing_interval: interval
+          interval
+        },
+        subscription_data: {
+          metadata: {
+            user_id: user.id,
+            plan: "premium",
+            interval
+          }
         }
-      }
-    });
+      });
 
-    /*
-     * Store pending checkout information.
-     */
     await supabaseAdmin
       .from("payments")
       .insert({
         user_id: user.id,
-        stripe_customer_id: customerId,
+        stripe_customer_id: customer.id,
         stripe_checkout_session_id: session.id,
-        amount: amount,
-        currency: currency,
-        status: "pending",
         plan: "premium",
-        interval: interval
+        interval,
+        status: "pending",
+        amount: interval === "year"
+          ? 19200
+          : 2000,
+        currency: "usd"
       });
 
     return res.status(200).json({
@@ -219,10 +204,16 @@ module.exports = async function handler(req, res) {
       sessionId: session.id
     });
   } catch (error) {
-    console.error("Stripe checkout error:", error);
+    console.error(
+      "Create checkout error:",
+      error
+    );
 
     return res.status(500).json({
-      error: "Unable to create checkout session."
+      success: false,
+      error:
+        error?.message ||
+        "Unable to create checkout session"
     });
   }
-};
+}
