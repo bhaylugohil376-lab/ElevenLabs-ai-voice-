@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Sound Effects — VoiceAI</title>
+
+  <meta
+    name="description"
+    content="Generate professional AI sound effects with VoiceAI."
+  />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="./style.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+  <header class="site-header">
+    <div class="container nav-container">
+
+      <a href="index.html" class="brand">
+        <span class="brand-mark">
+          <i data-lucide="audio-waveform"></i>
+        </span>
+
+        <span>VoiceAI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-secondary">
+          Login
+        </a>
+
+        <a href="pricing.html" class="btn btn-primary">
+          Get Started
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- =========================
+       PAGE HERO
+  ========================== -->
+  <main>
+
+    <section class="page-hero">
+      <div class="container">
+
+        <div class="page-hero-icon">
+          <i data-lucide="sparkles"></i>
+        </div>
+
+        <div class="eyebrow">
+          AI SOUND GENERATOR
+        </div>
+
+        <h1>
+          Create
+          <span>Professional Sound Effects</span>
+        </h1>
+
+        <p>
+          Describe any sound you need and generate cinematic,
+          realistic and creative sound effects for your projects.
+        </p>
+
+      </div>
+    </section>
+
+
+    <!-- =========================
+         GENERATOR
+    ========================== -->
+    <section class="tool-workspace-section">
+      <div class="container">
+
+        <div class="tool-workspace">
+
+          <!-- LEFT -->
+          <div class="tool-panel">
+
+            <div class="panel-header">
+              <div>
+                <h2>Sound Effect Generator</h2>
+
+                <p>
+                  Describe the sound you want to create.
+                </p>
+              </div>
+
+              <div id="usageBadge" class="usage-badge">
+                Checking usage...
+              </div>
+            </div>
+
+
+            <!-- Prompt -->
+            <div class="form-group">
+
+              <label for="soundPrompt">
+                Sound description
+              </label>
+
+              <textarea
+                id="soundPrompt"
+                rows="7"
+                maxlength="2000"
+                placeholder="Example: A cinematic thunderstorm with heavy rain, distant thunder and strong wind..."
+              ></textarea>
+
+              <div class="field-footer">
+                <span>
+                  Be specific for better results.
+                </span>
+
+                <span id="promptCounter">
+                  0 / 2000
+                </span>
+              </div>
+
+            </div>
+
+
+            <!-- Presets -->
+            <div class="form-group">
+
+              <label>
+                Quick presets
+              </label>
+
+              <div class="preset-grid">
+
+                <button
+                  type="button"
+                  class="preset-btn"
+                  data-prompt="A realistic cinematic thunderstorm with heavy rain, strong wind and distant thunder"
+                >
+                  <i data-lucide="cloud-lightning"></i>
+                  <span>Thunderstorm</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="preset-btn"
+                  data-prompt="A realistic busy city street with traffic, distant conversations, footsteps and urban ambience"
+                >
+                  <i data-lucide="building-2"></i>
+                  <span>City Ambience</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="preset-btn"
+                  data-prompt="A dramatic cinematic explosion with deep impact, debris and distant rumbling"
+                >
+                  <i data-lucide="bomb"></i>
+                  <span>Explosion</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="preset-btn"
+                  data-prompt="Realistic forest ambience with birds, leaves moving in the wind and distant wildlife"
+                >
+                  <i data-lucide="trees"></i>
+                  <span>Forest</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="preset-btn"
+                  data-prompt="A futuristic spaceship engine powering up with deep mechanical energy and sci-fi atmosphere"
+                >
+                  <i data-lucide="rocket"></i>
+                  <span>Sci-Fi</span>
+                </button>
+
+                <button
+                  type="button"
+                  class="preset-btn"
+                  data-prompt="Realistic ocean waves crashing gently onto a beach with distant wind and seagulls"
+                >
+                  <i data-lucide="waves"></i>
+                  <span>Ocean</span>
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <!-- Controls -->
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label for="duration">
+                  Duration
+                </label>
+
+                <select id="duration">
+
+                  <option value="5">
+                    5 seconds
+                  </option>
+
+                  <option value="10" selected>
+                    10 seconds
+                  </option>
+
+                  <option value="15">
+                    15 seconds
+                  </option>
+
+                  <option value="30">
+                    30 seconds
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="form-group">
+
+                <label for="quality">
+                  Quality
+                </label>
+
+                <select id="quality">
+
+                  <option value="standard">
+                    Standard
+                  </option>
+
+                  <option value="high" selected>
+                    High
+                  </option>
+
+                  <option value="studio">
+                    Studio
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <!-- Advanced -->
+            <details class="advanced-settings">
+
+              <summary>
+                <span>
+                  <i data-lucide="sliders-horizontal"></i>
+                  Advanced settings
+                </span>
+
+                <i data-lucide="chevron-down"></i>
+              </summary>
+
+              <div class="advanced-content">
+
+                <div class="form-grid">
+
+                  <div class="form-group">
+
+                    <label for="variation">
+                      Variation
+                    </label>
+
+                    <input
+                      id="variation"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="50"
+                    />
+
+                    <div class="range-value">
+                      <span>Controlled</span>
+                      <span id="variationValue">50%</span>
+                    </div>
+
+                  </div>
+
+
+                  <div class="form-group">
+
+                    <label for="intensity">
+                      Intensity
+                    </label>
+
+                    <input
+                      id="intensity"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="65"
+                    />
+
+                    <div class="range-value">
+                      <span>Soft</span>
+                      <span id="intensityValue">65%</span>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </details>
+
+
+            <!-- Generate -->
+            <div class="generator-actions">
+
+              <button
+                type="button"
+                id="generateBtn"
+                class="btn btn-primary btn-large"
+              >
+                <i data-lucide="sparkles"></i>
+                Generate Sound
+              </button>
+
+              <span class="generation-note">
+                AI generation may take a few moments.
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- RIGHT -->
+          <aside class="tool-preview-panel">
+
+            <div class="preview-header">
+
+              <div>
+                <span class="preview-label">
+                  RESULT
+                </span>
+
+                <h3>
+                  Generated Sound
+                </h3>
+              </div>
+
+              <i data-lucide="waveform"></i>
+
+            </div>
+
+
+            <!-- Empty -->
+            <div id="emptyResult" class="empty-result">
+
+              <div class="empty-icon">
+                <i data-lucide="music-2"></i>
+              </div>
+
+              <h3>
+                Your sound will appear here
+              </h3>
+
+              <p>
+                Enter a description and click
+                Generate Sound.
+              </p>
+
+            </div>
+
+
+            <!-- Loading -->
+            <div
+              id="loadingResult"
+              class="empty-result"
+              style="display:none;"
+            >
+
+              <div class="loading-spinner"></div>
+
+              <h3>
+                Generating sound...
+              </h3>
+
+              <p>
+                Please wait while VoiceAI creates
+                your audio.
+              </p>
+
+            </div>
+
+
+            <!-- Result -->
+            <div
+              id="soundResult"
+              class="sound-result"
+              style="display:none;"
+            >
+
+              <div class="result-cover">
+
+                <div class="result-cover-icon">
+                  <i data-lucide="audio-lines"></i>
+                </div>
+
+              </div>
+
+
+              <div class="result-info">
+
+                <span class="preview-label">
+                  AI GENERATED
+                </span>
+
+                <h3 id="resultTitle">
+                  Generated Sound Effect
+                </h3>
+
+                <p id="resultMeta">
+                  High quality audio
+                </p>
+
+              </div>
+
+
+              <audio
+                id="audioPlayer"
+                controls
+                preload="metadata"
+              ></audio>
+
+
+              <div class="result-actions">
+
+                <a
+                  id="downloadBtn"
+                  class="btn btn-primary"
+                  download="voiceai-sound-effect.wav"
+                >
+                  <i data-lucide="download"></i>
+                  Download
+                </a>
+
+                <button
+                  type="button"
+                  id="newSoundBtn"
+                  class="btn btn-secondary"
+                >
+                  <i data-lucide="plus"></i>
+                  New Sound
+                </button>
+
+              </div>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================
+         FEATURES
+    ========================== -->
+    <section class="feature-strip">
+      <div class="container">
+
+        <div class="feature-strip-grid">
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i data-lucide="zap"></i>
+            </div>
+
+            <div>
+              <h3>Fast Generation</h3>
+              <p>Create effects quickly.</p>
+            </div>
+          </div>
+
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i data-lucide="audio-lines"></i>
+            </div>
+
+            <div>
+              <h3>High Quality</h3>
+              <p>Production-ready audio.</p>
+            </div>
+          </div>
+
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i data-lucide="film"></i>
+            </div>
+
+            <div>
+              <h3>Creator Ready</h3>
+              <p>Perfect for video and ads.</p>
+            </div>
+          </div>
+
+
+          <div class="feature-item">
+            <div class="feature-icon">
+              <i data-lucide="download"></i>
+            </div>
+
+            <div>
+              <h3>Easy Export</h3>
+              <p>Download your generated audio.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+  <footer class="site-footer">
+
+    <div class="container footer-container">
+
+      <div class="footer-brand">
+
+        <a href="index.html" class="brand">
+
+          <span class="brand-mark">
+            <i data-lucide="audio-waveform"></i>
+          </span>
+
+          <span>VoiceAI</span>
+
+        </a>
+
+        <p>
+          AI-powered voice and audio studio
+          for creators and businesses.
+        </p>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="pricing.html">Pricing</a>
+
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      © 2026 VoiceAI. All rights reserved.
+    </div>
+
+  </footer>
+
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="./supabase-config.js"></script>
+
+  <script src="./script.js"></script>
+
+
+  <!-- =========================
+       PAGE SCRIPT
+  ========================== -->
+  <script>
+
+    "use strict";
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+
+      const prompt =
+        document.getElementById("soundPrompt");
+
+      const counter =
+        document.getElementById("promptCounter");
+
+      const generateBtn =
+        document.getElementById("generateBtn");
+
+      const emptyResult =
+        document.getElementById("emptyResult");
+
+      const loadingResult =
+        document.getElementById("loadingResult");
+
+      const soundResult =
+        document.getElementById("soundResult");
+
+      const audioPlayer =
+        document.getElementById("audioPlayer");
+
+      const downloadBtn =
+        document.getElementById("downloadBtn");
+
+      const newSoundBtn =
+        document.getElementById("newSoundBtn");
+
+      const usageBadge =
+        document.getElementById("usageBadge");
+
+
+      const duration =
+        document.getElementById("duration");
+
+      const quality =
+        document.getElementById("quality");
+
+      const variation =
+        document.getElementById("variation");
+
+      const intensity =
+        document.getElementById("intensity");
+
+
+      const variationValue =
+        document.getElementById("variationValue");
+
+      const intensityValue =
+        document.getElementById("intensityValue");
+
+
+      /* =========================
+         COUNTER
+      ========================== */
+
+      function updateCounter() {
+
+        counter.textContent =
+          `${prompt.value.length} / 2000`;
+
+      }
+
+      prompt.addEventListener(
+        "input",
+        updateCounter
+      );
+
+      updateCounter();
+
+
+      /* =========================
+         RANGE
+      ========================== */
+
+      variation.addEventListener(
+        "input",
+        () => {
+          variationValue.textContent =
+            `${variation.value}%`;
+        }
+      );
+
+
+      intensity.addEventListener(
+        "input",
+        () => {
+          intensityValue.textContent =
+            `${intensity.value}%`;
+        }
+      );
+
+
+      /* =========================
+         PRESETS
+      ========================== */
+
+      document
+        .querySelectorAll(".preset-btn")
+        .forEach((button) => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              prompt.value =
+                button.dataset.prompt || "";
+
+              updateCounter();
+
+              prompt.focus();
+
+            }
+          );
+
+        });
+
+
+      /* =========================
+         SUPABASE SESSION
+      ========================== */
+
+      async function getSession() {
+
+        if (!window.supabaseClient) {
+          throw new Error(
+            "Supabase is not configured."
+          );
+        }
+
+        const {
+          data,
+          error
+        } =
+          await window.supabaseClient.auth
+            .getSession();
+
+        if (error) {
+          throw error;
+        }
+
+        return data.session;
+
+      }
+
+
+      /* =========================
+         USAGE
+      ========================== */
+
+      async function loadUsage() {
+
+        try {
+
+          const session =
+            await getSession();
+
+          if (!session) {
+
+            usageBadge.textContent =
+              "Login required";
+
+            return;
+
+          }
+
+
+          const response =
+            await fetch(
+              "/api/usage?action=sound_effects",
+              {
+                headers: {
+                  Authorization:
+                    `Bearer ${session.access_token}`
+                }
+              }
+            );
+
+
+          if (!response.ok) {
+
+            usageBadge.textContent =
+              "Usage unavailable";
+
+            return;
+
+          }
+
+
+          const data =
+            await response.json();
+
+
+          if (
+            data.unlimited ||
+            data.plan === "premium" ||
+            data.plan === "admin"
+          ) {
+
+            usageBadge.textContent =
+              "Premium · Unlimited";
+
+            usageBadge.classList.add(
+              "usage-unlimited"
+            );
+
+            return;
+
+          }
+
+
+          const used =
+            Number(data.used || 0);
+
+          const limit =
+            Number(data.limit || 5);
+
+          usageBadge.textContent =
+            `${Math.max(
+              0,
+              limit - used
+            )} free uses left`;
+
+        } catch (error) {
+
+          console.error(
+            "Usage error:",
+            error
+          );
+
+          usageBadge.textContent =
+            "Free plan · 5 uses";
+
+        }
+
+      }
+
+
+      loadUsage();
+
+
+      /* =========================
+         GENERATE
+      ========================== */
+
+      generateBtn.addEventListener(
+        "click",
+        async () => {
+
+          const text =
+            prompt.value.trim();
+
+
+          if (!text) {
+
+            prompt.focus();
+
+            if (window.VoiceAI) {
+              VoiceAI.toast(
+                "Please describe the sound you want."
+              );
+            }
+
+            return;
+
+          }
+
+
+          let session;
+
+          try {
+
+            session =
+              await getSession();
+
+          } catch (error) {
+
+            console.error(error);
+
+            if (window.VoiceAI) {
+              VoiceAI.toast(
+                "Unable to connect to Supabase."
+              );
+            }
+
+            return;
+
+          }
+
+
+          if (!session) {
+
+            if (window.VoiceAI) {
+              VoiceAI.toast(
+                "Please login before generating sound."
+              );
+            }
+
+            sessionStorage.setItem(
+              "voiceai_return_url",
+              "sound-effects.html"
+            );
+
+            setTimeout(() => {
+              window.location.href =
+                "login.html";
+            }, 700);
+
+            return;
+
+          }
+
+
+          /* UI */
+
+          generateBtn.disabled = true;
+
+          generateBtn.innerHTML = `
+            <span class="loading-spinner-small"></span>
+            Generating...
+          `;
+
+          emptyResult.style.display =
+            "none";
+
+          soundResult.style.display =
+            "none";
+
+          loadingResult.style.display =
+            "flex";
+
+
+          try {
+
+            const response =
+              await fetch(
+                "/api/sound-effects/generate",
+                {
+                  method: "POST",
+
+                  headers: {
+                    "Content-Type":
+                      "application/json",
+
+                    Authorization:
+                      `Bearer ${session.access_token}`
+                  },
+
+                  body: JSON.stringify({
+
+                    prompt: text,
+
+                    duration:
+                      Number(
+                        duration.value
+                      ),
+
+                    quality:
+                      quality.value,
+
+                    variation:
+                      Number(
+                        variation.value
+                      ),
+
+                    intensity:
+                      Number(
+                        intensity.value
+                      )
+
+                  })
+
+                }
+              );
+
+
+            const data =
+              await response.json();
+
+
+            if (!response.ok) {
+
+              if (
+                response.status === 429
+              ) {
+
+                throw new Error(
+                  data.message ||
+                  "Daily limit reached. Please try again after 24 hours."
+                );
+
+              }
+
+              throw new Error(
+                data.message ||
+                data.error ||
+                "Sound generation failed."
+              );
+
+            }
+
+
+            let audioUrl =
+              data.audioUrl ||
+              data.url ||
+              data.audio_url;
+
+
+            if (
+              !audioUrl &&
+              data.base64
+            ) {
+
+              audioUrl =
+                `data:audio/wav;base64,${data.base64}`;
+
+            }
+
+
+            if (!audioUrl) {
+
+              throw new Error(
+                "The server did not return an audio file."
+              );
+
+            }
+
+
+            audioPlayer.src =
+              audioUrl;
+
+
+            downloadBtn.href =
+              audioUrl;
+
+
+            const extension =
+              (
+                data.format ||
+                "wav"
+              ).replace(".", "");
+
+
+            downloadBtn.download =
+              `voiceai-sound-effect.${extension}`;
+
+
+            document.getElementById(
+              "resultTitle"
+            ).textContent =
+              data.title ||
+              "Generated Sound Effect";
+
+
+            document.getElementById(
+              "resultMeta"
+            ).textContent =
+              data.duration
+                ? `${data.duration}s · ${quality.value}`
+                : `AI generated · ${quality.value}`;
+
+
+            loadingResult.style.display =
+              "none";
+
+            soundResult.style.display =
+              "block";
+
+
+            if (window.VoiceAI) {
+
+              VoiceAI.toast(
+                "Sound effect generated successfully."
+              );
+
+            }
+
+
+            await loadUsage();
+
+
+            if (window.lucide) {
+              lucide.createIcons();
+            }
+
+          } catch (error) {
+
+            console.error(
+              "Sound generation error:",
+              error
+            );
+
+
+            loadingResult.style.display =
+              "none";
+
+            emptyResult.style.display =
+              "flex";
+
+
+            if (window.VoiceAI) {
+
+              VoiceAI.toast(
+                error.message ||
+                "Unable to generate sound."
+              );
+
+            }
+
+          } finally {
+
+            generateBtn.disabled =
+              false;
+
+            generateBtn.innerHTML = `
+              <i data-lucide="sparkles"></i>
+              Generate Sound
+            `;
+
+            if (window.lucide) {
+              lucide.createIcons();
+            }
+
+          }
+
+        }
+      );
+
+
+      /* =========================
+         NEW SOUND
+      ========================== */
+
+      newSoundBtn.addEventListener(
+        "click",
+        () => {
+
+          soundResult.style.display =
+            "none";
+
+          emptyResult.style.display =
+            "flex";
+
+          audioPlayer.pause();
+
+          audioPlayer.removeAttribute(
+            "src"
+          );
+
+          audioPlayer.load();
+
+          prompt.focus();
+
+        }
+      );
+
+    });
+
+  </script>
+
+</body>
+</html>
