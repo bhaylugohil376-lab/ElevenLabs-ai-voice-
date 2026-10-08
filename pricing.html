@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="VoiceAI pricing plans">
+
   <title>Pricing — VoiceAI</title>
 
   <style>
@@ -13,24 +13,16 @@
       padding: 0;
     }
 
-    :root {
-      --bg: #f7f8fc;
-      --card: #fff;
-      --text: #171923;
-      --muted: #747987;
-      --border: #e4e6ed;
-      --primary: #6757e8;
-      --primary-dark: #5142cb;
-      --soft: #f0edff;
-      --green: #168653;
-      --shadow: 0 15px 40px rgba(20, 24, 40, .08);
-    }
-
     body {
       font-family: Inter, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
+      background: #f7f8fc;
+      color: #171717;
+      min-height: 100vh;
+    }
+
+    button,
+    input {
+      font: inherit;
     }
 
     a {
@@ -38,441 +30,277 @@
       color: inherit;
     }
 
-    button {
-      font: inherit;
-      cursor: pointer;
-    }
-
-    /* NAVBAR */
-
-    .navbar {
+    .topbar {
       height: 70px;
-      background: rgba(255,255,255,.96);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
+      background: #fff;
+      border-bottom: 1px solid #e5e5eb;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
       position: sticky;
       top: 0;
       z-index: 20;
     }
 
-    .nav-inner {
-      width: 100%;
-      max-width: 1400px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 25px;
-    }
-
     .logo {
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 850;
     }
 
     .logo span {
-      color: var(--primary);
+      color: #7357ff;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 25px;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: #555b69;
-      font-size: 14px;
-      font-weight: 650;
-    }
-
-    .nav-links a:hover,
-    .nav-links .active {
-      color: var(--primary);
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .login-btn {
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #fff;
+    .nav-link {
+      color: #555;
       font-weight: 700;
     }
 
-    .start-btn {
-      padding: 11px 16px;
-      border: 0;
-      border-radius: 10px;
-      background: var(--primary);
-      color: #fff;
-      font-weight: 700;
-    }
-
-    /* PAGE */
-
-    .page {
-      width: min(1180px, calc(100% - 32px));
-      margin: auto;
-      padding: 65px 0 80px;
+    .container {
+      width: min(1100px, 94%);
+      margin: 45px auto 70px;
     }
 
     .hero {
       text-align: center;
-      max-width: 760px;
-      margin: 0 auto 48px;
+      margin-bottom: 40px;
     }
 
     .badge {
       display: inline-block;
-      background: var(--soft);
-      color: var(--primary);
-      padding: 8px 13px;
-      border-radius: 999px;
-      font-size: 12px;
+      padding: 8px 15px;
+      border-radius: 30px;
+      background: #eeeaff;
+      color: #6046dc;
+      font-size: 13px;
       font-weight: 800;
       margin-bottom: 15px;
     }
 
-    .hero h1 {
-      font-size: clamp(38px, 6vw, 60px);
-      letter-spacing: -2px;
-      line-height: 1.05;
-      margin-bottom: 15px;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
+    h1 {
+      font-size: clamp(34px, 5vw, 54px);
+      margin-bottom: 13px;
     }
 
     .hero p {
-      color: var(--muted);
+      max-width: 650px;
+      margin: auto;
+      color: #666;
       line-height: 1.7;
-      font-size: 16px;
     }
 
-    /* BILLING */
-
-    .billing {
+    .billing-toggle {
       display: flex;
       justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-
-    .billing span {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--muted);
+      margin: 28px 0 35px;
     }
 
     .toggle {
-      width: 50px;
-      height: 28px;
+      display: flex;
+      background: #e9e9ef;
+      padding: 5px;
+      border-radius: 12px;
+    }
+
+    .toggle button {
       border: 0;
-      background: var(--primary);
-      border-radius: 50px;
-      position: relative;
+      background: transparent;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 750;
+      color: #666;
     }
 
-    .toggle::after {
-      content: "";
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      background: white;
-      border-radius: 50%;
-      top: 3px;
-      right: 3px;
-      transition: .2s;
+    .toggle button.active {
+      background: #fff;
+      color: #6046dc;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
     }
 
-    .save {
-      color: var(--green) !important;
-      background: #eafaf2;
-      padding: 5px 8px;
-      border-radius: 7px;
-    }
-
-    /* PRICING */
-
-    .pricing-grid {
+    .plans {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 22px;
-      max-width: 900px;
+      gap: 25px;
+      max-width: 850px;
       margin: auto;
     }
 
     .plan {
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: #fff;
+      border: 1px solid #e2e2e9;
       border-radius: 22px;
       padding: 30px;
-      box-shadow: var(--shadow);
       position: relative;
+      box-shadow: 0 12px 40px rgba(0,0,0,.05);
     }
 
     .plan.premium {
-      border: 2px solid var(--primary);
-      transform: translateY(-8px);
+      border: 2px solid #7357ff;
+      box-shadow: 0 18px 55px rgba(115,87,255,.15);
     }
 
     .popular {
       position: absolute;
       top: -13px;
-      left: 25px;
-      background: var(--primary);
+      right: 25px;
+      background: #7357ff;
       color: #fff;
-      padding: 6px 11px;
-      border-radius: 8px;
+      padding: 6px 12px;
+      border-radius: 20px;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 850;
     }
 
-    .plan-name {
-      font-size: 14px;
-      font-weight: 800;
-      margin-bottom: 12px;
+    .plan h2 {
+      font-size: 22px;
+      margin-bottom: 8px;
     }
 
     .plan-description {
-      color: var(--muted);
-      font-size: 13px;
+      color: #777;
+      min-height: 42px;
       line-height: 1.5;
-      min-height: 40px;
+      font-size: 14px;
     }
 
     .price {
-      margin: 24px 0 5px;
+      margin: 24px 0;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .price strong {
       font-size: 45px;
-      font-weight: 850;
-      letter-spacing: -2px;
+      line-height: 1;
     }
 
-    .price small {
-      font-size: 13px;
-      color: var(--muted);
-      letter-spacing: 0;
-      font-weight: 500;
+    .price span {
+      color: #777;
+      font-size: 14px;
     }
 
-    .price-note {
-      height: 20px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .plan-button {
-      width: 100%;
-      padding: 13px;
-      border-radius: 11px;
-      font-weight: 800;
-      margin: 22px 0;
-    }
-
-    .free-button {
-      background: #f0f1f5;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .premium-button {
-      background: var(--primary);
-      color: #fff;
-      border: 0;
-    }
-
-    .premium-button:hover {
-      background: var(--primary-dark);
-    }
-
-    .features-title {
+    .annual-note {
+      display: none;
+      color: #067647;
       font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 14px;
+      font-weight: 700;
+      margin-top: -15px;
+      margin-bottom: 18px;
     }
 
     .features {
       list-style: none;
+      margin: 25px 0;
+      display: grid;
+      gap: 13px;
     }
 
     .features li {
       display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      margin: 13px 0;
-      color: #4e5361;
-      font-size: 13px;
+      gap: 9px;
+      font-size: 14px;
       line-height: 1.45;
     }
 
     .check {
-      width: 18px;
-      height: 18px;
-      flex: 0 0 18px;
-      border-radius: 50%;
-      background: #e9f9f1;
-      color: var(--green);
-      display: grid;
-      place-items: center;
-      font-size: 11px;
+      color: #067647;
       font-weight: 900;
     }
 
-    /* FAQ */
+    .muted {
+      color: #aaa;
+    }
+
+    .btn {
+      width: 100%;
+      height: 49px;
+      border: 0;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .btn-free {
+      background: #eeeeF3;
+      color: #333;
+    }
+
+    .btn-premium {
+      background: #7357ff;
+      color: #fff;
+    }
+
+    .btn-premium:hover {
+      background: #6248ed;
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .status {
+      display: none;
+      max-width: 850px;
+      margin: 22px auto 0;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
 
     .faq {
-      max-width: 900px;
-      margin: 65px auto 0;
+      max-width: 850px;
+      margin: 45px auto 0;
     }
 
     .faq h2 {
       text-align: center;
-      font-size: 28px;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
     }
 
     details {
       background: #fff;
-      border: 1px solid var(--border);
+      border: 1px solid #e2e2e9;
       border-radius: 12px;
+      padding: 15px 17px;
       margin-bottom: 10px;
-      padding: 17px 19px;
     }
 
     summary {
       cursor: pointer;
-      font-size: 14px;
       font-weight: 750;
     }
 
     details p {
-      padding-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.7;
+      color: #666;
+      line-height: 1.65;
+      font-size: 14px;
+      margin-top: 10px;
     }
 
-    /* TRUST */
-
-    .trust {
-      margin: 50px auto 0;
-      max-width: 900px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 25px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+    .bottom-note {
       text-align: center;
-    }
-
-    .trust strong {
-      display: block;
-      font-size: 15px;
-      margin-bottom: 5px;
-    }
-
-    .trust span {
-      color: var(--muted);
+      color: #777;
       font-size: 12px;
+      line-height: 1.6;
+      margin-top: 35px;
     }
 
-    /* FOOTER */
-
-    footer {
-      background: #fff;
-      border-top: 1px solid var(--border);
-      padding: 26px 30px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .footer-inner {
-      max-width: 1180px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a:hover {
-      color: var(--primary);
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 800px) {
-
-      .nav-links {
-        display: none;
-      }
-
-      .navbar {
-        padding: 0 17px;
-      }
-
-      .pricing-grid {
+    @media (max-width: 700px) {
+      .plans {
         grid-template-columns: 1fr;
-        max-width: 550px;
-      }
-
-      .plan.premium {
-        transform: none;
-        order: -1;
-      }
-
-      .trust {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 500px) {
-
-      .login-btn {
-        display: none;
-      }
-
-      .start-btn {
-        padding: 9px 12px;
-        font-size: 12px;
-      }
-
-      .page {
-        width: calc(100% - 24px);
-        padding-top: 42px;
-      }
-
-      .hero h1 {
-        font-size: 40px;
       }
 
       .plan {
-        padding: 22px;
+        padding: 23px;
       }
 
-      .price {
-        font-size: 40px;
-      }
-
-      .footer-inner {
-        flex-direction: column;
+      .topbar {
+        padding: 0 4%;
       }
     }
   </style>
@@ -480,464 +308,538 @@
 
 <body>
 
-  <!-- NAVBAR -->
+<header class="topbar">
 
-  <header class="navbar">
+  <a href="tools.html" class="nav-link">
+    ← AI Tools
+  </a>
 
-    <div class="nav-inner">
+  <div class="logo">
+    ∿ <span>VoiceAI</span>
+  </div>
 
-      <a href="index.html" class="logo">
-        ∿ <span>Voice</span>AI
-      </a>
+  <a href="profile.html" class="nav-link">
+    Profile
+  </a>
 
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html" class="active">Pricing</a>
-        <a href="agents.html">Agents</a>
-      </nav>
+</header>
 
-      <div class="nav-actions">
-        <a href="login.html" class="login-btn">Login</a>
-        <a href="login.html" class="start-btn">Get Started</a>
-      </div>
+<main class="container">
 
+  <section class="hero">
+
+    <div class="badge">
+      Simple Pricing
     </div>
 
-  </header>
+    <h1>
+      Choose your VoiceAI plan
+    </h1>
 
+    <p>
+      Start free and explore the platform. Upgrade when you need
+      higher AI usage and premium capabilities.
+    </p>
 
-  <main class="page">
+  </section>
 
-    <!-- HERO -->
+  <div class="billing-toggle">
 
-    <section class="hero">
-
-      <div class="badge">
-        SIMPLE PRICING
-      </div>
-
-      <h1>
-        Choose the plan that
-        <span>fits your workflow.</span>
-      </h1>
-
-      <p>
-        Start free and explore every major VoiceAI tool.
-        Upgrade when you need more AI processing.
-      </p>
-
-    </section>
-
-
-    <!-- BILLING -->
-
-    <div class="billing">
-
-      <span>Monthly</span>
+    <div class="toggle">
 
       <button
-        class="toggle"
-        id="billingToggle"
-        aria-label="Toggle billing"
-      ></button>
+        id="monthlyBtn"
+        class="active"
+        type="button"
+      >
+        Monthly
+      </button>
 
-      <span>Yearly</span>
-
-      <span class="save">
-        Save 20%
-      </span>
+      <button
+        id="yearlyBtn"
+        type="button"
+      >
+        Yearly
+      </button>
 
     </div>
 
+  </div>
 
-    <!-- PLANS -->
+  <section class="plans">
 
-    <section class="pricing-grid">
+    <!-- FREE -->
+    <article class="plan">
 
-      <!-- FREE -->
+      <h2>
+        Free
+      </h2>
 
-      <article class="plan">
+      <p class="plan-description">
+        For trying VoiceAI and basic AI creation.
+      </p>
 
-        <div class="plan-name">
-          FREE
-        </div>
+      <div class="price">
 
-        <div class="plan-description">
-          Everything you need to explore VoiceAI.
-        </div>
-
-        <div class="price">
+        <strong>
           $0
-          <small>/month</small>
-        </div>
+        </strong>
 
-        <div class="price-note">
-          No credit card required
-        </div>
+        <span>
+          forever
+        </span>
 
-        <button
-          class="plan-button free-button"
-          onclick="location.href='login.html'"
-        >
-          Start Free
-        </button>
+      </div>
 
-        <div class="features-title">
-          INCLUDED
-        </div>
+      <ul class="features">
 
-        <ul class="features">
+        <li>
+          <span class="check">✓</span>
+          5 AI uses per day
+        </li>
 
-          <li>
-            <span class="check">✓</span>
-            Access to all major AI tools
-          </li>
+        <li>
+          <span class="check">✓</span>
+          Text to Speech
+        </li>
 
-          <li>
-            <span class="check">✓</span>
-            5 AI uses per 24 hours
-          </li>
+        <li>
+          <span class="check">✓</span>
+          Speech to Text
+        </li>
 
-          <li>
-            <span class="check">✓</span>
-            Voice library
-          </li>
+        <li>
+          <span class="check">✓</span>
+          Voice Library
+        </li>
 
-          <li>
-            <span class="check">✓</span>
-            Text to Speech
-          </li>
+        <li>
+          <span class="check">✓</span>
+          AI Studio
+        </li>
 
-          <li>
-            <span class="check">✓</span>
-            Text to Image
-          </li>
+        <li>
+          <span class="check">✓</span>
+          AI Voice Agents
+        </li>
 
-          <li>
-            <span class="check">✓</span>
-            Speech to Text
-          </li>
+        <li>
+          <span class="check">✓</span>
+          Basic downloads
+        </li>
 
-          <li>
-            <span class="check">✓</span>
-            AI Studio
-          </li>
+      </ul>
 
-          <li>
-            <span class="check">✓</span>
-            AI Voice Agents testing
-          </li>
+      <button
+        class="btn btn-free"
+        id="freeBtn"
+        type="button"
+      >
+        Current Free Plan
+      </button>
 
-        </ul>
+    </article>
 
-      </article>
+    <!-- PREMIUM -->
+    <article class="plan premium">
 
+      <div class="popular">
+        MOST POPULAR
+      </div>
 
-      <!-- PREMIUM -->
+      <h2>
+        Premium
+      </h2>
 
-      <article class="plan premium">
+      <p class="plan-description">
+        For creators, businesses and professional AI production.
+      </p>
 
-        <div class="popular">
-          MOST POPULAR
-        </div>
+      <div class="price">
 
-        <div class="plan-name">
-          PREMIUM
-        </div>
-
-        <div class="plan-description">
-          More power for creators, businesses and professionals.
-        </div>
-
-        <div class="price" id="premiumPrice">
+        <strong id="premiumPrice">
           $20
-          <small>/month</small>
-        </div>
+        </strong>
 
-        <div class="price-note" id="premiumNote">
-          Cancel anytime
-        </div>
+        <span id="premiumPeriod">
+          /month
+        </span>
 
-        <button
-          class="plan-button premium-button"
-          id="upgradeButton"
-        >
-          Upgrade to Premium
-        </button>
-
-        <div class="features-title">
-          EVERYTHING IN FREE, PLUS
-        </div>
-
-        <ul class="features">
-
-          <li>
-            <span class="check">✓</span>
-            Higher AI processing limits
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Priority generation
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Premium voice options
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Voice cloning
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Voice changer
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Dubbing
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Music & sound effects
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            AI Voice Agents
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Studio export
-          </li>
-
-          <li>
-            <span class="check">✓</span>
-            Priority support
-          </li>
-
-        </ul>
-
-      </article>
-
-    </section>
-
-
-    <!-- TRUST -->
-
-    <section class="trust">
-
-      <div>
-        <strong>Secure checkout</strong>
-        <span>Payments handled by your payment provider.</span>
       </div>
 
-      <div>
-        <strong>Cancel anytime</strong>
-        <span>No long-term commitment required.</span>
+      <div
+        class="annual-note"
+        id="annualNote"
+      >
+        Save 20% with yearly billing
       </div>
 
-      <div>
-        <strong>All-in-one platform</strong>
-        <span>One account for your VoiceAI workspace.</span>
-      </div>
+      <ul class="features">
 
-    </section>
+        <li>
+          <span class="check">✓</span>
+          Higher / unlimited app-level AI access
+        </li>
 
+        <li>
+          <span class="check">✓</span>
+          Premium voice generation
+        </li>
 
-    <!-- FAQ -->
+        <li>
+          <span class="check">✓</span>
+          Voice cloning
+        </li>
 
-    <section class="faq">
+        <li>
+          <span class="check">✓</span>
+          Voice changer
+        </li>
 
-      <h2>Pricing FAQ</h2>
+        <li>
+          <span class="check">✓</span>
+          AI dubbing
+        </li>
 
-      <details>
-        <summary>Can I use VoiceAI for free?</summary>
-        <p>
-          Yes. The Free plan gives access to the major tools with
-          a limit of 5 AI processing actions per 24 hours.
-        </p>
-      </details>
+        <li>
+          <span class="check">✓</span>
+          AI music & sound effects
+        </li>
 
-      <details>
-        <summary>How much is Premium?</summary>
-        <p>
-          Premium is $20 per month on the monthly plan.
-          Final billing and taxes depend on your payment provider.
-        </p>
-      </details>
+        <li>
+          <span class="check">✓</span>
+          AI Voice Agents
+        </li>
 
-      <details>
-        <summary>Are all AI tools included?</summary>
-        <p>
-          The interface can expose all major tools. Actual AI
-          processing depends on the backend and provider connected
-          to the VoiceAI application.
-        </p>
-      </details>
+        <li>
+          <span class="check">✓</span>
+          Studio projects
+        </li>
 
-      <details>
-        <summary>Can I cancel Premium?</summary>
-        <p>
-          Yes, Premium is designed as a monthly subscription and
-          can be cancelled through the connected billing system.
-        </p>
-      </details>
+        <li>
+          <span class="check">✓</span>
+          Priority features
+        </li>
 
-      <details>
-        <summary>Does Premium mean literally unlimited?</summary>
-        <p>
-          Premium removes the normal Free-plan daily limit, but
-          real provider, server, storage and fair-use limits may
-          still apply.
-        </p>
-      </details>
+      </ul>
 
-    </section>
+      <button
+        class="btn btn-premium"
+        id="upgradeBtn"
+        type="button"
+      >
+        Upgrade to Premium
+      </button>
 
-  </main>
+    </article>
 
+  </section>
 
-  <!-- FOOTER -->
+  <div
+    class="status"
+    id="status"
+  ></div>
 
-  <footer>
+  <section class="faq">
 
-    <div class="footer-inner">
+    <h2>
+      Pricing FAQ
+    </h2>
 
-      <div>
-        © 2026 VoiceAI. All rights reserved.
-      </div>
+    <details>
+      <summary>
+        Is the Free plan really limited to 5 AI uses?
+      </summary>
 
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="agents.html">Agents</a>
-        <a href="login.html">Login</a>
-        <a href="forgot-password.html">Forgot Password</a>
-      </div>
+      <p>
+        Yes. The application is designed to enforce 5 AI processing
+        uses per day for Free users on the server side.
+      </p>
+    </details>
 
-    </div>
+    <details>
+      <summary>
+        Is Premium truly unlimited?
+      </summary>
 
-  </footer>
+      <p>
+        Premium can have unlimited application-level access, but
+        third-party AI providers can still impose API, credit,
+        rate or infrastructure limits.
+      </p>
+    </details>
 
+    <details>
+      <summary>
+        Can I cancel Premium?
+      </summary>
 
-  <script>
+      <p>
+        Cancellation depends on the payment provider used by the
+        production deployment. The subscription status should be
+        updated through the payment webhook.
+      </p>
+    </details>
 
-    const billingToggle =
-      document.getElementById("billingToggle");
+    <details>
+      <summary>
+        Does upgrading immediately change my account?
+      </summary>
 
-    const premiumPrice =
-      document.getElementById("premiumPrice");
+      <p>
+        After successful payment, the payment webhook should update
+        your subscription record and your account will receive the
+        Premium plan.
+      </p>
+    </details>
 
-    const premiumNote =
-      document.getElementById("premiumNote");
+  </section>
 
-    const upgradeButton =
-      document.getElementById("upgradeButton");
+  <p class="bottom-note">
+    VoiceAI pricing shown here is the application pricing.
+    AI provider usage and infrastructure costs are separate.
+  </p>
 
-    let yearly = false;
+</main>
 
+<script>
+"use strict";
 
-    billingToggle.addEventListener(
-      "click",
-      () => {
+const monthlyBtn =
+  document.getElementById("monthlyBtn");
 
-        yearly = !yearly;
+const yearlyBtn =
+  document.getElementById("yearlyBtn");
 
-        if (yearly) {
+const premiumPrice =
+  document.getElementById("premiumPrice");
 
-          premiumPrice.innerHTML =
-            '$192 <small>/year</small>';
+const premiumPeriod =
+  document.getElementById("premiumPeriod");
 
-          premiumNote.textContent =
-            'Billed yearly — save 20%';
+const annualNote =
+  document.getElementById("annualNote");
 
-        } else {
+const upgradeBtn =
+  document.getElementById("upgradeBtn");
 
-          premiumPrice.innerHTML =
-            '$20 <small>/month</small>';
+const freeBtn =
+  document.getElementById("freeBtn");
 
-          premiumNote.textContent =
-            'Cancel anytime';
+const statusBox =
+  document.getElementById("status");
 
-        }
+let billingInterval = "month";
 
-      }
+function showStatus(
+  message,
+  type = "info"
+) {
+
+  statusBox.textContent =
+    message;
+
+  statusBox.style.display =
+    "block";
+
+  if (type === "error") {
+
+    statusBox.style.background =
+      "#fff0f0";
+
+    statusBox.style.color =
+      "#b42318";
+
+  } else if (type === "success") {
+
+    statusBox.style.background =
+      "#ecfdf3";
+
+    statusBox.style.color =
+      "#067647";
+
+  } else {
+
+    statusBox.style.background =
+      "#f4f4f8";
+
+    statusBox.style.color =
+      "#555";
+  }
+}
+
+monthlyBtn.addEventListener(
+  "click",
+  () => {
+
+    billingInterval =
+      "month";
+
+    monthlyBtn.classList.add(
+      "active"
     );
 
-
-    upgradeButton.addEventListener(
-      "click",
-      async () => {
-
-        upgradeButton.disabled = true;
-        upgradeButton.textContent =
-          "Opening checkout...";
-
-        try {
-
-          const response =
-            await fetch("/api/billing/create-checkout", {
-
-              method: "POST",
-
-              headers: {
-                "Content-Type": "application/json"
-              },
-
-              body: JSON.stringify({
-                plan: "premium",
-                billing: yearly ? "yearly" : "monthly"
-              })
-
-            });
-
-          if (!response.ok) {
-            throw new Error("Checkout unavailable");
-          }
-
-          const data =
-            await response.json();
-
-          if (data.checkoutUrl) {
-
-            window.location.href =
-              data.checkoutUrl;
-
-          } else {
-
-            throw new Error(
-              "No checkout URL returned."
-            );
-
-          }
-
-        } catch (error) {
-
-          alert(
-            "Premium checkout is not connected yet. Connect /api/billing/create-checkout to enable payments."
-          );
-
-          upgradeButton.disabled = false;
-          upgradeButton.textContent =
-            "Upgrade to Premium";
-
-        }
-
-      }
+    yearlyBtn.classList.remove(
+      "active"
     );
 
-  </script>
+    premiumPrice.textContent =
+      "$20";
+
+    premiumPeriod.textContent =
+      "/month";
+
+    annualNote.style.display =
+      "none";
+  }
+);
+
+yearlyBtn.addEventListener(
+  "click",
+  () => {
+
+    billingInterval =
+      "year";
+
+    yearlyBtn.classList.add(
+      "active"
+    );
+
+    monthlyBtn.classList.remove(
+      "active"
+    );
+
+    /*
+     * $20 × 12 = $240.
+     * Yearly plan shown at $192 = 20% saving.
+     */
+    premiumPrice.textContent =
+      "$192";
+
+    premiumPeriod.textContent =
+      "/year";
+
+    annualNote.style.display =
+      "block";
+  }
+);
+
+freeBtn.addEventListener(
+  "click",
+  () => {
+
+    window.location.href =
+      "signup.html";
+  }
+);
+
+upgradeBtn.addEventListener(
+  "click",
+  async () => {
+
+    upgradeBtn.disabled =
+      true;
+
+    upgradeBtn.textContent =
+      "Opening Checkout...";
+
+    try {
+
+      /*
+       * Production backend should create
+       * the payment-provider checkout session.
+       */
+      const response =
+        await fetch(
+          "/api/billing/create-checkout",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+              plan: "premium",
+              interval:
+                billingInterval,
+              amount:
+                billingInterval === "year"
+                  ? 192
+                  : 20,
+              currency: "USD"
+            })
+          }
+        );
+
+      const contentType =
+        response.headers.get(
+          "content-type"
+        ) || "";
+
+      let data = {};
+
+      if (
+        contentType.includes(
+          "application/json"
+        )
+      ) {
+
+        data =
+          await response.json();
+
+      } else {
+
+        const text =
+          await response.text();
+
+        data = {
+          message: text
+        };
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          data.message ||
+          "Checkout could not be created."
+        );
+      }
+
+      const checkoutUrl =
+        data.checkoutUrl ||
+        data.checkout_url ||
+        data.url;
+
+      if (!checkoutUrl) {
+
+        throw new Error(
+          "Payment checkout URL was not returned."
+        );
+      }
+
+      window.location.href =
+        checkoutUrl;
+
+    } catch (error) {
+
+      console.error(error);
+
+      showStatus(
+        error.message ||
+        "Unable to start checkout. Please try again.",
+        "error"
+      );
+
+      upgradeBtn.disabled =
+        false;
+
+      upgradeBtn.textContent =
+        "Upgrade to Premium";
+    }
+  }
+);
+</script>
 
 </body>
 </html>
