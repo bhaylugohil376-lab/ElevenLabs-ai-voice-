@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>VoiceAI — AI Voice Studio</title>
+  <meta
+    name="description"
+    content="VoiceAI is an AI voice studio for text-to-speech, voice creation, dubbing, music, transcription and more."
+  />
+
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/pages/index.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <header class="navbar">
+    <div class="container nav-inner">
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">∿</span>
+        <span>VoiceAI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-light">Login</a>
+        <a href="signup.html" class="btn btn-primary">Get Started</a>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div>
+
+          <div class="eyebrow">
+            ✦ AI Voice Studio
+          </div>
+
+          <h1>
+            Create voices that
+            <span>sound real.</span>
+          </h1>
+
+          <p class="hero-text">
+            Generate natural AI voices, clone voices, create dubbing,
+            transcribe audio, make music and build conversational AI —
+            all from one professional studio.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="tts.html" class="btn btn-primary">
+              Start Creating →
+            </a>
+
+            <a href="voices.html" class="btn btn-light">
+              Explore Voices
+            </a>
+          </div>
+
+          <div class="hero-trust">
+            Free users get <strong>5 AI uses/day</strong>.
+            Premium is <strong>$20/month</strong>.
+          </div>
+
+        </div>
+
+
+        <!-- QUICK GENERATOR -->
+
+        <div class="generator">
+
+          <div class="generator-top">
+            <div class="generator-title">
+              Quick Voice Generator
+            </div>
+
+            <div class="usage" id="usageBadge">
+              Free · 5/day
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="quickText">Text</label>
+
+            <textarea
+              id="quickText"
+              maxlength="5000"
+              placeholder="Type something you want the AI voice to say..."
+            ></textarea>
+          </div>
+
+          <div class="row">
+
+            <div class="field">
+              <label for="quickLanguage">Language</label>
+
+              <select id="quickLanguage">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="gu">Gujarati</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="ja">Japanese</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="quickVoice">Voice</label>
+
+              <select id="quickVoice">
+                <option value="">Loading voices...</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="generator-actions">
+
+            <button
+              class="btn btn-primary"
+              id="generateBtn"
+              type="button"
+            >
+              Generate
+            </button>
+
+            <button
+              class="btn btn-light"
+              id="previewBtn"
+              type="button"
+            >
+              Preview
+            </button>
+
+          </div>
+
+          <div class="status" id="quickStatus"></div>
+
+          <div class="audio-box" id="audioBox">
+
+            <audio id="audioPlayer" controls></audio>
+
+            <a
+              id="downloadAudio"
+              class="btn btn-primary download-btn"
+              download="voiceai-audio.mp3"
+            >
+              Download Audio
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- AI TOOLS -->
+
+    <section>
+      <div class="container">
+
+        <div class="section-head">
+          <h2>Everything you need to create</h2>
+          <p>
+            Professional AI audio and voice tools, each available on
+            its own dedicated workspace.
+          </p>
+        </div>
+
+        <div class="tools-grid">
+
+          <div class="tool-card">
+            <div class="tool-icon">T</div>
+            <h3>Text to Speech</h3>
+            <p>Create natural AI narration from text.</p>
+            <a href="tts.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">◎</div>
+            <h3>Text to Image</h3>
+            <p>Create images from descriptive prompts.</p>
+            <a href="image.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">◉</div>
+            <h3>Voice Library</h3>
+            <p>Browse and preview AI voices.</p>
+            <a href="voices.html">Explore Voices →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">♢</div>
+            <h3>Voice Clone</h3>
+            <p>Create an AI voice from a recording.</p>
+            <a href="clone.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">⇄</div>
+            <h3>Voice Transfer</h3>
+            <p>Transform the voice in your video.</p>
+            <a href="changer.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">▣</div>
+            <h3>AI Studio</h3>
+            <p>Edit and arrange voice projects.</p>
+            <a href="studio.html">Open Studio →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">↗</div>
+            <h3>Dubbing</h3>
+            <p>Translate and dub audio or video.</p>
+            <a href="dubbing.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">♫</div>
+            <h3>Music & SFX</h3>
+            <p>Create AI music and sound effects.</p>
+            <a href="music.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">⌁</div>
+            <h3>Speech to Text</h3>
+            <p>Transcribe audio and video accurately.</p>
+            <a href="stt.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">✦</div>
+            <h3>Voice Agents</h3>
+            <p>Build conversational AI voice agents.</p>
+            <a href="agents.html">Open Tool →</a>
+          </div>
+
+          <div class="tool-card">
+            <div class="tool-icon">▤</div>
+            <h3>Pricing</h3>
+            <p>Choose the plan that fits your usage.</p>
+            <a href="pricing.html">View Plans →</a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- AI VIDEO TESTING -->
+
+    <section class="video-section" id="video-testing">
+
+      <div class="container">
+
+        <div class="section-head">
+          <h2>AI Video Testing</h2>
+
+          <p>
+            Upload a video and preview it before using
+            VoiceAI's video voice tools.
+          </p>
+        </div>
+
+        <div class="video-box">
+
+          <input
+            class="video-input"
+            type="file"
+            id="videoInput"
+            accept="video/*"
+          />
+
+          <video
+            id="videoPreview"
+            controls
+            playsinline
+          ></video>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+
+    <section id="about">
+
+      <div class="container">
+
+        <div class="section-head">
+          <h2>Why VoiceAI?</h2>
+
+          <p>
+            One platform for creators, businesses, marketers,
+            developers and professional content teams.
+          </p>
+        </div>
+
+        <div class="about-grid">
+
+          <div class="about-card">
+            <h3>Natural AI Voices</h3>
+            <p>
+              Create expressive narration and voice content
+              using modern AI voice technology.
+            </p>
+          </div>
+
+          <div class="about-card">
+            <h3>One Creative Workspace</h3>
+            <p>
+              TTS, cloning, dubbing, transcription, music,
+              agents and studio workflows in one place.
+            </p>
+          </div>
+
+          <div class="about-card">
+            <h3>Built for Production</h3>
+            <p>
+              Download generated results and use them
+              in videos, advertisements, podcasts and apps.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FAQ -->
+
+    <section id="faq">
+
+      <div class="container">
+
+        <div class="section-head">
+          <h2>Frequently Asked Questions</h2>
+
+          <p>
+            Quick answers about VoiceAI.
+          </p>
+        </div>
+
+        <div class="faq-list">
+
+          <details>
+            <summary>How many AI uses does the Free plan have?</summary>
+            <p>
+              Free accounts receive exactly 5 AI-processing uses per day.
+              The limit is enforced by the backend.
+            </p>
+          </details>
+
+          <details>
+            <summary>What is the Premium price?</summary>
+            <p>
+              Premium is $20 per month. App-level access is designed
+              for higher or unlimited usage, subject to provider limits.
+            </p>
+          </details>
+
+          <details>
+            <summary>Can I download generated audio?</summary>
+            <p>
+              Yes. Generated audio and other supported outputs can
+              provide a download option.
+            </p>
+          </details>
+
+          <details>
+            <summary>Can I clone a voice?</summary>
+            <p>
+              Yes, through the dedicated Voice Clone workspace,
+              subject to the required consent and backend processing.
+            </p>
+          </details>
+
+          <details>
+            <summary>Does VoiceAI work on mobile?</summary>
+            <p>
+              The website is designed to be responsive for both
+              mobile and desktop screens.
+            </p>
+          </details>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CONTACT -->
+
+    <section id="contact">
+
+      <div class="container">
+
+        <div class="section-head">
+          <h2>Contact VoiceAI</h2>
+
+          <p>
+            Have a question, feedback or business request?
+          </p>
+        </div>
+
+        <form class="contact-card" id="contactForm">
+
+          <div class="field">
+            <label for="contactName">Name</label>
+
+            <input
+              id="contactName"
+              type="text"
+              required
+              placeholder="Your name"
+            />
+          </div>
+
+          <div class="field">
+            <label for="contactEmail">Email</label>
+
+            <input
+              id="contactEmail"
+              type="email"
+              required
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div class="field">
+            <label for="contactMessage">Message</label>
+
+            <textarea
+              id="contactMessage"
+              required
+              placeholder="Write your message..."
+            ></textarea>
+          </div>
+
+          <button
+            class="btn btn-primary"
+            type="submit"
+            id="contactBtn"
+          >
+            Send Message
+          </button>
+
+          <div class="status" id="contactStatus"></div>
+
+        </form>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+
+          <a href="index.html" class="logo">
+            <span class="logo-mark">∿</span>
+            <span>VoiceAI</span>
+          </a>
+
+          <p>
+            AI voice creation, audio production and conversational
+            voice tools for modern creators and businesses.
+          </p>
+
+        </div>
+
+        <div>
+          <h4>Product</h4>
+
+          <ul>
+            <li><a href="tools.html">AI Tools</a></li>
+            <li><a href="voices.html">Voice Library</a></li>
+            <li><a href="studio.html">Studio</a></li>
+            <li><a href="pricing.html">Pricing</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Company</h4>
+
+          <ul>
+            <li><a href="index.html#about">About</a></li>
+            <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="profile.html">Profile</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Account</h4>
+
+          <ul>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Create Account</a></li>
+            <li><a href="forgot-password.html">Forgot Password</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="copyright">
+        © 2026 VoiceAI. All rights reserved.
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <!-- JAVASCRIPT -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+  
+
+  <script src="js/pages/index.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
