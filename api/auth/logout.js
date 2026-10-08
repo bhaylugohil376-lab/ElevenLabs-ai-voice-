@@ -1,6 +1,4 @@
-// api/auth/logout.js
-
-const { createClient } = require("@supabase/supabase-js");
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
@@ -23,7 +21,7 @@ function getBearerToken(req) {
   return header.substring(7).trim();
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -40,6 +38,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== "POST") {
     return res.status(405).json({
+      success: false,
       error: "Method not allowed"
     });
   }
@@ -56,31 +55,29 @@ module.exports = async function handler(req, res) {
 
     const {
       data: { user },
-      error: authError
+      error: userError
     } = await supabaseAdmin.auth.getUser(token);
 
-    if (authError || !user) {
+    if (userError || !user) {
       return res.status(401).json({
         success: false,
         error: "Invalid or expired session"
       });
     }
 
-    /*
-     * Supabase browser sessions are normally cleared
-     * by supabaseClient.auth.signOut() on the frontend.
-     *
-     * This backend endpoint additionally provides a
-     * protected logout route for API clients.
-     */
-    const { error } =
+    // Server-side logout/revocation.
+    // The browser should also call supabaseClient.auth.signOut().
+    const { error: signOutError } =
       await supabaseAdmin.auth.admin.signOut(
-        user.id,
+        token,
         "global"
       );
 
-    if (error) {
-      console.error("Logout error:", error);
+    if (signOutError) {
+      console.error(
+        "Supabase logout error:",
+        signOutError
+      );
 
       return res.status(500).json({
         success: false,
@@ -93,11 +90,11 @@ module.exports = async function handler(req, res) {
       message: "Logged out successfully"
     });
   } catch (error) {
-    console.error("Logout API error:", error);
+    console.error("Logout error:", error);
 
     return res.status(500).json({
       success: false,
-      error: "Logout failed"
+      error: "Internal server error"
     });
   }
-};
+}
