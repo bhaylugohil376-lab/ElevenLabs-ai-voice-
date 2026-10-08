@@ -1,77 +1,66 @@
-// api/sound-effects/generate.js
-
 import { createClient } from "@supabase/supabase-js";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS"
+};
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-function send(res, status, data) {
-  return res.status(status).json(data);
-}
-
-async function getUser(req) {
+function getToken(req) {
   const auth = req.headers.authorization || "";
 
-  if (!auth.startsWith("Bearer ")) {
+  if (!auth.toLowerCase().startsWith("bearer ")) {
     return null;
   }
 
-  const token = auth.slice(7).trim();
-
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !user) return null;
-
-  return user;
+  return auth.substring(7).trim();
 }
 
-async function checkUsage() {
-  const { data, error } =
-    await supabaseAdmin.rpc(
-      "check_and_use_ai"
-    );
+function sendJson(res, status, data) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
 
-  if (error) {
-    throw new Error(
-      `Usage check failed: ${error.message}`
-    );
-  }
-
-  return data;
+  return res.status(status).json(data);
 }
 
 export default async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    return sendJson(res, 200, { ok: true });
+  }
+
+  if (req.method !== "POST") {
+    return sendJson(res, 405, {
+      ok: false,
+      error: "Method not allowed"
+    });
+  }
+
   try {
-    if (req.method !== "POST") {
-      res.setHeader("Allow", "POST");
+    const token = getToken(req);
 
-      return send(res, 405, {
-        error: "Method not allowed."
+    if (!token) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Authentication required"
       });
     }
 
-    const user = await getUser(req);
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseAdmin.auth.getUser(token);
 
-    if (!user) {
-      return send(res, 401, {
-        error: "Authentication required."
-      });
-    }
-
-    const apiKey =
-      process.env.ELEVENLABS_API_KEY;
-
-    if (!apiKey) {
-      return send(res, 500, {
-        error:
-          "ELEVENLABS_API_KEY is not configured."
+    if (userError || !user) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Invalid or expired session"
       });
     }
 
@@ -80,6 +69,7 @@ export default async function handler(req, res) {
     const prompt = String(
       body.prompt ||
       body.description ||
+      body.text ||
       ""
     ).trim();
 
@@ -87,161 +77,214 @@ export default async function handler(req, res) {
       body.duration || 5
     );
 
-    const projectName = String(
-      body.projectName ||
-      "Untitled Sound Effect"
-    ).trim();
-
     if (!prompt) {
-      return send(res, 400, {
-        error:
-          "Sound-effect prompt is required."
+      return sendJson(res, 400, {
+        ok: false,
+        error: "Sound-effect prompt is required"
       });
     }
 
-    if (prompt.length > 1000) {
-      return send(res, 400, {
+    if (
+      !Number.isFinite(duration) ||
+      duration < 0.5 ||
+      duration > 60
+    ) {
+      return sendJson(res, 400, {
+        ok: false,
         error:
-          "Prompt must be 1000 characters or less."
+          "Duration must be between 0.5 and 60 seconds"
       });
     }
-
-    const safeDuration = Math.min(
-      Math.max(duration, 0.5),
-      22
-    );
 
     /*
-     * Free = 5 AI generations/day.
-     * Premium/Admin = app-level unlimited.
+     * Server-side Free plan limit:
+     * 5 AI operations per day.
      */
-    const usage = await checkUsage();
+    const { data: usageResult, error: usageError } =
+      await supabaseAdmin.rpc(
+        "check_and_use_ai",
+        {
+          p_user_id: user.id,
+          p_action: "sound_effect_generation"
+        }
+      );
+
+    if (usageError) {
+      console.error(
+        "Usage RPC error:",
+        usageError
+      );
+
+      return sendJson(res, 500, {
+        ok: false,
+        error:
+          "Unable to verify AI usage limit"
+      });
+    }
+
+    const usage = Array.isArray(usageResult)
+      ? usageResult[0]
+      : usageResult;
 
     if (!usage?.allowed) {
-      return send(res, 429, {
+      return sendJson(res, 429, {
+        ok: false,
         error:
           usage?.reason ||
-          "Daily AI usage limit reached.",
+          "Daily AI usage limit reached",
         usage
       });
     }
 
     /*
-     * ElevenLabs Sound Effects API.
+     * Provider is configurable.
+     *
+     * Never expose this API key to the browser.
      */
-    const response = await fetch(
-      "https://api.elevenlabs.io/v1/sound-generation",
-      {
-        method: "POST",
-        headers: {
-          "xi-api-key": apiKey,
-          "Content-Type":
-            "application/json",
-          Accept: "audio/mpeg"
-        },
-        body: JSON.stringify({
-          text: prompt,
-          duration_seconds:
-            safeDuration,
-          prompt_influence: 0.3
-        })
-      }
-    );
+    const providerUrl =
+      process.env.SOUND_EFFECTS_API_URL;
 
-    if (!response.ok) {
-      const errorText =
-        await response.text();
+    const providerKey =
+      process.env.SOUND_EFFECTS_API_KEY;
 
-      console.error(
-        "ElevenLabs sound effect error:",
-        errorText
-      );
-
-      return send(
-        res,
-        response.status,
-        {
-          error:
-            "Sound-effect generation failed.",
-          provider: "elevenlabs"
-        }
-      );
+    if (!providerUrl || !providerKey) {
+      return sendJson(res, 500, {
+        ok: false,
+        error:
+          "Sound-effects provider is not configured on the server."
+      });
     }
 
-    const audioBuffer =
-      Buffer.from(
-        await response.arrayBuffer()
+    const jobId = crypto.randomUUID();
+
+    /*
+     * Create database record before provider request.
+     */
+    const { error: insertError } =
+      await supabaseAdmin
+        .from("sound_effect_generations")
+        .insert({
+          id: jobId,
+          user_id: user.id,
+          prompt,
+          duration,
+          status: "processing"
+        });
+
+    if (insertError) {
+      console.error(
+        "Sound-effects DB insert error:",
+        insertError
       );
 
-    if (!audioBuffer.length) {
-      return send(res, 502, {
+      return sendJson(res, 500, {
+        ok: false,
         error:
-          "Sound-effect provider returned empty audio."
+          "Unable to create sound-effect job"
       });
     }
 
     /*
-     * Save metadata in Supabase.
+     * Generic provider interface.
      */
-    const {
-      data: saved,
-      error: saveError
-    } = await supabaseAdmin
-      .from("sound_effect_generations")
-      .insert({
-        user_id: user.id,
-        project_name: projectName,
-        prompt,
-        duration: safeDuration,
-        status: "completed"
-      })
-      .select()
-      .single();
+    const providerResponse =
+      await fetch(providerUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            `Bearer ${providerKey}`
+        },
+        body: JSON.stringify({
+          prompt,
+          duration,
+          user_id: user.id,
+          job_id: jobId
+        })
+      });
 
-    if (saveError) {
+    const providerData =
+      await providerResponse.json().catch(
+        () => ({})
+      );
+
+    if (!providerResponse.ok) {
       console.error(
-        "Sound-effect DB save error:",
-        saveError
+        "Sound-effects provider error:",
+        providerData
+      );
+
+      await supabaseAdmin
+        .from("sound_effect_generations")
+        .update({
+          status: "failed"
+        })
+        .eq("id", jobId)
+        .eq("user_id", user.id);
+
+      return sendJson(
+        res,
+        providerResponse.status || 500,
+        {
+          ok: false,
+          error:
+            providerData?.error?.message ||
+            providerData?.error ||
+            "Sound-effect generation failed"
+        }
       );
     }
 
-    /*
-     * Return real generated audio.
-     */
-    res.statusCode = 200;
+    const audioUrl =
+      providerData?.audio_url ||
+      providerData?.audioUrl ||
+      providerData?.url ||
+      null;
 
-    res.setHeader(
-      "Content-Type",
-      "audio/mpeg"
-    );
+    const providerJobId =
+      providerData?.id ||
+      providerData?.job_id ||
+      providerData?.jobId ||
+      null;
 
-    res.setHeader(
-      "Content-Disposition",
-      'attachment; filename="voiceai-sound-effect.mp3"'
-    );
+    const status = audioUrl
+      ? "completed"
+      : "processing";
 
-    res.setHeader(
-      "Content-Length",
-      audioBuffer.length
-    );
+    await supabaseAdmin
+      .from("sound_effect_generations")
+      .update({
+        provider_job_id: providerJobId,
+        audio_url: audioUrl,
+        status
+      })
+      .eq("id", jobId)
+      .eq("user_id", user.id);
 
-    res.setHeader(
-      "X-VoiceAI-Usage",
-      JSON.stringify(usage)
-    );
-
-    return res.end(audioBuffer);
-
+    return sendJson(res, 200, {
+      ok: true,
+      message:
+        status === "completed"
+          ? "Sound effect generated successfully"
+          : "Sound-effect job started",
+      job: {
+        id: jobId,
+        providerJobId,
+        status,
+        audioUrl
+      },
+      provider: providerData,
+      usage
+    });
   } catch (error) {
     console.error(
       "Sound-effects API error:",
       error
     );
 
-    return send(res, 500, {
-      error:
-        error?.message ||
-        "Internal server error."
+    return sendJson(res, 500, {
+      ok: false,
+      error: "Internal server error"
     });
   }
 }
