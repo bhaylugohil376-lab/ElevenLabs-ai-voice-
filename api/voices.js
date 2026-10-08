@@ -1,157 +1,218 @@
+import { createClient } from "@supabase/supabase-js";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, OPTIONS"
+};
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+function sendJson(res, status, data) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
+
+  return res.status(status).json(data);
+}
+
+function getToken(req) {
+  const auth = req.headers.authorization || "";
+
+  if (!auth.toLowerCase().startsWith("bearer ")) {
+    return null;
+  }
+
+  return auth.substring(7).trim();
+}
+
 export default async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    return sendJson(res, 200, { ok: true });
+  }
+
   if (req.method !== "GET") {
-    return res.status(405).json({
+    return sendJson(res, 405, {
+      ok: false,
       error: "Method not allowed"
     });
   }
 
-  const API_KEY = process.env.ELEVENLABS_API_KEY;
-
-  if (!API_KEY) {
-    return res.status(500).json({
-      error: "ELEVENLABS_API_KEY is missing"
-    });
-  }
-
   try {
-    const {
-      search = "",
-      gender = "",
-      language = "",
-      category = "",
-      age = "",
-      page_size = "100",
-      page_token = ""
-    } = req.query;
+    /*
+     * Authentication is optional for browsing the public
+     * voice library.
+     */
+    const token = getToken(req);
 
-    const params = new URLSearchParams();
+    let user = null;
 
-    // ElevenLabs V2 Voices API
-    params.set(
-      "page_size",
-      Math.min(Number(page_size) || 100, 100).toString()
+    if (token) {
+      const {
+        data: { user: authenticatedUser }
+      } = await supabaseAdmin.auth.getUser(token);
+
+      user = authenticatedUser || null;
+    }
+
+    const url = new URL(
+      req.url,
+      `http://${req.headers.host || "localhost"}`
     );
 
-    if (search.trim()) {
-      params.set("search", search.trim());
+    const search =
+      url.searchParams.get("search")?.trim() || "";
+
+    const gender =
+      url.searchParams.get("gender")?.trim() || "";
+
+    const language =
+      url.searchParams.get("language")?.trim() || "";
+
+    const category =
+      url.searchParams.get("category")?.trim() || "";
+
+    const limitParam =
+      Number(url.searchParams.get("limit") || 50);
+
+    const limit = Math.min(
+      Math.max(limitParam, 1),
+      100
+    );
+
+    /*
+     * Load public voices from Supabase.
+     */
+    let query = supabaseAdmin
+      .from("voices")
+      .select(
+        `
+        id,
+        name,
+        gender,
+        language,
+        category,
+        description,
+        preview_url,
+        provider,
+        provider_voice_id,
+        is_public,
+        created_at
+        `
+      )
+      .eq("is_public", true)
+      .limit(limit);
+
+    if (search) {
+      const safeSearch =
+        search.replace(/[%_]/g, "");
+
+      query = query.or(
+        `name.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%`
+      );
     }
 
-    if (gender.trim()) {
-      params.set("gender", gender.trim());
+    if (gender) {
+      query = query.ilike(
+        "gender",
+        gender
+      );
     }
 
-    if (language.trim()) {
-      params.set("language", language.trim());
+    if (language) {
+      query = query.ilike(
+        "language",
+        language
+      );
     }
 
-    if (category.trim()) {
-      params.set("category", category.trim());
+    if (category) {
+      query = query.ilike(
+        "category",
+        category
+      );
     }
 
-    if (age.trim()) {
-      params.set("age", age.trim());
-    }
+    query = query.order(
+      "created_at",
+      { ascending: false }
+    );
 
-    if (page_token.trim()) {
-      params.set("page_token", page_token.trim());
-    }
+    const {
+      data: voices,
+      error: voicesError
+    } = await query;
 
-    const url =
-      `https://api.elevenlabs.io/v2/voices?${params.toString()}`;
+    if (voicesError) {
+      console.error(
+        "Voice library error:",
+        voicesError
+      );
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "xi-api-key": API_KEY,
-        "Accept": "application/json"
-      }
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      const message =
-        data?.detail?.message ||
-        data?.detail ||
-        data?.message ||
-        "Unable to load ElevenLabs voices";
-
-      return res.status(response.status).json({
-        error: message
+      return sendJson(res, 500, {
+        ok: false,
+        error: "Unable to load voice library"
       });
     }
 
-    const voices = Array.isArray(data.voices)
-      ? data.voices
-      : [];
+    /*
+     * Add user's favorites when authenticated.
+     */
+    let favoriteIds = new Set();
+
+    if (user && voices?.length) {
+      const voiceIds = voices.map(
+        (voice) => voice.id
+      );
+
+      const {
+        data: favorites,
+        error: favoriteError
+      } = await supabaseAdmin
+        .from("favorite_voices")
+        .select("voice_id")
+        .eq("user_id", user.id)
+        .in("voice_id", voiceIds);
+
+      if (!favoriteError && favorites) {
+        favoriteIds = new Set(
+          favorites.map(
+            (item) => item.voice_id
+          )
+        );
+      }
+    }
+
+    const result =
+      (voices || []).map((voice) => ({
+        ...voice,
+        isFavorite: favoriteIds.has(
+          voice.id
+        )
+      }));
 
     /*
-     * Return only the information required
-     * by the VoiceAI frontend.
+     * If the database does not yet contain public voices,
+     * provide an empty library instead of fake provider data.
      */
-    const safeVoices = voices.map((voice) => ({
-      voice_id: voice.voice_id || "",
-      name: voice.name || "Unnamed Voice",
-
-      category: voice.category || "",
-      description: voice.description || "",
-
-      labels: voice.labels || {},
-
-      preview_url:
-        voice.preview_url ||
-        voice.previewUrl ||
-        null,
-
-      available_for_tiers:
-        voice.available_for_tiers || [],
-
-      settings:
-        voice.settings || null,
-
-      high_quality_base_model_ids:
-        voice.high_quality_base_model_ids || [],
-
-      verified_languages:
-        voice.verified_languages || [],
-
-      samples:
-        Array.isArray(voice.samples)
-          ? voice.samples.map((sample) => ({
-              sample_id: sample.sample_id || "",
-              file_name: sample.file_name || "",
-              mime_type: sample.mime_type || "",
-              size_bytes: sample.size_bytes || 0,
-              hash: sample.hash || "",
-              duration_secs:
-                sample.duration_secs || 0,
-              remove_background_noise:
-                sample.remove_background_noise || false
-            }))
-          : []
-    }));
-
-    return res.status(200).json({
-      voices: safeVoices,
-
-      has_more:
-        Boolean(data.has_more),
-
-      next_page_token:
-        data.next_page_token || null,
-
-      total_count:
-        data.total_count || safeVoices.length
+    return sendJson(res, 200, {
+      ok: true,
+      count: result.length,
+      voices: result
     });
-
   } catch (error) {
     console.error(
-      "ElevenLabs voices error:",
+      "Voices API error:",
       error
     );
 
-    return res.status(500).json({
-      error: "Voice server error"
+    return sendJson(res, 500, {
+      ok: false,
+      error: "Internal server error"
     });
   }
 }
