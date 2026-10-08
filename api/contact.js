@@ -1,14 +1,8 @@
-// api/contact.js
-
-const { createClient } = require("@supabase/supabase-js");
-
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY;
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
-  SUPABASE_URL,
-  SUPABASE_SERVICE_ROLE_KEY,
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
   {
     auth: {
       autoRefreshToken: false,
@@ -17,34 +11,7 @@ const supabaseAdmin = createClient(
   }
 );
 
-function getBearerToken(req) {
-  const header = req.headers.authorization || "";
-
-  if (!header.startsWith("Bearer ")) {
-    return null;
-  }
-
-  return header.substring(7).trim();
-}
-
-async function getUser(req) {
-  const token = getBearerToken(req);
-
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !user) {
-    return null;
-  }
-
-  return user;
-}
-
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -61,89 +28,129 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== "POST") {
     return res.status(405).json({
+      success: false,
       error: "Method not allowed"
     });
   }
 
   try {
-    const body =
-      typeof req.body === "string"
-        ? JSON.parse(req.body || "{}")
-        : req.body || {};
+    let body = req.body || {};
 
-    const name = String(body.name || "").trim();
-    const email = String(body.email || "").trim().toLowerCase();
-    const subject = String(body.subject || "").trim();
-    const message = String(body.message || "").trim();
+    if (typeof body === "string") {
+      try {
+        body = JSON.parse(body || "{}");
+      } catch {
+        return res.status(400).json({
+          success: false,
+          error: "Invalid JSON body"
+        });
+      }
+    }
 
-    if (!name) {
+    const name = String(
+      body.name || ""
+    ).trim();
+
+    const email = String(
+      body.email || ""
+    ).trim().toLowerCase();
+
+    const subject = String(
+      body.subject || ""
+    ).trim();
+
+    const message = String(
+      body.message || ""
+    ).trim();
+
+    if (!name || !email || !message) {
       return res.status(400).json({
-        error: "Name is required"
+        success: false,
+        error:
+          "Name, email and message are required"
       });
     }
 
-    if (!email) {
+    if (name.length > 100) {
       return res.status(400).json({
-        error: "Email is required"
+        success: false,
+        error: "Name is too long"
       });
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (email.length > 254) {
       return res.status(400).json({
+        success: false,
+        error: "Email is too long"
+      });
+    }
+
+    const emailPattern =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+      return res.status(400).json({
+        success: false,
         error: "Invalid email address"
       });
     }
 
-    if (!message) {
+    if (subject.length > 200) {
       return res.status(400).json({
-        error: "Message is required"
+        success: false,
+        error: "Subject is too long"
       });
     }
 
     if (message.length > 5000) {
       return res.status(400).json({
+        success: false,
         error: "Message is too long"
       });
     }
 
-    const user = await getUser(req);
-
-    const insertData = {
-      name,
-      email,
-      subject: subject || "General enquiry",
-      message,
-      user_id: user ? user.id : null,
-      status: "new"
-    };
-
-    const { data, error } = await supabaseAdmin
+    const {
+      data: contactMessage,
+      error
+    } = await supabaseAdmin
       .from("contact_messages")
-      .insert(insertData)
-      .select()
+      .insert({
+        name,
+        email,
+        subject: subject || null,
+        message
+      })
+      .select("id, created_at")
       .single();
 
     if (error) {
-      console.error("Contact insert error:", error);
+      console.error(
+        "Contact message error:",
+        error
+      );
 
       return res.status(500).json({
-        error: "Unable to send message",
-        details: error.message
+        success: false,
+        error:
+          "Unable to save contact message"
       });
     }
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
-      message: "Your message has been sent successfully.",
-      contact: {
-        id: data.id
-      }
+      message:
+        "Your message has been submitted successfully.",
+      data: contactMessage
     });
   } catch (error) {
-    console.error("Contact API error:", error);
+    console.error(
+      "Contact API error:",
+      error
+    );
 
     return res.status(500).json({
-      error: "Contact request failed"
+      success: false,
+      error: "Internal server error"
     });
   }
-};
+}
