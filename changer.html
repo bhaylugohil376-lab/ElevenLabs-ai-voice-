@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Voice Transfer — VoiceAI</title>
+
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/pages/changer.css">
+</head>
+
+<body data-usage-action="voice_changer">
+
+<header class="topbar">
+  <a href="tools.html" class="back">← AI Tools</a>
+  <div class="logo">∿ <span>VoiceAI</span></div>
+  <a href="profile.html" class="back">Profile</a>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="badge">AI Video Voice Transfer</div>
+    <h1>Change the Voice in Your Video</h1>
+    <p>
+      Upload a video, choose an AI voice and generate a new voice track
+      while keeping your video content.
+    </p>
+  </section>
+
+  <div class="grid">
+
+    <!-- LEFT -->
+    <section class="card">
+      <h2>Upload Video</h2>
+
+      <label class="upload" for="videoInput">
+        <input
+          type="file"
+          id="videoInput"
+          accept="video/mp4,video/webm,video/mov,video/quicktime"
+        >
+
+        <div>
+          <div class="upload-icon">🎬</div>
+          <strong>Choose your video</strong>
+          <small>MP4, MOV or WebM</small>
+        </div>
+      </label>
+
+      <video id="sourceVideo" controls playsinline></video>
+
+      <div class="info">
+        Your uploaded video is processed by the VoiceAI backend.
+        Do not upload content you do not have permission to modify.
+      </div>
+    </section>
+
+    <!-- RIGHT -->
+    <section class="card">
+
+      <h2>Voice Settings</h2>
+
+      <div class="usage">
+        <strong>Free plan:</strong>
+        <span id="usageText">5 AI uses/day</span>
+      </div>
+
+      <div class="field">
+        <label for="voiceSelect">AI Voice</label>
+
+        <select id="voiceSelect">
+          <option value="">Loading voices...</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="languageSelect">Language</label>
+
+        <select id="languageSelect">
+          <option value="en">English</option>
+          <option value="hi">Hindi</option>
+          <option value="gu">Gujarati</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="ja">Japanese</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="styleSelect">Voice Style</label>
+
+        <select id="styleSelect">
+          <option value="natural">Natural</option>
+          <option value="professional">Professional</option>
+          <option value="advertisement">Advertisement</option>
+          <option value="energetic">Energetic</option>
+          <option value="calm">Calm</option>
+          <option value="documentary">Documentary</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="strength">Voice Strength</label>
+
+        <input
+          type="range"
+          id="strength"
+          min="0"
+          max="100"
+          value="80"
+        >
+
+        <div class="range-row">
+          <span>Soft</span>
+          <strong id="strengthValue">80%</strong>
+          <span>Strong</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="projectName">Project Name</label>
+
+        <input
+          type="text"
+          id="projectName"
+          placeholder="My voice transfer"
+          maxlength="100"
+        >
+      </div>
+
+      <button class="btn" id="generateBtn">
+        Generate New Voice
+      </button>
+
+      <button class="btn secondary" id="resetBtn">
+        Reset
+      </button>
+
+      <div class="status" id="status"></div>
+
+      <div class="result" id="result">
+        <h2>Generated Video</h2>
+
+        <video id="resultVideo" controls playsinline></video>
+
+        <a
+          id="downloadBtn"
+          class="download"
+          href="#"
+          download="voiceai-video.mp4"
+        >
+          Download Video
+        </a>
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+
+
+  <script src="js/pages/changer.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
