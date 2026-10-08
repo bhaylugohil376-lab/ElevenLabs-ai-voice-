@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="VoiceAI AI Voice Agents">
+
   <title>AI Voice Agents — VoiceAI</title>
 
   <style>
@@ -13,32 +13,11 @@
       padding: 0;
     }
 
-    :root {
-      --bg: #f7f8fc;
-      --card: #ffffff;
-      --text: #171a24;
-      --muted: #727887;
-      --border: #e5e7ed;
-      --primary: #6757e8;
-      --primary-dark: #5143ca;
-      --soft: #f0edff;
-      --success: #168653;
-      --danger: #d64545;
-      --shadow: 0 12px 35px rgba(25, 28, 45, .08);
-      --radius: 18px;
-    }
-
     body {
       font-family: Inter, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #f7f8fc;
+      color: #171717;
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
     }
 
     button,
@@ -48,372 +27,201 @@
       font: inherit;
     }
 
-    button {
-      cursor: pointer;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
-    /* NAVBAR */
-
-    .navbar {
+    .topbar {
       height: 70px;
-      background: rgba(255,255,255,.96);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 32px;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .nav-inner {
-      width: 100%;
-      max-width: 1450px;
-      margin: auto;
+      background: #fff;
+      border-bottom: 1px solid #e5e5eb;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      padding: 0 5%;
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
 
     .logo {
       font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -.5px;
+      font-weight: 850;
     }
 
     .logo span {
-      color: var(--primary);
+      color: #7357ff;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 26px;
-    }
-
-    .nav-links a {
-      color: #555b6b;
-      font-size: 14px;
-      font-weight: 600;
-      transition: .2s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--primary);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .profile-btn {
-      border: 1px solid var(--border);
-      background: #fff;
-      padding: 10px 15px;
-      border-radius: 11px;
+    .nav-link {
+      color: #555;
       font-weight: 700;
     }
 
-    .upgrade-btn {
-      border: 0;
-      background: var(--primary);
-      color: #fff;
-      padding: 11px 17px;
-      border-radius: 11px;
-      font-weight: 700;
-    }
-
-    .upgrade-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    /* PAGE */
-
-    .page {
-      width: min(1400px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 42px 0 70px;
+    .container {
+      width: min(1180px, 94%);
+      margin: 35px auto 70px;
     }
 
     .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 30px;
-      margin-bottom: 28px;
+      text-align: center;
+      margin-bottom: 32px;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--soft);
-      color: var(--primary);
-      padding: 7px 11px;
-      border-radius: 999px;
-      font-size: 12px;
+    .badge {
+      display: inline-block;
+      background: #eeeaff;
+      color: #6046dc;
+      padding: 8px 15px;
+      border-radius: 30px;
+      font-size: 13px;
       font-weight: 800;
-      margin-bottom: 13px;
+      margin-bottom: 14px;
     }
 
-    .hero h1 {
+    h1 {
       font-size: clamp(32px, 5vw, 52px);
-      line-height: 1.05;
-      letter-spacing: -1.8px;
       margin-bottom: 12px;
     }
 
     .hero p {
-      max-width: 700px;
-      color: var(--muted);
+      max-width: 720px;
+      margin: auto;
+      color: #666;
       line-height: 1.7;
-      font-size: 16px;
     }
 
-    .usage {
-      min-width: 220px;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 17px;
-      box-shadow: var(--shadow);
-    }
-
-    .usage-top {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .usage-bar {
-      height: 7px;
-      background: #ececf2;
-      border-radius: 20px;
-      overflow: hidden;
-    }
-
-    .usage-fill {
-      width: 20%;
-      height: 100%;
-      background: var(--primary);
-      border-radius: inherit;
-    }
-
-    .usage small {
-      display: block;
-      margin-top: 8px;
-      color: var(--muted);
-    }
-
-    /* WORKSPACE */
-
-    .workspace {
+    .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(330px, .9fr);
-      gap: 22px;
+      grid-template-columns: 1fr 390px;
+      gap: 24px;
       align-items: start;
     }
 
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+    .card {
+      background: #fff;
+      border: 1px solid #e4e4eb;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.04);
     }
 
-    .panel-header {
-      padding: 20px 22px;
-      border-bottom: 1px solid var(--border);
+    .card + .card {
+      margin-top: 20px;
     }
 
-    .panel-header h2 {
-      font-size: 18px;
-      margin-bottom: 5px;
-    }
-
-    .panel-header p {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .panel-body {
-      padding: 22px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 17px;
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
     }
 
     .field {
-      margin-bottom: 17px;
-    }
-
-    .field.full {
-      grid-column: 1 / -1;
+      margin-bottom: 18px;
     }
 
     label {
       display: block;
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 750;
+      margin-bottom: 7px;
     }
 
     input,
     textarea,
     select {
       width: 100%;
-      border: 1px solid var(--border);
-      background: #fbfbfd;
-      color: var(--text);
-      border-radius: 11px;
-      padding: 12px 13px;
+      border: 1px solid #dddde5;
+      border-radius: 10px;
       outline: none;
-      transition: .2s;
+      background: #fff;
+      color: #222;
+    }
+
+    input,
+    select {
+      height: 47px;
+      padding: 0 12px;
     }
 
     textarea {
+      min-height: 120px;
       resize: vertical;
-      min-height: 145px;
+      padding: 12px;
       line-height: 1.6;
     }
 
     input:focus,
     textarea:focus,
     select:focus {
-      border-color: var(--primary);
-      background: #fff;
-      box-shadow: 0 0 0 3px rgba(103,87,232,.1);
+      border-color: #7357ff;
     }
 
-    .hint {
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: 6px;
-    }
-
-    /* VOICE */
-
-    .voice-grid {
+    .agent-types {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
     }
 
-    .voice-option {
-      position: relative;
-    }
-
-    .voice-option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .voice-option label {
-      border: 1px solid var(--border);
+    .agent-type {
+      border: 1px solid #dedee7;
+      border-radius: 14px;
+      padding: 17px 12px;
       background: #fff;
-      border-radius: 12px;
-      padding: 13px 10px;
       cursor: pointer;
-      margin: 0;
+      text-align: left;
       transition: .2s;
     }
 
-    .voice-option input:checked + label {
-      border-color: var(--primary);
-      background: var(--soft);
-      color: var(--primary);
+    .agent-type:hover {
+      border-color: #7357ff;
     }
 
-    .voice-name {
+    .agent-type.active {
+      background: #f2efff;
+      border-color: #7357ff;
+    }
+
+    .agent-icon {
+      font-size: 25px;
+      margin-bottom: 9px;
+    }
+
+    .agent-type strong {
       display: block;
-      font-size: 13px;
+      font-size: 14px;
       margin-bottom: 4px;
     }
 
-    .voice-type {
-      display: block;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 500;
+    .agent-type small {
+      color: #777;
+      line-height: 1.4;
     }
 
-    /* SETTINGS */
-
-    .setting-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
-    .range-wrap {
-      border: 1px solid var(--border);
+    .usage {
+      background: #f4f1ff;
+      color: #6046dc;
+      padding: 13px;
       border-radius: 11px;
-      padding: 12px;
-      background: #fbfbfd;
-    }
-
-    .range-top {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 7px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    input[type="range"] {
-      padding: 0;
-      border: 0;
-      box-shadow: none;
-      accent-color: var(--primary);
-    }
-
-    /* BUTTONS */
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 5px;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 18px;
     }
 
     .btn {
+      width: 100%;
+      height: 49px;
       border: 0;
-      border-radius: 11px;
-      padding: 12px 17px;
+      border-radius: 10px;
+      background: #7357ff;
+      color: #fff;
       font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: .2s;
+      cursor: pointer;
     }
 
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      flex: 1;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-secondary {
-      background: #f0f1f5;
-      color: #343844;
-    }
-
-    .btn-secondary:hover {
-      background: #e5e6eb;
+    .btn:hover {
+      background: #6248ed;
     }
 
     .btn:disabled {
@@ -421,265 +229,200 @@
       cursor: not-allowed;
     }
 
-    /* TEST PANEL */
+    .secondary {
+      background: #eeeef3;
+      color: #333;
+      margin-top: 10px;
+    }
 
-    .test-panel {
-      min-height: 610px;
+    .secondary:hover {
+      background: #e4e4ea;
+    }
+
+    .danger {
+      background: #fff0f0;
+      color: #b42318;
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .agent-preview {
+      min-height: 330px;
+      background: #101014;
+      color: #fff;
+      border-radius: 17px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
     }
 
-    .agent-status {
+    .agent-header {
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: var(--success);
-      font-size: 12px;
-      font-weight: 800;
-      margin-top: 8px;
+      gap: 12px;
+      border-bottom: 1px solid #2d2d35;
+      padding-bottom: 15px;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--success);
+    .agent-avatar {
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
+      background: linear-gradient(135deg,#7357ff,#a994ff);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .agent-header strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .agent-header small {
+      color: #aaa;
+    }
+
+    .online {
+      margin-left: auto;
+      font-size: 11px;
+      color: #5ee38a;
     }
 
     .chat {
       flex: 1;
-      min-height: 350px;
-      max-height: 470px;
-      overflow-y: auto;
-      padding: 20px;
-      background: #fafaff;
+      padding: 17px 0;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
     }
 
     .message {
-      max-width: 84%;
-      padding: 11px 13px;
+      max-width: 82%;
+      padding: 10px 12px;
       border-radius: 13px;
-      margin-bottom: 12px;
       font-size: 13px;
-      line-height: 1.55;
-    }
-
-    .message.agent {
-      background: #fff;
-      border: 1px solid var(--border);
-      margin-right: auto;
-    }
-
-    .message.user {
-      background: var(--primary);
-      color: #fff;
-      margin-left: auto;
-    }
-
-    .chat-input {
-      padding: 15px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-      background: #fff;
-    }
-
-    .chat-input input {
-      flex: 1;
-    }
-
-    .send-btn {
-      width: 46px;
-      border: 0;
-      border-radius: 11px;
-      background: var(--primary);
-      color: white;
-      font-size: 18px;
-    }
-
-    .test-note {
-      padding: 0 20px 16px;
-      color: var(--muted);
-      font-size: 11px;
-      background: #fff;
-    }
-
-    /* FEATURES */
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-top: 22px;
-    }
-
-    .feature {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 20px;
-    }
-
-    .feature-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 11px;
-      background: var(--soft);
-      color: var(--primary);
-      display: grid;
-      place-items: center;
-      margin-bottom: 13px;
-    }
-
-    .feature h3 {
-      font-size: 14px;
-      margin-bottom: 7px;
-    }
-
-    .feature p {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.6;
-    }
-
-    /* ALERT */
-
-    .alert {
-      display: none;
-      margin-top: 15px;
-      padding: 11px 13px;
-      border-radius: 10px;
-      font-size: 12px;
       line-height: 1.5;
     }
 
-    .alert.error {
-      display: block;
-      color: var(--danger);
-      background: #fff1f1;
-      border: 1px solid #ffd6d6;
+    .bot {
+      background: #26262e;
+      align-self: flex-start;
     }
 
-    .alert.success {
-      display: block;
-      color: var(--success);
-      background: #edfff5;
-      border: 1px solid #c9f4dc;
+    .user {
+      background: #7357ff;
+      align-self: flex-end;
     }
 
-    /* FOOTER */
+    .chat-input {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid #2d2d35;
+      padding-top: 13px;
+    }
 
-    footer {
-      border-top: 1px solid var(--border);
-      background: #fff;
-      padding: 25px 30px;
-      color: var(--muted);
+    .chat-input input {
+      height: 43px;
+      background: #1c1c22;
+      border-color: #35353d;
+      color: #fff;
+    }
+
+    .chat-input button {
+      width: 50px;
+      border: 0;
+      border-radius: 9px;
+      background: #7357ff;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .agent-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .saved-agent {
+      border: 1px solid #e3e3ea;
+      border-radius: 12px;
+      padding: 13px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .saved-agent-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #f0edff;
+      color: #6046dc;
+      display: grid;
+      place-items: center;
+    }
+
+    .saved-agent-info {
+      flex: 1;
+    }
+
+    .saved-agent-info strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .saved-agent-info small {
+      color: #777;
+    }
+
+    .delete-agent {
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      color: #999;
+      font-size: 17px;
+    }
+
+    .empty {
+      color: #777;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 13px;
+    }
+
+    .info {
+      color: #777;
       font-size: 12px;
+      line-height: 1.65;
+      margin-top: 16px;
     }
 
-    .footer-inner {
-      max-width: 1400px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a:hover {
-      color: var(--primary);
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 1100px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      .test-panel {
-        min-height: 560px;
-      }
-    }
-
-    @media (max-width: 850px) {
-      .nav-links {
-        display: none;
-      }
-
-      .navbar {
-        padding: 0 18px;
-      }
-
-      .page {
-        width: min(100% - 28px, 720px);
-        padding-top: 28px;
-      }
-
-      .hero {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .usage {
-        width: 100%;
-      }
-
-      .voice-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .features {
+    @media (max-width: 900px) {
+      .layout {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 560px) {
-      .profile-btn {
-        display: none;
-      }
-
-      .upgrade-btn {
-        padding: 9px 12px;
-        font-size: 12px;
-      }
-
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      .panel-body {
-        padding: 16px;
-      }
-
-      .form-grid,
-      .setting-row {
+    @media (max-width: 650px) {
+      .agent-types {
         grid-template-columns: 1fr;
       }
 
-      .field.full {
-        grid-column: auto;
+      .card {
+        padding: 18px;
       }
 
-      .voice-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-      }
-
-      .chat {
-        min-height: 320px;
+      .topbar {
+        padding: 0 4%;
       }
     }
   </style>
@@ -687,776 +430,1074 @@
 
 <body>
 
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="nav-inner">
+<header class="topbar">
 
-      <a href="index.html" class="logo">
-        ∿ <span>Voice</span>AI
-      </a>
+  <a href="tools.html" class="nav-link">
+    ← AI Tools
+  </a>
 
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="agents.html" class="active">Agents</a>
-      </nav>
+  <div class="logo">
+    ∿ <span>VoiceAI</span>
+  </div>
 
-      <div class="nav-actions">
-        <a href="profile.html" class="profile-btn">Profile</a>
-        <a href="pricing.html" class="upgrade-btn">Upgrade</a>
-      </div>
+  <a href="profile.html" class="nav-link">
+    Profile
+  </a>
 
+</header>
+
+<main class="container">
+
+  <section class="hero">
+
+    <div class="badge">
+      Conversational AI
     </div>
-  </header>
 
+    <h1>
+      Build AI Voice Agents
+    </h1>
 
-  <main class="page">
+    <p>
+      Create intelligent voice agents for customer support, sales,
+      appointments and automated conversations.
+    </p>
 
-    <!-- HERO -->
-    <section class="hero">
+  </section>
 
-      <div>
-        <div class="eyebrow">
-          AI VOICE AGENTS
-        </div>
+  <div class="layout">
 
-        <h1>Build AI agents<br>that can talk.</h1>
+    <!-- LEFT -->
+    <div>
 
-        <p>
-          Create conversational voice agents for customer support,
-          sales, bookings, websites and automated conversations.
-        </p>
-      </div>
+      <section class="card">
 
-      <div class="usage">
-        <div class="usage-top">
-          <span>Free AI usage</span>
-          <strong>1 / 5</strong>
-        </div>
+        <h2>
+          Create your agent
+        </h2>
 
-        <div class="usage-bar">
-          <div class="usage-fill"></div>
-        </div>
-
-        <small>5 AI actions per 24 hours</small>
-      </div>
-
-    </section>
-
-
-    <!-- WORKSPACE -->
-    <section class="workspace">
-
-      <!-- LEFT -->
-      <div class="panel">
-
-        <div class="panel-header">
-          <h2>Agent configuration</h2>
-          <p>Configure your agent's personality, voice and behavior.</p>
-        </div>
-
-        <div class="panel-body">
-
-          <div class="form-grid">
-
-            <div class="field">
-              <label for="agentName">Agent name</label>
-              <input
-                id="agentName"
-                type="text"
-                placeholder="e.g. Support Assistant"
-                maxlength="80"
-              >
-            </div>
-
-            <div class="field">
-              <label for="agentDescription">Description</label>
-              <input
-                id="agentDescription"
-                type="text"
-                placeholder="What does this agent do?"
-                maxlength="150"
-              >
-            </div>
-
-            <div class="field">
-              <label for="language">Language</label>
-              <select id="language">
-                <option value="en-US">English — US</option>
-                <option value="en-GB">English — UK</option>
-                <option value="hi-IN">Hindi</option>
-                <option value="gu-IN">Gujarati</option>
-                <option value="es-ES">Spanish</option>
-                <option value="fr-FR">French</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="model">AI model</label>
-              <select id="model">
-                <option value="fast">VoiceAI Fast</option>
-                <option value="balanced">VoiceAI Balanced</option>
-                <option value="advanced">VoiceAI Advanced</option>
-              </select>
-            </div>
-
-            <div class="field full">
-
-              <label>Agent voice</label>
-
-              <div class="voice-grid">
-
-                <div class="voice-option">
-                  <input
-                    type="radio"
-                    id="voiceDavid"
-                    name="voice"
-                    value="david"
-                    checked
-                  >
-                  <label for="voiceDavid">
-                    <span class="voice-name">David</span>
-                    <span class="voice-type">Professional Male</span>
-                  </label>
-                </div>
-
-                <div class="voice-option">
-                  <input
-                    type="radio"
-                    id="voiceMarcus"
-                    name="voice"
-                    value="marcus"
-                  >
-                  <label for="voiceMarcus">
-                    <span class="voice-name">Marcus</span>
-                    <span class="voice-type">Deep & Confident</span>
-                  </label>
-                </div>
-
-                <div class="voice-option">
-                  <input
-                    type="radio"
-                    id="voiceSarah"
-                    name="voice"
-                    value="sarah"
-                  >
-                  <label for="voiceSarah">
-                    <span class="voice-name">Sarah</span>
-                    <span class="voice-type">Warm Female</span>
-                  </label>
-                </div>
-
-                <div class="voice-option">
-                  <input
-                    type="radio"
-                    id="voiceEmma"
-                    name="voice"
-                    value="emma"
-                  >
-                  <label for="voiceEmma">
-                    <span class="voice-name">Emma</span>
-                    <span class="voice-type">Clear & Friendly</span>
-                  </label>
-                </div>
-
-              </div>
-
-            </div>
-
-
-            <div class="field full">
-
-              <label for="systemPrompt">System instructions</label>
-
-              <textarea
-                id="systemPrompt"
-                placeholder="You are a helpful customer support agent. Answer clearly, politely and briefly..."
-              ></textarea>
-
-              <div class="hint">
-                Define the agent's personality, rules, goals and behavior.
-              </div>
-
-            </div>
-
-
-            <div class="field full">
-
-              <label for="greeting">Opening greeting</label>
-
-              <input
-                id="greeting"
-                type="text"
-                value="Hi! How can I help you today?"
-                maxlength="300"
-              >
-
-            </div>
-
-
-            <div class="field full">
-
-              <div class="setting-row">
-
-                <div class="range-wrap">
-
-                  <div class="range-top">
-                    <span>Temperature</span>
-                    <span id="temperatureValue">0.5</span>
-                  </div>
-
-                  <input
-                    id="temperature"
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.1"
-                    value="0.5"
-                  >
-
-                </div>
-
-                <div class="range-wrap">
-
-                  <div class="range-top">
-                    <span>Response speed</span>
-                    <span id="speedValue">1.0x</span>
-                  </div>
-
-                  <input
-                    id="responseSpeed"
-                    type="range"
-                    min="0.5"
-                    max="2"
-                    step="0.1"
-                    value="1"
-                  >
-
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div id="alertBox" class="alert"></div>
-
-
-          <div class="actions">
-
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="resetBtn"
-            >
-              Reset
-            </button>
-
-            <button
-              type="button"
-              class="btn btn-primary"
-              id="saveBtn"
-            >
-              Save Agent
-            </button>
-
-          </div>
-
-        </div>
-      </div>
-
-
-      <!-- RIGHT TEST PANEL -->
-      <div class="panel test-panel">
-
-        <div class="panel-header">
-
-          <h2>Test your agent</h2>
-
-          <p>
-            Send a message and preview how your agent responds.
-          </p>
-
-          <div class="agent-status">
-            <span class="status-dot"></span>
-            Ready to test
-          </div>
-
-        </div>
-
-
-        <div class="chat" id="chat">
-
-          <div class="message agent">
-            Hi! How can I help you today?
-          </div>
-
-        </div>
-
-
-        <div class="test-note">
-          Test mode uses your configured agent. Live phone/web deployment
-          requires the VoiceAI backend.
-        </div>
-
-
-        <div class="chat-input">
-
-          <input
-            type="text"
-            id="messageInput"
-            placeholder="Type a message..."
-            maxlength="1000"
-          >
+        <div class="agent-types">
 
           <button
             type="button"
-            class="send-btn"
-            id="sendBtn"
-            aria-label="Send message"
+            class="agent-type active"
+            data-type="support"
           >
-            →
+            <div class="agent-icon">🎧</div>
+            <strong>Support</strong>
+            <small>Customer service agent</small>
+          </button>
+
+          <button
+            type="button"
+            class="agent-type"
+            data-type="sales"
+          >
+            <div class="agent-icon">💼</div>
+            <strong>Sales</strong>
+            <small>Lead qualification</small>
+          </button>
+
+          <button
+            type="button"
+            class="agent-type"
+            data-type="booking"
+          >
+            <div class="agent-icon">📅</div>
+            <strong>Booking</strong>
+            <small>Appointments & calls</small>
           </button>
 
         </div>
 
-      </div>
-
-    </section>
-
-
-    <!-- FEATURES -->
-    <section class="features">
-
-      <article class="feature">
-
-        <div class="feature-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 3v18M8 7v10M16 7v10M5 10v4M19 10v4"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-          </svg>
+        <div class="usage">
+          <strong>Free plan:</strong>
+          <span id="usageText">5 AI uses/day</span>
         </div>
 
-        <h3>Natural conversations</h3>
+        <div class="field">
 
-        <p>
-          Build agents with natural responses, custom instructions
-          and configurable voice behavior.
-        </p>
+          <label for="agentName">
+            Agent Name
+          </label>
 
-      </article>
+          <input
+            id="agentName"
+            type="text"
+            maxlength="80"
+            placeholder="e.g. Sarah Support"
+          >
 
-
-      <article class="feature">
-
-        <div class="feature-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 5h16v14H4z"
-              stroke="currentColor"
-              stroke-width="1.8"
-            />
-            <path
-              d="M8 9h8M8 13h5"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-          </svg>
         </div>
 
-        <h3>Custom instructions</h3>
+        <div class="field">
 
-        <p>
-          Define exactly how your AI should answer, what it should
-          avoid and what goals it should follow.
-        </p>
+          <label for="agentVoice">
+            Voice
+          </label>
 
-      </article>
+          <select id="agentVoice">
 
+            <option value="">
+              Loading voices...
+            </option>
 
-      <article class="feature">
+          </select>
 
-        <div class="feature-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"
-              stroke="currentColor"
-              stroke-width="1.8"
-            />
-            <path
-              d="M9 12l2 2 4-4"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
         </div>
 
-        <h3>Deploy safely</h3>
+        <div class="field">
 
-        <p>
-          Connect your finished agent to your website, applications
-          or supported voice infrastructure through your backend.
-        </p>
+          <label for="agentLanguage">
+            Language
+          </label>
 
-      </article>
+          <select id="agentLanguage">
 
-    </section>
+            <option value="en">
+              English
+            </option>
 
-  </main>
+            <option value="hi">
+              Hindi
+            </option>
 
+            <option value="gu">
+              Gujarati
+            </option>
 
-  <!-- FOOTER -->
-  <footer>
+            <option value="es">
+              Spanish
+            </option>
 
-    <div class="footer-inner">
+            <option value="fr">
+              French
+            </option>
 
-      <div>
-        © 2026 VoiceAI. All rights reserved.
-      </div>
+            <option value="de">
+              German
+            </option>
 
-      <div class="footer-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="profile.html">Profile</a>
-        <a href="forgot-password.html">Forgot Password</a>
-      </div>
+            <option value="ja">
+              Japanese
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label for="systemPrompt">
+            Agent Instructions
+          </label>
+
+          <textarea
+            id="systemPrompt"
+            maxlength="5000"
+            placeholder="Describe how your AI agent should behave..."
+          ></textarea>
+
+        </div>
+
+        <div class="field">
+
+          <label for="welcomeMessage">
+            Welcome Message
+          </label>
+
+          <textarea
+            id="welcomeMessage"
+            maxlength="1000"
+            placeholder="Hello! How can I help you today?"
+          ></textarea>
+
+        </div>
+
+        <button
+          class="btn"
+          id="createAgentBtn"
+        >
+          Create AI Agent
+        </button>
+
+        <button
+          class="btn secondary"
+          id="clearFormBtn"
+        >
+          Clear
+        </button>
+
+        <div
+          class="status"
+          id="status"
+        ></div>
+
+      </section>
+
+      <section class="card">
+
+        <h2>
+          Your Agents
+        </h2>
+
+        <div
+          class="agent-list"
+          id="agentList"
+        >
+          <div class="empty">
+            No agents created yet.
+          </div>
+        </div>
+
+      </section>
 
     </div>
 
-  </footer>
+    <!-- RIGHT -->
+    <aside>
 
+      <section class="card">
 
-  <script>
+        <h2>
+          Test your agent
+        </h2>
 
-    const $ = (id) => document.getElementById(id);
+        <div class="agent-preview">
 
-    const temperature = $("temperature");
-    const temperatureValue = $("temperatureValue");
+          <div class="agent-header">
 
-    const responseSpeed = $("responseSpeed");
-    const speedValue = $("speedValue");
+            <div class="agent-avatar">
+              AI
+            </div>
 
-    const alertBox = $("alertBox");
+            <div>
+              <strong id="previewName">
+                VoiceAI Agent
+              </strong>
 
-    const chat = $("chat");
-    const messageInput = $("messageInput");
-    const sendBtn = $("sendBtn");
+              <small id="previewType">
+                Customer Support
+              </small>
+            </div>
 
-    /* SLIDERS */
+            <span class="online">
+              ● Online
+            </span>
 
-    temperature.addEventListener("input", () => {
-      temperatureValue.textContent = temperature.value;
-    });
+          </div>
 
-    responseSpeed.addEventListener("input", () => {
-      speedValue.textContent = Number(responseSpeed.value).toFixed(1) + "x";
-    });
+          <div
+            class="chat"
+            id="chat"
+          >
 
+            <div class="message bot">
+              Hello! I'm your VoiceAI agent. How can I help you?
+            </div>
 
-    /* ALERT */
+          </div>
 
-    function showAlert(message, type = "error") {
+          <div class="chat-input">
 
-      alertBox.textContent = message;
-      alertBox.className = "alert " + type;
+            <input
+              id="chatInput"
+              type="text"
+              placeholder="Type a message..."
+            >
 
+            <button
+              id="sendChatBtn"
+              type="button"
+            >
+              →
+            </button>
+
+          </div>
+
+        </div>
+
+        <p class="info">
+          The test chat sends your message to the configured backend agent.
+          Production voice calls require your telephony/voice provider setup.
+        </p>
+
+      </section>
+
+    </aside>
+
+  </div>
+
+</main>
+
+<script>
+"use strict";
+
+const agentName =
+  document.getElementById("agentName");
+
+const agentVoice =
+  document.getElementById("agentVoice");
+
+const agentLanguage =
+  document.getElementById("agentLanguage");
+
+const systemPrompt =
+  document.getElementById("systemPrompt");
+
+const welcomeMessage =
+  document.getElementById("welcomeMessage");
+
+const createAgentBtn =
+  document.getElementById("createAgentBtn");
+
+const clearFormBtn =
+  document.getElementById("clearFormBtn");
+
+const statusBox =
+  document.getElementById("status");
+
+const usageText =
+  document.getElementById("usageText");
+
+const agentList =
+  document.getElementById("agentList");
+
+const previewName =
+  document.getElementById("previewName");
+
+const previewType =
+  document.getElementById("previewType");
+
+const chat =
+  document.getElementById("chat");
+
+const chatInput =
+  document.getElementById("chatInput");
+
+const sendChatBtn =
+  document.getElementById("sendChatBtn");
+
+let selectedType = "support";
+let selectedAgentId = null;
+let agents = [];
+let voices = [];
+
+const typeNames = {
+  support: "Customer Support",
+  sales: "Sales Agent",
+  booking: "Appointment Booking"
+};
+
+function showStatus(message, type = "info") {
+
+  statusBox.textContent = message;
+  statusBox.style.display = "block";
+
+  if (type === "error") {
+
+    statusBox.style.background = "#fff0f0";
+    statusBox.style.color = "#b42318";
+
+  } else if (type === "success") {
+
+    statusBox.style.background = "#ecfdf3";
+    statusBox.style.color = "#067647";
+
+  } else {
+
+    statusBox.style.background = "#f4f4f8";
+    statusBox.style.color = "#555";
+  }
+}
+
+function escapeHtml(value) {
+
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+document
+  .querySelectorAll(".agent-type")
+  .forEach((button) => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        document
+          .querySelectorAll(".agent-type")
+          .forEach((item) =>
+            item.classList.remove("active")
+          );
+
+        button.classList.add("active");
+
+        selectedType =
+          button.dataset.type;
+
+        previewType.textContent =
+          typeNames[selectedType] ||
+          "AI Agent";
+
+        if (!systemPrompt.value.trim()) {
+
+          setDefaultPrompt();
+        }
+      }
+    );
+  });
+
+function setDefaultPrompt() {
+
+  const prompts = {
+
+    support:
+      "You are a helpful customer support agent. Answer clearly, politely and professionally. If you do not know something, say so instead of inventing information.",
+
+    sales:
+      "You are a professional sales assistant. Understand the customer's needs, explain the product clearly and help qualified leads move toward the next step without making false claims.",
+
+    booking:
+      "You are an appointment assistant. Help customers choose suitable appointment times, collect the required information and clearly confirm the requested booking details."
+  };
+
+  systemPrompt.value =
+    prompts[selectedType] ||
+    prompts.support;
+}
+
+function setDefaultWelcome() {
+
+  if (!welcomeMessage.value.trim()) {
+
+    welcomeMessage.value =
+      "Hello! How can I help you today?";
+  }
+}
+
+agentName.addEventListener(
+  "input",
+  () => {
+
+    previewName.textContent =
+      agentName.value.trim() ||
+      "VoiceAI Agent";
+  }
+);
+
+async function loadVoices() {
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/voices?page_size=100"
+      );
+
+    if (!response.ok) {
+      throw new Error("Voice API failed");
     }
 
+    const data =
+      await response.json();
 
-    /* COLLECT AGENT */
+    voices =
+      Array.isArray(data)
+        ? data
+        : (
+            data.voices ||
+            data.data ||
+            []
+          );
 
-    function getAgentData() {
+  } catch (error) {
 
-      const selectedVoice =
-        document.querySelector('input[name="voice"]:checked');
+    console.warn(
+      "Could not load voices:",
+      error
+    );
 
-      return {
+    voices = [
+      {
+        voice_id: "default-female",
+        voiceId: "default-female",
+        name: "Professional Female"
+      },
+      {
+        voice_id: "default-male",
+        voiceId: "default-male",
+        name: "Professional Male"
+      }
+    ];
+  }
 
-        name: $("agentName").value.trim(),
+  agentVoice.innerHTML = "";
 
-        description:
-          $("agentDescription").value.trim(),
+  if (!voices.length) {
 
-        language:
-          $("language").value,
+    agentVoice.innerHTML =
+      '<option value="">No voices available</option>';
 
-        model:
-          $("model").value,
+    return;
+  }
 
-        voice:
-          selectedVoice ? selectedVoice.value : "david",
+  voices.forEach((voice) => {
 
-        systemPrompt:
-          $("systemPrompt").value.trim(),
+    const id =
+      voice.voice_id ||
+      voice.voiceId ||
+      voice.id;
 
-        greeting:
-          $("greeting").value.trim(),
+    const name =
+      voice.name ||
+      voice.display_name ||
+      "AI Voice";
 
-        temperature:
-          Number(temperature.value),
-
-        responseSpeed:
-          Number(responseSpeed.value)
-
-      };
-
+    if (!id) {
+      return;
     }
 
+    const option =
+      document.createElement("option");
 
-    /* SAVE AGENT */
+    option.value = id;
+    option.textContent = name;
 
-    $("saveBtn").addEventListener("click", async () => {
+    agentVoice.appendChild(option);
+  });
+}
 
-      const agent = getAgentData();
+async function loadAgents() {
 
-      if (!agent.name) {
+  try {
 
-        showAlert("Please enter an agent name.");
+    const response =
+      await fetch("/api/agents");
 
-        $("agentName").focus();
+    if (!response.ok) {
+      return;
+    }
 
-        return;
+    const data =
+      await response.json();
 
-      }
-
-      if (!agent.systemPrompt) {
-
-        showAlert("Please add system instructions.");
-
-        $("systemPrompt").focus();
-
-        return;
-
-      }
-
-      const button = $("saveBtn");
-
-      button.disabled = true;
-      button.textContent = "Saving...";
-
-      try {
-
-        const response = await fetch("/api/agents", {
-
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify(agent)
-
-        });
-
-        if (!response.ok) {
-          throw new Error("Unable to save agent.");
-        }
-
-        const data = await response.json();
-
-        if (!data || data.success === false) {
-          throw new Error(
-            data?.message || "Agent could not be saved."
+    agents =
+      Array.isArray(data)
+        ? data
+        : (
+            data.agents ||
+            data.data ||
+            []
           );
-        }
 
-        if (data.id) {
-          localStorage.setItem(
-            "voiceaiAgentId",
-            data.id
-          );
-        }
+    renderAgents();
 
-        showAlert(
-          "Agent saved successfully.",
-          "success"
-        );
+  } catch (error) {
 
-      } catch (error) {
+    console.warn(
+      "Could not load agents:",
+      error
+    );
+  }
+}
 
-        showAlert(
-          "Agent could not be saved. Connect the /api/agents backend endpoint."
-        );
+function renderAgents() {
 
-      } finally {
+  if (!agents.length) {
 
-        button.disabled = false;
-        button.textContent = "Save Agent";
+    agentList.innerHTML =
+      '<div class="empty">No agents created yet.</div>';
 
-      }
+    return;
+  }
 
+  agentList.innerHTML =
+    agents.map((agent) => {
+
+      const id =
+        agent.id ||
+        agent.agent_id;
+
+      const name =
+        agent.name ||
+        agent.agent_name ||
+        "Unnamed Agent";
+
+      const type =
+        typeNames[
+          agent.type ||
+          agent.agent_type
+        ] ||
+        "AI Agent";
+
+      return `
+        <div class="saved-agent">
+
+          <div class="saved-agent-icon">
+            🤖
+          </div>
+
+          <div class="saved-agent-info">
+
+            <strong>
+              ${escapeHtml(name)}
+            </strong>
+
+            <small>
+              ${escapeHtml(type)}
+            </small>
+
+          </div>
+
+          <button
+            class="delete-agent"
+            type="button"
+            data-id="${escapeHtml(id)}"
+            title="Delete agent"
+          >
+            ×
+          </button>
+
+        </div>
+      `;
+
+    }).join("");
+
+  document
+    .querySelectorAll(".delete-agent")
+    .forEach((button) => {
+
+      button.addEventListener(
+        "click",
+        () => deleteAgent(button.dataset.id)
+      );
     });
+}
 
+createAgentBtn.addEventListener(
+  "click",
+  async () => {
 
-    /* TEST AGENT */
+    const name =
+      agentName.value.trim();
 
-    async function sendMessage() {
+    const prompt =
+      systemPrompt.value.trim();
 
-      const message =
-        messageInput.value.trim();
+    const welcome =
+      welcomeMessage.value.trim();
 
-      if (!message) return;
+    if (!name) {
 
-      const userBubble =
-        document.createElement("div");
+      showStatus(
+        "Please enter an agent name.",
+        "error"
+      );
 
-      userBubble.className = "message user";
-      userBubble.textContent = message;
+      agentName.focus();
+      return;
+    }
 
-      chat.appendChild(userBubble);
+    if (!prompt) {
 
-      messageInput.value = "";
+      showStatus(
+        "Please enter agent instructions.",
+        "error"
+      );
 
-      chat.scrollTop = chat.scrollHeight;
+      systemPrompt.focus();
+      return;
+    }
 
-      const thinking =
-        document.createElement("div");
+    createAgentBtn.disabled = true;
+    createAgentBtn.textContent =
+      "Creating...";
 
-      thinking.className = "message agent";
-      thinking.textContent = "Thinking...";
+    try {
 
-      chat.appendChild(thinking);
+      showStatus(
+        "Creating your AI agent..."
+      );
 
-      chat.scrollTop = chat.scrollHeight;
-
-      sendBtn.disabled = true;
-
-      try {
-
-        const agent = getAgentData();
-
-        const response = await fetch(
-          "/api/agents/test",
+      const response =
+        await fetch(
+          "/api/agents",
           {
             method: "POST",
-
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type":
+                "application/json"
             },
-
             body: JSON.stringify({
-
-              agent: agent,
-
-              message: message
-
+              name,
+              agent_name: name,
+              type: selectedType,
+              agent_type: selectedType,
+              voice: agentVoice.value,
+              voice_id: agentVoice.value,
+              language: agentLanguage.value,
+              systemPrompt: prompt,
+              system_prompt: prompt,
+              welcomeMessage: welcome,
+              welcome_message: welcome
             })
-
           }
         );
 
-        if (!response.ok) {
-          throw new Error(
-            "Agent test failed."
-          );
+      const contentType =
+        response.headers.get(
+          "content-type"
+        ) || "";
+
+      let data = {};
+
+      if (
+        contentType.includes(
+          "application/json"
+        )
+      ) {
+
+        data =
+          await response.json();
+
+      } else {
+
+        const text =
+          await response.text();
+
+        data = {
+          message: text
+        };
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          data.message ||
+          "Could not create agent."
+        );
+      }
+
+      const created =
+        data.agent ||
+        data.data ||
+        data;
+
+      if (
+        created &&
+        (
+          created.id ||
+          created.agent_id
+        )
+      ) {
+
+        agents.unshift(created);
+
+      }
+
+      renderAgents();
+
+      showStatus(
+        "AI agent created successfully.",
+        "success"
+      );
+
+      selectedAgentId =
+        created.id ||
+        created.agent_id ||
+        null;
+
+      clearForm(false);
+
+    } catch (error) {
+
+      console.error(error);
+
+      showStatus(
+        error.message ||
+        "Could not create AI agent.",
+        "error"
+      );
+
+    } finally {
+
+      createAgentBtn.disabled =
+        false;
+
+      createAgentBtn.textContent =
+        "Create AI Agent";
+    }
+  }
+);
+
+async function deleteAgent(id) {
+
+  if (!id) {
+    return;
+  }
+
+  const confirmed =
+    window.confirm(
+      "Delete this AI agent?"
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/agents?id=" +
+        encodeURIComponent(id),
+        {
+          method: "DELETE"
         }
+      );
+
+    if (!response.ok) {
+
+      let message =
+        "Could not delete agent.";
+
+      try {
 
         const data =
           await response.json();
 
-        const reply =
-          data.reply ||
+        message =
+          data.error ||
           data.message ||
-          data.output;
+          message;
 
-        if (!reply) {
-          throw new Error(
-            "No agent response received."
-          );
-        }
+      } catch (_) {}
 
-        thinking.textContent = reply;
-
-      } catch (error) {
-
-        thinking.textContent =
-          "Test backend is not connected yet. Connect /api/agents/test to enable live AI responses.";
-
-      } finally {
-
-        sendBtn.disabled = false;
-
-        chat.scrollTop =
-          chat.scrollHeight;
-
-      }
-
+      throw new Error(message);
     }
 
+    agents =
+      agents.filter(
+        (agent) =>
+          String(
+            agent.id ||
+            agent.agent_id
+          ) !== String(id)
+      );
 
-    sendBtn.addEventListener(
-      "click",
-      sendMessage
+    renderAgents();
+
+    showStatus(
+      "Agent deleted.",
+      "success"
     );
 
+  } catch (error) {
 
-    messageInput.addEventListener(
-      "keydown",
-      (event) => {
+    showStatus(
+      error.message ||
+      "Could not delete agent.",
+      "error"
+    );
+  }
+}
 
-        if (event.key === "Enter") {
+function addMessage(text, type) {
 
-          event.preventDefault();
+  const message =
+    document.createElement("div");
 
-          sendMessage();
+  message.className =
+    "message " + type;
 
+  message.textContent =
+    text;
+
+  chat.appendChild(message);
+
+  chat.scrollTop =
+    chat.scrollHeight;
+}
+
+async function sendChat() {
+
+  const message =
+    chatInput.value.trim();
+
+  if (!message) {
+    return;
+  }
+
+  addMessage(
+    message,
+    "user"
+  );
+
+  chatInput.value = "";
+
+  sendChatBtn.disabled =
+    true;
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/agents/test",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify({
+            agentId:
+              selectedAgentId,
+            agent_id:
+              selectedAgentId,
+            message,
+            type:
+              selectedType,
+            language:
+              agentLanguage.value,
+            voice:
+              agentVoice.value
+          })
         }
+      );
 
-      }
+    const contentType =
+      response.headers.get(
+        "content-type"
+      ) || "";
+
+    let data = {};
+
+    if (
+      contentType.includes(
+        "application/json"
+      )
+    ) {
+
+      data =
+        await response.json();
+
+    } else {
+
+      data = {
+        text:
+          await response.text()
+      };
+    }
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        data.message ||
+        "Agent test failed."
+      );
+    }
+
+    const reply =
+      data.reply ||
+      data.response ||
+      data.text ||
+      data.message ||
+      "I received your message.";
+
+    addMessage(
+      reply,
+      "bot"
     );
 
+  } catch (error) {
 
-    /* RESET */
+    console.error(error);
 
-    $("resetBtn").addEventListener(
-      "click",
-      () => {
-
-        $("agentName").value = "";
-        $("agentDescription").value = "";
-
-        $("language").value = "en-US";
-        $("model").value = "fast";
-
-        $("voiceDavid").checked = true;
-
-        $("systemPrompt").value = "";
-
-        $("greeting").value =
-          "Hi! How can I help you today?";
-
-        temperature.value = 0.5;
-        temperatureValue.textContent = "0.5";
-
-        responseSpeed.value = 1;
-        speedValue.textContent = "1.0x";
-
-        alertBox.className = "alert";
-        alertBox.textContent = "";
-
-        chat.innerHTML = `
-          <div class="message agent">
-            Hi! How can I help you today?
-          </div>
-        `;
-
-      }
+    addMessage(
+      error.message ||
+      "Sorry, the agent could not respond.",
+      "bot"
     );
 
-  </script>
+  } finally {
+
+    sendChatBtn.disabled =
+      false;
+
+    chatInput.focus();
+  }
+}
+
+sendChatBtn.addEventListener(
+  "click",
+  sendChat
+);
+
+chatInput.addEventListener(
+  "keydown",
+  (event) => {
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey
+    ) {
+
+      event.preventDefault();
+
+      sendChat();
+    }
+  }
+);
+
+function clearForm(showMessage = true) {
+
+  agentName.value = "";
+
+  systemPrompt.value = "";
+
+  welcomeMessage.value = "";
+
+  agentLanguage.value =
+    "en";
+
+  selectedAgentId = null;
+
+  previewName.textContent =
+    "VoiceAI Agent";
+
+  previewType.textContent =
+    typeNames[selectedType] ||
+    "Customer Support";
+
+  setDefaultPrompt();
+  setDefaultWelcome();
+
+  if (showMessage) {
+
+    showStatus(
+      "Form cleared."
+    );
+  }
+}
+
+clearFormBtn.addEventListener(
+  "click",
+  () => clearForm(true)
+);
+
+setDefaultPrompt();
+setDefaultWelcome();
+loadVoices();
+loadAgents();
+
+</script>
 
 </body>
 </html>
