@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voice Clone — VoiceAI</title>
+  <meta
+    name="description"
+    content="Create an AI voice clone from an authorized voice recording with VoiceAI."
+  >
+
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/pages/clone.css">
+</head>
+
+<body data-usage-action="voice_clone">
+
+<header class="navbar">
+
+  <div class="container nav">
+
+    <a href="index.html" class="logo">
+      <span class="logo-mark">∿</span>
+      <span>VoiceAI</span>
+    </a>
+
+    <nav class="links">
+      <a href="index.html">Home</a>
+      <a href="tools.html">AI Tools</a>
+      <a href="voices.html">Voices</a>
+      <a href="studio.html">Studio</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+
+    <div class="actions">
+      <a href="login.html" class="btn light">Login</a>
+      <a href="signup.html" class="btn primary">Get Started</a>
+      <button class="menu" id="menuBtn">☰</button>
+    </div>
+
+  </div>
+
+</header>
+
+
+<main>
+
+  <section class="hero">
+
+    <div class="container">
+
+      <div class="badge">
+        ✦ Voice Cloning
+      </div>
+
+      <h1>
+        Create your
+        <span>AI voice.</span>
+      </h1>
+
+      <p>
+        Upload an authorized voice recording and create a reusable
+        AI voice through the VoiceAI backend.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <section class="workspace">
+
+    <div class="container">
+
+      <div class="workspace-grid">
+
+        <!-- UPLOAD -->
+
+        <div class="card">
+
+          <h2>1. Upload voice sample</h2>
+
+          <p class="card-subtitle">
+            Use a clear recording with minimal background noise.
+          </p>
+
+          <div class="usage">
+
+            <div class="usage-top">
+
+              <span>Free usage</span>
+
+              <span
+                class="usage-text"
+                id="usageText"
+              >
+                1 / 5 today
+              </span>
+
+            </div>
+
+            <div class="progress">
+              <div
+                class="progress-bar"
+                id="usageBar"
+              ></div>
+            </div>
+
+          </div>
+
+
+          <div
+            class="dropzone"
+            id="dropzone"
+          >
+
+            <div class="upload-icon">
+              ↑
+            </div>
+
+            <h3>
+              Drop your audio here
+            </h3>
+
+            <p>
+              or tap to choose an audio file
+            </p>
+
+            <p class="voiceai-inline-style-1">
+              MP3, WAV, M4A or other supported audio
+            </p>
+
+            <input
+              class="file-input"
+              id="audioInput"
+              type="file"
+              accept="audio/*"
+            >
+
+          </div>
+
+
+          <div
+            class="file-info"
+            id="fileInfo"
+          ></div>
+
+
+          <div
+            class="audio-preview"
+            id="audioPreview"
+          >
+
+            <audio
+              id="sourcePlayer"
+              controls
+            ></audio>
+
+          </div>
+
+        </div>
+
+
+        <!-- SETTINGS -->
+
+        <div class="card">
+
+          <h2>2. Voice settings</h2>
+
+          <p class="card-subtitle">
+            Give your cloned voice a name and confirm you have permission
+            to clone the speaker.
+          </p>
+
+
+          <div class="field">
+
+            <label for="voiceName">
+              Voice name
+            </label>
+
+            <input
+              class="input"
+              id="voiceName"
+              type="text"
+              maxlength="80"
+              placeholder="e.g. My Professional Voice"
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="voiceLanguage">
+              Primary language
+            </label>
+
+            <select
+              class="select"
+              id="voiceLanguage"
+            >
+
+              <option value="en">
+                English
+              </option>
+
+              <option value="hi">
+                Hindi
+              </option>
+
+              <option value="gu">
+                Gujarati
+              </option>
+
+              <option value="es">
+                Spanish
+              </option>
+
+              <option value="fr">
+                French
+              </option>
+
+              <option value="de">
+                German
+              </option>
+
+              <option value="ja">
+                Japanese
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label for="voiceDescription">
+              Description
+            </label>
+
+            <textarea
+              class="input"
+              id="voiceDescription"
+              rows="4"
+              maxlength="500"
+              placeholder="Describe how this voice should be used..."
+            ></textarea>
+
+          </div>
+
+
+          <div class="consent">
+
+            <input
+              type="checkbox"
+              id="consent"
+            >
+
+            <label for="consent">
+              I confirm that I own this voice recording or have
+              explicit permission from the speaker to create and use
+              an AI voice clone from it.
+            </label>
+
+          </div>
+
+
+          <button
+            class="btn primary generate"
+            id="cloneBtn"
+            type="button"
+          >
+            Create AI Voice
+          </button>
+
+
+          <div
+            class="status"
+            id="status"
+          ></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- RESULT -->
+
+      <div
+        class="result"
+        id="result"
+      >
+
+        <h3>
+          Voice clone result
+        </h3>
+
+        <audio
+          id="resultPlayer"
+          controls
+        ></audio>
+
+        <div class="result-actions">
+
+          <a
+            class="btn primary"
+            id="downloadBtn"
+            download="voiceai-cloned-voice.mp3"
+          >
+            Download
+          </a>
+
+          <a
+            class="btn light"
+            id="useTtsBtn"
+            href="tts.html"
+          >
+            Use in TTS
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- INFO -->
+
+      <div class="info">
+
+        <div class="info-item">
+          <strong>🎙 Clear audio</strong>
+          <span>
+            Cleaner recordings generally produce better results.
+          </span>
+        </div>
+
+        <div class="info-item">
+          <strong>🔐 Permission required</strong>
+          <span>
+            Only clone voices you own or are authorized to use.
+          </span>
+        </div>
+
+        <div class="info-item">
+          <strong>⚡ 5/day Free</strong>
+          <span>
+            Free accounts have exactly five AI-processing uses per day.
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <div class="container">
+
+    <div class="footer-grid">
+
+      <div>
+
+        <a href="index.html" class="logo">
+          <span class="logo-mark">∿</span>
+          <span>VoiceAI</span>
+        </a>
+
+        <p class="voiceai-inline-style-2">
+          Professional AI voice tools for creators,
+          businesses and modern content teams.
+        </p>
+
+      </div>
+
+      <div>
+
+        <h4>Product</h4>
+
+        <ul>
+          <li><a href="tools.html">AI Tools</a></li>
+          <li><a href="voices.html">Voice Library</a></li>
+          <li><a href="studio.html">Studio</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+        </ul>
+
+      </div>
+
+      <div>
+
+        <h4>Company</h4>
+
+        <ul>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+
+      </div>
+
+      <div>
+
+        <h4>Account</h4>
+
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signup.html">Signup</a></li>
+          <li><a href="profile.html">Profile</a></li>
+        </ul>
+
+      </div>
+
+    </div>
+
+    <div class="copyright">
+      © 2026 VoiceAI. All rights reserved.
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+
+
+  <script src="js/pages/clone.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
