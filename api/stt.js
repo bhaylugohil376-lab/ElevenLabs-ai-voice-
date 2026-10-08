@@ -1,13 +1,10 @@
-// api/stt.js
-
 import { createClient } from "@supabase/supabase-js";
-import formidable from "formidable";
-import fs from "fs";
 
-export const config = {
-  api: {
-    bodyParser: false
-  }
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS"
 };
 
 const supabaseAdmin = createClient(
@@ -15,399 +12,282 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-function send(res, status, data) {
-  return res.status(status).json(data);
-}
+function getToken(req) {
+  const auth = req.headers.authorization || "";
 
-async function getUser(req) {
-  const authorization =
-    req.headers.authorization || "";
-
-  if (!authorization.startsWith("Bearer ")) {
+  if (!auth.toLowerCase().startsWith("bearer ")) {
     return null;
   }
 
-  const token =
-    authorization.slice(7).trim();
-
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !user) return null;
-
-  return user;
+  return auth.substring(7).trim();
 }
 
-async function checkUsage() {
-  const { data, error } =
-    await supabaseAdmin.rpc(
-      "check_and_use_ai"
-    );
-
-  if (error) {
-    throw new Error(
-      `Usage check failed: ${error.message}`
-    );
-  }
-
-  return data;
-}
-
-function parseForm(req) {
-  return new Promise((resolve, reject) => {
-    const form = formidable({
-      multiples: false,
-      maxFileSize: 100 * 1024 * 1024
-    });
-
-    form.parse(req, (error, fields, files) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve({ fields, files });
-    });
+function sendJson(res, status, data) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
   });
-}
 
-function first(value) {
-  return Array.isArray(value)
-    ? value[0]
-    : value;
-}
-
-function getFile(files) {
-  return (
-    files.audio ||
-    files.file ||
-    files.media ||
-    files.video ||
-    null
-  );
-}
-
-function getExtension(file) {
-  const name =
-    file?.originalFilename || "";
-
-  const match =
-    name.match(/(\.[a-zA-Z0-9]+)$/);
-
-  return match
-    ? match[1].toLowerCase()
-    : ".mp3";
-}
-
-function mimeType(file) {
-  return (
-    file?.mimetype ||
-    "audio/mpeg"
-  );
-}
-
-function buildTextResponse(text, format) {
-  if (format === "json") {
-    return {
-      text,
-      segments: []
-    };
-  }
-
-  if (format === "srt") {
-    return (
-      "1\n" +
-      "00:00:00,000 --> 00:00:10,000\n" +
-      text
-    );
-  }
-
-  if (format === "vtt") {
-    return (
-      "WEBVTT\n\n" +
-      "00:00:00.000 --> 00:00:10.000\n" +
-      text
-    );
-  }
-
-  return text;
+  return res.status(status).json(data);
 }
 
 export default async function handler(req, res) {
-  let uploadedPath = null;
+  if (req.method === "OPTIONS") {
+    return sendJson(res, 200, { ok: true });
+  }
+
+  if (req.method !== "POST") {
+    return sendJson(res, 405, {
+      ok: false,
+      error: "Method not allowed"
+    });
+  }
 
   try {
-    if (req.method !== "POST") {
-      res.setHeader("Allow", "POST");
+    const token = getToken(req);
 
-      return send(res, 405, {
-        error: "Method not allowed."
-      });
-    }
-
-    const user = await getUser(req);
-
-    if (!user) {
-      return send(res, 401, {
-        error: "Authentication required."
-      });
-    }
-
-    const apiKey =
-      process.env.OPENAI_API_KEY;
-
-    if (!apiKey) {
-      return send(res, 500, {
-        error:
-          "OPENAI_API_KEY is not configured."
+    if (!token) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Authentication required"
       });
     }
 
     const {
-      fields,
-      files
-    } = await parseForm(req);
+      data: { user },
+      error: userError
+    } = await supabaseAdmin.auth.getUser(token);
 
-    const mediaFile =
-      getFile(files);
-
-    if (!mediaFile) {
-      return send(res, 400, {
-        error:
-          "Audio or video file is required."
+    if (userError || !user) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Invalid or expired session"
       });
     }
 
-    uploadedPath =
-      mediaFile.filepath ||
-      mediaFile.path;
+    const body = req.body || {};
 
-    if (!uploadedPath) {
-      return send(res, 400, {
-        error:
-          "Uploaded file could not be read."
-      });
-    }
+    const audioUrl =
+      body.audioUrl ||
+      body.audio_url ||
+      body.url ||
+      null;
 
     const language =
-      String(
-        first(fields.language) ||
-        ""
-      ).trim();
+      body.language ||
+      null;
 
-    const format =
-      String(
-        first(fields.format) ||
-        "txt"
-      ).trim().toLowerCase();
-
-    const projectName =
-      String(
-        first(fields.projectName) ||
-        "Untitled Transcription"
-      ).trim();
-
-    const allowedFormats = [
-      "txt",
-      "srt",
-      "vtt",
-      "json"
-    ];
-
-    const finalFormat =
-      allowedFormats.includes(format)
-        ? format
-        : "txt";
+    if (!audioUrl) {
+      return sendJson(res, 400, {
+        ok: false,
+        error: "audioUrl is required"
+      });
+    }
 
     /*
-     * Free = 5 AI uses/day.
-     * Premium/Admin = application-level unlimited.
+     * STT is an AI operation.
+     * Free users: maximum 5 AI uses/day.
      */
-    const usage = await checkUsage();
+    const { data: usageResult, error: usageError } =
+      await supabaseAdmin.rpc(
+        "check_and_use_ai",
+        {
+          p_user_id: user.id,
+          p_action: "speech_to_text"
+        }
+      );
+
+    if (usageError) {
+      console.error(
+        "Usage RPC error:",
+        usageError
+      );
+
+      return sendJson(res, 500, {
+        ok: false,
+        error: "Unable to verify AI usage limit"
+      });
+    }
+
+    const usage =
+      Array.isArray(usageResult)
+        ? usageResult[0]
+        : usageResult;
 
     if (!usage?.allowed) {
-      return send(res, 429, {
+      return sendJson(res, 429, {
+        ok: false,
         error:
           usage?.reason ||
-          "Daily AI usage limit reached.",
+          "Daily AI usage limit reached",
         usage
       });
     }
 
-    const buffer =
-      await fs.promises.readFile(
-        uploadedPath
-      );
+    const elevenLabsKey =
+      process.env.ELEVENLABS_API_KEY;
 
-    const blob = new Blob(
-      [buffer],
-      {
-        type: mimeType(mediaFile)
-      }
-    );
+    if (!elevenLabsKey) {
+      return sendJson(res, 500, {
+        ok: false,
+        error:
+          "ElevenLabs API is not configured on the server."
+      });
+    }
 
     /*
-     * OpenAI transcription endpoint.
+     * Download the audio from the supplied URL.
      */
+    const audioResponse =
+      await fetch(audioUrl);
+
+    if (!audioResponse.ok) {
+      return sendJson(res, 400, {
+        ok: false,
+        error: "Unable to download audio"
+      });
+    }
+
+    const contentType =
+      audioResponse.headers.get(
+        "content-type"
+      ) || "audio/mpeg";
+
+    const audioBuffer =
+      Buffer.from(
+        await audioResponse.arrayBuffer()
+      );
+
+    /*
+     * Basic size protection.
+     */
+    const maxSize =
+      25 * 1024 * 1024;
+
+    if (audioBuffer.length > maxSize) {
+      return sendJson(res, 413, {
+        ok: false,
+        error:
+          "Audio file is too large. Maximum size is 25 MB."
+      });
+    }
+
     const formData = new FormData();
 
     formData.append(
       "file",
-      blob,
-      mediaFile.originalFilename ||
-        `audio${getExtension(mediaFile)}`
+      new Blob(
+        [audioBuffer],
+        { type: contentType }
+      ),
+      "audio-input.mp3"
     );
 
-    formData.append(
-      "model",
-      process.env.OPENAI_STT_MODEL ||
-        "gpt-4o-mini-transcribe"
-    );
-
-    /*
-     * Only send language when user selected one.
-     */
     if (language) {
-      const languageCode =
-        language
-          .split("-")[0]
-          .toLowerCase();
-
       formData.append(
-        "language",
-        languageCode
+        "language_code",
+        String(language).slice(0, 20)
       );
     }
 
-    const response = await fetch(
-      "https://api.openai.com/v1/audio/transcriptions",
-      {
-        method: "POST",
-        headers: {
-          Authorization:
-            `Bearer ${apiKey}`
-        },
-        body: formData
-      }
-    );
-
-    const providerData =
-      await response.json();
-
-    if (!response.ok) {
-      console.error(
-        "OpenAI STT error:",
-        providerData
+    /*
+     * ElevenLabs Speech-to-Text.
+     */
+    const sttResponse =
+      await fetch(
+        "https://api.elevenlabs.io/v1/speech-to-text",
+        {
+          method: "POST",
+          headers: {
+            "xi-api-key": elevenLabsKey
+          },
+          body: formData
+        }
       );
 
-      return send(
+    const sttData =
+      await sttResponse.json().catch(
+        () => ({})
+      );
+
+    if (!sttResponse.ok) {
+      console.error(
+        "ElevenLabs STT error:",
+        sttData
+      );
+
+      return sendJson(
         res,
-        response.status,
+        sttResponse.status || 500,
         {
+          ok: false,
           error:
-            providerData?.error?.message ||
-            "Speech-to-text failed.",
-          provider: "openai"
+            sttData?.detail?.message ||
+            sttData?.detail ||
+            "Speech-to-text failed"
         }
       );
     }
 
     const text =
-      String(
-        providerData?.text ||
-        providerData?.transcript ||
-        ""
-      ).trim();
-
-    if (!text) {
-      return send(res, 502, {
-        error:
-          "No transcript was returned."
-      });
-    }
+      sttData?.text ||
+      sttData?.transcript ||
+      "";
 
     /*
-     * Save job in Supabase.
+     * Save STT result.
      */
-    const {
-      data: savedJob,
-      error: saveError
-    } = await supabaseAdmin
-      .from("stt_jobs")
-      .insert({
-        user_id: user.id,
-        project_name: projectName,
-        language:
-          language || null,
-        status: "completed",
-        transcript: text
-      })
-      .select()
-      .single();
+    const { data: savedJob, error: saveError } =
+      await supabaseAdmin
+        .from("stt_jobs")
+        .insert({
+          user_id: user.id,
+          source_url: audioUrl,
+          language: language,
+          transcript: text,
+          status: "completed"
+        })
+        .select()
+        .single();
 
     if (saveError) {
       console.error(
-        "STT DB save error:",
+        "STT database error:",
         saveError
       );
 
-      return send(res, 200, {
-        success: true,
-        text,
-        content:
-          buildTextResponse(
-            text,
-            finalFormat
-          ),
-        format: finalFormat,
-        saved: false,
+      /*
+       * Provider succeeded, so return the transcript
+       * instead of falsely reporting failure.
+       */
+      return sendJson(res, 200, {
+        ok: true,
+        transcript: text,
+        result: sttData,
+        usage,
         warning:
-          "Transcript generated, but database logging failed.",
-        usage
+          "Transcript generated, but database save failed."
       });
     }
 
-    return send(res, 200, {
-      success: true,
-      text,
-      content:
-        buildTextResponse(
-          text,
-          finalFormat
-        ),
-      format: finalFormat,
-      job: savedJob,
+    return sendJson(res, 200, {
+      ok: true,
+      transcript: text,
+      job: {
+        id: savedJob.id,
+        status: savedJob.status
+      },
+      result: sttData,
       usage
     });
-
   } catch (error) {
     console.error(
       "STT API error:",
       error
     );
 
-    return send(res, 500, {
-      error:
-        error?.message ||
-        "Internal server error."
+    return sendJson(res, 500, {
+      ok: false,
+      error: "Internal server error"
     });
-
-  } finally {
-    if (
-      uploadedPath &&
-      fs.existsSync(uploadedPath)
-    ) {
-      try {
-        await fs.promises.unlink(
-          uploadedPath
-        );
-      } catch {
-        // Ignore temporary-file cleanup errors.
-      }
-    }
   }
 }
