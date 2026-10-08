@@ -3,771 +3,284 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="VoiceAI AI Dubbing Studio">
   <title>AI Dubbing — VoiceAI</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #f5f6fa;
-      --card: #fff;
-      --text: #17181d;
-      --muted: #737681;
-      --border: #e4e5eb;
-      --primary: #6d4aff;
-      --primary-dark: #5635dc;
-      --soft: #efecff;
-      --green: #159866;
-      --red: #d53d3d;
-    }
-
-    body {
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    /* NAVBAR */
-
-    .navbar {
-      height: 68px;
-      background: rgba(255,255,255,.97);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-
-    .nav-inner {
-      width: min(1180px, calc(100% - 30px));
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .logo {
-      font-size: 21px;
-      font-weight: 850;
-      white-space: nowrap;
-    }
-
-    .logo span {
-      color: var(--primary);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .nav-links a {
-      font-size: 13px;
-      font-weight: 650;
-      color: #5e616b;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--primary);
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .nav-btn {
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 9px;
-      padding: 9px 13px;
-      font-size: 12px;
-      font-weight: 750;
-    }
-
-    .nav-btn.primary {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
 
-    /* HERO */
-
-    .hero {
-      width: min(1000px, calc(100% - 30px));
-      margin: auto;
-      text-align: center;
-      padding: 58px 0 34px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--soft);
-      color: var(--primary);
-      padding: 8px 13px;
-      border-radius: 30px;
-      font-size: 11px;
-      font-weight: 800;
-      margin-bottom: 17px;
-    }
-
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--primary);
-      border-radius: 50%;
-    }
-
-    .hero h1 {
-      font-size: clamp(35px, 5vw, 55px);
-      letter-spacing: -2px;
-      line-height: 1.05;
-      margin-bottom: 15px;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
-    }
-
-    .hero p {
-      max-width: 650px;
-      margin: auto;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    /* MAIN */
-
-    .container {
-      width: min(1000px, calc(100% - 30px));
-      margin: 0 auto 75px;
-    }
-
-    .workspace {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px;
-      box-shadow: 0 9px 30px rgba(25,25,45,.045);
-    }
-
-    .card-title {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      margin-bottom: 20px;
-    }
-
-    .icon-box {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: var(--soft);
-      color: var(--primary);
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
+    body{
+      font-family:Inter,Arial,sans-serif;
+      background:#f7f8fc;
+      color:#171717;
+      min-height:100vh
     }
 
-    .icon-box svg {
-      width: 21px;
-      height: 21px;
-    }
-
-    .card-title h2 {
-      font-size: 17px;
-    }
+    button,input,select{font:inherit}
 
-    .card-title p {
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 11px;
+    a{
+      text-decoration:none;
+      color:inherit
     }
-
-    /* UPLOAD */
 
-    .upload-box {
-      min-height: 255px;
-      border: 2px dashed #d8d6e5;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 25px;
-      cursor: pointer;
-      background: #fcfcff;
-      transition: .2s;
+    .topbar{
+      height:70px;
+      background:#fff;
+      border-bottom:1px solid #e7e7ed;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 5%;
+      position:sticky;
+      top:0;
+      z-index:20
     }
 
-    .upload-box:hover,
-    .upload-box.dragover {
-      border-color: var(--primary);
-      background: #f8f6ff;
+    .logo{
+      font-size:22px;
+      font-weight:800
     }
 
-    .upload-icon {
-      width: 57px;
-      height: 57px;
-      margin: 0 auto 13px;
-      border-radius: 16px;
-      background: var(--soft);
-      color: var(--primary);
-      display: grid;
-      place-items: center;
+    .logo span{
+      color:#7357ff
     }
 
-    .upload-icon svg {
-      width: 27px;
-      height: 27px;
+    .top-link{
+      color:#555;
+      font-weight:650
     }
 
-    .upload-box h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
+    .container{
+      width:min(1120px,94%);
+      margin:35px auto 70px
     }
 
-    .upload-box p {
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.6;
+    .hero{
+      text-align:center;
+      margin-bottom:30px
     }
 
-    .browse {
-      color: var(--primary);
-      font-weight: 800;
+    .badge{
+      display:inline-block;
+      background:#eeeaff;
+      color:#6046dc;
+      padding:8px 14px;
+      border-radius:30px;
+      font-size:13px;
+      font-weight:750;
+      margin-bottom:14px
     }
 
-    #mediaFile {
-      display: none;
+    h1{
+      font-size:clamp(32px,5vw,50px);
+      margin-bottom:12px
     }
 
-    .file-info {
-      display: none;
-      margin-top: 12px;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #fafafd;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .hero p{
+      color:#666;
+      line-height:1.7;
+      max-width:680px;
+      margin:auto
     }
 
-    .file-info.show {
-      display: flex;
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:24px
     }
 
-    .file-name {
-      font-size: 11px;
-      font-weight: 800;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    .card{
+      background:#fff;
+      border:1px solid #e4e4eb;
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 10px 35px rgba(0,0,0,.04)
     }
 
-    .file-meta {
-      color: var(--muted);
-      font-size: 9px;
-      margin-top: 3px;
+    .card h2{
+      font-size:20px;
+      margin-bottom:18px
     }
 
-    .remove-btn {
-      border: 0;
-      background: #fff0f0;
-      color: var(--red);
-      border-radius: 7px;
-      padding: 7px 9px;
-      font-size: 10px;
-      font-weight: 800;
+    .upload{
+      border:2px dashed #d0d0d9;
+      border-radius:15px;
+      min-height:210px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      cursor:pointer;
+      padding:25px;
+      transition:.2s
     }
 
-    /* FORM */
-
-    .field {
-      margin-bottom: 16px;
+    .upload:hover{
+      border-color:#7357ff;
+      background:#faf9ff
     }
 
-    .field label {
-      display: block;
-      font-size: 11px;
-      font-weight: 800;
-      margin-bottom: 7px;
-      color: #4f525b;
+    .upload input{
+      display:none
     }
 
-    select {
-      width: 100%;
-      height: 43px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: white;
-      padding: 0 11px;
-      outline: none;
-      color: var(--text);
-      font-size: 12px;
+    .upload-icon{
+      font-size:43px;
+      margin-bottom:12px
     }
 
-    select:focus {
-      border-color: var(--primary);
+    .upload strong{
+      display:block;
+      margin-bottom:7px
     }
 
-    .language-row {
-      display: grid;
-      grid-template-columns: 1fr 40px 1fr;
-      gap: 8px;
-      align-items: center;
+    .upload small{
+      color:#777
     }
 
-    .swap {
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 9px;
-      display: grid;
-      place-items: center;
-      color: var(--primary);
+    video,audio{
+      width:100%;
+      margin-top:17px
     }
 
-    .swap svg {
-      width: 16px;
-      height: 16px;
+    video{
+      display:none;
+      max-height:330px;
+      border-radius:12px;
+      background:#111
     }
-
-    /* OPTIONS */
 
-    .option-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .field{
+      margin-bottom:17px
     }
 
-    .option {
-      position: relative;
+    label{
+      display:block;
+      font-size:14px;
+      font-weight:750;
+      margin-bottom:7px
     }
 
-    .option input {
-      position: absolute;
-      opacity: 0;
+    select,input[type=text]{
+      width:100%;
+      height:47px;
+      border:1px solid #dddde5;
+      border-radius:10px;
+      padding:0 12px;
+      background:#fff;
+      outline:none
     }
 
-    .option label {
-      display: block;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 11px;
-      cursor: pointer;
-      background: white;
-      margin: 0;
+    select:focus,
+    input[type=text]:focus{
+      border-color:#7357ff
     }
 
-    .option label strong {
-      display: block;
-      font-size: 11px;
-      color: #33353b;
+    .swap{
+      width:42px;
+      height:42px;
+      border:1px solid #dddde5;
+      background:#f7f7fa;
+      border-radius:50%;
+      cursor:pointer;
+      display:block;
+      margin:0 auto 17px;
+      font-size:18px
     }
 
-    .option label small {
-      display: block;
-      color: var(--muted);
-      font-size: 9px;
-      margin-top: 3px;
+    .usage{
+      background:#f4f1ff;
+      color:#6046dc;
+      border-radius:11px;
+      padding:13px;
+      font-size:13px;
+      line-height:1.5;
+      margin-bottom:18px
     }
 
-    .option input:checked + label {
-      border-color: var(--primary);
-      background: var(--soft);
+    .btn{
+      width:100%;
+      height:49px;
+      border:0;
+      border-radius:10px;
+      background:#7357ff;
+      color:#fff;
+      font-weight:800;
+      cursor:pointer
     }
 
-    /* CHECKBOX */
-
-    .check-row {
-      display: flex;
-      gap: 9px;
-      align-items: flex-start;
-      padding: 11px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: #fafafd;
-      margin-bottom: 16px;
+    .btn:hover{
+      background:#6248ed
     }
 
-    .check-row input {
-      margin-top: 2px;
-      accent-color: var(--primary);
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed
     }
 
-    .check-row span {
-      color: #666974;
-      font-size: 10px;
-      line-height: 1.5;
+    .secondary{
+      margin-top:10px;
+      background:#eeeef3;
+      color:#333
     }
-
-    /* GENERATE */
 
-    .generate-btn {
-      width: 100%;
-      height: 48px;
-      border: 0;
-      border-radius: 10px;
-      background: var(--primary);
-      color: white;
-      font-size: 12px;
-      font-weight: 850;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
+    .secondary:hover{
+      background:#e5e5eb
     }
 
-    .generate-btn:hover {
-      background: var(--primary-dark);
+    .status{
+      display:none;
+      margin-top:14px;
+      padding:12px;
+      border-radius:10px;
+      font-size:13px;
+      line-height:1.5
     }
 
-    .generate-btn:disabled {
-      opacity: .55;
-      cursor: not-allowed;
+    .result{
+      display:none;
+      margin-top:25px
     }
 
-    .spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255,255,255,.35);
-      border-top-color: white;
-      border-radius: 50%;
-      display: none;
-      animation: spin .7s linear infinite;
+    .result h3{
+      margin-bottom:8px
     }
 
-    .loading .spinner {
-      display: block;
+    .download{
+      display:block;
+      margin-top:11px;
+      padding:12px;
+      border-radius:10px;
+      background:#171717;
+      color:#fff;
+      text-align:center;
+      font-size:13px;
+      font-weight:750
     }
 
-    .loading .btn-text {
-      display: none;
+    .info{
+      margin-top:17px;
+      color:#777;
+      font-size:12px;
+      line-height:1.65
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+    @media(max-width:800px){
+      .grid{
+        grid-template-columns:1fr
       }
     }
 
-    /* USAGE */
-
-    .usage {
-      margin-top: 13px;
-      padding: 11px;
-      border: 1px solid #e7e3ff;
-      background: #faf9ff;
-      border-radius: 9px;
-    }
-
-    .usage-top {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      margin-bottom: 7px;
-    }
-
-    .usage-top strong {
-      color: var(--primary);
-    }
-
-    .progress {
-      height: 5px;
-      background: #e5e3eb;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .progress div {
-      height: 100%;
-      width: 20%;
-      background: var(--primary);
-    }
-
-    /* MESSAGE */
-
-    .message {
-      display: none;
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 9px;
-      font-size: 10px;
-      line-height: 1.5;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      background: #fff0f0;
-      color: #a72b2b;
-      border: 1px solid #ffd8d8;
-    }
-
-    .message.info {
-      background: var(--soft);
-      color: #5337ca;
-      border: 1px solid #ddd7ff;
-    }
-
-    /* RESULT */
-
-    .result {
-      display: none;
-      margin-top: 18px;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 21px;
-      box-shadow: 0 9px 30px rgba(25,25,45,.045);
-    }
-
-    .result.show {
-      display: block;
-    }
-
-    .result-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .result-status {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: #eaf9f2;
-      color: var(--green);
-      display: grid;
-      place-items: center;
-    }
-
-    .result-status svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    .result-head h2 {
-      font-size: 15px;
-    }
-
-    .result-head p {
-      color: var(--muted);
-      font-size: 10px;
-      margin-top: 3px;
-    }
-
-    .result-player {
-      padding: 14px;
-      background: #fafafd;
-      border: 1px solid var(--border);
-      border-radius: 11px;
-    }
-
-    audio {
-      width: 100%;
-      height: 40px;
-    }
-
-    .download-btn {
-      margin-top: 10px;
-      width: 100%;
-      height: 42px;
-      background: #18191d;
-      color: white;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .download-btn svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    /* FEATURES */
-
-    .features {
-      margin-top: 45px;
-    }
-
-    .features h2 {
-      text-align: center;
-      font-size: 25px;
-      margin-bottom: 24px;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .feature {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 19px;
-    }
-
-    .feature svg {
-      width: 22px;
-      height: 22px;
-      color: var(--primary);
-      margin-bottom: 11px;
-    }
-
-    .feature h3 {
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .feature p {
-      color: var(--muted);
-      font-size: 10px;
-      line-height: 1.6;
-    }
-
-    /* FOOTER */
-
-    footer {
-      border-top: 1px solid var(--border);
-      background: white;
-      padding: 27px 15px;
-    }
-
-    .footer-inner {
-      width: min(1180px, 100%);
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .footer-copy {
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      color: var(--muted);
-      font-size: 10px;
-    }
-
-    /* RESPONSIVE */
-
-    @media (max-width: 800px) {
-
-      .nav-links {
-        display: none;
+    @media(max-width:480px){
+      .topbar{
+        padding:0 4%
       }
 
-      .workspace {
-        grid-template-columns: 1fr;
+      .container{
+        margin-top:24px
       }
 
-      .feature-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 520px) {
-
-      .nav-inner {
-        width: calc(100% - 20px);
-      }
-
-      .nav-actions .nav-btn:first-child {
-        display: none;
-      }
-
-      .hero {
-        padding-top: 40px;
-      }
-
-      .hero h1 {
-        font-size: 37px;
-        letter-spacing: -1.3px;
-      }
-
-      .hero p {
-        font-size: 13px;
-      }
-
-      .container {
-        width: calc(100% - 20px);
-      }
-
-      .card {
-        padding: 16px;
-        border-radius: 13px;
-      }
-
-      .language-row {
-        grid-template-columns: 1fr;
-      }
-
-      .swap {
-        width: 100%;
-      }
-
-      .option-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .feature-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
+      .card{
+        padding:18px
       }
     }
   </style>
@@ -775,264 +288,851 @@
 
 <body>
 
-  <!-- NAVBAR -->
+<header class="topbar">
 
-  <header class="navbar">
+  <a href="tools.html" class="top-link">
+    ← AI Tools
+  </a>
 
-    <div class="nav-inner">
+  <div class="logo">
+    ∿ <span>VoiceAI</span>
+  </div>
 
-      <a href="index.html" class="logo">
-        ∿ <span>VoiceAI</span>
-      </a>
+  <a href="profile.html" class="top-link">
+    Profile
+  </a>
 
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="tools.html">AI Tools</a>
-        <a href="voices.html">Voices</a>
-        <a href="studio.html">Studio</a>
-        <a href="pricing.html">Pricing</a>
-      </nav>
+</header>
 
-      <div class="nav-actions">
-        <a href="profile.html" class="nav-btn">
-          Profile
-        </a>
-
-        <a href="pricing.html" class="nav-btn primary">
-          Upgrade
-        </a>
-      </div>
-
-    </div>
-
-  </header>
-
-
-  <!-- HERO -->
+<main class="container">
 
   <section class="hero">
 
     <div class="badge">
-      <span class="badge-dot"></span>
-      AI Dubbing Studio
+      AI Dubbing
     </div>
 
     <h1>
-      Speak globally with
-      <span>AI dubbing</span>
+      Dub Your Content Globally
     </h1>
 
     <p>
-      Translate and dub your audio or video into another language
-      while preserving natural timing, expression and voice quality.
+      Upload audio or video, select the source and target languages,
+      and create an AI-dubbed version for a global audience.
     </p>
 
   </section>
 
+  <div class="grid">
 
-  <!-- MAIN -->
+    <!-- SOURCE -->
+    <section class="card">
 
-  <main class="container">
+      <h2>
+        1. Upload Content
+      </h2>
 
-    <section class="workspace">
+      <label class="upload" for="mediaInput">
 
-      <!-- UPLOAD CARD -->
+        <input
+          type="file"
+          id="mediaInput"
+          accept="audio/*,video/*"
+        >
 
-      <div class="card">
+        <div>
 
-        <div class="card-title">
-
-          <div class="icon-box">
-
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="1.8">
-              <path d="M12 16V4"/>
-              <path d="m7 9 5-5 5 5"/>
-              <path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/>
-            </svg>
-
+          <div class="upload-icon">
+            🎬
           </div>
 
-          <div>
-            <h2>Upload media</h2>
-            <p>Audio or video for dubbing</p>
-          </div>
+          <strong>
+            Choose audio or video
+          </strong>
+
+          <small>
+            MP3, WAV, M4A, MP4, MOV or WebM
+          </small>
 
         </div>
 
+      </label>
 
-        <div class="upload-box" id="uploadBox">
+      <video
+        id="sourceVideo"
+        controls
+        playsinline
+      ></video>
 
-          <input
-            type="file"
-            id="mediaFile"
-            accept="audio/*,video/*"
-          >
+      <audio
+        id="sourceAudio"
+        controls
+        style="display:none"
+      ></audio>
 
-          <div>
+      <p class="info">
+        Only upload content you own or have permission to process.
+      </p>
 
-            <div class="upload-icon">
+    </section>
 
-              <svg viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="1.8">
+    <!-- SETTINGS -->
+    <section class="card">
 
-                <path d="M4 6h16v12H4z"/>
-                <path d="m10 10 5 2-5 2v-4Z"/>
+      <h2>
+        2. Dubbing Settings
+      </h2>
 
-              </svg>
+      <div class="usage">
 
-            </div>
-
-            <h3>
-              Drop audio or video here
-            </h3>
-
-            <p>
-              or <span class="browse">browse files</span><br>
-              Recommended maximum size: 500 MB
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="file-info" id="fileInfo">
-
-          <div style="min-width:0">
-
-            <div class="file-name" id="fileName"></div>
-
-            <div class="file-meta" id="fileMeta"></div>
-
-          </div>
-
-          <button class="remove-btn" id="removeFile">
-            Remove
-          </button>
-
-        </div>
-
-
-        <div class="message" id="message"></div>
+        <strong>Free plan:</strong>
+        <span id="usageText">
+          5 AI uses/day
+        </span>
 
       </div>
 
+      <div class="field">
 
-      <!-- SETTINGS CARD -->
+        <label for="sourceLanguage">
+          Source Language
+        </label>
 
-      <div class="card">
+        <select id="sourceLanguage">
 
-        <div class="card-title">
+          <option value="en">
+            English
+          </option>
 
-          <div class="icon-box">
+          <option value="hi">
+            Hindi
+          </option>
 
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="1.8">
+          <option value="gu">
+            Gujarati
+          </option>
 
-              <path d="M12 3v18"/>
-              <path d="M7 7v10"/>
-              <path d="M17 6v12"/>
+          <option value="es">
+            Spanish
+          </option>
 
-            </svg>
+          <option value="fr">
+            French
+          </option>
 
-          </div>
+          <option value="de">
+            German
+          </option>
 
-          <div>
-            <h2>Dubbing settings</h2>
-            <p>Configure language and voice</p>
-          </div>
+          <option value="ja">
+            Japanese
+          </option>
 
-        </div>
+        </select>
 
+      </div>
 
-        <!-- LANGUAGE -->
+      <button
+        class="swap"
+        id="swapBtn"
+        type="button"
+        title="Swap languages"
+      >
+        ⇅
+      </button>
 
-        <div class="field">
+      <div class="field">
 
-          <label>Language pair</label>
+        <label for="targetLanguage">
+          Target Language
+        </label>
 
-          <div class="language-row">
+        <select id="targetLanguage">
 
-            <select id="sourceLanguage">
+          <option value="hi">
+            Hindi
+          </option>
 
-              <option value="auto">
-                Auto detect
-              </option>
+          <option value="en">
+            English
+          </option>
 
-              <option value="en">
-                English
-              </option>
+          <option value="gu">
+            Gujarati
+          </option>
 
-              <option value="hi">
-                Hindi
-              </option>
+          <option value="es">
+            Spanish
+          </option>
 
-              <option value="gu">
-                Gujarati
-              </option>
+          <option value="fr">
+            French
+          </option>
 
-              <option value="es">
-                Spanish
-              </option>
+          <option value="de">
+            German
+          </option>
 
-              <option value="fr">
-                French
-              </option>
+          <option value="ja">
+            Japanese
+          </option>
 
-              <option value="de">
-                German
-              </option>
+        </select>
 
-              <option value="ja">
-                Japanese
-              </option>
+      </div>
 
-            </select>
+      <div class="field">
 
+        <label for="voiceSelect">
+          Target Voice
+        </label>
 
-            <button class="swap" id="swapLanguage">
+        <select id="voiceSelect">
 
-              <svg viewBox="0 0 24 24"
-                   fill="none"
-                   stroke="currentColor"
-                   stroke-width="1.8">
+          <option value="">
+            Loading voices...
+          </option>
 
-                <path d="M7 7h12l-3-3"/>
-                <path d="M17 17H5l3 3"/>
+        </select>
 
-              </svg>
+      </div>
 
-            </button>
+      <div class="field">
 
+        <label for="styleSelect">
+          Dubbing Style
+        </label>
 
-            <select id="targetLanguage">
+        <select id="styleSelect">
 
-              <option value="hi">
-                Hindi
-              </option>
+          <option value="natural">
+            Natural
+          </option>
 
-              <option value="en">
-                English
-              </option>
+          <option value="professional">
+            Professional
+          </option>
 
-              <option value="gu">
-                Gujarati
-              </option>
+          <option value="advertisement">
+            Advertisement
+          </option>
 
-              <option value="es">
-                Spanish
-              </option>
+          <option value="documentary">
+            Documentary
+          </option>
 
-              <option value="fr">
-                French
-              </option>
+          <option value="energetic">
+            Energetic
+          </option>
 
-              <option value="de">
-                German
+          <option value="calm">
+            Calm
+          </option>
+
+        </select>
+
+      </div>
+
+      <div class="field">
+
+        <label for="projectName">
+          Project Name
+        </label>
+
+        <input
+          id="projectName"
+          type="text"
+          maxlength="100"
+          placeholder="My dubbing project"
+        >
+
+      </div>
+
+      <button
+        class="btn"
+        id="generateBtn"
+      >
+        Generate Dub
+      </button>
+
+      <button
+        class="btn secondary"
+        id="resetBtn"
+      >
+        Reset
+      </button>
+
+      <div
+        class="status"
+        id="status"
+      ></div>
+
+      <div
+        class="result"
+        id="result"
+      >
+
+        <h3>
+          Dubbed Result
+        </h3>
+
+        <video
+          id="resultVideo"
+          controls
+          playsinline
+          style="display:none"
+        ></video>
+
+        <audio
+          id="resultAudio"
+          controls
+          style="display:none"
+        ></audio>
+
+        <a
+          id="downloadBtn"
+          class="download"
+          href="#"
+          download="voiceai-dubbed.mp4"
+        >
+          Download Dubbed File
+        </a>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+<script>
+"use strict";
+
+const mediaInput =
+  document.getElementById("mediaInput");
+
+const sourceVideo =
+  document.getElementById("sourceVideo");
+
+const sourceAudio =
+  document.getElementById("sourceAudio");
+
+const resultVideo =
+  document.getElementById("resultVideo");
+
+const resultAudio =
+  document.getElementById("resultAudio");
+
+const sourceLanguage =
+  document.getElementById("sourceLanguage");
+
+const targetLanguage =
+  document.getElementById("targetLanguage");
+
+const voiceSelect =
+  document.getElementById("voiceSelect");
+
+const styleSelect =
+  document.getElementById("styleSelect");
+
+const projectName =
+  document.getElementById("projectName");
+
+const swapBtn =
+  document.getElementById("swapBtn");
+
+const generateBtn =
+  document.getElementById("generateBtn");
+
+const resetBtn =
+  document.getElementById("resetBtn");
+
+const statusBox =
+  document.getElementById("status");
+
+const resultBox =
+  document.getElementById("result");
+
+const downloadBtn =
+  document.getElementById("downloadBtn");
+
+const usageText =
+  document.getElementById("usageText");
+
+let selectedMedia = null;
+let sourceObjectUrl = null;
+let generatedObjectUrl = null;
+
+const fallbackVoices = [
+  {
+    id: "default-male",
+    name: "Marcus — Professional Male"
+  },
+  {
+    id: "default-female",
+    name: "Sarah — Professional Female"
+  },
+  {
+    id: "default-energy",
+    name: "Jerry — Energetic Male"
+  },
+  {
+    id: "default-bubbly",
+    name: "Allison — Energetic Female"
+  }
+];
+
+function showStatus(message, type = "info") {
+
+  statusBox.textContent = message;
+  statusBox.style.display = "block";
+
+  if (type === "error") {
+
+    statusBox.style.background = "#fff0f0";
+    statusBox.style.color = "#b42318";
+
+  } else if (type === "success") {
+
+    statusBox.style.background = "#ecfdf3";
+    statusBox.style.color = "#067647";
+
+  } else {
+
+    statusBox.style.background = "#f4f4f8";
+    statusBox.style.color = "#555";
+  }
+}
+
+function populateVoices(voices) {
+
+  voiceSelect.innerHTML = "";
+
+  voices.forEach((voice) => {
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      voice.voice_id ||
+      voice.id ||
+      "";
+
+    option.textContent =
+      voice.name ||
+      voice.display_name ||
+      "AI Voice";
+
+    voiceSelect.appendChild(option);
+  });
+}
+
+async function loadVoices() {
+
+  try {
+
+    const response =
+      await fetch("/api/voices?page_size=100");
+
+    if (!response.ok) {
+      throw new Error("Voice API failed");
+    }
+
+    const data =
+      await response.json();
+
+    const voices =
+      Array.isArray(data)
+        ? data
+        : Array.isArray(data.voices)
+          ? data.voices
+          : [];
+
+    if (!voices.length) {
+      populateVoices(fallbackVoices);
+      return;
+    }
+
+    populateVoices(voices);
+
+  } catch (error) {
+
+    console.warn(
+      "Voice library unavailable:",
+      error
+    );
+
+    populateVoices(fallbackVoices);
+  }
+}
+
+mediaInput.addEventListener("change", () => {
+
+  const file =
+    mediaInput.files?.[0];
+
+  if (!file) {
+    return;
+  }
+
+  selectedMedia = file;
+
+  if (sourceObjectUrl) {
+    URL.revokeObjectURL(sourceObjectUrl);
+  }
+
+  sourceObjectUrl =
+    URL.createObjectURL(file);
+
+  sourceVideo.style.display = "none";
+  sourceAudio.style.display = "none";
+
+  if (file.type.startsWith("video/")) {
+
+    sourceVideo.src =
+      sourceObjectUrl;
+
+    sourceVideo.style.display =
+      "block";
+
+  } else if (file.type.startsWith("audio/")) {
+
+    sourceAudio.src =
+      sourceObjectUrl;
+
+    sourceAudio.style.display =
+      "block";
+  }
+
+  showStatus(
+    file.name + " selected."
+  );
+});
+
+swapBtn.addEventListener("click", () => {
+
+  const currentSource =
+    sourceLanguage.value;
+
+  sourceLanguage.value =
+    targetLanguage.value;
+
+  targetLanguage.value =
+    currentSource;
+});
+
+generateBtn.addEventListener("click", async () => {
+
+  if (!selectedMedia) {
+
+    showStatus(
+      "Please upload audio or video first.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (
+    sourceLanguage.value ===
+    targetLanguage.value
+  ) {
+
+    showStatus(
+      "Source and target languages must be different.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (!voiceSelect.value) {
+
+    showStatus(
+      "Please select a target voice.",
+      "error"
+    );
+
+    return;
+  }
+
+  generateBtn.disabled = true;
+  generateBtn.textContent =
+    "Dubbing...";
+
+  try {
+
+    showStatus(
+      "Your content is being dubbed. Please wait..."
+    );
+
+    const formData =
+      new FormData();
+
+    formData.append(
+      "file",
+      selectedMedia
+    );
+
+    formData.append(
+      "media",
+      selectedMedia
+    );
+
+    formData.append(
+      "sourceLanguage",
+      sourceLanguage.value
+    );
+
+    formData.append(
+      "source_language",
+      sourceLanguage.value
+    );
+
+    formData.append(
+      "targetLanguage",
+      targetLanguage.value
+    );
+
+    formData.append(
+      "target_language",
+      targetLanguage.value
+    );
+
+    formData.append(
+      "voiceId",
+      voiceSelect.value
+    );
+
+    formData.append(
+      "voice_id",
+      voiceSelect.value
+    );
+
+    formData.append(
+      "style",
+      styleSelect.value
+    );
+
+    formData.append(
+      "projectName",
+      projectName.value.trim() ||
+      "VoiceAI Dubbing"
+    );
+
+    const response =
+      await fetch(
+        "/api/dubbing",
+        {
+          method: "POST",
+          body: formData
+        }
+      );
+
+    const contentType =
+      response.headers.get(
+        "content-type"
+      ) || "";
+
+    if (!response.ok) {
+
+      let message =
+        "Dubbing failed.";
+
+      if (
+        contentType.includes(
+          "application/json"
+        )
+      ) {
+
+        const data =
+          await response.json();
+
+        message =
+          data.error ||
+          data.message ||
+          message;
+
+      } else {
+
+        const text =
+          await response.text();
+
+        if (text) {
+          message =
+            text.slice(0, 300);
+        }
+      }
+
+      throw new Error(message);
+    }
+
+    let outputUrl = "";
+    let outputType = "";
+
+    if (
+      contentType.includes(
+        "application/json"
+      )
+    ) {
+
+      const data =
+        await response.json();
+
+      outputUrl =
+        data.videoUrl ||
+        data.audioUrl ||
+        data.outputUrl ||
+        data.downloadUrl ||
+        data.url ||
+        "";
+
+      outputType =
+        data.type ||
+        data.outputType ||
+        "";
+
+    } else {
+
+      const blob =
+        await response.blob();
+
+      outputUrl =
+        URL.createObjectURL(blob);
+
+      generatedObjectUrl =
+        outputUrl;
+
+      outputType =
+        blob.type || "";
+    }
+
+    if (!outputUrl) {
+
+      throw new Error(
+        "Server did not return the dubbed file."
+      );
+    }
+
+    resultVideo.style.display =
+      "none";
+
+    resultAudio.style.display =
+      "none";
+
+    /*
+     * Detect output from returned type
+     * or original uploaded media.
+     */
+    const isVideo =
+      outputType.includes("video") ||
+      selectedMedia.type.startsWith("video/") ||
+      outputUrl.match(
+        /\.(mp4|webm|mov)(\?|$)/i
+      );
+
+    if (isVideo) {
+
+      resultVideo.src =
+        outputUrl;
+
+      resultVideo.style.display =
+        "block";
+
+      downloadBtn.download =
+        "voiceai-dubbed-video.mp4";
+
+    } else {
+
+      resultAudio.src =
+        outputUrl;
+
+      resultAudio.style.display =
+        "block";
+
+      downloadBtn.download =
+        "voiceai-dubbed-audio.mp3";
+    }
+
+    downloadBtn.href =
+      outputUrl;
+
+    resultBox.style.display =
+      "block";
+
+    usageText.textContent =
+      "AI use completed • Free plan limit: 5/day";
+
+    showStatus(
+      "Dubbing completed successfully.",
+      "success"
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    showStatus(
+      error.message ||
+      "Something went wrong while dubbing.",
+      "error"
+    );
+
+  } finally {
+
+    generateBtn.disabled =
+      false;
+
+    generateBtn.textContent =
+      "Generate Dub";
+  }
+});
+
+resetBtn.addEventListener("click", () => {
+
+  mediaInput.value = "";
+
+  selectedMedia = null;
+
+  if (sourceObjectUrl) {
+    URL.revokeObjectURL(sourceObjectUrl);
+    sourceObjectUrl = null;
+  }
+
+  if (generatedObjectUrl) {
+    URL.revokeObjectURL(generatedObjectUrl);
+    generatedObjectUrl = null;
+  }
+
+  sourceVideo.removeAttribute("src");
+  sourceVideo.load();
+  sourceVideo.style.display = "none";
+
+  sourceAudio.removeAttribute("src");
+  sourceAudio.load();
+  sourceAudio.style.display = "none";
+
+  resultVideo.removeAttribute("src");
+  resultVideo.load();
+  resultVideo.style.display = "none";
+
+  resultAudio.removeAttribute("src");
+  resultAudio.load();
+  resultAudio.style.display = "none";
+
+  resultBox.style.display = "none";
+
+  projectName.value = "";
+
+  statusBox.style.display = "none";
+
+  usageText.textContent =
+    "5 AI uses/day";
+});
+
+loadVoices();
+</script>
+
+</body>
+</html>
