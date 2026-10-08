@@ -1,138 +1,75 @@
-// api/usage.js
+import { createClient } from "@supabase/supabase-js";
 
-const { createClient } = require("@supabase/supabase-js");
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS"
+};
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-function getBearerToken(req) {
-  const header = req.headers.authorization || "";
+function getToken(req) {
+  const auth = req.headers.authorization || "";
 
-  if (!header.startsWith("Bearer ")) {
+  if (!auth.toLowerCase().startsWith("bearer ")) {
     return null;
   }
 
-  return header.substring(7).trim();
+  return auth.substring(7).trim();
 }
 
-async function getUser(req) {
-  const token = getBearerToken(req);
+function sendJson(res, status, data) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
 
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !user) return null;
-
-  return user;
+  return res.status(status).json(data);
 }
 
-module.exports = async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, OPTIONS"
-  );
-
+export default async function handler(req, res) {
   if (req.method === "OPTIONS") {
-    return res.status(200).end();
+    return sendJson(res, 200, { ok: true });
   }
 
   if (req.method !== "GET") {
-    return res.status(405).json({
+    return sendJson(res, 405, {
+      ok: false,
       error: "Method not allowed"
     });
   }
 
   try {
-    const user = await getUser(req);
+    const token = getToken(req);
 
-    if (!user) {
-      return res.status(401).json({
+    if (!token) {
+      return sendJson(res, 401, {
+        ok: false,
         error: "Authentication required"
       });
     }
 
-    /*
-     * Get current plan from the database.
-     */
-    const { data: planData, error: planError } =
-      await supabaseAdmin.rpc("get_my_plan", {
-        p_user_id: user.id
-      });
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseAdmin.auth.getUser(token);
 
-    if (planError) {
-      console.error("Plan lookup error:", planError);
-    }
-
-    let plan = "free";
-
-    if (typeof planData === "string") {
-      plan = planData.toLowerCase();
-    } else if (planData?.plan) {
-      plan = String(planData.plan).toLowerCase();
-    }
-
-    /*
-     * Also check the user's profile plan.
-     */
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("plan")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile?.plan) {
-      const profilePlan =
-        String(profile.plan).toLowerCase();
-
-      if (profilePlan === "admin") {
-        plan = "admin";
-      } else if (
-        profilePlan === "premium" &&
-        plan !== "admin"
-      ) {
-        plan = "premium";
-      }
-    }
-
-    /*
-     * Premium/Admin are unlimited at application level.
-     */
-    if (plan === "premium" || plan === "admin") {
-      return res.status(200).json({
-        success: true,
-        plan,
-        usage: 0,
-        limit: null,
-        remaining: null,
-        unlimited: true
+    if (userError || !user) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Invalid or expired session"
       });
     }
 
-    /*
-     * Free users have 5 AI uses per day.
-     */
-    const today = new Date()
-      .toISOString()
-      .slice(0, 10);
+    const today = new Date().toISOString().slice(0, 10);
 
-    const { data: usageRow, error: usageError } =
+    /*
+     * Get today's usage record.
+     */
+    const { data: usage, error: usageError } =
       await supabaseAdmin
         .from("usage_daily")
         .select("*")
@@ -141,43 +78,85 @@ module.exports = async function handler(req, res) {
         .maybeSingle();
 
     if (usageError) {
-      console.error(
-        "Usage lookup error:",
-        usageError
-      );
+      console.error("Usage lookup error:", usageError);
 
-      return res.status(500).json({
-        error: "Unable to read usage"
+      return sendJson(res, 500, {
+        ok: false,
+        error: "Unable to load usage"
       });
     }
 
-    const usage = Number(
-      usageRow?.usage_count ??
-      usageRow?.count ??
-      usageRow?.uses ??
+    /*
+     * Get the user's current plan using the existing
+     * Supabase RPC.
+     */
+    const { data: planData, error: planError } =
+      await supabaseAdmin.rpc("get_my_plan", {
+        p_user_id: user.id
+      });
+
+    let plan = "free";
+
+    if (!planError && planData) {
+      if (typeof planData === "string") {
+        plan = planData.toLowerCase();
+      } else if (Array.isArray(planData) && planData.length > 0) {
+        plan =
+          String(
+            planData[0]?.plan ||
+            planData[0]?.name ||
+            "free"
+          ).toLowerCase();
+      } else if (typeof planData === "object") {
+        plan =
+          String(
+            planData.plan ||
+            planData.name ||
+            "free"
+          ).toLowerCase();
+      }
+    }
+
+    const used = Number(
+      usage?.usage_count ??
+      usage?.count ??
+      usage?.ai_uses ??
       0
     );
 
-    const limit = 5;
-    const remaining = Math.max(
-      0,
-      limit - usage
-    );
+    const isPremium =
+      plan === "premium" ||
+      plan === "pro" ||
+      plan === "admin";
 
-    return res.status(200).json({
-      success: true,
-      plan: "free",
-      usage,
-      limit,
-      remaining,
-      unlimited: false,
-      date: today
+    const limit = isPremium ? null : 5;
+
+    const remaining =
+      limit === null
+        ? null
+        : Math.max(limit - used, 0);
+
+    return sendJson(res, 200, {
+      ok: true,
+      user: {
+        id: user.id,
+        email: user.email || null
+      },
+      plan,
+      usage: {
+        date: today,
+        used,
+        limit,
+        remaining,
+        unlimited: isPremium
+      }
     });
   } catch (error) {
     console.error("Usage API error:", error);
 
-    return res.status(500).json({
-      error: "Unable to load usage"
+    return sendJson(res, 500, {
+      ok: false,
+      error: "Internal server error"
     });
   }
-};
+}
