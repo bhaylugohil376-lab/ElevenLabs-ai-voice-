@@ -1,96 +1,194 @@
 import { createClient } from "@supabase/supabase-js";
 
-const corsHeaders = {
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "GET, OPTIONS"
 };
 
-const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
 function sendJson(res, status, data) {
-  Object.entries(corsHeaders).forEach(([key, value]) => {
+  Object.entries(CORS_HEADERS).forEach(([key, value]) => {
     res.setHeader(key, value);
   });
 
   return res.status(status).json(data);
 }
 
-function getToken(req) {
-  const auth = req.headers.authorization || "";
+function getBearerToken(req) {
+  const header = req.headers.authorization || "";
 
-  if (!auth.toLowerCase().startsWith("bearer ")) {
+  if (!header.toLowerCase().startsWith("bearer ")) {
     return null;
   }
 
-  return auth.substring(7).trim();
+  return header.slice(7).trim();
 }
 
-export default async function handler(req, res) {
-  if (req.method === "OPTIONS") {
-    return sendJson(res, 200, { ok: true });
+async function getUser(req) {
+  const token = getBearerToken(req);
+
+  if (!token) return null;
+
+  const {
+    data: { user },
+    error
+  } = await supabaseAdmin.auth.getUser(token);
+
+  if (error || !user) {
+    return null;
   }
 
-  if (req.method !== "GET") {
-    return sendJson(res, 405, {
-      ok: false,
-      error: "Method not allowed"
-    });
+  return user;
+}
+
+function normalizeVoice(voice) {
+  const labels = voice.labels || {};
+
+  const voiceId =
+    voice.voice_id ||
+    voice.id ||
+    voice.provider_voice_id;
+
+  return {
+    id: voiceId,
+    voice_id: voiceId,
+    provider_voice_id: voiceId,
+
+    name:
+      voice.name ||
+      "AI Voice",
+
+    gender:
+      labels.gender ||
+      voice.gender ||
+      "unknown",
+
+    language:
+      labels.language ||
+      voice.language_code ||
+      voice.language ||
+      "en",
+
+    category:
+      voice.category ||
+      labels.category ||
+      "general",
+
+    description:
+      voice.description ||
+      labels.description ||
+      "Natural AI voice.",
+
+    preview_url:
+      voice.preview_url ||
+      voice.previewUrl ||
+      null,
+
+    provider: "elevenlabs",
+
+    labels
+  };
+}
+
+function matchesFilters(
+  voice,
+  search,
+  gender,
+  language,
+  category
+) {
+  const text = [
+    voice.name,
+    voice.description,
+    voice.language,
+    voice.gender,
+    voice.category,
+    JSON.stringify(voice.labels || {})
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  if (
+    search &&
+    !text.includes(search.toLowerCase())
+  ) {
+    return false;
   }
 
-  try {
-    /*
-     * Authentication is optional for browsing the public
-     * voice library.
-     */
-    const token = getToken(req);
+  if (
+    gender &&
+    String(voice.gender).toLowerCase() !==
+      gender.toLowerCase()
+  ) {
+    return false;
+  }
 
-    let user = null;
+  if (
+    language &&
+    !String(voice.language)
+      .toLowerCase()
+      .includes(language.toLowerCase())
+  ) {
+    return false;
+  }
 
-    if (token) {
-      const {
-        data: { user: authenticatedUser }
-      } = await supabaseAdmin.auth.getUser(token);
+  if (
+    category &&
+    String(voice.category).toLowerCase() !==
+      category.toLowerCase()
+  ) {
+    return false;
+  }
 
-      user = authenticatedUser || null;
-    }
+  return true;
+}
 
-    const url = new URL(
-      req.url,
-      `http://${req.headers.host || "localhost"}`
+async function getFavorites(user, voiceIds) {
+  if (!user || !voiceIds.length) {
+    return new Set();
+  }
+
+  const { data, error } =
+    await supabaseAdmin
+      .from("favorite_voices")
+      .select("voice_id")
+      .eq("user_id", user.id)
+      .in("voice_id", voiceIds);
+
+  if (error) {
+    console.error(
+      "Favorites lookup error:",
+      error
     );
 
-    const search =
-      url.searchParams.get("search")?.trim() || "";
+    return new Set();
+  }
 
-    const gender =
-      url.searchParams.get("gender")?.trim() || "";
+  return new Set(
+    (data || []).map(
+      item => item.voice_id
+    )
+  );
+}
 
-    const language =
-      url.searchParams.get("language")?.trim() || "";
-
-    const category =
-      url.searchParams.get("category")?.trim() || "";
-
-    const limitParam =
-      Number(url.searchParams.get("limit") || 50);
-
-    const limit = Math.min(
-      Math.max(limitParam, 1),
-      100
-    );
-
-    /*
-     * Load public voices from Supabase.
-     */
-    let query = supabaseAdmin
-      .from("voices")
-      .select(
-        `
+async function getDatabaseVoices({
+  search,
+  gender,
+  language,
+  category,
+  limit,
+  offset
+}) {
+  let query = supabaseAdmin
+    .from("voices")
+    .select(
+      `
         id,
         name,
         gender,
@@ -102,117 +200,376 @@ export default async function handler(req, res) {
         provider_voice_id,
         is_public,
         created_at
-        `
-      )
-      .eq("is_public", true)
-      .limit(limit);
-
-    if (search) {
-      const safeSearch =
-        search.replace(/[%_]/g, "");
-
-      query = query.or(
-        `name.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%`
-      );
-    }
-
-    if (gender) {
-      query = query.ilike(
-        "gender",
-        gender
-      );
-    }
-
-    if (language) {
-      query = query.ilike(
-        "language",
-        language
-      );
-    }
-
-    if (category) {
-      query = query.ilike(
-        "category",
-        category
-      );
-    }
-
-    query = query.order(
-      "created_at",
-      { ascending: false }
+      `,
+      { count: "exact" }
+    )
+    .eq("is_public", true)
+    .order("created_at", {
+      ascending: false
+    })
+    .range(
+      offset,
+      offset + limit - 1
     );
 
-    const {
-      data: voices,
-      error: voicesError
-    } = await query;
+  if (search) {
+    const cleaned =
+      search
+        .replace(/[%_]/g, "")
+        .trim();
 
-    if (voicesError) {
-      console.error(
-        "Voice library error:",
-        voicesError
+    if (cleaned) {
+      query = query.or(
+        `name.ilike.%${cleaned}%,description.ilike.%${cleaned}%`
       );
-
-      return sendJson(res, 500, {
-        ok: false,
-        error: "Unable to load voice library"
-      });
     }
+  }
 
-    /*
-     * Add user's favorites when authenticated.
-     */
-    let favoriteIds = new Set();
+  if (gender) {
+    query = query.ilike(
+      "gender",
+      gender
+    );
+  }
 
-    if (user && voices?.length) {
-      const voiceIds = voices.map(
-        (voice) => voice.id
-      );
+  if (language) {
+    query = query.ilike(
+      "language",
+      `%${language}%`
+    );
+  }
 
-      const {
-        data: favorites,
-        error: favoriteError
-      } = await supabaseAdmin
-        .from("favorite_voices")
-        .select("voice_id")
-        .eq("user_id", user.id)
-        .in("voice_id", voiceIds);
+  if (category) {
+    query = query.ilike(
+      "category",
+      category
+    );
+  }
 
-      if (!favoriteError && favorites) {
-        favoriteIds = new Set(
-          favorites.map(
-            (item) => item.voice_id
-          )
-        );
+  const {
+    data,
+    count,
+    error
+  } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return {
+    voices: data || [],
+    total: count || 0
+  };
+}
+
+async function getElevenLabsVoices() {
+  const apiKey =
+    process.env.ELEVENLABS_API_KEY;
+
+  if (!apiKey) {
+    throw new Error(
+      "ELEVENLABS_API_KEY is not configured."
+    );
+  }
+
+  const response = await fetch(
+    "https://api.elevenlabs.io/v2/voices?page_size=100",
+    {
+      method: "GET",
+      headers: {
+        "xi-api-key": apiKey,
+        Accept: "application/json"
       }
     }
+  );
 
-    const result =
-      (voices || []).map((voice) => ({
-        ...voice,
-        isFavorite: favoriteIds.has(
-          voice.id
-        )
-      }));
+  const data =
+    await response
+      .json()
+      .catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data?.detail?.message ||
+        data?.detail ||
+        "ElevenLabs voice service failed."
+    );
+  }
+
+  return Array.isArray(data.voices)
+    ? data.voices
+    : [];
+}
+
+async function syncVoices(voices) {
+  if (!voices.length) return;
+
+  const rows = voices
+    .map(normalizeVoice)
+    .filter(
+      voice =>
+        voice.provider_voice_id
+    )
+    .map(voice => ({
+      name: voice.name,
+      gender: voice.gender,
+      language: voice.language,
+      category: voice.category,
+      description: voice.description,
+      preview_url: voice.preview_url,
+      provider: "elevenlabs",
+      provider_voice_id:
+        voice.provider_voice_id,
+      is_public: true
+    }));
+
+  if (!rows.length) return;
+
+  const { error } =
+    await supabaseAdmin
+      .from("voices")
+      .upsert(
+        rows,
+        {
+          onConflict:
+            "provider_voice_id"
+        }
+      );
+
+  if (error) {
+    console.error(
+      "Voice sync warning:",
+      error
+    );
+  }
+}
+
+export default async function handler(
+  req,
+  res
+) {
+  if (req.method === "OPTIONS") {
+    return sendJson(res, 200, {
+      ok: true
+    });
+  }
+
+  if (req.method !== "GET") {
+    return sendJson(res, 405, {
+      ok: false,
+      error: "Method not allowed"
+    });
+  }
+
+  try {
+    const user =
+      await getUser(req);
+
+    const url = new URL(
+      req.url,
+      `https://${req.headers.host || "localhost"}`
+    );
+
+    const search =
+      url.searchParams
+        .get("search")
+        ?.trim() || "";
+
+    const gender =
+      url.searchParams
+        .get("gender")
+        ?.trim() || "";
+
+    const language =
+      url.searchParams
+        .get("language")
+        ?.trim() || "";
+
+    const category =
+      url.searchParams
+        .get("category")
+        ?.trim() || "";
+
+    const page = Math.max(
+      parseInt(
+        url.searchParams.get("page") ||
+          "1",
+        10
+      ) || 1,
+      1
+    );
+
+    const requestedLimit =
+      parseInt(
+        url.searchParams.get(
+          "page_size"
+        ) ||
+          url.searchParams.get(
+            "limit"
+          ) ||
+          "50",
+        10
+      ) || 50;
+
+    const limit = Math.min(
+      Math.max(
+        requestedLimit,
+        1
+      ),
+      100
+    );
+
+    const offset =
+      (page - 1) * limit;
 
     /*
-     * If the database does not yet contain public voices,
-     * provide an empty library instead of fake provider data.
+     * 1. Read from Supabase first.
      */
-    return sendJson(res, 200, {
-      ok: true,
-      count: result.length,
-      voices: result
-    });
+    let result =
+      await getDatabaseVoices({
+        search,
+        gender,
+        language,
+        category,
+        limit,
+        offset
+      });
+
+    /*
+     * 2. If DB is empty, get real
+     * ElevenLabs voices and sync them.
+     */
+    if (
+      result.total === 0 &&
+      offset === 0
+    ) {
+      const providerVoices =
+        await getElevenLabsVoices();
+
+      await syncVoices(
+        providerVoices
+      );
+
+      const normalized =
+        providerVoices
+          .map(normalizeVoice)
+          .filter(voice =>
+            matchesFilters(
+              voice,
+              search,
+              gender,
+              language,
+              category
+            )
+          );
+
+      const pageVoices =
+        normalized.slice(
+          0,
+          limit
+        );
+
+      const favoriteSet =
+        await getFavorites(
+          user,
+          pageVoices.map(
+            voice =>
+              voice.voice_id
+          )
+        );
+
+      const voices =
+        pageVoices.map(
+          voice => ({
+            ...voice,
+            isFavorite:
+              favoriteSet.has(
+                voice.voice_id
+              )
+          })
+        );
+
+      return sendJson(
+        res,
+        200,
+        {
+          ok: true,
+          voices,
+          count: voices.length,
+          total: normalized.length,
+          page,
+          page_size: limit,
+          has_more:
+            normalized.length >
+            page * limit,
+          source:
+            "elevenlabs"
+        }
+      );
+    }
+
+    /*
+     * 3. Normalize DB voices.
+     */
+    const normalized =
+      result.voices.map(
+        normalizeVoice
+      );
+
+    const favoriteSet =
+      await getFavorites(
+        user,
+        normalized.map(
+          voice =>
+            voice.voice_id
+        )
+      );
+
+    const voices =
+      normalized.map(
+        voice => ({
+          ...voice,
+          isFavorite:
+            favoriteSet.has(
+              voice.voice_id
+            )
+        })
+      );
+
+    return sendJson(
+      res,
+      200,
+      {
+        ok: true,
+        voices,
+        count: voices.length,
+        total: result.total,
+        page,
+        page_size: limit,
+        has_more:
+          offset + voices.length <
+          result.total,
+        source:
+          "supabase"
+      }
+    );
   } catch (error) {
     console.error(
-      "Voices API error:",
+      "Voice API error:",
       error
     );
 
-    return sendJson(res, 500, {
-      ok: false,
-      error: "Internal server error"
-    });
+    return sendJson(
+      res,
+      500,
+      {
+        ok: false,
+        voices: [],
+        count: 0,
+        error:
+          error?.message ||
+          "Unable to load voice library."
+      }
+    );
   }
 }
