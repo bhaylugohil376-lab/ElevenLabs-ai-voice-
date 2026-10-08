@@ -1,13 +1,10 @@
-// api/voice-clone.js
-
 import { createClient } from "@supabase/supabase-js";
-import formidable from "formidable";
-import fs from "fs";
 
-export const config = {
-  api: {
-    bodyParser: false
-  }
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS"
 };
 
 const supabaseAdmin = createClient(
@@ -15,360 +12,295 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-function json(res, status, data) {
+function getToken(req) {
+  const auth = req.headers.authorization || "";
+
+  if (!auth.toLowerCase().startsWith("bearer ")) {
+    return null;
+  }
+
+  return auth.substring(7).trim();
+}
+
+function sendJson(res, status, data) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
+
   return res.status(status).json(data);
 }
 
-async function getUser(req) {
-  const auth = req.headers.authorization || "";
-
-  if (!auth.startsWith("Bearer ")) return null;
-
-  const token = auth.slice(7).trim();
-
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !user) return null;
-
-  return user;
-}
-
-function parseForm(req) {
-  return new Promise((resolve, reject) => {
-    const form = formidable({
-      multiples: false,
-      maxFileSize: 25 * 1024 * 1024
-    });
-
-    form.parse(req, (error, fields, files) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve({ fields, files });
-    });
-  });
-}
-
-function value(field) {
-  if (Array.isArray(field)) {
-    return field[0];
-  }
-
-  return field || "";
-}
-
-function getUploadedFile(files) {
-  return (
-    files.audio ||
-    files.file ||
-    files.voice ||
-    null
-  );
-}
-
-async function checkUsage() {
-  const { data, error } =
-    await supabaseAdmin.rpc(
-      "check_and_use_ai"
-    );
-
-  if (error) {
-    throw new Error(
-      `Usage check failed: ${error.message}`
-    );
-  }
-
-  return data;
-}
-
 export default async function handler(req, res) {
-  let uploadedPath = null;
+  if (req.method === "OPTIONS") {
+    return sendJson(res, 200, { ok: true });
+  }
+
+  if (req.method !== "POST") {
+    return sendJson(res, 405, {
+      ok: false,
+      error: "Method not allowed"
+    });
+  }
 
   try {
-    if (req.method !== "POST") {
-      res.setHeader("Allow", "POST");
+    const token = getToken(req);
 
-      return json(res, 405, {
-        error: "Method not allowed."
-      });
-    }
-
-    const user = await getUser(req);
-
-    if (!user) {
-      return json(res, 401, {
-        error: "Authentication required."
-      });
-    }
-
-    const apiKey =
-      process.env.ELEVENLABS_API_KEY;
-
-    if (!apiKey) {
-      return json(res, 500, {
-        error:
-          "ELEVENLABS_API_KEY is not configured."
+    if (!token) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Authentication required"
       });
     }
 
     const {
-      fields,
-      files
-    } = await parseForm(req);
+      data: { user },
+      error: userError
+    } = await supabaseAdmin.auth.getUser(token);
 
-    const audioFile =
-      getUploadedFile(files);
-
-    if (!audioFile) {
-      return json(res, 400, {
-        error: "Voice sample is required."
+    if (userError || !user) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Invalid or expired session"
       });
     }
 
-    uploadedPath =
-      audioFile.filepath ||
-      audioFile.path;
+    const body = req.body || {};
 
-    if (!uploadedPath) {
-      return json(res, 400, {
-        error: "Uploaded file could not be read."
-      });
-    }
+    const name =
+      body.name ||
+      body.voiceName ||
+      body.voice_name ||
+      "My Voice";
 
-    const voiceName =
-      String(
-        value(
-          fields.voiceName ||
-          fields.name
-        )
-      ).trim();
-
-    const language =
-      String(
-        value(fields.language)
-      ).trim() || "en";
+    const audioUrl =
+      body.audioUrl ||
+      body.audio_url ||
+      null;
 
     const description =
-      String(
-        value(fields.description)
-      ).trim();
-
-    const consent =
-      String(
-        value(fields.consent)
-      ).toLowerCase();
-
-    if (!voiceName) {
-      return json(res, 400, {
-        error: "Voice name is required."
-      });
-    }
-
-    if (
-      consent !== "true" &&
-      consent !== "yes" &&
-      consent !== "1"
-    ) {
-      return json(res, 400, {
-        error:
-          "Explicit voice cloning consent is required."
-      });
-    }
+      body.description ||
+      "";
 
     /*
-     * Server-side daily AI limit.
-     * Free = 5/day
-     * Premium/Admin = application-level unlimited
+     * Voice cloning is an AI operation, so enforce the
+     * server-side Free 5/day limit.
      */
-    const usage = await checkUsage();
+    const { data: usageResult, error: usageError } =
+      await supabaseAdmin.rpc("check_and_use_ai", {
+        p_user_id: user.id,
+        p_action: "voice_clone"
+      });
+
+    if (usageError) {
+      console.error("Usage RPC error:", usageError);
+
+      return sendJson(res, 500, {
+        ok: false,
+        error: "Unable to verify AI usage limit"
+      });
+    }
+
+    const usage =
+      Array.isArray(usageResult)
+        ? usageResult[0]
+        : usageResult;
 
     if (!usage?.allowed) {
-      return json(res, 429, {
+      return sendJson(res, 429, {
+        ok: false,
         error:
           usage?.reason ||
-          "Daily AI usage limit reached.",
+          "Daily AI usage limit reached",
         usage
       });
     }
 
-    /*
-     * Send sample to ElevenLabs.
-     */
-    const form = new FormData();
+    if (!audioUrl) {
+      return sendJson(res, 400, {
+        ok: false,
+        error:
+          "audioUrl is required. Upload the sample audio first."
+      });
+    }
 
-    const buffer =
-      await fs.promises.readFile(
-        uploadedPath
+    const elevenLabsKey =
+      process.env.ELEVENLABS_API_KEY;
+
+    if (!elevenLabsKey) {
+      return sendJson(res, 500, {
+        ok: false,
+        error:
+          "ElevenLabs API is not configured on the server."
+      });
+    }
+
+    /*
+     * Download the supplied audio sample.
+     */
+    const audioResponse =
+      await fetch(audioUrl);
+
+    if (!audioResponse.ok) {
+      return sendJson(res, 400, {
+        ok: false,
+        error: "Unable to download audio sample"
+      });
+    }
+
+    const audioBuffer =
+      Buffer.from(
+        await audioResponse.arrayBuffer()
       );
 
-    const blob = new Blob(
-      [buffer],
+    /*
+     * ElevenLabs voice cloning endpoint.
+     */
+    const formData = new FormData();
+
+    const audioBlob = new Blob(
+      [audioBuffer],
       {
         type:
-          audioFile.mimetype ||
-          "audio/mpeg"
+          audioResponse.headers.get(
+            "content-type"
+          ) || "audio/mpeg"
       }
     );
 
-    form.append(
+    formData.append(
       "files",
-      blob,
-      audioFile.originalFilename ||
-        "voice-sample.mp3"
+      audioBlob,
+      "voice-sample.mp3"
     );
 
-    form.append(
+    formData.append(
       "name",
-      voiceName
+      String(name).slice(0, 100)
     );
 
     if (description) {
-      form.append(
+      formData.append(
         "description",
-        description
+        String(description).slice(0, 500)
       );
     }
 
-    const elevenResponse =
+    const cloneResponse =
       await fetch(
         "https://api.elevenlabs.io/v1/voices/add",
         {
           method: "POST",
           headers: {
-            "xi-api-key": apiKey
+            "xi-api-key": elevenLabsKey
           },
-          body: form
+          body: formData
         }
       );
 
-    const contentType =
-      elevenResponse.headers.get(
-        "content-type"
-      ) || "";
+    const cloneData =
+      await cloneResponse.json().catch(
+        () => ({})
+      );
 
-    let providerData;
-
-    if (
-      contentType.includes(
-        "application/json"
-      )
-    ) {
-      providerData =
-        await elevenResponse.json();
-    } else {
-      providerData = {
-        raw:
-          await elevenResponse.text()
-      };
-    }
-
-    if (!elevenResponse.ok) {
+    if (!cloneResponse.ok) {
       console.error(
         "ElevenLabs clone error:",
-        providerData
+        cloneData
       );
 
-      return json(
+      return sendJson(
         res,
-        elevenResponse.status,
+        cloneResponse.status >= 400
+          ? cloneResponse.status
+          : 500,
         {
+          ok: false,
           error:
-            providerData?.detail ||
-            providerData?.message ||
-            "Voice cloning failed.",
-          provider: "elevenlabs"
+            cloneData?.detail?.message ||
+            cloneData?.detail ||
+            "Voice cloning failed"
         }
       );
     }
 
-    const voiceId =
-      providerData?.voice_id ||
-      providerData?.voiceId;
+    const providerVoiceId =
+      cloneData?.voice_id ||
+      cloneData?.voiceId;
 
-    if (!voiceId) {
-      return json(res, 502, {
+    if (!providerVoiceId) {
+      return sendJson(res, 502, {
+        ok: false,
         error:
-          "ElevenLabs did not return a voice ID."
+          "Voice provider did not return a voice ID"
       });
     }
 
     /*
-     * Save clone in Supabase.
+     * Save the cloned voice in Supabase.
      */
-    const {
-      data: clone,
-      error: cloneError
-    } = await supabaseAdmin
-      .from("voice_clones")
-      .insert({
-        user_id: user.id,
-        voice_id: voiceId,
-        name: voiceName,
-        language,
-        description,
-        status: "ready"
-      })
-      .select()
-      .single();
+    const { data: savedVoice, error: saveError } =
+      await supabaseAdmin
+        .from("voice_clones")
+        .insert({
+          user_id: user.id,
+          name: String(name).slice(0, 100),
+          provider: "elevenlabs",
+          provider_voice_id: providerVoiceId,
+          source_url: audioUrl,
+          status: "ready"
+        })
+        .select()
+        .single();
 
-    if (cloneError) {
+    if (saveError) {
       console.error(
-        "Supabase clone save error:",
-        cloneError
+        "Voice clone DB error:",
+        saveError
       );
 
       /*
-       * Voice was already created at ElevenLabs,
-       * so return the provider ID even if DB save fails.
+       * Do not pretend the clone failed if the provider
+       * succeeded. Return the provider ID so the user
+       * doesn't lose the created voice.
        */
-      return json(res, 201, {
-        success: true,
-        voiceId,
-        cloneSaved: false,
+      return sendJson(res, 200, {
+        ok: true,
+        message:
+          "Voice cloned successfully, but database save failed",
+        voice: {
+          id: providerVoiceId,
+          provider: "elevenlabs",
+          status: "ready"
+        },
+        usage,
         warning:
-          "Voice created, but database record could not be saved.",
-        usage
+          "Please save this voice ID before retrying."
       });
     }
 
-    return json(res, 201, {
-      success: true,
-      voiceId,
-      clone,
+    return sendJson(res, 200, {
+      ok: true,
+      message: "Voice cloned successfully",
+      voice: {
+        id:
+          savedVoice.id ||
+          providerVoiceId,
+        provider: "elevenlabs",
+        providerVoiceId,
+        name: savedVoice.name,
+        status: savedVoice.status
+      },
       usage
     });
-
   } catch (error) {
     console.error(
       "Voice clone API error:",
       error
     );
 
-    return json(res, 500, {
-      error:
-        error?.message ||
-        "Voice cloning failed."
+    return sendJson(res, 500, {
+      ok: false,
+      error: "Internal server error"
     });
-
-  } finally {
-    if (
-      uploadedPath &&
-      fs.existsSync(uploadedPath)
-    ) {
-      try {
-        await fs.promises.unlink(
-          uploadedPath
-        );
-      } catch {
-        // Ignore temporary-file cleanup errors.
-      }
-    }
   }
 }
