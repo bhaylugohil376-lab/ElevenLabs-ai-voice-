@@ -1,16 +1,10 @@
-// api/dubbing.js
-
 import { createClient } from "@supabase/supabase-js";
-import formidable from "formidable";
-import fs from "fs";
-import os from "os";
-import path from "path";
-import crypto from "crypto";
 
-export const config = {
-  api: {
-    bodyParser: false
-  }
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS"
 };
 
 const supabaseAdmin = createClient(
@@ -18,162 +12,133 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-function send(res, status, data) {
-  return res.status(status).json(data);
-}
+function getToken(req) {
+  const auth = req.headers.authorization || "";
 
-async function getUser(req) {
-  const auth =
-    req.headers.authorization || "";
-
-  if (!auth.startsWith("Bearer ")) {
+  if (!auth.toLowerCase().startsWith("bearer ")) {
     return null;
   }
 
-  const token =
-    auth.slice(7).trim();
-
-  if (!token) return null;
-
-  const {
-    data: { user },
-    error
-  } = await supabaseAdmin.auth.getUser(token);
-
-  if (error || !user) return null;
-
-  return user;
+  return auth.substring(7).trim();
 }
 
-async function checkUsage() {
-  const { data, error } =
-    await supabaseAdmin.rpc(
-      "check_and_use_ai"
-    );
-
-  if (error) {
-    throw new Error(
-      `Usage check failed: ${error.message}`
-    );
-  }
-
-  return data;
-}
-
-function parseForm(req) {
-  return new Promise((resolve, reject) => {
-    const form = formidable({
-      multiples: false,
-      maxFileSize:
-        200 * 1024 * 1024
-    });
-
-    form.parse(
-      req,
-      (error, fields, files) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        resolve({
-          fields,
-          files
-        });
-      }
-    );
+function sendJson(res, status, data) {
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
   });
+
+  return res.status(status).json(data);
 }
 
-function first(value) {
-  return Array.isArray(value)
-    ? value[0]
-    : value;
-}
-
-function getMediaFile(files) {
-  return (
-    files.video ||
-    files.audio ||
-    files.file ||
-    files.media ||
-    null
-  );
-}
-
-function getExtension(file) {
-  const filename =
-    file?.originalFilename || "";
-
-  const match =
-    filename.match(
-      /(\.[a-zA-Z0-9]+)$/
-    );
-
-  return match
-    ? match[1].toLowerCase()
-    : ".mp4";
-}
-
-function safeTempFile(extension) {
-  return path.join(
-    os.tmpdir(),
-    `voiceai-${crypto
-      .randomBytes(12)
-      .toString("hex")}${extension}`
-  );
-}
-
-async function downloadToFile(
-  url,
-  destination
-) {
-  const response =
-    await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(
-      `Unable to download provider output: ${response.status}`
-    );
+export default async function handler(req, res) {
+  if (req.method === "OPTIONS") {
+    return sendJson(res, 200, { ok: true });
   }
 
-  const buffer =
-    Buffer.from(
-      await response.arrayBuffer()
-    );
-
-  await fs.promises.writeFile(
-    destination,
-    buffer
-  );
-}
-
-export default async function handler(
-  req,
-  res
-) {
-  const temporaryFiles = [];
+  if (req.method !== "POST") {
+    return sendJson(res, 405, {
+      ok: false,
+      error: "Method not allowed"
+    });
+  }
 
   try {
-    if (req.method !== "POST") {
-      res.setHeader(
-        "Allow",
-        "POST"
-      );
+    const token = getToken(req);
 
-      return send(res, 405, {
-        error:
-          "Method not allowed."
+    if (!token) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Authentication required"
       });
     }
 
-    const user =
-      await getUser(req);
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseAdmin.auth.getUser(token);
 
-    if (!user) {
-      return send(res, 401, {
+    if (userError || !user) {
+      return sendJson(res, 401, {
+        ok: false,
+        error: "Invalid or expired session"
+      });
+    }
+
+    const body = req.body || {};
+
+    const sourceUrl =
+      body.sourceUrl ||
+      body.source_url ||
+      body.videoUrl ||
+      body.video_url ||
+      null;
+
+    const targetLanguage =
+      body.targetLanguage ||
+      body.target_language ||
+      body.language ||
+      null;
+
+    const sourceLanguage =
+      body.sourceLanguage ||
+      body.source_language ||
+      null;
+
+    const voiceId =
+      body.voiceId ||
+      body.voice_id ||
+      null;
+
+    if (!sourceUrl) {
+      return sendJson(res, 400, {
+        ok: false,
+        error: "sourceUrl is required"
+      });
+    }
+
+    if (!targetLanguage) {
+      return sendJson(res, 400, {
+        ok: false,
+        error: "targetLanguage is required"
+      });
+    }
+
+    /*
+     * Dubbing consumes one AI use for Free users.
+     */
+    const { data: usageResult, error: usageError } =
+      await supabaseAdmin.rpc(
+        "check_and_use_ai",
+        {
+          p_user_id: user.id,
+          p_action: "dubbing"
+        }
+      );
+
+    if (usageError) {
+      console.error(
+        "Usage RPC error:",
+        usageError
+      );
+
+      return sendJson(res, 500, {
+        ok: false,
+        error: "Unable to verify AI usage limit"
+      });
+    }
+
+    const usage =
+      Array.isArray(usageResult)
+        ? usageResult[0]
+        : usageResult;
+
+    if (!usage?.allowed) {
+      return sendJson(res, 429, {
+        ok: false,
         error:
-          "Authentication required."
+          usage?.reason ||
+          "Daily AI usage limit reached",
+        usage
       });
     }
 
@@ -181,603 +146,172 @@ export default async function handler(
       process.env.ELEVENLABS_API_KEY;
 
     if (!elevenLabsKey) {
-      return send(res, 500, {
+      return sendJson(res, 500, {
+        ok: false,
         error:
-          "ELEVENLABS_API_KEY is not configured."
-      });
-    }
-
-    const {
-      fields,
-      files
-    } = await parseForm(req);
-
-    const mediaFile =
-      getMediaFile(files);
-
-    if (!mediaFile) {
-      return send(res, 400, {
-        error:
-          "Audio or video file is required."
-      });
-    }
-
-    const inputPath =
-      mediaFile.filepath ||
-      mediaFile.path;
-
-    if (!inputPath) {
-      return send(res, 400, {
-        error:
-          "Uploaded media could not be read."
-      });
-    }
-
-    const sourceLanguage =
-      String(
-        first(
-          fields.sourceLanguage ||
-          fields.source_language
-        ) || ""
-      ).trim();
-
-    const targetLanguage =
-      String(
-        first(
-          fields.targetLanguage ||
-          fields.target_language
-        ) || ""
-      ).trim();
-
-    const voiceId =
-      String(
-        first(
-          fields.voiceId ||
-          fields.voice_id ||
-          fields.voice
-        ) || ""
-      ).trim();
-
-    const style =
-      String(
-        first(fields.style) ||
-        "natural"
-      ).trim();
-
-    const projectName =
-      String(
-        first(fields.projectName) ||
-        "Untitled Dubbing Project"
-      ).trim();
-
-    if (!sourceLanguage) {
-      return send(res, 400, {
-        error:
-          "Source language is required."
-      });
-    }
-
-    if (!targetLanguage) {
-      return send(res, 400, {
-        error:
-          "Target language is required."
-      });
-    }
-
-    if (!voiceId) {
-      return send(res, 400, {
-        error:
-          "Target voice is required."
-      });
-    }
-
-    if (
-      sourceLanguage ===
-      targetLanguage
-    ) {
-      return send(res, 400, {
-        error:
-          "Source and target languages must be different."
+          "ElevenLabs API is not configured on the server."
       });
     }
 
     /*
-     * Server-side 5/day protection.
+     * Create a local dubbing job first.
      */
-    const usage =
-      await checkUsage();
+    const jobId = crypto.randomUUID();
 
-    if (!usage?.allowed) {
-      return send(res, 429, {
-        error:
-          usage?.reason ||
-          "Daily AI usage limit reached.",
-        usage
-      });
-    }
-
-    /*
-     * Read source media.
-     */
-    const sourceBuffer =
-      await fs.promises.readFile(
-        inputPath
-      );
-
-    /*
-     * STEP 1:
-     * Transcribe source audio using
-     * ElevenLabs Speech-to-Text.
-     */
-    const transcriptionForm =
-      new FormData();
-
-    transcriptionForm.append(
-      "file",
-      new Blob(
-        [sourceBuffer],
-        {
-          type:
-            mediaFile.mimetype ||
-            "audio/mpeg"
-        }
-      ),
-      mediaFile.originalFilename ||
-        `source${getExtension(
-          mediaFile
-        )}`
-    );
-
-    transcriptionForm.append(
-      "model_id",
-      "scribe_v2"
-    );
-
-    const transcriptionResponse =
-      await fetch(
-        "https://api.elevenlabs.io/v1/speech-to-text",
-        {
-          method: "POST",
-          headers: {
-            "xi-api-key":
-              elevenLabsKey
-          },
-          body:
-            transcriptionForm
-        }
-      );
-
-    const transcriptionData =
-      await transcriptionResponse.json();
-
-    if (
-      !transcriptionResponse.ok
-    ) {
-      console.error(
-        "Dubbing STT error:",
-        transcriptionData
-      );
-
-      return send(
-        res,
-        transcriptionResponse.status,
-        {
-          error:
-            transcriptionData?.detail ||
-            transcriptionData?.message ||
-            "Source transcription failed."
-        }
-      );
-    }
-
-    const sourceText =
-      String(
-        transcriptionData?.text ||
-        transcriptionData?.transcript ||
-        ""
-      ).trim();
-
-    if (!sourceText) {
-      return send(res, 502, {
-        error:
-          "No source speech was detected."
-      });
-    }
-
-    /*
-     * STEP 2:
-     * Translate source text.
-     *
-     * Uses OpenAI because the user wants
-     * multilingual dubbing.
-     */
-    const openAiKey =
-      process.env.OPENAI_API_KEY;
-
-    if (!openAiKey) {
-      return send(res, 500, {
-        error:
-          "OPENAI_API_KEY is not configured."
-      });
-    }
-
-    const translationResponse =
-      await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-            Authorization:
-              `Bearer ${openAiKey}`
-          },
-          body: JSON.stringify({
-            model:
-              process.env.OPENAI_TRANSLATION_MODEL ||
-              "gpt-4o-mini",
-            temperature: 0.2,
-            messages: [
-              {
-                role: "system",
-                content:
-                  "Translate the provided spoken script naturally for dubbing. Preserve meaning, names, numbers and intent. Do not add explanations."
-              },
-              {
-                role: "user",
-                content:
-                  `Translate from ${sourceLanguage} to ${targetLanguage}. Style: ${style}.\n\n${sourceText}`
-              }
-            ]
-          })
-        }
-      );
-
-    const translationData =
-      await translationResponse.json();
-
-    if (
-      !translationResponse.ok
-    ) {
-      console.error(
-        "Dubbing translation error:",
-        translationData
-      );
-
-      return send(
-        res,
-        translationResponse.status,
-        {
-          error:
-            translationData?.error?.message ||
-            "Translation failed."
-        }
-      );
-    }
-
-    const translatedText =
-      String(
-        translationData?.choices?.[0]
-          ?.message?.content ||
-        ""
-      ).trim();
-
-    if (!translatedText) {
-      return send(res, 502, {
-        error:
-          "Translation returned empty text."
-      });
-    }
-
-    /*
-     * STEP 3:
-     * Generate target-language speech.
-     */
-    const speechResponse =
-      await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(
-          voiceId
-        )}`,
-        {
-          method: "POST",
-          headers: {
-            "xi-api-key":
-              elevenLabsKey,
-            "Content-Type":
-              "application/json",
-            Accept:
-              "audio/mpeg"
-          },
-          body: JSON.stringify({
-            text:
-              translatedText,
-            model_id:
-              "eleven_multilingual_v2",
-            voice_settings: {
-              stability: 0.5,
-              similarity_boost: 0.75
-            }
-          })
-        }
-      );
-
-    if (!speechResponse.ok) {
-      const errorText =
-        await speechResponse.text();
-
-      console.error(
-        "Dubbing TTS error:",
-        errorText
-      );
-
-      return send(
-        res,
-        speechResponse.status,
-        {
-          error:
-            "Target voice generation failed."
-        }
-      );
-    }
-
-    const audioBuffer =
-      Buffer.from(
-        await speechResponse.arrayBuffer()
-      );
-
-    /*
-     * STEP 4:
-     * Store generated audio temporarily.
-     */
-    const audioPath =
-      safeTempFile(".mp3");
-
-    await fs.promises.writeFile(
-      audioPath,
-      audioBuffer
-    );
-
-    temporaryFiles.push(
-      audioPath
-    );
-
-    /*
-     * For audio-only uploads, return generated
-     * dubbed audio directly.
-     */
-    const mime =
-      mediaFile.mimetype || "";
-
-    const isVideo =
-      mime.startsWith("video/") ||
-      [".mp4", ".mov", ".webm", ".mkv"]
-        .includes(
-          getExtension(mediaFile)
-        );
-
-    if (!isVideo) {
-      const {
-        data: savedAudio,
-        error: saveError
-      } = await supabaseAdmin
+    const { error: insertError } =
+      await supabaseAdmin
         .from("dubbing_jobs")
         .insert({
+          id: jobId,
           user_id: user.id,
-          project_name: projectName,
-          source_language:
-            sourceLanguage,
-          target_language:
-            targetLanguage,
+          source_url: sourceUrl,
+          source_language: sourceLanguage,
+          target_language: targetLanguage,
           voice_id: voiceId,
-          source_text: sourceText,
-          translated_text:
-            translatedText,
-          status: "completed"
-        })
-        .select()
-        .single();
+          status: "processing"
+        });
 
-      if (saveError) {
-        console.error(
-          "Dubbing DB error:",
-          saveError
-        );
-      }
-
-      return send(res, 200, {
-        success: true,
-        type: "audio",
-        audioBase64:
-          audioBuffer.toString(
-            "base64"
-          ),
-        mimeType:
-          "audio/mpeg",
-        sourceText,
-        translatedText,
-        job:
-          savedAudio || null,
-        usage
-      });
-    }
-
-    /*
-     * Video muxing requires ffmpeg.
-     *
-     * If ffmpeg-static is installed, use it.
-     */
-    let ffmpegPath;
-
-    try {
-      const ffmpeg =
-        await import(
-          "ffmpeg-static"
-        );
-
-      ffmpegPath =
-        ffmpeg.default || ffmpeg;
-    } catch {
-      return send(res, 501, {
-        error:
-          "Video dubbing requires ffmpeg-static. Install/configure ffmpeg for video output."
-      });
-    }
-
-    const outputPath =
-      safeTempFile(".mp4");
-
-    temporaryFiles.push(
-      outputPath
-    );
-
-    const { spawn } =
-      await import("child_process");
-
-    await new Promise(
-      (resolve, reject) => {
-        const process =
-          spawn(ffmpegPath, [
-            "-y",
-            "-i",
-            inputPath,
-            "-i",
-            audioPath,
-            "-map",
-            "0:v:0",
-            "-map",
-            "1:a:0",
-            "-c:v",
-            "copy",
-            "-c:a",
-            "aac",
-            "-shortest",
-            outputPath
-          ]);
-
-        let stderr = "";
-
-        process.stderr.on(
-          "data",
-          chunk => {
-            stderr +=
-              chunk.toString();
-          }
-        );
-
-        process.on(
-          "error",
-          reject
-        );
-
-        process.on(
-          "close",
-          code => {
-            if (code === 0) {
-              resolve();
-            } else {
-              reject(
-                new Error(
-                  `FFmpeg failed: ${stderr.slice(
-                    -2000
-                  )}`
-                )
-              );
-            }
-          }
-        );
-      }
-    );
-
-    const outputBuffer =
-      await fs.promises.readFile(
-        outputPath
-      );
-
-    /*
-     * Save database record.
-     */
-    const {
-      data: savedJob,
-      error: saveError
-    } = await supabaseAdmin
-      .from("dubbing_jobs")
-      .insert({
-        user_id: user.id,
-        project_name: projectName,
-        source_language:
-          sourceLanguage,
-        target_language:
-          targetLanguage,
-        voice_id: voiceId,
-        source_text: sourceText,
-        translated_text:
-          translatedText,
-        status: "completed"
-      })
-      .select()
-      .single();
-
-    if (saveError) {
+    if (insertError) {
       console.error(
-        "Dubbing DB save error:",
-        saveError
+        "Dubbing DB insert error:",
+        insertError
       );
+
+      return sendJson(res, 500, {
+        ok: false,
+        error: "Unable to create dubbing job"
+      });
     }
 
     /*
-     * Return binary video.
+     * ElevenLabs dubbing API.
+     *
+     * The media URL is sent to ElevenLabs, which performs
+     * transcription, translation, voice generation and
+     * synchronization.
      */
-    res.statusCode = 200;
+    const formData = new FormData();
 
-    res.setHeader(
-      "Content-Type",
-      "video/mp4"
+    formData.append(
+      "source_url",
+      sourceUrl
     );
 
-    res.setHeader(
-      "Content-Disposition",
-      'attachment; filename="voiceai-dubbed.mp4"'
+    formData.append(
+      "target_lang",
+      String(targetLanguage)
     );
 
-    res.setHeader(
-      "Content-Length",
-      outputBuffer.length
-    );
+    if (sourceLanguage) {
+      formData.append(
+        "source_lang",
+        String(sourceLanguage)
+      );
+    }
 
-    return res.end(
-      outputBuffer
-    );
+    if (voiceId) {
+      formData.append(
+        "voice_id",
+        String(voiceId)
+      );
+    }
 
+    const dubbingResponse =
+      await fetch(
+        "https://api.elevenlabs.io/v1/dubbing",
+        {
+          method: "POST",
+          headers: {
+            "xi-api-key": elevenLabsKey
+          },
+          body: formData
+        }
+      );
+
+    const dubbingData =
+      await dubbingResponse.json().catch(
+        () => ({})
+      );
+
+    if (!dubbingResponse.ok) {
+      console.error(
+        "ElevenLabs dubbing error:",
+        dubbingData
+      );
+
+      await supabaseAdmin
+        .from("dubbing_jobs")
+        .update({
+          status: "failed"
+        })
+        .eq("id", jobId)
+        .eq("user_id", user.id);
+
+      return sendJson(
+        res,
+        dubbingResponse.status || 500,
+        {
+          ok: false,
+          error:
+            dubbingData?.detail?.message ||
+            dubbingData?.detail ||
+            "Dubbing failed"
+        }
+      );
+    }
+
+    const providerDubbingId =
+      dubbingData?.dubbing_id ||
+      dubbingData?.id;
+
+    /*
+     * ElevenLabs may process dubbing asynchronously.
+     */
+    const finalStatus =
+      providerDubbingId
+        ? "processing"
+        : "completed";
+
+    const { error: updateError } =
+      await supabaseAdmin
+        .from("dubbing_jobs")
+        .update({
+          provider_job_id:
+            providerDubbingId || null,
+          status: finalStatus
+        })
+        .eq("id", jobId)
+        .eq("user_id", user.id);
+
+    if (updateError) {
+      console.error(
+        "Dubbing DB update error:",
+        updateError
+      );
+    }
+
+    return sendJson(res, 200, {
+      ok: true,
+      message:
+        "Dubbing job created successfully",
+      job: {
+        id: jobId,
+        providerJobId:
+          providerDubbingId || null,
+        status: finalStatus
+      },
+      result: dubbingData,
+      usage
+    });
   } catch (error) {
     console.error(
       "Dubbing API error:",
       error
     );
 
-    return send(res, 500, {
-      error:
-        error?.message ||
-        "Dubbing failed."
+    return sendJson(res, 500, {
+      ok: false,
+      error: "Internal server error"
     });
-
-  } finally {
-    /*
-     * Clean temporary generated files.
-     */
-    for (
-      const file of temporaryFiles
-    ) {
-      try {
-        if (
-          fs.existsSync(file)
-        ) {
-          await fs.promises.unlink(
-            file
-          );
-        }
-      } catch {
-        // Ignore cleanup errors.
-      }
-    }
   }
 }
