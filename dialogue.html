@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Text to Dialogue — VoiceAI</title>
+
+  <meta
+    name="description"
+    content="Create natural multi-speaker AI conversations with VoiceAI Text to Dialogue."
+  />
+
+  <link rel="stylesheet" href="./style.css" />
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="site-header">
+    <div class="nav-container">
+
+      <a href="index.html" class="logo">
+        <span class="logo-mark">
+          <i data-lucide="audio-lines"></i>
+        </span>
+        <span>VoiceAI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="tools.html" class="active">AI Tools</a>
+        <a href="voices.html">Voices</a>
+        <a href="studio.html">Studio</a>
+        <a href="pricing.html">Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="login.html" class="nav-login">Login</a>
+        <a href="signup.html" class="primary-btn nav-get-started">
+          Get Started
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ================= PAGE ================= -->
+  <main class="tool-page">
+
+    <!-- HERO -->
+    <section class="tool-hero">
+
+      <div class="tool-badge">
+        <i data-lucide="message-square-code"></i>
+        AI Dialogue Studio
+      </div>
+
+      <h1>
+        Turn text into
+        <span>natural dialogue</span>
+      </h1>
+
+      <p>
+        Create realistic multi-speaker conversations for ads, podcasts,
+        videos, stories, training and AI experiences.
+      </p>
+
+    </section>
+
+
+    <!-- ================= WORKSPACE ================= -->
+    <section class="dialogue-workspace">
+
+      <!-- LEFT -->
+      <div class="dialogue-editor panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>
+              <i data-lucide="messages-square"></i>
+              Dialogue Script
+            </h2>
+
+            <p>
+              Build your conversation line by line.
+            </p>
+          </div>
+
+          <div class="usage-pill" id="usageBadge">
+            <i data-lucide="gauge"></i>
+            <span id="usageText">5 free uses</span>
+          </div>
+
+        </div>
+
+
+        <!-- SPEAKER 1 -->
+        <div class="dialogue-line">
+
+          <div class="speaker-label">
+            <span class="speaker-avatar speaker-one">
+              A
+            </span>
+
+            <strong>Speaker 1</strong>
+          </div>
+
+          <select id="speaker1Voice" class="voice-select">
+            <option value="default-male">
+              Alex — Professional Male
+            </option>
+
+            <option value="bryan">
+              Bryan — Polished & Engaging
+            </option>
+
+            <option value="hale">
+              Hale — Smooth & Persuasive
+            </option>
+
+            <option value="juniper">
+              Juniper — Grounded & Professional
+            </option>
+          </select>
+
+          <textarea
+            id="speaker1Text"
+            class="dialogue-textarea"
+            maxlength="2500"
+            placeholder="Write Speaker 1's line..."
+          ></textarea>
+
+          <div class="line-footer">
+            <span id="speaker1Count">0 / 2500</span>
+          </div>
+
+        </div>
+
+
+        <!-- SPEAKER 2 -->
+        <div class="dialogue-line">
+
+          <div class="speaker-label">
+            <span class="speaker-avatar speaker-two">
+              B
+            </span>
+
+            <strong>Speaker 2</strong>
+          </div>
+
+          <select id="speaker2Voice" class="voice-select">
+            <option value="default-female">
+              Sophia — Professional Female
+            </option>
+
+            <option value="jessica">
+              Jessica — Professional & Natural
+            </option>
+
+            <option value="allison">
+              Allison — Energetic & Bubbly
+            </option>
+
+            <option value="jerry">
+              Jerry B — Upbeat & Happy
+            </option>
+          </select>
+
+          <textarea
+            id="speaker2Text"
+            class="dialogue-textarea"
+            maxlength="2500"
+            placeholder="Write Speaker 2's line..."
+          ></textarea>
+
+          <div class="line-footer">
+            <span id="speaker2Count">0 / 2500</span>
+          </div>
+
+        </div>
+
+
+        <!-- ADD SPEAKER -->
+        <button
+          type="button"
+          class="add-line-btn"
+          id="addDialogueLine"
+        >
+          <i data-lucide="plus"></i>
+          Add Dialogue Line
+        </button>
+
+
+        <!-- OPTIONS -->
+        <div class="dialogue-options">
+
+          <div class="option-card">
+
+            <label for="dialogueStyle">
+              <i data-lucide="wand-sparkles"></i>
+              Conversation Style
+            </label>
+
+            <select id="dialogueStyle">
+              <option value="natural">
+                Natural Conversation
+              </option>
+
+              <option value="advertisement">
+                Advertisement
+              </option>
+
+              <option value="podcast">
+                Podcast
+              </option>
+
+              <option value="story">
+                Storytelling
+              </option>
+
+              <option value="professional">
+                Professional
+              </option>
+            </select>
+
+          </div>
+
+
+          <div class="option-card">
+
+            <label for="dialogueFormat">
+              <i data-lucide="file-audio"></i>
+              Output Format
+            </label>
+
+            <select id="dialogueFormat">
+              <option value="mp3_44100_128">
+                MP3 — 128 kbps
+              </option>
+
+              <option value="mp3_44100_192">
+                MP3 — 192 kbps
+              </option>
+
+              <option value="wav_44100">
+                WAV — 44.1 kHz
+              </option>
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <!-- GENERATE -->
+        <button
+          type="button"
+          class="primary-btn generate-dialogue-btn"
+          id="generateDialogueBtn"
+        >
+          <i data-lucide="play"></i>
+          Generate Dialogue
+        </button>
+
+      </div>
+
+
+      <!-- RIGHT -->
+      <aside class="dialogue-preview panel">
+
+        <div class="panel-header">
+
+          <div>
+            <h2>
+              <i data-lucide="headphones"></i>
+              Preview
+            </h2>
+
+            <p>
+              Your generated conversation appears here.
+            </p>
+          </div>
+
+        </div>
+
+
+        <!-- EMPTY -->
+        <div id="dialogueEmpty" class="preview-empty">
+
+          <div class="empty-icon">
+            <i data-lucide="message-circle-more"></i>
+          </div>
+
+          <h3>Your dialogue is ready to be created</h3>
+
+          <p>
+            Add speaker lines and click Generate Dialogue.
+          </p>
+
+        </div>
+
+
+        <!-- RESULT -->
+        <div
+          id="dialogueResult"
+          class="dialogue-result"
+          hidden
+        >
+
+          <div class="result-status">
+            <span class="status-dot"></span>
+            Dialogue generated
+          </div>
+
+          <audio
+            id="dialogueAudio"
+            controls
+            preload="metadata"
+          ></audio>
+
+          <div class="result-actions">
+
+            <a
+              href="#"
+              id="downloadDialogue"
+              class="secondary-btn"
+              download="voiceai-dialogue.mp3"
+            >
+              <i data-lucide="download"></i>
+              Download
+            </a>
+
+            <button
+              type="button"
+              class="secondary-btn"
+              id="newDialogueBtn"
+            >
+              <i data-lucide="rotate-ccw"></i>
+              New Dialogue
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ERROR -->
+        <div
+          id="dialogueError"
+          class="error-box"
+          hidden
+        >
+          <i data-lucide="triangle-alert"></i>
+          <span id="dialogueErrorText"></span>
+        </div>
+
+      </aside>
+
+    </section>
+
+
+    <!-- ================= INFO ================= -->
+    <section class="dialogue-info">
+
+      <div class="info-card">
+        <i data-lucide="mic-2"></i>
+
+        <div>
+          <h3>Multiple voices</h3>
+          <p>
+            Give every character a different voice for a more natural
+            conversation.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="info-card">
+        <i data-lucide="sparkles"></i>
+
+        <div>
+          <h3>AI-ready workflow</h3>
+          <p>
+            Perfect for podcasts, advertisements, social videos and
+            storytelling.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="info-card">
+        <i data-lucide="zap"></i>
+
+        <div>
+          <h3>Fast generation</h3>
+          <p>
+            Generate your complete dialogue from one simple workspace.
+          </p>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+      <div>
+        <div class="logo footer-logo">
+          <span class="logo-mark">
+            <i data-lucide="audio-lines"></i>
+          </span>
+          <span>VoiceAI</span>
+        </div>
+
+        <p>
+          AI voice tools for creators, businesses and teams.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contact.html">Contact</a>
+        <a href="pricing.html">Pricing</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 VoiceAI. All rights reserved.
+    </div>
+
+  </footer>
+
+
+  <!-- ================= SUPABASE ================= -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="./supabase-config.js"></script>
+
+  <script src="./script.js"></script>
+
+
+  <!-- ================= PAGE SCRIPT ================= -->
+  <script>
+
+    "use strict";
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+
+      setupCounters();
+      setupDialogueGenerator();
+      setupNewDialogue();
+
+      loadDialogueSession();
+      loadDialogueUsage();
+
+    });
+
+
+    /* =========================================
+       COUNTERS
+    ========================================= */
+
+    function setupCounters() {
+
+      const fields = [
+        {
+          input: "speaker1Text",
+          counter: "speaker1Count"
+        },
+        {
+          input: "speaker2Text",
+          counter: "speaker2Count"
+        }
+      ];
+
+      fields.forEach((item) => {
+
+        const input = document.getElementById(item.input);
+        const counter = document.getElementById(item.counter);
+
+        if (!input || !counter) return;
+
+        function update() {
+          counter.textContent =
+            `${input.value.length} / 2500`;
+        }
+
+        input.addEventListener("input", update);
+
+        update();
+
+      });
+
+    }
+
+
+    /* =========================================
+       GENERATOR
+    ========================================= */
+
+    function setupDialogueGenerator() {
+
+      const button =
+        document.getElementById("generateDialogueBtn");
+
+      if (!button) return;
+
+      button.addEventListener("click", async () => {
+
+        const speaker1 =
+          document.getElementById("speaker1Text").value.trim();
+
+        const speaker2 =
+          document.getElementById("speaker2Text").value.trim();
+
+        const voice1 =
+          document.getElementById("speaker1Voice").value;
+
+        const voice2 =
+          document.getElementById("speaker2Voice").value;
+
+        const style =
+          document.getElementById("dialogueStyle").value;
+
+        const format =
+          document.getElementById("dialogueFormat").value;
+
+
+        if (!speaker1 && !speaker2) {
+
+          showDialogueError(
+            "Please enter at least one dialogue line."
+          );
+
+          return;
+
+        }
+
+
+        const session =
+          await getSupabaseSession();
+
+        if (!session) {
+
+          window.location.href =
+            "login.html?redirect=dialogue.html";
+
+          return;
+
+        }
+
+
+        button.disabled = true;
+
+        button.innerHTML = `
+          <i data-lucide="loader-circle"></i>
+          Generating Dialogue...
+        `;
+
+        if (window.lucide) {
+          lucide.createIcons();
+        }
+
+
+        hideDialogueError();
+
+
+        try {
+
+          const response =
+            await fetch("/api/dialogue", {
+
+              method: "POST",
+
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization":
+                  `Bearer ${session.access_token}`
+              },
+
+              body: JSON.stringify({
+
+                lines: [
+
+                  {
+                    speaker: "Speaker 1",
+                    voice_id: voice1,
+                    text: speaker1
+                  },
+
+                  {
+                    speaker: "Speaker 2",
+                    voice_id: voice2,
+                    text: speaker2
+                  }
+
+                ].filter((line) => line.text),
+
+                style,
+
+                output_format: format
+
+              })
+
+            });
+
+
+          let data = {};
+
+          try {
+            data = await response.json();
+          } catch {
+            data = {};
+          }
+
+
+          if (!response.ok) {
+
+            if (response.status === 401) {
+
+              window.location.href =
+                "login.html?redirect=dialogue.html";
+
+              return;
+
+            }
+
+            if (response.status === 429) {
+
+              showDialogueError(
+                data.error ||
+                "Daily limit reached. You have used all 5 free uses for this section. Please try again after 24 hours."
+              );
+
+              return;
+
+            }
+
+            throw new Error(
+              data.error ||
+              "Dialogue generation failed."
+            );
+
+          }
+
+
+          if (!data.audio) {
+
+            throw new Error(
+              "No audio was returned by the server."
+            );
+
+          }
+
+
+          showDialogueResult(data.audio);
+
+
+          await loadDialogueUsage();
+
+        } catch (error) {
+
+          console.error(
+            "Dialogue generation error:",
+            error
+          );
+
+          showDialogueError(
+            error.message ||
+            "Something went wrong while generating the dialogue."
+          );
+
+        } finally {
+
+          button.disabled = false;
+
+          button.innerHTML = `
+            <i data-lucide="play"></i>
+            Generate Dialogue
+          `;
+
+          if (window.lucide) {
+            lucide.createIcons();
+          }
+
+        }
+
+      });
+
+    }
+
+
+    /* =========================================
+       SHOW RESULT
+    ========================================= */
+
+    function showDialogueResult(audioData) {
+
+      const empty =
+        document.getElementById("dialogueEmpty");
+
+      const result =
+        document.getElementById("dialogueResult");
+
+      const audio =
+        document.getElementById("dialogueAudio");
+
+      const download =
+        document.getElementById("downloadDialogue");
+
+
+      let audioUrl = audioData;
+
+
+      if (
+        typeof audioData === "string" &&
+        !audioData.startsWith("data:")
+      ) {
+
+        if (
+          audioData.startsWith("http://") ||
+          audioData.startsWith("https://")
+        ) {
+
+          audioUrl = audioData;
+
+        } else {
+
+          audioUrl =
+            `data:audio/mpeg;base64,${audioData}`;
+
+        }
+
+      }
+
+
+      audio.src = audioUrl;
+
+      download.href = audioUrl;
+
+
+      empty.hidden = true;
+
+      result.hidden = false;
+
+
+      result.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+
+    }
+
+
+    /* =========================================
+       NEW DIALOGUE
+    ========================================= */
+
+    function setupNewDialogue() {
+
+      const button =
+        document.getElementById("newDialogueBtn");
+
+      if (!button) return;
+
+      button.addEventListener("click", () => {
+
+        document.getElementById("speaker1Text").value = "";
+        document.getElementById("speaker2Text").value = "";
+
+        document.getElementById("speaker1Count")
+          .textContent = "0 / 2500";
+
+        document.getElementById("speaker2Count")
+          .textContent = "0 / 2500";
+
+
+        const audio =
+          document.getElementById("dialogueAudio");
+
+        audio.pause();
+        audio.removeAttribute("src");
+        audio.load();
+
+
+        document.getElementById("dialogueResult")
+          .hidden = true;
+
+        document.getElementById("dialogueEmpty")
+          .hidden = false;
+
+        hideDialogueError();
+
+      });
+
+    }
+
+
+    /* =========================================
+       SESSION
+    ========================================= */
+
+    async function getSupabaseSession() {
+
+      if (!window.supabaseClient) {
+
+        console.error(
+          "Supabase client is not available."
+        );
+
+        return null;
+
+      }
+
+      const {
+        data,
+        error
+      } =
+        await window.supabaseClient.auth.getSession();
+
+
+      if (error) {
+
+        console.error(
+          "Supabase session error:",
+          error
+        );
+
+        return null;
+
+      }
+
+
+      return data?.session || null;
+
+    }
+
+
+    /* =========================================
+       USAGE
+    ========================================= */
+
+    async function loadDialogueUsage() {
+
+      const badge =
+        document.getElementById("usageText");
+
+      if (!badge) return;
+
+
+      const session =
+        await getSupabaseSession();
+
+      if (!session) {
+
+        badge.textContent =
+          "Login required";
+
+        return;
+
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/usage?action=dialogue",
+            {
+              method: "GET",
+              headers: {
+                "Authorization":
+                  `Bearer ${session.access_token}`
+              }
+            }
+          );
+
+
+        if (!response.ok) {
+
+          badge.textContent =
+            "5 free uses";
+
+          return;
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          data.unlimited ||
+          data.plan === "premium"
+        ) {
+
+          badge.textContent =
+            "Unlimited";
+
+          return;
+
+        }
+
+
+        const used =
+          Number(data.used || 0);
+
+        const limit =
+          Number(data.limit || 5);
+
+
+        const remaining =
+          Math.max(0, limit - used);
+
+
+        badge.textContent =
+          `${remaining} free uses`;
+
+      } catch (error) {
+
+        console.error(
+          "Usage error:",
+          error
+        );
+
+        badge.textContent =
+          "5 free uses";
+
+      }
+
+    }
+
+
+    /* =========================================
+       SESSION STORAGE
+    ========================================= */
+
+    function loadDialogueSession() {
+
+      const saved =
+        sessionStorage.getItem(
+          "voiceai_dialogue_text"
+        );
+
+      if (!saved) return;
+
+      try {
+
+        const data =
+          JSON.parse(saved);
+
+        if (data.speaker1) {
+
+          document.getElementById(
+            "speaker1Text"
+          ).value = data.speaker1;
+
+        }
+
+        if (data.speaker2) {
+
+          document.getElementById(
+            "speaker2Text"
+          ).value = data.speaker2;
+
+        }
+
+      } catch {
+        // Ignore invalid session data.
+      }
+
+    }
+
+
+    /* =========================================
+       ERROR
+    ========================================= */
+
+    function showDialogueError(message) {
+
+      const box =
+        document.getElementById("dialogueError");
+
+      const text =
+        document.getElementById("dialogueErrorText");
+
+      if (!box || !text) return;
+
+      text.textContent = message;
+
+      box.hidden = false;
+
+      box.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+
+    }
+
+
+    function hideDialogueError() {
+
+      const box =
+        document.getElementById("dialogueError");
+
+      if (box) {
+        box.hidden = true;
+      }
+
+    }
+
+
+    /* =========================================
+       ADD DIALOGUE LINE
+    ========================================= */
+
+    document.addEventListener(
+      "click",
+      (event) => {
+
+        const button =
+          event.target.closest(
+            "#addDialogueLine"
+          );
+
+        if (!button) return;
+
+
+        VoiceAI.toast(
+          "Additional dialogue lines will be supported by the dialogue API."
+        );
+
+      }
+    );
+
+  </script>
+
+
+  <!-- ================= PAGE-SPECIFIC CSS ================= -->
+  <style>
+
+    .tool-page {
+      min-height: 100vh;
+      padding: 80px 5% 70px;
+    }
+
+
+    .tool-hero {
+      max-width: 850px;
+      margin: 0 auto 45px;
+      text-align: center;
+    }
+
+
+    .tool-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border: 1px solid rgba(56,189,248,.25);
+      border-radius: 999px;
+      color: #7dd3fc;
+      background: rgba(14,165,233,.08);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+
+    .tool-badge svg {
+      width: 15px;
+      height: 15px;
+    }
+
+
+    .tool-hero h1 {
+      margin: 20px 0 14px;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -2px;
+    }
+
+
+    .tool-hero h1 span {
+      color: #38bdf8;
+    }
+
+
+    .tool-hero p {
+      max-width: 680px;
+      margin: auto;
+      color: #8da5c1;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+
+    .dialogue-workspace {
+      max-width: 1350px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(320px, .75fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+
+    .panel {
+      background: rgba(10, 22, 43, .82);
+      border: 1px solid rgba(100, 160, 220, .16);
+      border-radius: 22px;
+      box-shadow: 0 25px 70px rgba(0,0,0,.22);
+      overflow: hidden;
+    }
+
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      padding: 25px;
+      border-bottom: 1px solid rgba(100,160,220,.12);
+    }
+
+
+    .panel-header h2 {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 5px;
+      color: #eef7ff;
+      font-size: 18px;
+    }
+
+
+    .panel-header h2 svg {
+      width: 19px;
+      color: #38bdf8;
+    }
+
+
+    .panel-header p {
+      margin: 0;
+      color: #6f88a5;
+      font-size: 12px;
+    }
+
+
+    .usage-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+      padding: 8px 11px;
+      color: #7dd3fc;
+      background: rgba(56,189,248,.08);
+      border: 1px solid rgba(56,189,248,.18);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+
+    .usage-pill svg {
+      width: 14px;
+    }
+
+
+    .dialogue-line {
+      margin: 20px 25px;
+      padding: 18px;
+      border: 1px solid rgba(100,160,220,.13);
+      border-radius: 17px;
+      background: rgba(4,13,29,.45);
+    }
+
+
+    .speaker-label {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 12px;
+      color: #dcecff;
+      font-size: 13px;
+    }
+
+
+    .speaker-avatar {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+
+    .speaker-one {
+      color: #dff6ff;
+      background: linear-gradient(135deg,#0284c7,#38bdf8);
+    }
+
+
+    .speaker-two {
+      color: #eff6ff;
+      background: linear-gradient(135deg,#4f46e5,#818cf8);
+    }
+
+
+    .voice-select,
+    .dialogue-textarea,
+    .option-card select {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid rgba(100,160,220,.18);
+      border-radius: 11px;
+      background: #08162c;
+      color: #dcecff;
+      outline: none;
+      font-family: inherit;
+    }
+
+
+    .voice-select,
+    .option-card select {
+      height: 44px;
+      padding: 0 13px;
+      margin-bottom: 12px;
+    }
+
+
+    .voice-select:focus,
+    .dialogue-textarea:focus,
+    .option-card select:focus {
+      border-color: rgba(56,189,248,.65);
+      box-shadow: 0 0 0 3px rgba(56,189,248,.08);
+    }
+
+
+    .dialogue-textarea {
+      min-height: 125px;
+      padding: 13px;
+      resize: vertical;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+
+    .dialogue-textarea::placeholder {
+      color: #526984;
+    }
+
+
+    .line-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 7px;
+      color: #526984;
+      font-size: 10px;
+    }
+
+
+    .add-line-btn {
+      width: calc(100% - 50px);
+      margin: 0 25px 22px;
+      min-height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      border: 1px dashed rgba(56,189,248,.3);
+      border-radius: 12px;
+      background: rgba(56,189,248,.035);
+      color: #7dd3fc;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+
+    .add-line-btn:hover {
+      background: rgba(56,189,248,.08);
+    }
+
+
+    .add-line-btn svg {
+      width: 16px;
+    }
+
+
+    .dialogue-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 0 25px 20px;
+    }
+
+
+    .option-card {
+      padding: 15px;
+      border: 1px solid rgba(100,160,220,.13);
+      border-radius: 14px;
+      background: rgba(4,13,29,.35);
+    }
+
+
+    .option-card label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 9px;
+      color: #a9bfd8;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+
+    .option-card label svg {
+      width: 15px;
+      color: #38bdf8;
+    }
+
+
+    .option-card select {
+      margin: 0;
+    }
+
+
+    .generate-dialogue-btn {
+      width: calc(100% - 50px);
+      margin: 0 25px 25px;
+      min-height: 50px;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+
+    .generate-dialogue-btn svg {
+      width: 17px;
+    }
+
+
+    .preview-empty {
+      min-height: 430px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 30px;
+    }
+
+
+    .empty-icon {
+      width: 66px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      color: #38bdf8;
+      background: rgba(56,189,248,.08);
+      border: 1px solid rgba(56,189,248,.16);
+      margin-bottom: 20px;
+    }
+
+
+    .empty-icon svg {
+      width: 28px;
+    }
+
+
+    .preview-empty h3 {
+      margin: 0 0 8px;
+      color: #dcecff;
+      font-size: 17px;
+    }
+
+
+    .preview-empty p {
+      max-width: 280px;
+      margin: 0;
+      color: #637b98;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+
+    .dialogue-result {
+      padding: 25px;
+    }
+
+
+    .result-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #86efac;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34,197,94,.7);
+    }
+
+
+    #dialogueAudio {
+      width: 100%;
+    }
+
+
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+
+    .result-actions .secondary-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      text-decoration: none;
+    }
+
+
+    .result-actions svg {
+      width: 15px;
+    }
+
+
+    .error-box {
+      margin: 0 25px 25px;
+      padding: 13px;
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      color: #fecaca;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.2);
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+
+    .error-box svg {
+      width: 17px;
+      min-width: 17px;
+      color: #f87171;
+    }
+
+
+    .dialogue-info {
+      max-width: 1350px;
+      margin: 25px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 15px;
+    }
+
+
+    .info-card {
+      display: flex;
+      gap: 13px;
+      padding: 18px;
+      border: 1px solid rgba(100,160,220,.12);
+      border-radius: 16px;
+      background: rgba(10,22,43,.6);
+    }
+
+
+    .info-card > svg {
+      width: 20px;
+      min-width: 20px;
+      color: #38bdf8;
+    }
+
+
+    .info-card h3 {
+      margin: 0 0 5px;
+      color: #dcecff;
+      font-size: 13px;
+    }
+
+
+    .info-card p {
+      margin: 0;
+      color: #637b98;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+
+    .site-footer {
+      margin-top: 30px;
+    }
+
+
+    .footer-logo {
+      text-decoration: none;
+    }
+
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+
+    .footer-links a {
+      color: #7189a5;
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+
+    .footer-links a:hover {
+      color: #7dd3fc;
+    }
+
+
+    @media (max-width: 1000px) {
+
+      .dialogue-workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .dialogue-preview {
+        order: -1;
+      }
+
+      .preview-empty {
+        min-height: 280px;
+      }
+
+    }
+
+
+    @media (max-width: 760px) {
+
+      .tool-page {
+        padding: 55px 16px 50px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-get-started {
+        display: none;
+      }
+
+      .tool-hero h1 {
+        font-size: 38px;
+      }
+
+      .panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .dialogue-options {
+        grid-template-columns: 1fr;
+      }
+
+      .dialogue-info {
+        grid-template-columns: 1fr;
+      }
+
+      .result-actions {
+        flex-direction: column;
+      }
+
+    }
+
+
+    @media (max-width: 430px) {
+
+      .tool-page {
+        padding-left: 11px;
+        padding-right: 11px;
+      }
+
+      .tool-hero h1 {
+        font-size: 32px;
+        letter-spacing: -1px;
+      }
+
+      .tool-hero p {
+        font-size: 13px;
+      }
+
+      .panel {
+        border-radius: 17px;
+      }
+
+      .panel-header {
+        padding: 18px;
+      }
+
+      .dialogue-line {
+        margin: 15px;
+        padding: 14px;
+      }
+
+      .add-line-btn,
+      .generate-dialogue-btn {
+        width: calc(100% - 30px);
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+
+      .dialogue-options {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+
+      .error-box {
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+
+    }
+
+  </style>
+
+</body>
+</html>
