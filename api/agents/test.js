@@ -1,6 +1,4 @@
-// api/agents/test.js
-
-const { createClient } = require("@supabase/supabase-js");
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
@@ -42,7 +40,7 @@ async function getUser(req) {
   return user;
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -59,6 +57,7 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== "POST") {
     return res.status(405).json({
+      success: false,
       error: "Method not allowed"
     });
   }
@@ -68,6 +67,7 @@ module.exports = async function handler(req, res) {
 
     if (!user) {
       return res.status(401).json({
+        success: false,
         error: "Authentication required"
       });
     }
@@ -84,105 +84,106 @@ module.exports = async function handler(req, res) {
     ).trim();
 
     const message = String(
-      body.message ||
-      ""
+      body.message || ""
     ).trim();
 
     if (!agentId) {
       return res.status(400).json({
+        success: false,
         error: "Agent ID is required"
       });
     }
 
     if (!message) {
       return res.status(400).json({
+        success: false,
         error: "Message is required"
       });
     }
 
     if (message.length > 5000) {
       return res.status(400).json({
+        success: false,
         error: "Message is too long"
       });
     }
 
-    /*
-     * Make sure this agent belongs to the
-     * currently authenticated user.
-     */
-    const { data: agent, error: agentError } =
-      await supabaseAdmin
-        .from("agents")
-        .select("*")
-        .eq("id", agentId)
-        .eq("user_id", user.id)
-        .maybeSingle();
+    const {
+      data: agent,
+      error: agentError
+    } = await supabaseAdmin
+      .from("agents")
+      .select("*")
+      .eq("id", agentId)
+      .eq("user_id", user.id)
+      .maybeSingle();
 
     if (agentError) {
-      console.error(
-        "Agent lookup error:",
-        agentError
-      );
+      console.error("Agent lookup error:", agentError);
 
       return res.status(500).json({
+        success: false,
         error: "Unable to load agent"
       });
     }
 
     if (!agent) {
       return res.status(404).json({
+        success: false,
         error: "Agent not found"
       });
     }
 
-    /*
-     * Count this as one AI usage.
-     * The database function enforces:
-     * Free = 5/day
-     * Premium/Admin = app-level unlimited
-     */
-    const { data: usageResult, error: usageError } =
-      await supabaseAdmin.rpc("check_and_use_ai", {
+    const {
+      data: usageResult,
+      error: usageError
+    } = await supabaseAdmin.rpc(
+      "check_and_use_ai",
+      {
         p_user_id: user.id
-      });
+      }
+    );
 
     if (usageError) {
-      console.error(
-        "Usage check error:",
-        usageError
-      );
+      console.error("Usage check error:", usageError);
 
       return res.status(500).json({
+        success: false,
         error: "Unable to verify AI usage"
       });
     }
 
-    const usage =
-      Array.isArray(usageResult)
-        ? usageResult[0]
-        : usageResult;
+    const usage = Array.isArray(usageResult)
+      ? usageResult[0]
+      : usageResult;
 
     if (!usage?.allowed) {
       return res.status(429).json({
+        success: false,
         error:
-          usage.reason ||
+          usage?.reason ||
           "Daily AI usage limit reached",
-        usage: usage.usage,
-        limit: usage.limit,
-        remaining: usage.remaining
+        usage: usage?.usage,
+        limit: usage?.limit,
+        remaining: usage?.remaining
       });
     }
 
-    /*
-     * ElevenLabs Conversational AI.
-     *
-     * The signed URL lets the frontend start
-     * a secure conversation without exposing
-     * the ElevenLabs API key.
-     */
+    const elevenLabsAgentId =
+      agent.agent_id ||
+      agent.elevenlabs_agent_id ||
+      agentId;
+
+    if (!process.env.ELEVENLABS_API_KEY) {
+      return res.status(500).json({
+        success: false,
+        error: "ElevenLabs API key is not configured"
+      });
+    }
+
     const elevenLabsResponse = await fetch(
       "https://api.elevenlabs.io/v1/convai/conversation/get-signed-url?agent_id=" +
-        encodeURIComponent(agent.agent_id || agent.elevenlabs_agent_id || agentId),
+        encodeURIComponent(elevenLabsAgentId),
       {
         method: "GET",
         headers: {
@@ -202,6 +203,7 @@ module.exports = async function handler(req, res) {
       );
 
       return res.status(502).json({
+        success: false,
         error:
           "Unable to connect to ElevenLabs agent"
       });
@@ -218,16 +220,13 @@ module.exports = async function handler(req, res) {
 
     if (!signedUrl) {
       return res.status(502).json({
+        success: false,
         error:
           "ElevenLabs did not return a signed URL"
       });
     }
 
-    /*
-     * Store conversation/test request when
-     * the table is available.
-     */
-    try {
+    const { error: logError } =
       await supabaseAdmin
         .from("agent_conversations")
         .insert({
@@ -239,14 +238,11 @@ module.exports = async function handler(req, res) {
             type: "agent_test"
           }
         });
-    } catch (dbError) {
-      /*
-       * Conversation logging should not prevent
-       * the actual agent test from working.
-       */
+
+    if (logError) {
       console.warn(
         "Conversation logging skipped:",
-        dbError.message
+        logError.message
       );
     }
 
@@ -255,21 +251,19 @@ module.exports = async function handler(req, res) {
       signedUrl,
       agentId: agent.id,
       usage: {
-        used: usage.usage,
-        limit: usage.limit,
-        remaining: usage.remaining
+        used: usage?.usage,
+        limit: usage?.limit,
+        remaining: usage?.remaining
       }
     });
   } catch (error) {
-    console.error(
-      "Agent test error:",
-      error
-    );
+    console.error("Agent test error:", error);
 
     return res.status(500).json({
+      success: false,
       error:
-        error.message ||
+        error?.message ||
         "Agent test failed"
     });
   }
-};
+}
