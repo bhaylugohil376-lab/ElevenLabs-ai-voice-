@@ -1741,56 +1741,55 @@
                 );
 
 
-              const data =
-                await response.json();
-
-
-              if (!response.ok) {
-
-                if (
-                  response.status === 429
-                ) {
-
-                  throw new Error(
-                    data.message ||
-                    "Daily limit reached. Please try again after 24 hours."
-                  );
-
-                }
-
-
-                throw new Error(
-                  data.message ||
-                  data.error ||
-                  "Voice transfer failed."
-                );
-
+              // Parse JSON defensively; an unimplemented route may return an HTML 404 page.
+              const responseText = await response.text();
+              let data = {};
+              try {
+                data = responseText ? JSON.parse(responseText) : {};
+              } catch (_) {
+                data = {};
               }
 
+              if (!response.ok) {
+                if (response.status === 429) {
+                  throw new Error(
+                    data.message || data.error ||
+                    "Daily limit reached. Please try again after 24 hours."
+                  );
+                }
+
+                if (response.status === 404) {
+                  throw new Error(
+                    "Video Voice Transfer API is not installed on this server yet. The page is ready, but /api/video-voice-transfer must be implemented before real processing can work."
+                  );
+                }
+
+                if (response.status === 501) {
+                  throw new Error(
+                    data.message || data.error ||
+                    "The voice-transfer provider adapter is not implemented yet."
+                  );
+                }
+
+                throw new Error(
+                  data.message || data.error ||
+                  `Voice transfer failed (HTTP ${response.status}).`
+                );
+              }
 
               let outputUrl =
                 data.outputUrl ||
                 data.videoUrl ||
                 data.url;
 
-
-              if (
-                !outputUrl &&
-                data.base64
-              ) {
-
-                outputUrl =
-                  `data:video/mp4;base64,${data.base64}`;
-
+              if (!outputUrl && data.base64) {
+                outputUrl = `data:video/mp4;base64,${data.base64}`;
               }
 
-
               if (!outputUrl) {
-
                 throw new Error(
-                  "The server did not return a transformed video."
+                  "The API response did not include a video URL or base64 video output. No result was created."
                 );
-
               }
 
 
