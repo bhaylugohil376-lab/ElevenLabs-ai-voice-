@@ -984,6 +984,14 @@
 
           generateBtn.disabled = true;
 
+          if (audio) {
+            audio.pause();
+            audio.removeAttribute("src");
+            audio.load();
+          }
+          if (result) result.hidden = true;
+          if (emptyState) emptyState.hidden = false;
+
           generateBtn.innerHTML = `
             <i data-lucide="loader-circle"></i>
             Generating...
@@ -1042,41 +1050,26 @@
               ).value;
 
 
-            /*
-             * Backend route:
-             * POST /api/sound-effects/generate
-             */
+            // The backend route is /api/sound-effects (not /api/sound-effects/generate).
+            // The provider adapter accepts prompt + duration, so fold the UI options into
+            // the prompt to ensure category/intensity are not silently discarded.
+            const enrichedPrompt = [
+              text,
+              `Sound category: ${category}.`,
+              `Intensity: ${intensity}.`
+            ].join("\n");
 
-            const response =
-              await fetch(
-                "./api/sound-effects/generate",
-                {
-
-                  method: "POST",
-
-                  headers: {
-                    "Content-Type":
-                      "application/json",
-
-                    "Authorization":
-                      `Bearer ${session.access_token}`
-                  },
-
-                  body: JSON.stringify({
-
-                    prompt: text,
-
-                    duration:
-                      Number(duration),
-
-                    intensity,
-
-                    category
-
-                  })
-
-                }
-              );
+            const response = await fetch("/api/sound-effects", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${session.access_token}`
+              },
+              body: JSON.stringify({
+                prompt: enrichedPrompt,
+                duration: Number(duration)
+              })
+            });
 
 
             const data =
@@ -1094,23 +1087,28 @@
 
 
             const audioUrl =
-              data.audioUrl ||
               data.audio_url ||
+              data.audioUrl ||
               data.url;
 
-
             if (!audioUrl) {
-
-              throw new Error(
-                "The server did not return an audio file."
-              );
-
+              if (data.job_id || data.status === "processing") {
+                throw new Error(
+                  "The provider accepted the job, but no audio URL was returned. This project does not yet have a job-status polling endpoint; configure the provider adapter to return audio_url."
+                );
+              }
+              throw new Error("The server did not return an audio file URL.");
             }
 
-
-            audio.src = audioUrl;
-
-            download.href = audioUrl;
+            // Support both absolute URLs and provider-relative audio paths.
+            const resolvedAudioUrl = new URL(audioUrl, window.location.origin).href;
+            audio.pause();
+            audio.removeAttribute("src");
+            audio.load();
+            audio.src = resolvedAudioUrl;
+            audio.load();
+            download.href = resolvedAudioUrl;
+            download.setAttribute("download", "voiceai-sound-effect");
 
 
             resultDescription.textContent =
